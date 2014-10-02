@@ -1,0 +1,4 @@
+services:
+  facetapi.adapter:
+    class: Drupal\facetapi\Adapter
+    arguments: []
