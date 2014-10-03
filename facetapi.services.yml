@@ -2,3 +2,6 @@ services:
   facetapi.adapter:
     class: Drupal\facetapi\Adapter
     arguments: []
+  plugin.manager.facetapi.sort:
+    class: Drupal\facetapi\FacetApiSortManager
+    parent: default_plugin_manager
