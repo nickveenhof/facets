@@ -2,9 +2,7 @@
 
 namespace Drupal\facetapi\Plugin\FacetApi\Sort;
 
-use Drupal\Core\Annotation\Translation;
-use Drupal\facetapi\Annotation\FacetApiSort;
-use Drupal\facetapi\Sort\FacetApiSortBase;
+use Drupal\facetapi\Sort\SortPluginBase;
 
 /**
  * @FacetApiSort(
@@ -13,7 +11,7 @@ use Drupal\facetapi\Sort\FacetApiSortBase;
  *    description = @Translation("Sort by the value displayed to the user.")
  * )
  */
-class SortDisplay extends FacetApiSortBase {
+class SortDisplay extends SortPluginBase {
   public function sort(array $a, array $b) {
     return strcasecmp($a['#markup'], $b['#markup']);
   }

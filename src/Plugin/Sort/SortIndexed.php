@@ -2,9 +2,8 @@
 
 namespace Drupal\facetapi\Plugin\FacetApi\Sort;
 
-use Drupal\Core\Annotation\Translation;
-use Drupal\facetapi\Annotation\FacetApiSort;
-use Drupal\facetapi\Sort\FacetApiSortBase;
+use Drupal\facetapi\Sort\SortPluginBase;
+
 
 /**
  * @FacetApiSort(
@@ -13,7 +12,7 @@ use Drupal\facetapi\Sort\FacetApiSortBase;
  *    description = @Translation("Sort by the raw value stored in the index.")
  * )
  */
-class SortIndexed extends FacetApiSortBase {
+class SortIndexed extends SortPluginBase {
   public function sort(array $a, array $b) {
     $a_value = (isset($a['#indexed_value'])) ? $a['#indexed_value'] : '';
     $b_value = (isset($b['#indexed_value'])) ? $b['#indexed_value'] : '';

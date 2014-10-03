@@ -2,9 +2,7 @@
 
 namespace Drupal\facetapi\Plugin\FacetApi\Sort;
 
-use Drupal\Core\Annotation\Translation;
-use Drupal\facetapi\Annotation\FacetApiSort;
-use Drupal\facetapi\Sort\FacetApiSortBase;
+use Drupal\facetapi\Sort\SortPluginBase;
 
 /**
  * @FacetApiSort(
@@ -13,7 +11,7 @@ use Drupal\facetapi\Sort\FacetApiSortBase;
  *    description = @Translation("Sort by the facet count.")
  * )
  */
-class SortCount extends FacetApiSortBase {
+class SortCount extends SortPluginBase {
   public function sort(array $a, array $b) {
     $a_count = (isset($a['#count'])) ? $a['#count'] : 0;
     $b_count = (isset($b['#count'])) ? $b['#count'] : 0;

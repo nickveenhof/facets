@@ -7,8 +7,9 @@
 namespace Drupal\facetapi\Sort;
 
 use Drupal\Component\Plugin\PluginBase;
+use Drupal\facetapi\Sort\SortInterface;
 
-class SortPluginBase extends PluginBase implements FacetApiSortInterface {
+class SortPluginBase extends PluginBase implements SortInterface {
 
   private $weight;
 

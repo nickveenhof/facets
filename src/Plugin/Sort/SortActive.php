@@ -2,9 +2,7 @@
 
 namespace Drupal\facetapi\Plugin\FacetApi\Sort;
 
-use Drupal\Core\Annotation\Translation;
-use Drupal\facetapi\Annotation\FacetApiSort;
-use Drupal\facetapi\Sort\FacetApiSortBase;
+use Drupal\facetapi\Sort\SortPluginBase;
 
 /**
  * @FacetApiSort(
@@ -13,7 +11,7 @@ use Drupal\facetapi\Sort\FacetApiSortBase;
  *    description = @Translation("Sort by whether the facet is active or not.")
  * )
  */
-class SortActive extends FacetApiSortBase {
+class SortActive extends SortPluginBase {
   public function sort(array $a, array $b) {
     $a_active = (isset($a['#active'])) ? $a['#active'] : 0;
     $b_active = (isset($b['#active'])) ? $b['#active'] : 0;
