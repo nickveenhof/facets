@@ -1,14 +1,14 @@
 <?php
 /**
  * @file
- * Provides Drupal/Sort/FacetApiSortBase.
+ * Provides \Drupal\facetapi\SortPluginBase;
  */
 
 namespace Drupal\facetapi\Sort;
 
 use Drupal\Component\Plugin\PluginBase;
 
-class FacetApiSortBase extends PluginBase implements FacetApiSortInterface {
+class SortPluginBase extends PluginBase implements FacetApiSortInterface {
 
   private $weight;
 

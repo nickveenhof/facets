@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\image\ImageEffectInterface.
+ * Contains \Drupal\facetapi\Sort\SortInterface.
  */
 
 namespace Drupal\facetapi\Sort;
@@ -14,7 +14,7 @@ use Drupal\Component\Plugin\ConfigurablePluginInterface;
  *
  * @see plugin_api
  */
-interface FacetApiSortInterface extends PluginInspectionInterface {
+interface SortInterface extends PluginInspectionInterface {
 
   /**
    * Returns the id of the facetapi sort.

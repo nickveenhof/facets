@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\facetapi\FacetapiSortManager.
+ * Contains \Drupal\facetapi\Sort\SortPluginManager.
  */
 
 namespace Drupal\facetapi\Sort;
@@ -16,7 +16,7 @@ use Drupal\Core\Plugin\DefaultPluginManager;
  *
  * @see plugin_api
  */
-class FacetApiSortManager extends DefaultPluginManager {
+class SortPluginManager extends DefaultPluginManager {
 
   /**
    * Constructs a new FacetapiSortManager.
@@ -30,8 +30,7 @@ class FacetApiSortManager extends DefaultPluginManager {
    *   The module handler.
    */
   public function __construct(\Traversable $namespaces, CacheBackendInterface $cache_backend, ModuleHandlerInterface $module_handler) {
-    parent::__construct('Plugin/Sort', $namespaces, $module_handler, 'Drupal\facetapi\FacetApiSortInterface', 'Drupal\facetapi\Annotation\FacetApiSort');
-
+    parent::__construct('Plugin/FacetApi/Sort', $namespaces, $module_handler, 'Drupal\facetapi\SortInterface', 'Drupal\facetapi\Annotation\FacetApiSort');
     $this->alterInfo('facetapi_sort_info');
     $this->setCacheBackend($cache_backend, 'facetapi_sort_plugins');
   }
