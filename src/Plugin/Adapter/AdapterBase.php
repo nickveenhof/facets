@@ -7,7 +7,8 @@
 
 namespace Drupal\facetapi\Plugin;
 
-use Drupal\facetapi\Plugin\AdapterInterface;
+use Drupal\Core\Plugin\PluginBase;
+use Drupal\facetapi\AdapterInterface;
 
 /**
  * Base class for Facet API adapters.
@@ -20,14 +21,14 @@ use Drupal\facetapi\Plugin\AdapterInterface;
  * enabled facets or passing the appropriate query type plugin to the backend
  * so that it can execute the actual facet query.
  */
-abstract class AdapterBase implements AdapterInterface {
+abstract class AdapterBase extends PluginBase implements AdapterInterface {
 
   /**
    * The searcher information as returned by facetapi_get_searcher_info().
    *
    * @var array
    */
-  protected $searcher = array();
+  protected $info = array();
 
   /**
    * The search keys, or query text, submitted by the user.
@@ -137,13 +138,16 @@ abstract class AdapterBase implements AdapterInterface {
    */
   protected $settings = array();
 
-  public function __construct(SearcherInterface $searcher) {
-    $this->searcher = $searcher;
+  /**
+   * @param array $searcher_info
+   */
+  public function __construct(array $searcher_info) {
+    $this->info = $searcher_info;
 
     // Load and initialize the url processor plugin. Initializing the plugin
     // fetches the data from a source, usually $_GET, and trigger the methods
     // that instantiate the query type plugins and process the active items.
-    $this->urlProcessor = $this->loadUrlProcessor($this->searcher['url processor']);
+    $this->urlProcessor = $this->loadUrlProcessor($this->info['url processor']);
     $this->initUrlProcessor();
   }
 
@@ -345,7 +349,7 @@ abstract class AdapterBase implements AdapterInterface {
     // Gather a whitelist of query type plugins supported by this searcher.
     $plugin_ids = array();
     foreach (ctools_get_plugins('facetapi', 'query_types') as $plugin) {
-      if ($this->searcher['adapter'] == $plugin['handler']['adapter']) {
+      if ($this->info['adapter'] == $plugin['handler']['adapter']) {
         $type = call_user_func(array($plugin['handler']['class'], 'getType'));
         $plugin_ids[$type] = $plugin['handler']['class'];
       }
@@ -450,7 +454,7 @@ abstract class AdapterBase implements AdapterInterface {
    *   The machine readable if of the adapter plugin.
    */
   public function getId() {
-    return $this->searcher['adapter'];
+    return $this->info['adapter'];
   }
 
   /**
@@ -460,7 +464,7 @@ abstract class AdapterBase implements AdapterInterface {
    *   The machine readable name of the searcher.
    */
   public function getSearcher() {
-    return $this->searcher['name'];
+    return $this->info['name'];
   }
 
   /**
@@ -470,7 +474,7 @@ abstract class AdapterBase implements AdapterInterface {
    *   The type of content indexed by $this->searcher['searcher'].
    */
   public function getTypes() {
-    return $this->searcher['types'];
+    return $this->info['types'];
   }
 
   /**
@@ -487,7 +491,7 @@ abstract class AdapterBase implements AdapterInterface {
    *   a method with a more descript name.
    */
   public function getPath($realm_name) {
-    return $this->searcher['path'] . '/facets/' . $realm_name;
+    return $this->info['path'] . '/facets/' . $realm_name;
   }
 
   /**
@@ -502,7 +506,7 @@ abstract class AdapterBase implements AdapterInterface {
     if (NULL === $this->searchPath) {
       // Backwards compatibility with apachesolr <= beta8.
       // @see http://drupal.org/node/1305748#comment-5102352
-      foreach (array($this->searcher['module'], $this->searcher['module'] . '_search') as $module) {
+      foreach (array($this->info['module'], $this->info['module'] . '_search') as $module) {
         if ($path = module_invoke($module, 'search_info')) {
           $this->searchPath = 'search/' . $path['path'];
           if (!isset($_GET['keys']) && ($keys = $this->getSearchKeys())) {
@@ -611,7 +615,7 @@ abstract class AdapterBase implements AdapterInterface {
    *   TRUE if the backend supports "missing" facets, FALSE otherwise.
    */
   public function supportsFacetMissing() {
-    return $this->searcher['supports facet missing'];
+    return $this->info['supports facet missing'];
   }
 
   /**
@@ -622,7 +626,7 @@ abstract class AdapterBase implements AdapterInterface {
    *   otherwise.
    */
   public function supportsFacetMincount() {
-    return $this->searcher['supports facet mincount'];
+    return $this->info['supports facet mincount'];
   }
 
   /**
@@ -644,7 +648,7 @@ abstract class AdapterBase implements AdapterInterface {
    */
   function addActiveFilters($query) {
     module_load_include('inc', 'facetapi', 'facetapi.callbacks');
-    facetapi_add_active_searcher($this->searcher['name']);
+    facetapi_add_active_searcher($this->info['name']);
 
     // Invoke initActiveFilters hook.
     $this->initActiveFilters($query);
@@ -709,11 +713,11 @@ abstract class AdapterBase implements AdapterInterface {
    * @see ctools_export_crud_new()
    */
   public function initSettingsObject($name, $facet_name, $realm_name = NULL) {
-    $cached_settings = facetapi_get_searcher_settings($this->searcher['name']);
+    $cached_settings = facetapi_get_searcher_settings($this->info['name']);
     if (!isset($cached_settings[$name])) {
       $settings = ctools_export_crud_new('facetapi');
       $settings->name = $name;
-      $settings->searcher = $this->searcher['name'];
+      $settings->searcher = $this->info['name'];
       $settings->realm = (string) $realm_name;
       $settings->facet = $facet_name;
       $settings->enabled = 0;
@@ -745,7 +749,7 @@ abstract class AdapterBase implements AdapterInterface {
   public function getFacetSettings(array $facet, array $realm) {
     // Build the unique name of the configuration and check whether the setting
     // has already be loaded so defaults are processed only once per setting.
-    $name = $this->searcher['name'] . ':' . $realm['name'] . ':' . $facet['name'];
+    $name = $this->info['name'] . ':' . $realm['name'] . ':' . $facet['name'];
     if (!isset($this->settings[$name])) {
 
       // Initialize settings and flag whether it is "new" meaning that all
@@ -818,7 +822,7 @@ abstract class AdapterBase implements AdapterInterface {
   public function getFacetSettingsGlobal(array $facet) {
     // Build the unique name of the configuration and check whether the setting
     // has already be loaded so defaults are processed only once per setting.
-    $name = $this->searcher['name'] . '::' . $facet['name'];
+    $name = $this->info['name'] . '::' . $facet['name'];
     if (!isset($this->settings[$name])) {
 
       // Initialize settings and flag whether it is "new" meaning that all
@@ -875,7 +879,7 @@ abstract class AdapterBase implements AdapterInterface {
    * @see facetapi_get_enabled_facets()
    */
   public function getEnabledFacets($realm_name = NULL) {
-    return facetapi_get_enabled_facets($this->searcher['name'], $realm_name);
+    return facetapi_get_enabled_facets($this->info['name'], $realm_name);
   }
 
   /**

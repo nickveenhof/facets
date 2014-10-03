@@ -1,8 +1,6 @@
 <?php
 /**
- * User: jur
- * Date: 03-10-14
- * Time: 15:54
+ * Contains Drupal\facetapi\FacetProcessor
  */
 
 namespace Drupal\facetapi;
