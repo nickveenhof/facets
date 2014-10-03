@@ -8,6 +8,8 @@
 
 namespace Drupal\facetapi\Plugin\Url;
 
+use Drupal\facetapi\Plugin\Adapter\AdapterInterface;
+
 /**
  * In D7 this was the abstract class extended by all url processor plugins.
  * This called FacetApiUrlProcessor but the name would then no longer be consistent
@@ -31,7 +33,7 @@ abstract class FacetUrlProcessor {
   /**
    * Held the adapter that the url processor plugin was associated with.
    *
-   * @var FacetapiAdapter
+   * @var AdapterInterface
    */
   protected $adapter;
 
@@ -54,10 +56,10 @@ abstract class FacetUrlProcessor {
   /**
    * Constructed the FacetapiUrlProcessor object.
    *
-   * @param FacetapiAdapter $adapter
+   * @param AdapterInterface $adapter
    *   The adapter that the url processor plugin would get associated with.
    */
-  public function __construct(FacetapiAdapter $adapter) {
+  public function __construct(AdapterInterface $adapter) {
     $this->adapter = $adapter;
   }
 
@@ -161,7 +163,7 @@ abstract class FacetUrlProcessor {
    *   Hardcoded to 'f' in D7 but actually it is already defined in the filterKey property
    *   so it might make sense to no longer hardcode this in here if this function remains?
    *
-   * @return FacetapiUrlParser
+   * @return FacetUrlProcessor
    *   An instance of this class.
    */
   public function setParams(array $params, $filter_key = 'f') {

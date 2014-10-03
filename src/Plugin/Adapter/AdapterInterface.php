@@ -5,7 +5,7 @@
  * Contains Drupal\facetapi\Plugin\AdapterInterface.
  */
 
-namespace Drupal\facetapi;
+namespace Drupal\facetapi\Plugin\Adapter;
 
 interface AdapterInterface {
 
@@ -23,7 +23,7 @@ interface AdapterInterface {
    * @param array $searcher_info
    *   The searcher information as returned by facetapi_get_searcher_info().
    */
-  public function __construct(SearcherInterface $searcher);
+  //public function __construct(SearcherInterface $searcher);
 
   /**
    * Returns a boolean flagging whether $this->searcher['searcher'] executed a

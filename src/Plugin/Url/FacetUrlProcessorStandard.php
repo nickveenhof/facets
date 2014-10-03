@@ -7,6 +7,8 @@
 
 namespace Drupal\facetapi\Plugin\Url;
 
+use \Drupal\Component\Utility\UrlHelper;
+
 /**
  * In D7 this was the standard url processor
  * This called FacetApiUrlProcessorStandard but the name would then no longer be consistent
@@ -53,7 +55,7 @@ class FacetUrlProcessorStandard extends FacetUrlProcessor {
    *   An associative array containing the normalized params.
    */
   public function normalizeParams(array $params, $filter_key = 'f') {
-    return drupal_get_query_parameters($params, array('q', 'page'));
+    return UrlHelper::filterQueryParameters($params, array('q', 'page'));
   }
 
   /**

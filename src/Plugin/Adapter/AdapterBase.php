@@ -5,10 +5,10 @@
  * Contains Drupal\facetapi\Plugin\AdapterBase.
  */
 
-namespace Drupal\facetapi\Plugin;
+namespace Drupal\facetapi\Plugin\Adapter;
 
 use Drupal\Core\Plugin\PluginBase;
-use Drupal\facetapi\AdapterInterface;
+use Drupal\facetapi\Plugin\Adapter\AdapterInterface;
 
 /**
  * Base class for Facet API adapters.
@@ -64,6 +64,28 @@ abstract class AdapterBase extends PluginBase implements AdapterInterface {
    * @see FacetapiQueryTypeInterface
    */
   protected $queryTypes = array();
+
+  /**
+   * Returns a boolean flagging whether facets in a realm shoud be displayed.
+   *
+   * Useful, for example, for suppressing sidebar blocks in some cases. Apache
+   * Solr Search Integration used this method to prevent blocks from being
+   * displayed when the module was configured to render them in the search body
+   * on "empty" searches instead of the normal facet location.
+   *
+   * @param string $realm_name
+   *   The machine readable name of the realm.
+   *
+   * @return boolean
+   *   A boolean flagging whether to display a given realm.
+   *
+   * @todo It appears that no implementing modules are leveraging this anymore.
+   *   Let's discuss whether to deprecate this method or even remove it from
+   *   future versions of Facet API at http://drupal.org/node/1661410.
+   */
+  public function suppressOutput($realm_name) {
+    return false;
+  }
 
   /**
    * @TODO: generalize to ProcessorInterface and properly type hint in __construct().
