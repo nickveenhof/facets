@@ -8,7 +8,7 @@
 namespace Drupal\facetapi\Plugin\Adapter;
 
 use Drupal\Core\Plugin\PluginBase;
-use Drupal\facetapi\Plugin\Adapter\AdapterInterface;
+use Drupal\facetapi\Adapter\AdapterInterface;
 
 /**
  * Base class for Facet API adapters.

@@ -5,7 +5,7 @@
  * Contains Drupal\facetapi\Plugin\AdapterInterface.
  */
 
-namespace Drupal\facetapi\Plugin\Adapter;
+namespace Drupal\facetapi\Adapter;
 
 interface AdapterInterface {
 

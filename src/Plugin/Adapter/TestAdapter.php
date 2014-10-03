@@ -3,7 +3,7 @@
  * Contains Drupal\facetapi\Plugin\TestAdapter
  */
 
-namespace Drupal\facetapi\Plugin;
+namespace Drupal\facetapi\Plugin\Adapter;
 
 /**
  * @FacetApiAdapter(
