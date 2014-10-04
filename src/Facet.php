@@ -2,10 +2,10 @@
 
 /**
  * @file
- * Contains Drupal\facetapi\Facet.
+ * Contains Drupal\facet_api\Facet.
  */
 
-namespace Drupal\facetapi;
+namespace Drupal\facet_api;
 
 /**
  * Wrapper around the facet definition with methods that build render arrays.
@@ -13,7 +13,7 @@ namespace Drupal\facetapi;
  * Thic class contain methods that assist in render array generation and stores
  * additional context about how and what generated the render arrays for
  * consumption by the widget plugins. Objects can also be used as if they are
- * the facet definitions returned by facetapi_facet_load().
+ * the facet definitions returned by facet_api_facet_load().
  *
  * @TODO: Remove ArrayAccess dependency...  'Cause we like object!
  */
@@ -27,7 +27,7 @@ class Facet implements ArrayAccess {
   protected $adapter;
 
   /**
-   * The facet definition as returned by facetapi_facet_load().
+   * The facet definition as returned by facet_api_facet_load().
    *
    * This is the array acted on by the ArrayAccess interface methods so the
    * object can be used as if it were the facet definition array.
@@ -51,7 +51,7 @@ class Facet implements ArrayAccess {
    * @param FacetapiAdapter $adapter
    *   he FacetapiAdapter object this class was instantiated from.
    * @param array $facet
-   *   The facet definition as returned by facetapi_facet_load().
+   *   The facet definition as returned by facet_api_facet_load().
    */
   public function __construct(FacetapiAdapter $adapter, array $facet) {
     $this->adapter = $adapter;
@@ -102,7 +102,7 @@ class Facet implements ArrayAccess {
   }
 
   /**
-   * Returns the facet definition as returned by facetapi_facet_load().
+   * Returns the facet definition as returned by facet_api_facet_load().
    *
    * @return array
    *   An array containing the facet definition.
@@ -136,7 +136,7 @@ class Facet implements ArrayAccess {
    */
   public function getSettings($realm = NULL) {
     if ($realm && !is_array($realm)) {
-      $realm = facetapi_realm_load($realm);
+      $realm = facet_api_realm_load($realm);
     }
     $method = ($realm) ? 'getFacetSettings' : 'getFacetSettingsGlobal';
     return $this->adapter->$method($this->facet, $realm);
@@ -151,7 +151,7 @@ class Facet implements ArrayAccess {
    * empty behavior plugin is executed to finalize the build.
    *
    * @param array $realm
-   *   The realm definition as returned by facetapi_realm_load().
+   *   The realm definition as returned by facet_api_realm_load().
    * @param FacetapiFacetProcessor $processor
    *   The processor object.
    *
@@ -166,27 +166,27 @@ class Facet implements ArrayAccess {
 
     // Execute the filter plugins.
     // @todo Defensive coding here for filters?
-    $enabled_filters = array_filter($settings->settings['filters'], 'facetapi_filter_disabled_filters');
+    $enabled_filters = array_filter($settings->settings['filters'], 'facet_api_filter_disabled_filters');
     uasort($enabled_filters, 'drupal_sort_weight');
     foreach ($enabled_filters as $filter_id => $filter_settings) {
-      if ($class = ctools_plugin_load_class('facetapi', 'filters', $filter_id, 'handler')) {
+      if ($class = ctools_plugin_load_class('facet_api', 'filters', $filter_id, 'handler')) {
         $filter_plugin = new $class($filter_id, $this->adapter, $settings);
         $this->build = $filter_plugin->execute($this->build);
       }
       else {
-        watchdog('facetapi', 'Filter %name not valid.', array('%name' => $filter_id), WATCHDOG_ERROR);
+        watchdog('facet_api', 'Filter %name not valid.', array('%name' => $filter_id), WATCHDOG_ERROR);
       }
     }
 
     // Instantiate and initialize the widget plugin.
     // @todo Add defensive coding here for widgets?
     $widget_name = $settings->settings['widget'];
-    if ($class = ctools_plugin_load_class('facetapi', 'widgets', $widget_name, 'handler')) {
+    if ($class = ctools_plugin_load_class('facet_api', 'widgets', $widget_name, 'handler')) {
       $widget_plugin = new $class($widget_name, $realm, $this, $settings);
       $widget_plugin->init();
     }
     else {
-      watchdog('facetapi', 'Widget %name not valid.', array('%name' => $widget_name), WATCHDOG_ERROR);
+      watchdog('facet_api', 'Widget %name not valid.', array('%name' => $widget_name), WATCHDOG_ERROR);
       return array();
     }
 
@@ -198,7 +198,7 @@ class Facet implements ArrayAccess {
     else {
       // Instantiate the empty behavior plugin.
       $id = $settings->settings['empty_behavior'];
-      $class = ctools_plugin_load_class('facetapi', 'empty_behaviors', $id, 'handler');
+      $class = ctools_plugin_load_class('facet_api', 'empty_behaviors', $id, 'handler');
       $empty_plugin = new $class($settings);
       // Execute the empty behavior plugin.
       $build = $widget_plugin->getBuild();
@@ -211,7 +211,7 @@ class Facet implements ArrayAccess {
     }
 
     // Add JavaScript settings by merging with the others already set.
-    $merge_settings['facetapi']['facets'][] = $widget_plugin->getJavaScriptSettings();
+    $merge_settings['facet_api']['facets'][] = $widget_plugin->getJavaScriptSettings();
     drupal_add_js($merge_settings, 'setting');
 
     // Return render array keyed by the FacetapiWidget::$key property.

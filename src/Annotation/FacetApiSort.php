@@ -2,17 +2,17 @@
 
 /**
  * @file
- * Contains \Drupal\facetapi\Annotation\FacetApiSort.
+ * Contains \Drupal\facet_api\Annotation\FacetApiSort.
  */
 
-namespace Drupal\facetapi\Annotation;
+namespace Drupal\facet_api\Annotation;
 
 use Drupal\Component\Annotation\Plugin;
 
 /**
  * Defines a Facet API Sorter annotation object.
  *
- * @see \Drupal\facetapi\FacetApiSortManager
+ * @see \Drupal\facet_api\FacetApiSortManager
  * @see plugin_api
  *
  * @Annotation

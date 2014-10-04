@@ -2,10 +2,10 @@
 
 /**
  * @file
- * Contains Drupal\facetapi\Plugin\AdapterInterface.
+ * Contains Drupal\facet_api\Plugin\AdapterInterface.
  */
 
-namespace Drupal\facetapi\Adapter;
+namespace Drupal\facet_api\Adapter;
 
 interface AdapterInterface {
 
@@ -21,7 +21,7 @@ interface AdapterInterface {
    * the facet data.
    *
    * @param array $searcher_info
-   *   The searcher information as returned by facetapi_get_searcher_info().
+   *   The searcher information as returned by facet_api_get_searcher_info().
    */
   //public function __construct(SearcherInterface $searcher);
 
@@ -153,7 +153,7 @@ interface AdapterInterface {
    * Returns a facet's active items.
    *
    * @param array|string $facet
-   *   Either the facet definition as returned by facetapi_facet_load() or the
+   *   Either the facet definition as returned by facet_api_facet_load() or the
    *   machine readable name of the facet.
    *
    * @return array
@@ -286,7 +286,7 @@ interface AdapterInterface {
   /**
    * Allows for backend specific overrides to the settings form.
    *
-   * @see facetapi_facet_display_form()
+   * @see facet_api_facet_display_form()
    */
   public function settingsForm(&$form, &$form_state);
 
@@ -370,9 +370,9 @@ interface AdapterInterface {
    * returned by the backend, for example the display widget and sort settings.
    *
    * @param array $facet
-   *   The facet definition as returned by facetapi_facet_load().
+   *   The facet definition as returned by facet_api_facet_load().
    * @param array $realm
-   *   The realm definition as returned by facetapi_realm_load().
+   *   The realm definition as returned by facet_api_realm_load().
    *
    * @return stdClass
    *   An object containing the settings.
@@ -391,7 +391,7 @@ interface AdapterInterface {
    * are configured globally and reflected across all realms for this searcher.
    *
    * @param array $facet
-   *   The facet definition as returned by facetapi_facet_load().
+   *   The facet definition as returned by facet_api_facet_load().
    *
    * @return
    *   An object containing the settings.
@@ -410,7 +410,7 @@ interface AdapterInterface {
    * @return array
    *   An array of enabled facets.
    *
-   * @see facetapi_get_enabled_facets()
+   * @see facet_api_get_enabled_facets()
    */
   public function getEnabledFacets($realm_name = NULL);
 
@@ -418,7 +418,7 @@ interface AdapterInterface {
    * Returns a FacetapiFacet instance for the facet being rendered.
    *
    * @param array $facet
-   *   The facet definition as returned by facetapi_facet_load().
+   *   The facet definition as returned by facet_api_facet_load().
    *
    * @return FacetapiFacet
    *   The facet rendering object object.
@@ -429,7 +429,7 @@ interface AdapterInterface {
    * Returns the facet's instantiated query type plugin.
    *
    * @param array|string $facet
-   *   Either the facet definition as returned by facetapi_facet_load() or the
+   *   Either the facet definition as returned by facet_api_facet_load() or the
    *   machine readable name of the facet.
    *
    * @return FacetapiQueryTypeInterface|NULL
@@ -467,7 +467,7 @@ interface AdapterInterface {
    * Helper function that returns the query string variables for a facet item.
    *
    * @param array $facet
-   *   The facet definition as returned by facetapi_facet_load().
+   *   The facet definition as returned by facet_api_facet_load().
    * @param array $values
    *   An array containing the item's values being added to or removed from the
    *   query string dependent on whether or not the item is active.
@@ -485,7 +485,7 @@ interface AdapterInterface {
    * Helper function that returns the path for a facet link.
    *
    * @param array $facet
-   *   The facet definition as returned by facetapi_facet_load().
+   *   The facet definition as returned by facet_api_facet_load().
    * @param array $values
    *   An array containing the item's values being added to or removed from the
    *   query string dependent on whether or not the item is active.

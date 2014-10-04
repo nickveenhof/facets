@@ -2,15 +2,15 @@
 
 /**
  * @file
- * Contains Drupal\facetapi\Plugin\Block\FacetBlock.
+ * Contains Drupal\facet_api\Plugin\Block\FacetBlock.
  */
 
-namespace Drupal\facetapi\Plugin\Block;
+namespace Drupal\facet_api\Plugin\Block;
 
 use Drupal\Core\Block\BlockBase;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
-use Drupal\facetapi\Adapter;
+use Drupal\facet_api\Adapter;
 
 /**
  * Provides a 'FacetBlock' block.
@@ -23,11 +23,11 @@ use Drupal\facetapi\Adapter;
 class FacetBlock extends BlockBase implements ContainerFactoryPluginInterface {
 
   /**
-   * Drupal\facetapi\Adapter definition.
+   * Drupal\facet_api\Adapter definition.
    *
-   * @var Drupal\facetapi\Adapter
+   * @var Drupal\facet_api\Adapter
    */
-  protected $facetapi_adapter;
+  protected $facet_api_adapter;
 
   /**
    * Construct.
@@ -43,10 +43,10 @@ class FacetBlock extends BlockBase implements ContainerFactoryPluginInterface {
         array $configuration,
         $plugin_id,
         $plugin_definition,
-        Adapter $facetapi_adapter
+        Adapter $facet_api_adapter
   ) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
-    $this->facetapi_adapter = $facetapi_adapter;
+    $this->facet_api_adapter = $facet_api_adapter;
   }
 
   /**
@@ -57,7 +57,7 @@ class FacetBlock extends BlockBase implements ContainerFactoryPluginInterface {
       $configuration,
       $plugin_id,
       $plugin_definition,
-      $container->get('facetapi.adapter')
+      $container->get('facet_api.adapter')
     );
   }
 

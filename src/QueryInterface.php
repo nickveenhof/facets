@@ -2,10 +2,10 @@
 
 /**
  * @file
- * Contains \Drupal\facetapi\QueryInterface.
+ * Contains \Drupal\facet_api\QueryInterface.
  */
 
-namespace Drupal\facetapi;
+namespace Drupal\facet_api;
 
 use Drupal\Core\Config\Entity\ConfigEntityInterface;
 

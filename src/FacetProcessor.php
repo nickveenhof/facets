@@ -1,9 +1,9 @@
 <?php
 /**
- * Contains Drupal\facetapi\FacetProcessor
+ * Contains Drupal\facet_api\FacetProcessor
  */
 
-namespace Drupal\facetapi;
+namespace Drupal\facet_api;
 
 
 /**
@@ -262,7 +262,7 @@ class FacetProcessor {
     // Since the children are copied to their parent's "#item_parents" property
     // during processing, we have to filter the original child items from the
     // top level of the hierarchy.
-    return array_filter($build, 'facetapi_filter_top_level_children');
+    return array_filter($build, 'facet_api_filter_top_level_children');
   }
 
   /**
@@ -280,7 +280,7 @@ class FacetProcessor {
         // Merges the childrens' values if the item is active so the children
         // are deactivated along with the parent.
         if ($item['#active']) {
-          $values = array_merge(facetapi_get_child_values($item['#item_children']), $values);
+          $values = array_merge(facet_api_get_child_values($item['#item_children']), $values);
         }
       }
       // Stores this item's active children so we can deactivate them in the

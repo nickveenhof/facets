@@ -1,12 +1,12 @@
 <?php
 
-namespace Drupal\facetapi\Plugin\FacetApi\Sort;
+namespace Drupal\facet_api\Plugin\FacetApi\Sort;
 
-use Drupal\facetapi\Sort\SortPluginBase;
+use Drupal\facet_api\Sort\SortPluginBase;
 
 /**
  * @FacetApiSort(
- *    id = "facetapi_sort_active",
+ *    id = "facet_api_sort_active",
  *    label = @Translation("Facet Active"),
  *    description = @Translation("Sort by whether the facet is active or not.")
  * )

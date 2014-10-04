@@ -2,10 +2,10 @@
 
 /**
  * @file
- * Contains Drupal\facetapi\Plugin\Block\FacetUrlProcessor.
+ * Contains Drupal\facet_api\Plugin\Block\FacetUrlProcessor.
  */
 
-namespace Drupal\facetapi\Plugin\Url;
+namespace Drupal\facet_api\Plugin\Url;
 
 use \Drupal\Component\Utility\UrlHelper;
 
@@ -62,7 +62,7 @@ class FacetUrlProcessorStandard extends FacetUrlProcessor {
    * Implemented FacetapiUrlProcessor::getQueryString().
    *
    * @param array $facet
-   *   The facet definition as returned by facetapi_facet_load().
+   *   The facet definition as returned by facet_api_facet_load().
    * @param array $values
    *   An array containing the item's values being added to or removed from the
    *   query string dependent on whether or not the item is active.
@@ -111,7 +111,7 @@ class FacetUrlProcessorStandard extends FacetUrlProcessor {
    * Checked the facet's global "limit_active_items" settings.
    *
    * @param array $facet
-   *   The facet definition as returned by facetapi_facet_load().
+   *   The facet definition as returned by facet_api_facet_load().
    *
    * @return int
    *   Whether or not to limit active items to one per facet.
@@ -177,14 +177,14 @@ class FacetUrlProcessorStandard extends FacetUrlProcessor {
    * Allowed for processor specific overrides to the settings form.
    */
   public function settingsForm(&$form, &$form_state) {
-    $facet = $form['#facetapi']['facet'];
+    $facet = $form['#facet_api']['facet'];
     $settings = $this->adapter->getFacetSettingsGlobal($facet);
 
     // Add the limit active item field to the form
     $form['global']['limit_active_items'] = array(
       '#type' => 'checkbox',
       '#title' => t('Limit to one active item'),
-      '#prefix' => '<div class="facetapi-global-setting">',
+      '#prefix' => '<div class="facet_api-global-setting">',
       '#suffix' => '</div>',
       '#default_value' => !empty($settings->settings['limit_active_items']),
       '#description' => t('Enabling this option allows only one item to be active at a time.'),

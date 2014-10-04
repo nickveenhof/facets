@@ -2,13 +2,13 @@
 
 /**
  * @file
- * Contains Drupal\facetapi\Plugin\Adapter\AdapterBase.
+ * Contains Drupal\facet_api\Plugin\Adapter\AdapterBase.
  */
 
-namespace Drupal\facetapi\Plugin\Adapter;
+namespace Drupal\facet_api\Plugin\Adapter;
 
 use Drupal\Core\Plugin\PluginBase;
-use Drupal\facetapi\Adapter\AdapterInterface;
+use Drupal\facet_api\Adapter\AdapterInterface;
 
 /**
  * Base class for Facet API adapters.
@@ -24,7 +24,7 @@ use Drupal\facetapi\Adapter\AdapterInterface;
 abstract class AdapterBase extends PluginBase implements AdapterInterface {
 
   /**
-   * The searcher information as returned by facetapi_get_searcher_info().
+   * The searcher information as returned by facet_api_get_searcher_info().
    *
    * @var array
    */
@@ -208,10 +208,10 @@ abstract class AdapterBase extends PluginBase implements AdapterInterface {
 
     // Get the url processor plugin class. If the class for the passed plugin
     // cannot be retrieved, log the error and load the standard plugin.
-    if (!$class = ctools_plugin_load_class('facetapi', 'url_processors', $id, 'handler')) {
+    if (!$class = ctools_plugin_load_class('facet_api', 'url_processors', $id, 'handler')) {
       if ('standard' != $id) {
-        watchdog('facetapi', 'Url processor plugin "@id" not valid, loading standard plugin.', array('@id' => $id), WATCHDOG_ERROR);
-        $class = ctools_plugin_load_class('facetapi', 'url_processors', 'standard', 'handler');
+        watchdog('facet_api', 'Url processor plugin "@id" not valid, loading standard plugin.', array('@id' => $id), WATCHDOG_ERROR);
+        $class = ctools_plugin_load_class('facet_api', 'url_processors', 'standard', 'handler');
       }
       else {
         // The plugins are not registered, probably because CTools is weighted
@@ -219,7 +219,7 @@ abstract class AdapterBase extends PluginBase implements AdapterInterface {
         // Let's raise a call to action and explicitly set the class to prevent
         // fatal errors.
         // @see http://drupal.org/node/1816110
-        watchdog('facetapi', 'Url processor plugins are not yet registered, loading standard plugin. Please visit <a href="@url">@url</a> for more information.', array('@id' => $id, '@url' => 'http://drupal.org/node/1816110'), WATCHDOG_ERROR);
+        watchdog('facet_api', 'Url processor plugins are not yet registered, loading standard plugin. Please visit <a href="@url">@url</a> for more information.', array('@id' => $id, '@url' => 'http://drupal.org/node/1816110'), WATCHDOG_ERROR);
         $class = 'FacetapiUrlProcessorStandard';
       }
     }
@@ -350,7 +350,7 @@ abstract class AdapterBase extends PluginBase implements AdapterInterface {
 
     // Gather a whitelist of query type plugins supported by this searcher.
     $plugin_ids = array();
-    foreach (ctools_get_plugins('facetapi', 'query_types') as $plugin) {
+    foreach (ctools_get_plugins('facet_api', 'query_types') as $plugin) {
       if ($this->info['adapter'] == $plugin['handler']['adapter']) {
         $type = call_user_func(array($plugin['handler']['class'], 'getType'));
         $plugin_ids[$type] = $plugin['handler']['class'];
@@ -415,7 +415,7 @@ abstract class AdapterBase extends PluginBase implements AdapterInterface {
    * Returns a facet's active items.
    *
    * @param array|string $facet
-   *   Either the facet definition as returned by facetapi_facet_load() or the
+   *   Either the facet definition as returned by facet_api_facet_load() or the
    *   machine readable name of the facet.
    *
    * @return array
@@ -591,7 +591,7 @@ abstract class AdapterBase extends PluginBase implements AdapterInterface {
   /**
    * Allows for backend specific overrides to the settings form.
    *
-   * @see facetapi_facet_display_form()
+   * @see facet_api_facet_display_form()
    */
   public function settingsForm(&$form, &$form_state) {
     // Nothing to do...
@@ -649,8 +649,8 @@ abstract class AdapterBase extends PluginBase implements AdapterInterface {
    * @see FacetapiAdapter::initActiveFilters()
    */
   function addActiveFilters($query) {
-    module_load_include('inc', 'facetapi', 'facetapi.callbacks');
-    facetapi_add_active_searcher($this->info['name']);
+    module_load_include('inc', 'facet_api', 'facet_api.callbacks');
+    facet_api_add_active_searcher($this->info['name']);
 
     // Invoke initActiveFilters hook.
     $this->initActiveFilters($query);
@@ -661,7 +661,7 @@ abstract class AdapterBase extends PluginBase implements AdapterInterface {
       // Instantiate and execute dependency plugins.
       $display = TRUE;
       foreach ($facet['dependency plugins'] as $id) {
-        $class = ctools_plugin_load_class('facetapi', 'dependencies', $id, 'handler');
+        $class = ctools_plugin_load_class('facet_api', 'dependencies', $id, 'handler');
         $plugin = new $class($id, $this, $facet, $settings, $this->activeItems['facet']);
         if (NULL !== ($return = $plugin->execute())) {
           $display = $return;
@@ -715,9 +715,9 @@ abstract class AdapterBase extends PluginBase implements AdapterInterface {
    * @see ctools_export_crud_new()
    */
   public function initSettingsObject($name, $facet_name, $realm_name = NULL) {
-    $cached_settings = facetapi_get_searcher_settings($this->info['name']);
+    $cached_settings = facet_api_get_searcher_settings($this->info['name']);
     if (!isset($cached_settings[$name])) {
-      $settings = ctools_export_crud_new('facetapi');
+      $settings = ctools_export_crud_new('facet_api');
       $settings->name = $name;
       $settings->searcher = $this->info['name'];
       $settings->realm = (string) $realm_name;
@@ -738,9 +738,9 @@ abstract class AdapterBase extends PluginBase implements AdapterInterface {
    * returned by the backend, for example the display widget and sort settings.
    *
    * @param array $facet
-   *   The facet definition as returned by facetapi_facet_load().
+   *   The facet definition as returned by facet_api_facet_load().
    * @param array $realm
-   *   The realm definition as returned by facetapi_realm_load().
+   *   The realm definition as returned by facet_api_realm_load().
    *
    * @return stdClass
    *   An object containing the settings.
@@ -790,11 +790,11 @@ abstract class AdapterBase extends PluginBase implements AdapterInterface {
 
       // Apply the widget plugin's default settings.
       $id = $this->settings[$name]->settings['widget'];
-      $class = ctools_plugin_load_class('facetapi', 'widgets', $id, 'handler');
+      $class = ctools_plugin_load_class('facet_api', 'widgets', $id, 'handler');
       // If we have an invalid widget, fall back to the realm's default widget.
       if (!$class) {
         $id = $this->settings[$name]->settings['widget'] = $realm['default widget'];
-        $class = ctools_plugin_load_class('facetapi', 'widgets', $id, 'handler');
+        $class = ctools_plugin_load_class('facet_api', 'widgets', $id, 'handler');
       }
       $plugin = new $class($id, $realm, $this->getFacet($facet), $this->settings[$name]);
       $this->settings[$name]->settings += $plugin->getDefaultSettings();
@@ -814,7 +814,7 @@ abstract class AdapterBase extends PluginBase implements AdapterInterface {
    * are configured globally and reflected across all realms for this searcher.
    *
    * @param array $facet
-   *   The facet definition as returned by facetapi_facet_load().
+   *   The facet definition as returned by facet_api_facet_load().
    *
    * @return
    *   An object containing the settings.
@@ -857,7 +857,7 @@ abstract class AdapterBase extends PluginBase implements AdapterInterface {
         if ($is_new) {
           $this->settings[$name]->settings['dependencies'] = array();
         }
-        $class = ctools_plugin_load_class('facetapi', 'dependencies', $id, 'handler');
+        $class = ctools_plugin_load_class('facet_api', 'dependencies', $id, 'handler');
         $plugin = new $class($id, $this, $facet, $this->settings[$name], array());
         $this->settings[$name]->settings['dependencies'] += $plugin->getDefaultSettings();
       }
@@ -878,17 +878,17 @@ abstract class AdapterBase extends PluginBase implements AdapterInterface {
    * @return array
    *   An array of enabled facets.
    *
-   * @see facetapi_get_enabled_facets()
+   * @see facet_api_get_enabled_facets()
    */
   public function getEnabledFacets($realm_name = NULL) {
-    return facetapi_get_enabled_facets($this->info['name'], $realm_name);
+    return facet_api_get_enabled_facets($this->info['name'], $realm_name);
   }
 
   /**
    * Returns a FacetapiFacet instance for the facet being rendered.
    *
    * @param array $facet
-   *   The facet definition as returned by facetapi_facet_load().
+   *   The facet definition as returned by facet_api_facet_load().
    *
    * @return FacetapiFacet
    *   The facet rendering object object.
@@ -904,7 +904,7 @@ abstract class AdapterBase extends PluginBase implements AdapterInterface {
    * Returns the facet's instantiated query type plugin.
    *
    * @param array|string $facet
-   *   Either the facet definition as returned by facetapi_facet_load() or the
+   *   Either the facet definition as returned by facet_api_facet_load() or the
    *   machine readable name of the facet.
    *
    * @return FacetapiQueryTypeInterface|NULL
@@ -961,7 +961,7 @@ abstract class AdapterBase extends PluginBase implements AdapterInterface {
    * Helper function that returns the query string variables for a facet item.
    *
    * @param array $facet
-   *   The facet definition as returned by facetapi_facet_load().
+   *   The facet definition as returned by facet_api_facet_load().
    * @param array $values
    *   An array containing the item's values being added to or removed from the
    *   query string dependent on whether or not the item is active.
@@ -981,7 +981,7 @@ abstract class AdapterBase extends PluginBase implements AdapterInterface {
    * Helper function that returns the path for a facet link.
    *
    * @param array $facet
-   *   The facet definition as returned by facetapi_facet_load().
+   *   The facet definition as returned by facet_api_facet_load().
    * @param array $values
    *   An array containing the item's values being added to or removed from the
    *   query string dependent on whether or not the item is active.
@@ -1045,7 +1045,7 @@ abstract class AdapterBase extends PluginBase implements AdapterInterface {
   public function buildRealm($realm_name) {
     // Bail if realm isn't valid.
     // @todo Call watchdog()?
-    if (!$realm = facetapi_realm_load($realm_name)) {
+    if (!$realm = facet_api_realm_load($realm_name)) {
       return array();
     }
 

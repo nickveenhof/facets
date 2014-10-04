@@ -1,12 +1,12 @@
 <?php
 
-namespace Drupal\facetapi\Plugin\FacetApi\Sort;
+namespace Drupal\facet_api\Plugin\FacetApi\Sort;
 
-use Drupal\facetapi\Sort\SortPluginBase;
+use Drupal\facet_api\Sort\SortPluginBase;
 
 /**
  * @FacetApiSort(
- *    id = "facetapi_sort_count",
+ *    id = "facet_api_sort_count",
  *    label = @Translation("Count"),
  *    description = @Translation("Sort by the facet count.")
  * )

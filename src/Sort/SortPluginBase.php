@@ -1,20 +1,20 @@
 <?php
 /**
  * @file
- * Provides \Drupal\facetapi\SortPluginBase;
+ * Provides \Drupal\facet_api\SortPluginBase;
  */
 
-namespace Drupal\facetapi\Sort;
+namespace Drupal\facet_api\Sort;
 
 use Drupal\Component\Plugin\PluginBase;
-use Drupal\facetapi\Sort\SortInterface;
+use Drupal\facet_api\Sort\SortInterface;
 
 class SortPluginBase extends PluginBase implements SortInterface {
 
   private $weight;
 
   /**
-   * Returns the id of the facetapi sort.
+   * Returns the id of the facet_api sort.
    *
    * @return mixed
    */
@@ -23,7 +23,7 @@ class SortPluginBase extends PluginBase implements SortInterface {
   }
 
   /**
-   * Returns the label of the facetapi sort.
+   * Returns the label of the facet_api sort.
    *
    * @return string
    */
@@ -32,7 +32,7 @@ class SortPluginBase extends PluginBase implements SortInterface {
   }
 
   /**
-   * Returns the description of the facetapi sort.
+   * Returns the description of the facet_api sort.
    *
    * @return string
    */
@@ -41,7 +41,7 @@ class SortPluginBase extends PluginBase implements SortInterface {
   }
 
   /**
-   * Gets the weight of the facetapi sort.
+   * Gets the weight of the facet_api sort.
    *
    * @return int|string
    */
@@ -50,7 +50,7 @@ class SortPluginBase extends PluginBase implements SortInterface {
   }
 
   /**
-   * Sets the weight of the facetapi sort.
+   * Sets the weight of the facet_api sort.
    *
    * @param int $weight
    * @return $this

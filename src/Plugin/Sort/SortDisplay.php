@@ -1,12 +1,12 @@
 <?php
 
-namespace Drupal\facetapi\Plugin\FacetApi\Sort;
+namespace Drupal\facet_api\Plugin\FacetApi\Sort;
 
-use Drupal\facetapi\Sort\SortPluginBase;
+use Drupal\facet_api\Sort\SortPluginBase;
 
 /**
  * @FacetApiSort(
- *    id = "facetapi_sort_display",
+ *    id = "facet_api_sort_display",
  *    label = @Translation("Display value"),
  *    description = @Translation("Sort by the value displayed to the user.")
  * )

@@ -2,17 +2,17 @@
 
 /**
  * @file
- * Contains \Drupal\facetapi\Annotation\FacetApiAdapter.
+ * Contains \Drupal\facet_api\Annotation\FacetApiAdapter.
  */
 
-namespace Drupal\facetapi\Annotation;
+namespace Drupal\facet_api\Annotation;
 
 use Drupal\Component\Annotation\Plugin;
 
 /**
  * Defines a Facet API Adapter annotation object.
  *
- * @see \Drupal\facetapi\FacetApiAdapterManager
+ * @see \Drupal\facet_api\FacetApiAdapterManager
  * @see plugin_api
  *
  * @ingroup plugin_api

@@ -2,17 +2,17 @@
 
 /**
  * @file
- * Contains \Drupal\facetapi\Sort\SortPluginManager.
+ * Contains \Drupal\facet_api\Sort\SortPluginManager.
  */
 
-namespace Drupal\facetapi\Sort;
+namespace Drupal\facet_api\Sort;
 
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Plugin\DefaultPluginManager;
 
 /**
- * Manages facetapi sort plugins.
+ * Manages facet_api sort plugins.
  *
  * @see plugin_api
  */
@@ -30,9 +30,9 @@ class SortPluginManager extends DefaultPluginManager {
    *   The module handler.
    */
   public function __construct(\Traversable $namespaces, CacheBackendInterface $cache_backend, ModuleHandlerInterface $module_handler) {
-    parent::__construct('Plugin/FacetApi/Sort', $namespaces, $module_handler, 'Drupal\facetapi\SortInterface', 'Drupal\facetapi\Annotation\FacetApiSort');
-    $this->alterInfo('facetapi_sort_info');
-    $this->setCacheBackend($cache_backend, 'facetapi_sort_plugins');
+    parent::__construct('Plugin/FacetApi/Sort', $namespaces, $module_handler, 'Drupal\facet_api\SortInterface', 'Drupal\facet_api\Annotation\FacetApiSort');
+    $this->alterInfo('facet_api_sort_info');
+    $this->setCacheBackend($cache_backend, 'facet_api_sort_plugins');
   }
 
 }

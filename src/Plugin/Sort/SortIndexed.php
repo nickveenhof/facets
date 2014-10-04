@@ -1,13 +1,13 @@
 <?php
 
-namespace Drupal\facetapi\Plugin\FacetApi\Sort;
+namespace Drupal\facet_api\Plugin\FacetApi\Sort;
 
-use Drupal\facetapi\Sort\SortPluginBase;
+use Drupal\facet_api\Sort\SortPluginBase;
 
 
 /**
  * @FacetApiSort(
- *    id = "facetapi_sort_indexed",
+ *    id = "facet_api_sort_indexed",
  *    label = @Translation("Indexed value"),
  *    description = @Translation("Sort by the raw value stored in the index.")
  * )

@@ -1,34 +1,34 @@
 <?php
 /**
  * @file
- * Contains \Drupal\Tests\facetapi\Plugin\Url\FacetUrlProcessorStandardTest.
+ * Contains \Drupal\Tests\facet_api\Plugin\Url\FacetUrlProcessorStandardTest.
  */
 
-namespace Drupal\Tests\facetapi\Plugin\Url;
+namespace Drupal\Tests\facet_api\Plugin\Url;
 
-use Drupal\facetapi\Plugin\Url\FacetUrlProcessorStandard;
+use Drupal\facet_api\Plugin\Url\FacetUrlProcessorStandard;
 use Drupal\Tests\UnitTestCase;
 
 /**
  * Tests the "URL field" processor.
  *
- * @group facetapi
+ * @group facet_api
  *
- * @see \Drupal\facetapi\Plugin\Url\FacetUrlProcessorStandard
+ * @see \Drupal\facet_api\Plugin\Url\FacetUrlProcessorStandard
  */
 class FacetUrlProcessorStandardTest extends UnitTestCase {
 
   /**
    * Stores the processor to be tested.
    *
-   * @var \Drupal\facetapi\Plugin\Url\FacetUrlProcessorStandard
+   * @var \Drupal\facet_api\Plugin\Url\FacetUrlProcessorStandard
    */
   protected $processor;
 
   /**
    * Stores the processor to be tested.
    *
-   * @var \Drupal\facetapi\Adapter\AdapterInterface
+   * @var \Drupal\facet_api\Adapter\AdapterInterface
    */
   protected $adapter;
 
@@ -39,7 +39,7 @@ class FacetUrlProcessorStandardTest extends UnitTestCase {
     parent::setUp();
 
     // Create a mock for the URL to be returned.
-    $this->adapter = $this->getMock('Drupal\facetapi\Plugin\Adapter\AdapterInterface');
+    $this->adapter = $this->getMock('Drupal\facet_api\Plugin\Adapter\AdapterInterface');
     // Create the URL-Processor and set the mocked indexer.
     $this->processor = new FacetUrlProcessorStandard($this->adapter);
   }

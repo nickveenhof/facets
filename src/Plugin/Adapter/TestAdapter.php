@@ -1,15 +1,15 @@
 <?php
 /**
- * Contains Drupal\facetapi\Plugin\TestAdapter
+ * Contains Drupal\facet_api\Plugin\TestAdapter
  */
 
-namespace Drupal\facetapi\Plugin\Adapter;
+namespace Drupal\facet_api\Plugin\Adapter;
 
 /**
  * @FacetApiAdapter(
  *   id = "test",
  *   label = @Translation("Test"),
- *   description = @Translation("Test class for facetapi adapter")
+ *   description = @Translation("Test class for facet_api adapter")
  * )
  */
 class TestAdapter extends AdapterBase {

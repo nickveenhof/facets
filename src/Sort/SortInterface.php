@@ -2,10 +2,10 @@
 
 /**
  * @file
- * Contains \Drupal\facetapi\Sort\SortInterface.
+ * Contains \Drupal\facet_api\Sort\SortInterface.
  */
 
-namespace Drupal\facetapi\Sort;
+namespace Drupal\facet_api\Sort;
 
 use Drupal\Component\Plugin\ConfigurablePluginInterface;
 
@@ -17,46 +17,46 @@ use Drupal\Component\Plugin\ConfigurablePluginInterface;
 interface SortInterface extends PluginInspectionInterface {
 
   /**
-   * Returns the id of the facetapi sort.
+   * Returns the id of the facet_api sort.
    *
    * @return mixed
    */
   public function getId();
 
   /**
-   * Returns the label of the facetapi sort.
+   * Returns the label of the facet_api sort.
    *
    * @return string
    */
   public function getLabel();
 
   /**
-   * Returns the description of the facetapi sort.
+   * Returns the description of the facet_api sort.
    *
    * @return string
    */
   public function getDescription();
 
   /**
-   * Returns the weight of the facetapi sort.
+   * Returns the weight of the facet_api sort.
    *
    * @return int|string
-   *   Either the integer weight of the facetapi sort, or an empty string.
+   *   Either the integer weight of the facet_api sort, or an empty string.
    */
   public function getWeight();
 
   /**
-   * Sets the weight for this facetapi sort.
+   * Sets the weight for this facet_api sort.
    *
    * @param int $weight
-   *   The weight for this facetapi sort.
+   *   The weight for this facet_api sort.
    *
    * @return $this
    */
   public function setWeight($weight);
 
   /**
-   * Function that actually sorts the facetapi results.
+   * Function that actually sorts the facet_api results.
    *
    * @param array $a
    * @param array $b

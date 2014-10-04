@@ -2,10 +2,10 @@
 
 /**
  * @file
- * Contains \Drupal\facetapi\QueryTypeBase.
+ * Contains \Drupal\facet_api\QueryTypeBase.
  */
 
-namespace Drupal\facetapi;
+namespace Drupal\facet_api;
 
 
 abstract class QueryTypeBase implements QueryTypeInterface {
@@ -18,7 +18,7 @@ abstract class QueryTypeBase implements QueryTypeInterface {
   protected $adapter;
 
   /**
-   * The facet definition as returned by facetapi_facet_load().
+   * The facet definition as returned by facet_api_facet_load().
    *
    * @var array
    */
@@ -30,7 +30,7 @@ abstract class QueryTypeBase implements QueryTypeInterface {
    * @param FacetapiAdapter $adapter
    *   The adapter object associated with facet being queried.
    * @param array $facet
-   *   The facet definition as returned by facetapi_facet_load().
+   *   The facet definition as returned by facet_api_facet_load().
    */
   public function __construct(FacetapiAdapter $adapter, array $facet) {
     $this->adapter = $adapter;

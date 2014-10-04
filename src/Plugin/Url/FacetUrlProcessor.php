@@ -3,12 +3,12 @@
 
 /**
  * @file
- * Contains Drupal\facetapi\Plugin\Block\FacetUrlProcessor.
+ * Contains Drupal\facet_api\Plugin\Block\FacetUrlProcessor.
  */
 
-namespace Drupal\facetapi\Plugin\Url;
+namespace Drupal\facet_api\Plugin\Url;
 
-use Drupal\facetapi\Plugin\Adapter\AdapterInterface;
+use Drupal\facet_api\Plugin\Adapter\AdapterInterface;
 
 /**
  * In D7 this was the abstract class extended by all url processor plugins.
@@ -22,7 +22,7 @@ use Drupal\facetapi\Plugin\Adapter\AdapterInterface;
  * responsible for building facet links and setting breadcrumb trails.
  *
  * Each adapter instance was associated with a single url processor plugin. The
- * plugin was associated with the adapter via hook_facetapi_searcher_info()
+ * plugin was associated with the adapter via hook_facet_api_searcher_info()
  * implementations.
  *
  * All functions and comments in this class have currently been copy/pasted verbatim
@@ -103,7 +103,7 @@ abstract class FacetUrlProcessor {
    * more details.
    *
    * @param array $facet
-   *   The facet definition as returned by facetapi_facet_load().
+   *   The facet definition as returned by facet_api_facet_load().
    * @param array $values
    *   An array containing the item's values being added to or removed from the
    *   query string dependent on whether or not the item is active.
