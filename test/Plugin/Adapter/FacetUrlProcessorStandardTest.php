@@ -1,7 +1,7 @@
 <?php
 /**
  * @file
- * Contains \Drupal\Tests\facetapi\Plugin\Plugin\Url\FacetUrlProcessorStandardTest.
+ * Contains \Drupal\Tests\facetapi\Plugin\Url\FacetUrlProcessorStandardTest.
  */
 
 namespace Drupal\Tests\facetapi\Plugin\Url;
@@ -28,7 +28,7 @@ class FacetUrlProcessorStandardTest extends UnitTestCase {
   /**
    * Stores the processor to be tested.
    *
-   * @var \Drupal\facetapi\Plugin\Adapter\AdapterInterface
+   * @var \Drupal\facetapi\Adapter\AdapterInterface
    */
   protected $adapter;
 
