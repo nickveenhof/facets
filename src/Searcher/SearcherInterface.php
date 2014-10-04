@@ -5,7 +5,7 @@
  * Contains \Drupal\facetapi\Searcher\SearcherInterface.
  */
 
-namespace Drupal\facetapi\Searcher;
+namespace Drupal\facet_api\Searcher;
 
 use Drupal\Component\Plugin\ConfigurablePluginInterface;
 

@@ -4,11 +4,12 @@
  * Provides \Drupal\facetapi\SearcherPluginBase;
  */
 
-namespace Drupal\facetapi\Searcher;
+namespace Drupal\facet_api\Searcher;
 
 use Drupal\Component\Plugin\PluginBase;
+use Drupal\facet_api\Searcher\SearcherInterface
 
-class SearcherPluginBase extends PluginBase implements FacetApiSearcherInterface {
+class SearcherPluginBase extends PluginBase implements SearcherInterface {
 
   /**
    * Returns the machine readable name of the searcher.

@@ -61,6 +61,10 @@ class FacetBlock extends BlockBase implements ContainerFactoryPluginInterface {
    * {@inheritdoc}
    */
   public function build() {
+
+    $d = \Drupal::service('plugin.manager.facet_api.searcher')->getDefinitions();
+    dsm($d);
+
     return [
       '#markup' => 'Facet block',
     ];

@@ -5,7 +5,7 @@
  * Contains \Drupal\facetapi\Annotation\FacetApiSearcher.
  */
 
-namespace Drupal\facetapi\Annotation;
+namespace Drupal\facet_api\Annotation;
 
 use Drupal\Component\Annotation\Plugin;
 
