@@ -10,7 +10,6 @@ namespace Drupal\facet_api\Plugin\Block;
 use Drupal\Core\Block\BlockBase;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
-use Drupal\facet_api\Adapter;
 
 /**
  * Provides a 'FacetBlock' block.
@@ -42,11 +41,9 @@ class FacetBlock extends BlockBase implements ContainerFactoryPluginInterface {
   public function __construct(
         array $configuration,
         $plugin_id,
-        $plugin_definition,
-        Adapter $facet_api_adapter
+        $plugin_definition
   ) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
-    $this->facet_api_adapter = $facet_api_adapter;
   }
 
   /**
@@ -56,8 +53,7 @@ class FacetBlock extends BlockBase implements ContainerFactoryPluginInterface {
     return new static(
       $configuration,
       $plugin_id,
-      $plugin_definition,
-      $container->get('facet_api.adapter')
+      $plugin_definition
     );
   }
 
