@@ -4,7 +4,7 @@
  * Contains Drupal\facetapi_dummy_backend\Plugin\DummyBackend.
  */
 
-namespace Drupal\facetapi_dummy_backend\Plugin\DummyBackend;
+namespace Drupal\facetapi_dummy_backend\Plugin\Backend;
 
 /**
  * @FacetApiDummyBackend(
@@ -14,6 +14,6 @@ namespace Drupal\facetapi_dummy_backend\Plugin\DummyBackend;
  * )
  */
 
-class DummyBackend extends BackendPluginBase {
+class Backend extends BackendPluginBase {
 
 }
