@@ -74,37 +74,37 @@ class FacetUrlProcessorStandard extends FacetUrlProcessor {
    *   The query string variables.
    */
   public function getQueryString(array $facet, array $values, $active) {
-    $qstring = $this->params;
+    $query_string = $this->params;
     $active_items = $this->adapter->getActiveItems($facet);
 
     // Appends to qstring if inactive, removes if active.
     foreach ($values as $value) {
       if ($active && isset($active_items[$value])) {
-        unset($qstring[$this->filterKey][$active_items[$value]['pos']]);
+        unset($query_string[$this->filterKey][$active_items[$value]['pos']]);
       }
       elseif (!$active) {
         $field_alias = rawurlencode($facet['field alias']);
 
         // Strips all other filters for this facet if limit option is set.
         if ($this->limitActiveItems($facet)) {
-          foreach ($qstring[$this->filterKey] as $pos => $filter) {
+          foreach ($query_string[$this->filterKey] as $pos => $filter) {
             // Refactor the if statement to best practises?
             // (strpos($filter, $field_alias) === 0) or (strpos($filter, $field_alias) === FALSE)
             if (0 === strpos($filter, $field_alias)) {
-              unset($qstring[$this->filterKey][$pos]);
+              unset($query_string[$this->filterKey][$pos]);
             }
           }
         }
 
         // Adds the filter to the query string.
-        $qstring[$this->filterKey][] = $field_alias . ':' . $value;
+        $query_string[$this->filterKey][] = $field_alias . ':' . $value;
       }
     }
 
     // Removes duplicates, resets array keys and returns query string.
     // @see http://drupal.org/node/1340528
-    $qstring[$this->filterKey] = array_values(array_unique($qstring[$this->filterKey]));
-    return array_filter($qstring);
+    $query_string[$this->filterKey] = array_values(array_unique($query_string[$this->filterKey]));
+    return array_filter($query_string);
   }
 
   /**

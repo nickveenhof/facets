@@ -393,7 +393,7 @@ interface AdapterInterface {
    * @param array $facet
    *   The facet definition as returned by facet_api_facet_load().
    *
-   * @return
+   * @return \stdClass
    *   An object containing the settings.
    *
    * @see ctools_export_crud_load()

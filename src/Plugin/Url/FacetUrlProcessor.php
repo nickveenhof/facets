@@ -8,7 +8,7 @@
 
 namespace Drupal\facet_api\Plugin\Url;
 
-use Drupal\facet_api\Plugin\Adapter\AdapterInterface;
+use Drupal\facet_api\Adapter\AdapterInterface;
 
 /**
  * In D7 this was the abstract class extended by all url processor plugins.
@@ -33,7 +33,7 @@ abstract class FacetUrlProcessor {
   /**
    * Held the adapter that the url processor plugin was associated with.
    *
-   * @var AdapterInterface
+   * @var \Drupal\facet_api\Adapter\AdapterInterface
    */
   protected $adapter;
 

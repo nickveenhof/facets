@@ -7,7 +7,7 @@
 
 namespace Drupal\facet_api\Searcher;
 
-use Drupal\Component\Plugin\ConfigurablePluginInterface;
+use Drupal\Component\Plugin\PluginInspectionInterface;
 
 /**
  * Defines the interface for searchers.

@@ -17,7 +17,7 @@ namespace Drupal\facet_api;
  *
  * @TODO: Remove ArrayAccess dependency...  'Cause we like object!
  */
-class Facet implements ArrayAccess {
+class Facet implements \ArrayAccess {
 
   /**
    * The FacetapiAdapter object this class was instantiated from.

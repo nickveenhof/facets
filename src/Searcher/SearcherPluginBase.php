@@ -7,7 +7,7 @@
 namespace Drupal\facet_api\Searcher;
 
 use Drupal\Component\Plugin\PluginBase;
-use Drupal\facet_api\Searcher\SearcherInterface
+use Drupal\facet_api\Searcher\SearcherInterface;
 
 class SearcherPluginBase extends PluginBase implements SearcherInterface {
 

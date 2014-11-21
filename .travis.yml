@@ -13,6 +13,7 @@ php:
 notifications:
   email:
     - nick.veenhof@acquia.com
+    - jur@triquanta.nl
   irc:
     - "chat.freenode.net#drupal-search-api"
 
