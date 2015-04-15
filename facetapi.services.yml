@@ -1,4 +1,4 @@
 services:
   plugin.manager.facetapi.adapter:
-    class: Drupal\facetapi\AdapterPluginManager
+    class: Drupal\facetapi\Adapter\AdapterPluginManager
     parent: default_plugin_manager

@@ -21,7 +21,7 @@ use Drupal\facetapi\Adapter\AdapterInterface;
  * enabled facets or passing the appropriate query type plugin to the backend
  * so that it can execute the actual facet query.
  */
-abstract class AdapterBase extends PluginBase implements AdapterInterface {
+abstract class AdapterPluginBase extends PluginBase implements AdapterInterface {
 
   /**
    * The search keys, or query text, submitted by the user.
@@ -123,10 +123,6 @@ abstract class AdapterBase extends PluginBase implements AdapterInterface {
    * @see FacetapiAdapter::getFacetSettings()
    */
   protected $settings = array();
-
-  public function __construct() {
-    // TODO: create constructor.
-  }
 
   /**
    * Returns the search path associated with this searcher.
