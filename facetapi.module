@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains facet_api.module
+ * Contains facetapi.module
  */
 
 use Drupal\Core\Routing\RouteMatchInterface;
@@ -11,11 +11,11 @@ use Drupal\Core\Routing\RouteMatchInterface;
  * Implements hook_help().
  */
 
-function facet_api_help($route_name, RouteMatchInterface $route_match)
+function facetapi_help($route_name, RouteMatchInterface $route_match)
 {
   switch ($route_name) {
-    // Main module help for the facet_api module.
-    case 'help.page.facet_api':
+    // Main module help for the facetapi module.
+    case 'help.page.facetapi':
       $output = '';
       $output .= '<h3>' . t('About') . '</h3>';
       $output .= '<p>' . t('Facetapi test') . '</p>';
@@ -28,7 +28,7 @@ function facet_api_help($route_name, RouteMatchInterface $route_match)
  * Implements hook_theme().
  */
 
-function facet_api_theme()
+function facetapi_theme()
 {
   $theme = [];
 

@@ -33,7 +33,7 @@ The info we need per searcher are:
 - path
 - 
 
-### Facets (hook_facet_api_facet_info)
+### Facets (hook_facetapi_facet_info)
 
 Define all facets provided by the module.
 

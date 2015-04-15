@@ -1,4 +1,0 @@
-services:
-  plugin.manager.facet_api.adapter:
-    class: Drupal\facet_api\AdapterManager
-    parent: default_plugin_manager

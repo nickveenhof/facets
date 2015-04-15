@@ -2,17 +2,17 @@
 
 /**
  * @file
- * Contains \Drupal\facet_api\Annotation\FacetApiAdapter.
+ * Contains \Drupal\facetapi\Annotation\FacetApiAdapter.
  */
 
-namespace Drupal\facet_api\Annotation;
+namespace Drupal\facetapi\Annotation;
 
 use Drupal\Component\Annotation\Plugin;
 
 /**
  * Defines a Facet API Adapter annotation object.
  *
- * @see \Drupal\facet_api\FacetApiAdapterManager
+ * @see \Drupal\facetapi\FacetApiAdapterManager
  * @see plugin_api
  *
  * @ingroup plugin_api
@@ -47,7 +47,7 @@ class FacetApiAdapter extends Plugin {
   public $description;
 
   /**
-   * Class used to retrieve derivative definitions of the block.
+   * Class used to retrieve derivative definitions of the adapter.
    *
    * @var string
    */

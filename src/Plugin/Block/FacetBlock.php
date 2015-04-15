@@ -2,10 +2,10 @@
 
 /**
  * @file
- * Contains Drupal\facet_api\Plugin\Block\FacetBlock.
+ * Contains Drupal\facetapi\Plugin\Block\FacetBlock.
  */
 
-namespace Drupal\facet_api\Plugin\Block;
+namespace Drupal\facetapi\Plugin\Block;
 
 use Drupal\Core\Block\BlockBase;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
@@ -22,11 +22,11 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 class FacetBlock extends BlockBase implements ContainerFactoryPluginInterface {
 
   /**
-   * Drupal\facet_api\Adapter definition.
+   * Drupal\facetapi\Adapter definition.
    *
-   * @var Drupal\facet_api\Adapter
+   * @var Drupal\facetapi\Adapter
    */
-  protected $facet_api_adapter;
+  protected $facetapi_adapter;
 
   /**
    * Construct.

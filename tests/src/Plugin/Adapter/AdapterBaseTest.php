@@ -1,18 +1,18 @@
 <?php
 /**
  * @file
- * Contains \Drupal\Tests\facet_api\Plugin\Url\FacetUrlProcessorStandardTest.
+ * Contains \Drupal\Tests\facetapi\Plugin\Url\FacetUrlProcessorStandardTest.
  */
 
-namespace Drupal\Tests\facet_api\Plugin\Adapter;
+namespace Drupal\Tests\facetapi\Plugin\Adapter;
 
-use Drupal\facet_api\Plugin\Adapter\AdapterBase;
+use Drupal\facetapi\Plugin\Adapter\AdapterBase;
 use Drupal\Tests\UnitTestCase;
 
 /**
- * @coversDefaultClass \Drupal\facet_api\Plugin\Url\FacetUrlProcessorStandard
+ * @coversDefaultClass \Drupal\facetapi\Plugin\Url\FacetUrlProcessorStandard
  *
- * @group facet_api
+ * @group facetapi
  *
  */
 class AdapterBaseTest extends UnitTestCase {
@@ -20,14 +20,14 @@ class AdapterBaseTest extends UnitTestCase {
   /**
    * Stores the processor which is not tested here.
    *
-   * @var \Drupal\facet_api\Plugin\Url\FacetUrlProcessorStandard|\PHPUnit_Framework_MockObject_MockObject
+   * @var \Drupal\facetapi\Plugin\Url\FacetUrlProcessorStandard|\PHPUnit_Framework_MockObject_MockObject
    */
   protected $processor;
 
   /**
    * Stores the adapter under test.
    *
-   * @var \Drupal\facet_api\Adapter\AdapterInterface
+   * @var \Drupal\facetapi\Adapter\AdapterInterface
    */
   protected $adapter;
 
@@ -39,9 +39,9 @@ class AdapterBaseTest extends UnitTestCase {
 
     // @TODO: implement the setup.
 //    // Create a mock for the URL to be returned.
-//    $this->adapter = $this->getMock('Drupal\facet_api\Adapter\AdapterInterface');
+//    $this->adapter = $this->getMock('Drupal\facetapi\Adapter\AdapterInterface');
     // Create the URL-Processor and set the mocked indexer.
-//    $this->processor = $this->getMock('Drupal\facet_api\Ur');
+//    $this->processor = $this->getMock('Drupal\facetapi\Ur');
   }
 
   public function testGetPageTotal() {
