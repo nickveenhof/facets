@@ -31,7 +31,9 @@ The info we need per searcher are:
 - Adapter
 - Url processor
 - path
-- 
+
+Because of the nature of drupal 8, the logic thing to do would be to make
+a plugin derivative, instead of using a hook.
 
 ### Facets (hook_facetapi_facet_info)
 

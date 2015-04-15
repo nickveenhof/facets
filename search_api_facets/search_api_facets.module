@@ -1,0 +1,33 @@
+<?php
+/**
+ * Hooks
+ */
+use Drupal\search_api\Query\QueryInterface;
+
+/**
+ * Implementation of hook_facetapi_searcher_info.
+ *
+ * @return array
+ */
+function search_api_facets_facetapi_searcher_info() {
+  return array(
+    'search' => array(
+      'label'                   => t('Search'),
+      'adapter'                 => 'search',
+//      'url processor'           => 'standard',
+      'types'                   => array('node'),
+      'path'                    => 'admin/config/search/settings',
+    ),
+  );
+}
+
+
+/**
+ * Implementation of hook_search_api_query_alter.
+ *
+ * @param \Drupal\search_api\Query\QueryInterface $query
+ */
+function search_api_facets_search_api_query_alter(QueryInterface &$query) {
+  $force_break = 'force';
+  // Get the adapter derivative.
+}
