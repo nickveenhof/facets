@@ -1,8 +1,0 @@
-<?php
-
-/**
- * @file
- *   This module contains a search api dummy backend which implements
- *   FacetAPI interfaces.
- */
-

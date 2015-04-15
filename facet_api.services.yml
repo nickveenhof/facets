@@ -1,10 +1,4 @@
 services:
-  plugin.manager.facet_api.sort:
-    class: Drupal\facet_api\FacetApiSortManager
-    parent: default_plugin_manager
   plugin.manager.facet_api.adapter:
     class: Drupal\facet_api\AdapterManager
-    parent: default_plugin_manager
-  plugin.manager.facet_api.searcher:
-    class: Drupal\facet_api\Searcher\SearcherPluginManager
     parent: default_plugin_manager
