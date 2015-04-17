@@ -87,7 +87,7 @@ interface AdapterInterface {
    *
    * @see FacetapiAdapter::initActiveFilters()
    */
-  public function addActiveFilters(&$query);
+  public function alterQuery(&$query);
 
   /**
    * Hook that allows the backend to initialize its query object for faceting.

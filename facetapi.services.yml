@@ -2,3 +2,6 @@ services:
   plugin.manager.facetapi.adapter:
     class: Drupal\facetapi\Adapter\AdapterPluginManager
     parent: default_plugin_manager
+  plugin.manager.facetapi.query_type:
+    class: Drupal\facetapi\QueryType\QueryTypePluginManager
+    parent: default_plugin_manager

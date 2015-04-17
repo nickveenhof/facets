@@ -7,10 +7,13 @@
 
 namespace Drupal\facetapi\Adapter;
 
+use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\Plugin\Context\Context;
 use Drupal\Core\Plugin\Context\ContextDefinition;
 use Drupal\Core\Plugin\PluginBase;
 use Drupal\facetapi\Adapter\AdapterInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
+use Drupal\Component\Plugin\PluginManagerInterface;
 
 /**
  * Base class for Facet API adapters.
@@ -23,7 +26,12 @@ use Drupal\facetapi\Adapter\AdapterInterface;
  * enabled facets or passing the appropriate query type plugin to the backend
  * so that it can execute the actual facet query.
  */
-abstract class AdapterPluginBase extends PluginBase implements AdapterInterface {
+abstract class AdapterPluginBase extends PluginBase implements AdapterInterface, ContainerFactoryPluginInterface {
+
+  /**
+   * The plugin manager.
+   */
+  protected $query_type_plugin_manager;
 
   /**
    * The search keys, or query text, submitted by the user.
@@ -138,6 +146,21 @@ abstract class AdapterPluginBase extends PluginBase implements AdapterInterface 
     // TODO: Implement getSearchPath() method.
   }
 
+  public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
+    // Get the plugin manager for query types and store it.
+    $query_type_plugin_manager = $container->get('plugin.manager.facetapi.query_type');
+
+    $plugin = new static($configuration, $plugin_id, $plugin_definition, $query_type_plugin_manager);
+
+    return $plugin;
+  }
+
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, PluginManagerInterface $query_type_plugin_manager) {
+    $this->query_type_plugin_manager = $query_type_plugin_manager;
+
+    parent::__construct($configuration, $plugin_id, $plugin_definition);
+  }
+
   /**
    * Sets the search keys, or query text, submitted by the user.
    *
@@ -219,8 +242,8 @@ abstract class AdapterPluginBase extends PluginBase implements AdapterInterface 
    *
    * @see FacetapiAdapter::initActiveFilters()
    */
-  public function addActiveFilters(&$query) {
-    // TODO: Implement addActiveFilters() method.
+  public function alterQuery(&$query) {
+    // TODO: Implement alterQuery() method.
   }
 
   /**
