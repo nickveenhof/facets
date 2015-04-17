@@ -6,24 +6,6 @@ use Drupal\search_api\Query\QueryInterface;
 use Drupal\Component\Plugin\PluginBase;
 
 /**
- * Implementation of hook_facetapi_searcher_info.
- *
- * @return array
- */
-function search_api_facets_facetapi_searcher_info() {
-  return array(
-    'search' => array(
-      'label'                   => t('Search'),
-      'adapter'                 => 'search',
-//      'url processor'           => 'standard',
-      'types'                   => array('node'),
-      'path'                    => 'admin/config/search/settings',
-    ),
-  );
-}
-
-
-/**
  * Implementation of hook_search_api_query_alter.
  *
  * @param \Drupal\search_api\Query\QueryInterface $query
@@ -37,9 +19,7 @@ function search_api_facets_search_api_query_alter(QueryInterface &$query) {
   $index_id = $index->getOriginalId();
   $config = array('index' => $index);
 
-  $base_plugin_id = 'search_api';
-
-  $plugin_id = $base_plugin_id . PluginBase::DERIVATIVE_SEPARATOR . $index_id;
+  $plugin_id = 'search_api';
 
   $adapter = $plugin_manager->createInstance($plugin_id, $config);
 
