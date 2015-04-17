@@ -43,4 +43,8 @@ function search_api_facets_search_api_query_alter(QueryInterface &$query) {
 
   $adapter = $plugin_manager->createInstance($plugin_id, $config);
 
+  // Add the active filters.
+  $adapter->addActiveFilters($query);
+
+
 }

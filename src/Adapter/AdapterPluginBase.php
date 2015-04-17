@@ -7,6 +7,8 @@
 
 namespace Drupal\facetapi\Adapter;
 
+use Drupal\Core\Plugin\Context\Context;
+use Drupal\Core\Plugin\Context\ContextDefinition;
 use Drupal\Core\Plugin\PluginBase;
 use Drupal\facetapi\Adapter\AdapterInterface;
 
@@ -217,7 +219,7 @@ abstract class AdapterPluginBase extends PluginBase implements AdapterInterface 
    *
    * @see FacetapiAdapter::initActiveFilters()
    */
-  function addActiveFilters($query) {
+  public function addActiveFilters(&$query) {
     // TODO: Implement addActiveFilters() method.
   }
 
@@ -351,5 +353,12 @@ abstract class AdapterPluginBase extends PluginBase implements AdapterInterface 
    */
   public function processFacets() {
     // TODO: Implement processFacets() method.
+  }
+
+  public function build() {
+    // Process the facets.
+    $this->processFacets();
+
+    // Return the render array.
   }
 }

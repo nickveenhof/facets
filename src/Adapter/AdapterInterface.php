@@ -87,7 +87,7 @@ interface AdapterInterface {
    *
    * @see FacetapiAdapter::initActiveFilters()
    */
-  function addActiveFilters($query);
+  public function addActiveFilters(&$query);
 
   /**
    * Hook that allows the backend to initialize its query object for faceting.
@@ -202,5 +202,13 @@ interface AdapterInterface {
    * @todo For clarity, should this method be named buildFacets()?
    */
   public function processFacets();
+
+  /**
+   * Build the facets and get the render arrays for all facets.
+   *
+   * @return array
+   *   Facet render arrays.
+   */
+  public function build();
 
 }

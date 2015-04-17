@@ -3,6 +3,8 @@
 /**
  * @file
  * Contains Drupal\facetapi\Plugin\Block\FacetBlock.
+ *
+ * NOTE: There should be a facetblock or settings for the facets later.
  */
 
 namespace Drupal\facetapi\Plugin\Block;
@@ -24,9 +26,16 @@ class FacetBlock extends BlockBase implements ContainerFactoryPluginInterface {
   /**
    * Drupal\facetapi\Adapter definition.
    *
-   * @var Drupal\facetapi\Adapter
+   * @var Drupal\facetapi\Adapter\AdapterInterface
    */
   protected $facetapi_adapter;
+
+  /**
+   * The adapter plugin manager.
+   *
+   * @var Drupal\Component\Plugin\PluginManagerInterface
+   */
+  protected $plugin_manager;
 
   /**
    * Construct.
@@ -37,12 +46,10 @@ class FacetBlock extends BlockBase implements ContainerFactoryPluginInterface {
    *   The plugin_id for the plugin instance.
    * @param string $plugin_definition
    *   The plugin implementation definition.
+   * @param Drupal\Component\Plugin\PluginManagerInterface pluginManager
    */
-  public function __construct(
-        array $configuration,
-        $plugin_id,
-        $plugin_definition
-  ) {
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, $plugin_manager) {
+    $this->plugin_manager = $plugin_manager;
     parent::__construct($configuration, $plugin_id, $plugin_definition);
   }
 
@@ -50,10 +57,12 @@ class FacetBlock extends BlockBase implements ContainerFactoryPluginInterface {
    * {@inheritdoc}
    */
   public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
+    $plugin_manager = $container->get('plugin.manager.facetapi.adapter');
     return new static(
       $configuration,
       $plugin_id,
-      $plugin_definition
+      $plugin_definition,
+      $plugin_manager
     );
   }
 
@@ -61,9 +70,18 @@ class FacetBlock extends BlockBase implements ContainerFactoryPluginInterface {
    * {@inheritdoc}
    */
   public function build() {
-    return [
-      '#markup' => 'Facet block',
-    ];
+    // Get the adapter.
+    // For now hard code the id.
+    // This should be based on facet definitions.
+    // The plugin manager should be injected.
+    $plugin_id = 'search_api:content';
+    $adapter = $this->plugin_manager->createInstance($plugin_id);
+    $build = $adapter->build();
+
+    // Let the adapter build the facets.
+//    $adapter->
+
+    return $build;
   }
 
 }
