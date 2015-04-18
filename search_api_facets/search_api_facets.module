@@ -31,11 +31,13 @@ function search_api_facets_search_api_query_alter(QueryInterface &$query) {
 }
 
 function search_api_facets_facetapi_facet_info() {
+  $facet_info = array();
   // Load all views.
   /**
    * @var EntityManagerInterface
    */
   $entity_manager = \Drupal::entityManager();
+  // @TODO: filter on search api views.
   $views = $entity_manager->getStorage('view')->loadMultiple();
   // Get the views executable factory.
   $views_executable_factory = Drupal::service('views.executable');
@@ -43,23 +45,45 @@ function search_api_facets_facetapi_facet_info() {
     $view = $views_executable_factory->get($view_entity);
     // Determine if the view is an search api view.
     if (substr($view->storage->get('base_table'), 0, 17) == 'search_api_index_') {
-      // Add facets for each view.
+      // Get the view id.
+      $view_id = $view->id();
       $index_id = substr($view->storage->get('base_table'), 17);
       $index = Index::load($index_id);
       // Get fields.
       $fields = $index->getFields();
+      // Add facets for each view display which is of type page or block.
+      foreach ($view->storage->get('display') as $display) {
+        $supported_display_plugins = array(
+          'page',
+          'block',
+        );
+        if (in_array($display['display_plugin'], $supported_display_plugins)) {
+          // @TODO: This should be a function in search api. Look it up.
+          $searcher_name = 'search_api_views:' . $view_id . ':' . $display['id'];
+          foreach ($fields as $field_name => $field) {
+            if ( empty($facet_info[$searcher_name])) {
+              $facet_info[$searcher_name] = array();
+            }
+            // Determine the query type.
+            $term_types = array(
+              'string',
+              'integer',
+            );
+            if (in_array($field->getType(), $term_types)) {
+              $facet_info[$searcher_name][$field_name] = array(
+                'name' => $field_name,
+                'label' => $field->getDataDefinition()->getLabel(),
+                'field' => $field->getFieldIdentifier(),
+                'query type plugin' => 'search_api_term',
+                'searcher' => $searcher_name,
+              );
+            }
+
+          }
+
+        }
+      }
     }
   }
-
-
-  $facet_info = array();
-  $facet_info['search_id'] = array();
-  $facet_info['search_id']['my_field'] = array(
-    'name' => 'my_field',
-    'label' => t('My field'),
-    'field' => 'my_field_index_field_name',
-    'field alias' => 'my_alias',
-    'query type plugin' => '',
-  );
   return $facet_info;
 }

@@ -13,11 +13,9 @@ interface QueryTypeInterface {
   /**
    * Add facet info to the query using the backend native query object.
    *
-   * @param $query
-   *
    * @return mixed
    */
-  public function execute($query);
+  public function execute();
 
   /**
    * Build the facet information,

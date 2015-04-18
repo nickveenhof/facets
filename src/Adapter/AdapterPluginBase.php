@@ -141,6 +141,12 @@ abstract class AdapterPluginBase extends PluginBase implements AdapterInterface,
   protected $settings = array();
 
   /**
+   * Searcher id.
+   *
+   * @var string
+   */
+  protected $searcher_id;
+  /**
    * Returns the search path associated with this searcher.
    *
    * @return string
@@ -289,6 +295,14 @@ abstract class AdapterPluginBase extends PluginBase implements AdapterInterface,
     return $facet_definitions;
   }
 
+
+  /**
+   * @return string
+   */
+  public function getSearcherId() {
+    return $this->searcher_id;
+  }
+
   /**
    * Returns a FacetapiFacet instance for the facet being rendered.
    *
@@ -401,10 +415,21 @@ abstract class AdapterPluginBase extends PluginBase implements AdapterInterface,
     // TODO: Implement processFacets() method.
   }
 
-  public function build() {
+  public function build($facet) {
     // Process the facets.
-    $this->processFacets();
-
+    // @TODO: inject the searcher id on create of the adapter.
+    $this->searcher_id = $facet['searcher'];
+    $results = $this->processFacets();
+    // Let the plugin render the facet.
+    $configuration = array(
+      'query' => NULL,
+      'facet' => $facet,
+      'results' => $results[$facet['name']]
+    );
+    $query_type_plugin = $this->query_type_plugin_manager->createInstance($facet['query type plugin'],
+      $configuration
+    );
     // Return the render array.
+    return $query_type_plugin->build();
   }
 }

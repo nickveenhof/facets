@@ -50,20 +50,24 @@ class SearchApiViewsAdapter extends AdapterPluginBase {
   }
 
 
+  /**
+   * Alter the query.
+   *
+   * @TODO: abstract part of this implementation and move to abstract class.
+   *
+   * @param mixed $query
+   */
   public function alterQuery(&$query) {
     // Get enabled facets.
     $facets = $this->getEnabledFacets();
-    // Alter the query here.
-    // For now this is done in the Adapter implementation itself.
-    // Later on, this should be done using query type plugins for a backend.
-    // We need a working proof of concept, so perform it directly here.
-    $options = &$query->getOptions();
-    $options['search_api_facets']['entity:node/type'] = array(
-      'field'             => 'entity:node/type',
-      'limit'             => 50,
-      'operator'          => 'and',
-      'min_count'         => 0,
-    );
+    // Get the searcher name from the query.
+    $search_id = $query->getOption('search id');
+    foreach ($facets[$search_id] as $facet) {
+      // Create the query type plugin.
+      $query_type_plugin = $this->query_type_plugin_manager->createInstance($facet['query type plugin'], array('query' => $query, 'facet' => $facet));
+      // Let the query type alter the query.
+      $query_type_plugin->execute();
+    }
   }
 
 
@@ -94,33 +98,11 @@ class SearchApiViewsAdapter extends AdapterPluginBase {
    * when facetapi does it.
    */
   public function processFacets() {
-    $dummy = 'dummy';
     // Get the facet values from the query that has been done.
     // Store all information in $this->facets.
-    $results = $this->search_results_cache->getResults('search_api_views:search:page_1');
+    $results = $this->search_results_cache->getResults($this->searcher_id);
 
     return $results->getExtraData('search_api_facets');
   }
 
-  /**
-   * Build the render array for facets.
-   */
-  public function build() {
-    $this->processFacets();
-
-    $facet_data = $this->processFacets();
-    // Create an itemlist for the field 'entity:node/type'
-    $items = array();
-    foreach ($facet_data['entity:node/type'] as $data) {
-      $text = $data['filter'] . '(' . $data['count'] . ')';
-      $items[] = $text;
-    }
-
-    $output = array(
-      '#theme' => 'item_list',
-      '#items' => $items,
-    );
-    return $output;
-
-  }
 }

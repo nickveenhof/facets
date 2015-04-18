@@ -34,3 +34,15 @@ function facetapi_theme()
 
   return $theme;
 }
+
+
+/**
+ * Get all facet definitions.
+ *
+ * @return mixed
+ */
+function facetapi_get_enabled_facets() {
+  $module_handler = \Drupal::service('module_handler');
+  $facet_definitions = $module_handler->invokeAll('facetapi_facet_info');
+  return $facet_definitions;
+}

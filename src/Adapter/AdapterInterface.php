@@ -106,6 +106,13 @@ interface AdapterInterface {
   public function getEnabledFacets();
 
   /**
+   * Returns the searcher id.
+   *
+   * @return string
+   */
+  public function getSearcherId();
+
+  /**
    * Returns a FacetapiFacet instance for the facet being rendered.
    *
    * @param array $facet
@@ -209,6 +216,6 @@ interface AdapterInterface {
    * @return array
    *   Facet render arrays.
    */
-  public function build();
+  public function build($facet);
 
 }
