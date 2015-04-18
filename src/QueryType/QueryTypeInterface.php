@@ -11,12 +11,20 @@ use Drupal\facetapi\Adapter\AdapterInterface;
 interface QueryTypeInterface {
 
   /**
-   * Indicate if the queryType interface supports the adapter.
+   * Add facet info to the query using the backend native query object.
    *
-   * @param \Drupal\facetapi\Adapter\AdapterInterface $adapter
+   * @param $query
    *
    * @return mixed
    */
-  static public function supportsAdapter(AdapterInterface $adapter);
+  public function execute($query);
+
+  /**
+   * Build the facet information,
+   * so it can be rendered.
+   *
+   * @return mixed
+   */
+  public function build();
 
 }

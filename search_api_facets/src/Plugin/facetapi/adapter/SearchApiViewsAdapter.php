@@ -4,10 +4,12 @@
  */
 namespace Drupal\search_api_facets\Plugin\facetapi\adapter;
 
+use Drupal\Component\Plugin\PluginManagerInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\facetapi\Adapter\AdapterPluginBase;
 use Drupal\search_api\Query\QueryInterface;
 use Drupal\search_api\Query\ResultsCache;
+use MyProject\Proxies\__CG__\stdClass;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -18,7 +20,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * )
  *
  */
-class SearchApiAdapter extends AdapterPluginBase implements ContainerFactoryPluginInterface {
+class SearchApiViewsAdapter extends AdapterPluginBase {
 
   /**
    * @var Drupal\search_api\Query\ResultsCache
@@ -29,19 +31,28 @@ class SearchApiAdapter extends AdapterPluginBase implements ContainerFactoryPlug
     // Get the ResultsCache from the container.
     $results_cache = $container->get('search_api.results_static_cache');
 
-    $plugin = new static($configuration, $plugin_id, $plugin_definition, $results_cache);
+    $query_type_plugin_manager = $container->get('plugin.manager.facetapi.query_type');
+
+    $plugin = new static($configuration, $plugin_id, $plugin_definition, $query_type_plugin_manager, $results_cache);
+
+    // Insert the module handler.
+    // @var ModuleHandlerInterface
+    $module_handler = $container->get('module_handler');
+    $plugin->setModuleHandler($module_handler);
 
     return $plugin;
   }
 
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, ResultsCache $results_cache) {
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, PluginManagerInterface $query_type_plugin_manager, ResultsCache $results_cache) {
     $this->search_results_cache = $results_cache;
 
-    parent::__construct($configuration, $plugin_id, $plugin_definition);
+    parent::__construct($configuration, $plugin_id, $plugin_definition, $query_type_plugin_manager);
   }
 
 
-  public function addActiveFilters(&$query) {
+  public function alterQuery(&$query) {
+    // Get enabled facets.
+    $facets = $this->getEnabledFacets();
     // Alter the query here.
     // For now this is done in the Adapter implementation itself.
     // Later on, this should be done using query type plugins for a backend.
@@ -54,6 +65,7 @@ class SearchApiAdapter extends AdapterPluginBase implements ContainerFactoryPlug
       'min_count'         => 0,
     );
   }
+
 
   /**
    * Add the given facet to the query.

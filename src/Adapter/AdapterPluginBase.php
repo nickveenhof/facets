@@ -7,6 +7,7 @@
 
 namespace Drupal\facetapi\Adapter;
 
+use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\Plugin\Context\Context;
 use Drupal\Core\Plugin\Context\ContextDefinition;
@@ -32,6 +33,11 @@ abstract class AdapterPluginBase extends PluginBase implements AdapterInterface,
    * The plugin manager.
    */
   protected $query_type_plugin_manager;
+
+  /**
+   * @var ModuleHandlerInterface
+   */
+  protected $module_handler;
 
   /**
    * The search keys, or query text, submitted by the user.
@@ -152,13 +158,26 @@ abstract class AdapterPluginBase extends PluginBase implements AdapterInterface,
 
     $plugin = new static($configuration, $plugin_id, $plugin_definition, $query_type_plugin_manager);
 
+    // Insert the module handler.
+    // @var ModuleHandlerInterface
+    $module_handler = $container->get('module_handler');
+    $plugin->setModuleHandler($module_handler);
+
     return $plugin;
   }
 
   public function __construct(array $configuration, $plugin_id, $plugin_definition, PluginManagerInterface $query_type_plugin_manager) {
     $this->query_type_plugin_manager = $query_type_plugin_manager;
-
     parent::__construct($configuration, $plugin_id, $plugin_definition);
+  }
+
+  /**
+   * Set the module handler.
+   *
+   * @param ModuleHandlerInterface $module_handler
+   */
+  public function setModuleHandler(ModuleHandlerInterface $module_handler) {
+    $this->module_handler = $module_handler;
   }
 
   /**
@@ -263,7 +282,11 @@ abstract class AdapterPluginBase extends PluginBase implements AdapterInterface,
    *   An array of enabled facets.
    */
   public function getEnabledFacets() {
-    // TODO: Implement getEnabledFacets() method.
+    // Use the hook_info to discover facets.
+    $facet_definitions = $this->module_handler->invokeAll('facetapi_facet_info');
+    // Maybe also add different discovery methods later,
+    // for instance in the adapter itself.
+    return $facet_definitions;
   }
 
   /**

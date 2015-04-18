@@ -2,6 +2,8 @@
 /**
  * Hooks
  */
+use Drupal\Core\Entity\EntityManagerInterface;
+use Drupal\search_api\Entity\Index;
 use Drupal\search_api\Query\QueryInterface;
 use Drupal\Component\Plugin\PluginBase;
 
@@ -26,4 +28,38 @@ function search_api_facets_search_api_query_alter(QueryInterface &$query) {
   // Add the active filters.
   $adapter->alterQuery($query);
 
+}
+
+function search_api_facets_facetapi_facet_info() {
+  // Load all views.
+  /**
+   * @var EntityManagerInterface
+   */
+  $entity_manager = \Drupal::entityManager();
+  $views = $entity_manager->getStorage('view')->loadMultiple();
+  // Get the views executable factory.
+  $views_executable_factory = Drupal::service('views.executable');
+  foreach ($views as $view_id => $view_entity) {
+    $view = $views_executable_factory->get($view_entity);
+    // Determine if the view is an search api view.
+    if (substr($view->storage->get('base_table'), 0, 17) == 'search_api_index_') {
+      // Add facets for each view.
+      $index_id = substr($view->storage->get('base_table'), 17);
+      $index = Index::load($index_id);
+      // Get fields.
+      $fields = $index->getFields();
+    }
+  }
+
+
+  $facet_info = array();
+  $facet_info['search_id'] = array();
+  $facet_info['search_id']['my_field'] = array(
+    'name' => 'my_field',
+    'label' => t('My field'),
+    'field' => 'my_field_index_field_name',
+    'field alias' => 'my_alias',
+    'query type plugin' => '',
+  );
+  return $facet_info;
 }
