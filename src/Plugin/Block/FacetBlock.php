@@ -76,11 +76,15 @@ class FacetBlock extends BlockBase implements ContainerFactoryPluginInterface {
     // This should be based on facet definitions.
     // The plugin manager should be injected.
     $plugin_id = 'search_api';
-    $adapter = $this->plugin_manager->createInstance($plugin_id);
+    list($search_id, $facet_key) = explode(':::', $this->configuration['facet_identifier']);
+    $config = array(
+      'search_id' => $search_id,
+    );
+    $adapter = $this->plugin_manager->createInstance($plugin_id, $config);
+
     // Get the facet definitions.
     $facet_definitions = facetapi_get_enabled_facets();
-    list($searcher_key, $facet_key) = explode(':::', $this->configuration['facet_identifier']);
-    $facet = $facet_definitions[$searcher_key][$facet_key];
+    $facet = $facet_definitions[$search_id][$facet_key];
     $build = $adapter->build($facet);
 
     // Let the adapter build the facets.

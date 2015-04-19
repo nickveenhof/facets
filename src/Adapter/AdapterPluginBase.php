@@ -9,10 +9,7 @@ namespace Drupal\facetapi\Adapter;
 
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
-use Drupal\Core\Plugin\Context\Context;
-use Drupal\Core\Plugin\Context\ContextDefinition;
 use Drupal\Core\Plugin\PluginBase;
-use Drupal\facetapi\Adapter\AdapterInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Drupal\Component\Plugin\PluginManagerInterface;
 
@@ -28,6 +25,8 @@ use Drupal\Component\Plugin\PluginManagerInterface;
  * so that it can execute the actual facet query.
  */
 abstract class AdapterPluginBase extends PluginBase implements AdapterInterface, ContainerFactoryPluginInterface {
+
+  protected static $adapters;
 
   /**
    * The plugin manager.
@@ -159,21 +158,36 @@ abstract class AdapterPluginBase extends PluginBase implements AdapterInterface,
   }
 
   public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
-    // Get the plugin manager for query types and store it.
-    $query_type_plugin_manager = $container->get('plugin.manager.facetapi.query_type');
+    // If the search_id is set in the configuration,
+    // get it if it is already instantiated.
+    if (! empty($configuration['search_id']) && ! empty(self::$adapters[$configuration['search_id']])) {
+      return self::$adapters[$configuration['search_id']];
+    }
 
-    $plugin = new static($configuration, $plugin_id, $plugin_definition, $query_type_plugin_manager);
+    $plugin = new static($configuration, $plugin_id, $plugin_definition);
 
     // Insert the module handler.
     // @var ModuleHandlerInterface
     $module_handler = $container->get('module_handler');
     $plugin->setModuleHandler($module_handler);
 
+    // Insert the plugin manager for query types.
+    // @var PluginManagerInterface
+    $query_type_plugin_manager = $container->get('plugin.manager.facetapi.query_type');
+    $plugin->setQueryTypePluginManager($query_type_plugin_manager);
+
+    // If the search_id is set, store the plugin in the static variable.
+    if (! empty($configuration['search_id'])) {
+      if (empty(self::$adapters)) {
+        self::$adapters = array();
+      }
+      self::$adapters[$configuration['search_id']] = $plugin;
+    }
+
     return $plugin;
   }
 
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, PluginManagerInterface $query_type_plugin_manager) {
-    $this->query_type_plugin_manager = $query_type_plugin_manager;
+  public function __construct(array $configuration, $plugin_id, $plugin_definition) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
   }
 
@@ -186,6 +200,21 @@ abstract class AdapterPluginBase extends PluginBase implements AdapterInterface,
     $this->module_handler = $module_handler;
   }
 
+  /**
+   * Get the queryTypePluginManager
+   *
+   * @return PluginManagerInterface
+   */
+  public function getQueryTypePluginManager() {
+    return $this->query_type_plugin_manager;
+  }
+
+  /**
+   * @param PluginManagerInterface $query_type_plugin_manager
+   */
+  public function setQueryTypePluginManager(PluginManagerInterface $query_type_plugin_manager) {
+    $this->query_type_plugin_manager = $query_type_plugin_manager;
+  }
   /**
    * Sets the search keys, or query text, submitted by the user.
    *
