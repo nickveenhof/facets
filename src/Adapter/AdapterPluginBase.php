@@ -297,7 +297,15 @@ abstract class AdapterPluginBase extends PluginBase implements AdapterInterface,
    * @see FacetapiAdapter::initActiveFilters()
    */
   public function alterQuery(&$query) {
-    // TODO: Implement alterQuery() method.
+    $facets = $this->getEnabledFacets();
+    // Get the searcher name from the query.
+    $search_id = $this->configuration['search_id'];
+    foreach ($facets[$search_id] as $facet) {
+      // Create the query type plugin.
+      $query_type_plugin = $this->query_type_plugin_manager->createInstance($facet['query type plugin'], array('query' => $query, 'facet' => $facet));
+      // Let the query type alter the query.
+      $query_type_plugin->execute();
+    }
   }
 
   /**

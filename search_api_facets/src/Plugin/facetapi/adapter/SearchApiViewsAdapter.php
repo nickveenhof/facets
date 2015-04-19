@@ -4,12 +4,9 @@
  */
 namespace Drupal\search_api_facets\Plugin\facetapi\adapter;
 
-use Drupal\Component\Plugin\PluginManagerInterface;
-use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\facetapi\Adapter\AdapterPluginBase;
 use Drupal\search_api\Query\QueryInterface;
-use Drupal\search_api\Query\ResultsCache;
-use MyProject\Proxies\__CG__\stdClass;
+use Drupal\search_api\Query\ResultsCacheInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -22,54 +19,40 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  */
 class SearchApiViewsAdapter extends AdapterPluginBase {
 
-  /**
-   * @var Drupal\search_api\Query\ResultsCache
+  /*
+   * @var Drupal\search_api\Query\QueryInterface
    */
-  protected $search_results_cache;
+  protected $search_api_query;
 
   public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
+    $plugin = parent::create($container, $configuration, $plugin_id, $plugin_definition);
+
     // Get the ResultsCache from the container.
     $results_cache = $container->get('search_api.results_static_cache');
-
-    $query_type_plugin_manager = $container->get('plugin.manager.facetapi.query_type');
-
-    $plugin = new static($configuration, $plugin_id, $plugin_definition, $query_type_plugin_manager, $results_cache);
-
-    // Insert the module handler.
-    // @var ModuleHandlerInterface
-    $module_handler = $container->get('module_handler');
-    $plugin->setModuleHandler($module_handler);
+    $plugin->setSearchResultsCache($results_cache);
 
     return $plugin;
   }
 
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, PluginManagerInterface $query_type_plugin_manager, ResultsCache $results_cache) {
-    $this->search_results_cache = $results_cache;
-
-    parent::__construct($configuration, $plugin_id, $plugin_definition, $query_type_plugin_manager);
+  public function __construct(array $configuration, $plugin_id, $plugin_definition) {
+    parent::__construct($configuration, $plugin_id, $plugin_definition);
   }
-
 
   /**
-   * Alter the query.
+   * Get the search results cache.
    *
-   * @TODO: abstract part of this implementation and move to abstract class.
-   *
-   * @param mixed $query
+   * @return Drupal\search_api\Query\ResultsCacheInterface
    */
-  public function alterQuery(&$query) {
-    // Get enabled facets.
-    $facets = $this->getEnabledFacets();
-    // Get the searcher name from the query.
-    $search_id = $query->getOption('search id');
-    foreach ($facets[$search_id] as $facet) {
-      // Create the query type plugin.
-      $query_type_plugin = $this->query_type_plugin_manager->createInstance($facet['query type plugin'], array('query' => $query, 'facet' => $facet));
-      // Let the query type alter the query.
-      $query_type_plugin->execute();
-    }
+  public function getSearchResultsCache() {
+    return $this->search_results_cache;
   }
 
+  /**
+   * @param Drupal\search_api\Query\ResultsCacheInterface $search_results_cache
+   */
+  public function setSearchResultsCache(ResultsCacheInterface $search_results_cache) {
+    $this->search_results_cache = $search_results_cache;
+  }
 
   /**
    * Add the given facet to the query.
