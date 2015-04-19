@@ -4,7 +4,9 @@
  */
 namespace Drupal\search_api_facets\Plugin\facetapi\adapter;
 
+use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\facetapi\Adapter\AdapterPluginBase;
+use Drupal\facetapi\QueryType\QueryTypePluginManager;
 use Drupal\search_api\Query\QueryInterface;
 use Drupal\search_api\Query\ResultsCacheInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -22,36 +24,40 @@ class SearchApiViewsAdapter extends AdapterPluginBase {
   /*
    * @var Drupal\search_api\Query\QueryInterface
    */
-  protected $search_api_query;
+  protected $searchApiQuery;
+
+  protected $searchResultsCache;
 
   public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
-    $plugin = parent::create($container, $configuration, $plugin_id, $plugin_definition);
+    // Insert the module handler.
+    // @var ModuleHandlerInterface
+    $module_handler = $container->get('module_handler');
+
+    // Insert the plugin manager for query types.
+    // @var PluginManagerInterface
+    $query_type_plugin_manager = $container->get('plugin.manager.facetapi.query_type');
 
     // Get the ResultsCache from the container.
+    // @var ResultsCacheInterface
     $results_cache = $container->get('search_api.results_static_cache');
-    $plugin->setSearchResultsCache($results_cache);
+
+
+    $plugin = new static($configuration, $plugin_id, $plugin_definition, $module_handler, $query_type_plugin_manager, $results_cache);
+
 
     return $plugin;
   }
 
-  public function __construct(array $configuration, $plugin_id, $plugin_definition) {
-    parent::__construct($configuration, $plugin_id, $plugin_definition);
-  }
+  public function __construct(
+    array $configuration,
+    $plugin_id, $plugin_definition,
+    ModuleHandlerInterface $module_handler,
+    QueryTypePluginManager $query_type_plugin_manager,
+    ResultsCacheInterface $results_cache
+  ) {
 
-  /**
-   * Get the search results cache.
-   *
-   * @return Drupal\search_api\Query\ResultsCacheInterface
-   */
-  public function getSearchResultsCache() {
-    return $this->search_results_cache;
-  }
-
-  /**
-   * @param Drupal\search_api\Query\ResultsCacheInterface $search_results_cache
-   */
-  public function setSearchResultsCache(ResultsCacheInterface $search_results_cache) {
-    $this->search_results_cache = $search_results_cache;
+    parent::__construct($configuration, $plugin_id, $plugin_definition, $module_handler, $query_type_plugin_manager);
+    $this->searchResultsCache = $results_cache;
   }
 
   /**
@@ -83,7 +89,7 @@ class SearchApiViewsAdapter extends AdapterPluginBase {
   public function processFacets() {
     // Get the facet values from the query that has been done.
     // Store all information in $this->facets.
-    $results = $this->search_results_cache->getResults($this->searcher_id);
+    $results = $this->searchResultsCache->getResults($this->searcher_id);
 
     return $results->getExtraData('search_api_facets');
   }
