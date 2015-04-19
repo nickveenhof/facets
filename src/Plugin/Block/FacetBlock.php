@@ -27,16 +27,16 @@ class FacetBlock extends BlockBase implements ContainerFactoryPluginInterface {
   /**
    * Drupal\facetapi\Adapter definition.
    *
-   * @var Drupal\facetapi\Adapter\AdapterInterface
+   * @var \Drupal\facetapi\Adapter\AdapterInterface
    */
-  protected $facetapi_adapter;
+  protected $facetapiAdapter;
 
   /**
    * The adapter plugin manager.
    *
-   * @var Drupal\Component\Plugin\PluginManagerInterface
+   * @var \Drupal\facetapi\Adapter\AdapterPluginManagerInterface
    */
-  protected $plugin_manager;
+  protected $pluginManager;
 
   /**
    * Construct.
@@ -47,10 +47,10 @@ class FacetBlock extends BlockBase implements ContainerFactoryPluginInterface {
    *   The plugin_id for the plugin instance.
    * @param string $plugin_definition
    *   The plugin implementation definition.
-   * @param Drupal\Component\Plugin\PluginManagerInterface pluginManager
+   * @param \Drupal\facetapi\Adapter\AdapterPluginManagerInterface pluginManager
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, $plugin_manager) {
-    $this->plugin_manager = $plugin_manager;
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, \Drupal\facetapi\Adapter\AdapterPluginManagerInterface $plugin_manager) {
+    $this->pluginManager = $plugin_manager;
     parent::__construct($configuration, $plugin_id, $plugin_definition);
   }
 
@@ -77,10 +77,7 @@ class FacetBlock extends BlockBase implements ContainerFactoryPluginInterface {
     // The plugin manager should be injected.
     $plugin_id = 'search_api';
     list($search_id, $facet_key) = explode(':::', $this->configuration['facet_identifier']);
-    $config = array(
-      'search_id' => $search_id,
-    );
-    $adapter = $this->plugin_manager->createInstance($plugin_id, $config);
+    $adapter = $this->pluginManager->getMyOwnChangeLaterInstance($plugin_id, $search_id);
 
     // Get the facet definitions.
     $facet_definitions = facetapi_get_enabled_facets();

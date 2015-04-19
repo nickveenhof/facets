@@ -15,22 +15,16 @@ use Drupal\Component\Plugin\PluginBase;
 function search_api_facets_search_api_query_alter(QueryInterface &$query) {
   // Get the adapter derivative.
   // Get the plugin manager.
+  /** @var \Drupal\facetapi\Adapter\AdapterPluginManagerInterface $plugin_manager */
   $plugin_manager = \Drupal::service('plugin.manager.facetapi.adapter');
 
   // Get the searcher id.
   // This is the id of the view.
   $search_id = $query->getOption('search id');
 
-  // Add the search id and the query to the config of the plugin.
-  $config = array(
-    'search_id' => $search_id,
-    'query' => $query,
-  );
-
-
   $plugin_id = 'search_api';
 
-  $adapter = $plugin_manager->createInstance($plugin_id, $config);
+  $adapter = $plugin_manager->getMyOwnChangeLaterInstance($plugin_id, $search_id);
 
   // Add the active filters.
   $adapter->alterQuery($query);

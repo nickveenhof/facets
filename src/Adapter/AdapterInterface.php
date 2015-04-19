@@ -2,12 +2,20 @@
 
 /**
  * @file
- * Contains Drupal\facetapi\Plugin\AdapterInterface.
+ * Contains Drupal\facetapi\Adapter\AdapterInterface.
  */
 
 namespace Drupal\facetapi\Adapter;
 
 interface AdapterInterface {
+
+  /**
+   * Set the search id.
+   *
+   * @return mixed
+   */
+  public function setSearchId($search_id);
+
 
   /**
    * Returns the search path associated with this searcher.
