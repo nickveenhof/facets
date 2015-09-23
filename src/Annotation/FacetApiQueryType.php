@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\facetapi\Annotation\FacetApiAdapter.
+ * Contains \Drupal\facetapi\Annotation\FacetApiQueryType.
  */
 
 namespace Drupal\facetapi\Annotation;
@@ -10,16 +10,16 @@ namespace Drupal\facetapi\Annotation;
 use Drupal\Component\Annotation\Plugin;
 
 /**
- * Defines a Facet API Adapter annotation object.
+ * Defines a Facet API QueryType annotation object.
  *
- * @see \Drupal\facetapi\FacetApiAdapterManager
+ * @see \Drupal\facetapi\QueryType\QueryTypePluginManager
  * @see plugin_api
  *
  * @ingroup plugin_api
  *
  * @Annotation
  */
-class FacetApiAdapter extends Plugin {
+class FacetApiQueryType extends Plugin {
 
   /**
    * The adapter plugin id

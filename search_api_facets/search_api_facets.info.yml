@@ -1,0 +1,8 @@
+type: module
+name: 'Search API facets'
+description: 'Provides facet integration for search api based on facetapi.'
+package: Search
+core: 8.x
+dependencies:
+  - search_api
+  - facetapi

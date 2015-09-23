@@ -3,14 +3,14 @@
  * Tests Facet API's Adapter implementation.
  */
 
-namespace Drupal\facet_api\Tests;
+namespace Drupal\facetapi\Tests;
 
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\simpletest\WebTestBase;
 
 /**
- * @coversDefaultClass Drupal\facet_api\Tests\Adapter
- * @group facet_api
+ * @coversDefaultClass Drupal\facetapi\Tests\Adapter
+ * @group facetapi
  */
 class AdapterTest extends WebTestBase {
 
@@ -21,7 +21,7 @@ class AdapterTest extends WebTestBase {
    *
    * @var array
    */
-  public static $modules = array('facet_api_dummy');
+  public static $modules = array('facetapi_dummy');
 
   /**
    * The URL generator.

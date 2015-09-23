@@ -1,0 +1,48 @@
+<?php
+
+/**
+ * @file
+ * Contains facetapi.module
+ */
+
+use Drupal\Core\Routing\RouteMatchInterface;
+
+/**
+ * Implements hook_help().
+ */
+
+function facetapi_help($route_name, RouteMatchInterface $route_match)
+{
+  switch ($route_name) {
+    // Main module help for the facetapi module.
+    case 'help.page.facetapi':
+      $output = '';
+      $output .= '<h3>' . t('About') . '</h3>';
+      $output .= '<p>' . t('Facetapi test') . '</p>';
+      return $output;
+    break;
+  }
+}
+
+/**
+ * Implements hook_theme().
+ */
+
+function facetapi_theme()
+{
+  $theme = [];
+
+  return $theme;
+}
+
+
+/**
+ * Get all facet definitions.
+ *
+ * @return mixed
+ */
+function facetapi_get_enabled_facets() {
+  $module_handler = \Drupal::service('module_handler');
+  $facet_definitions = $module_handler->invokeAll('facetapi_facet_info');
+  return $facet_definitions;
+}
