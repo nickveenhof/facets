@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @file Contains Drupal\facetapi\Adapter\AdapterPluginManagerInterface
  */

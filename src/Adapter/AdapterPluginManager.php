@@ -1,10 +1,9 @@
 <?php
 /**
- * Contains Drupal\facetapi\AdapterManager
+ * Contains Drupal\facetapi\Adapter\AdapterPluginManager
  */
 
 namespace Drupal\facetapi\Adapter;
-
 
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Plugin\DefaultPluginManager;
@@ -18,7 +17,7 @@ class AdapterPluginManager extends DefaultPluginManager implements AdapterPlugin
   protected $adapters = [];
 
   public function __construct(\Traversable $namespaces, CacheBackendInterface $cache_backend, ModuleHandlerInterface $module_handler) {
-    parent::__construct('Plugin/facetapi/Adapter', $namespaces, $module_handler, 'Drupal\facetapi\Adapter\AdapterInterface', 'Drupal\facetapi\Annotation\FacetApiAdapter');
+    parent::__construct('Plugin/facetapi/adapter', $namespaces, $module_handler, 'Drupal\facetapi\Adapter\AdapterInterface', 'Drupal\facetapi\Annotation\FacetApiAdapter');
     $this->alterInfo('facetapi_adapter_info');
     $this->setCacheBackend($cache_backend, 'facetapi_adapter_plugins');
   }
