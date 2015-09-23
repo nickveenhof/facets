@@ -1,18 +1,17 @@
 <?php
-/**
- * Contains Drupal\facet_api\Plugin\TestAdapter
- */
 
 namespace Drupal\facet_api\Plugin\Adapter;
+
+use Drupal\facet_api\Adapter\AdapterPluginBase;
 
 /**
  * @FacetApiAdapter(
  *   id = "test",
- *   label = @Translation("Test"),
- *   description = @Translation("Test class for facet_api adapter")
+ *   label = @Translation("Search API Adapter"),
+ *   description = @Translation("test API Class for facet_api")
  * )
  */
-class TestAdapter extends AdapterBase {
+class TestAdapter extends AdapterPluginBase {
 
   /**
    * Returns a boolean flagging whether $this->searcher['searcher'] executed a

@@ -30,7 +30,7 @@ class SortPluginManager extends DefaultPluginManager {
    *   The module handler.
    */
   public function __construct(\Traversable $namespaces, CacheBackendInterface $cache_backend, ModuleHandlerInterface $module_handler) {
-    parent::__construct('Plugin/FacetApi/Sort', $namespaces, $module_handler, 'Drupal\facet_api\SortInterface', 'Drupal\facet_api\Annotation\FacetApiSort');
+    parent::__construct('Plugin/FacetApi/sort', $namespaces, $module_handler, 'Drupal\facet_api\SortInterface', 'Drupal\facet_api\Annotation\FacetApiSort');
     $this->alterInfo('facet_api_sort_info');
     $this->setCacheBackend($cache_backend, 'facet_api_sort_plugins');
   }

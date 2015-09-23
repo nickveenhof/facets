@@ -30,7 +30,7 @@ class SearcherPluginManager extends DefaultPluginManager {
    *   The module handler.
    */
   public function __construct(\Traversable $namespaces, CacheBackendInterface $cache_backend, ModuleHandlerInterface $module_handler) {
-    parent::__construct('Plugin/facet_api/Searcher', $namespaces, $module_handler, 'Drupal\facet_api\Searcher\SearcherInterface', 'Drupal\facet_api\Annotation\FacetApiSearcher');
+    parent::__construct('Plugin/facet_api/searcher', $namespaces, $module_handler, 'Drupal\facet_api\Searcher\SearcherInterface', 'Drupal\facet_api\Annotation\FacetApiSearcher');
     $this->alterInfo('facetapi_searcher_info');
     $this->setCacheBackend($cache_backend, 'facetapi_searcher_plugins');
   }

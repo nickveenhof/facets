@@ -5,7 +5,7 @@
  * Contains Drupal\facet_api\Plugin\Adapter\AdapterBase.
  */
 
-namespace Drupal\facet_api\Plugin\Adapter;
+namespace Drupal\facet_api\Adapter;
 
 use Drupal\Core\Plugin\PluginBase;
 use Drupal\facet_api\Adapter\AdapterInterface;
@@ -21,7 +21,7 @@ use Drupal\facet_api\Adapter\AdapterInterface;
  * enabled facets or passing the appropriate query type plugin to the backend
  * so that it can execute the actual facet query.
  */
-abstract class AdapterBase extends PluginBase implements AdapterInterface {
+abstract class AdapterPluginBase extends PluginBase implements AdapterInterface {
 
   /**
    * The searcher information as returned by facet_api_get_searcher_info().
