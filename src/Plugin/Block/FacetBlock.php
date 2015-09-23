@@ -122,5 +122,11 @@ class FacetBlock extends BlockBase implements ContainerFactoryPluginInterface {
     $this->configuration['facet_identifier'] = $form_state->getValue('facet_identifier');
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  public function getCacheMaxAge() {
+    return 0;
+  }
 
 }

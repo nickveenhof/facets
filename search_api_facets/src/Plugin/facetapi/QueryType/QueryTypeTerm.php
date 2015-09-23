@@ -5,7 +5,7 @@
  * Time: 16:28
  */
 
-namespace Drupal\search_api_facets\Plugin\Facetapi\QueryType;
+namespace Drupal\search_api_facets\Plugin\facetapi\QueryType;
 
 use Drupal\facetapi\Adapter\AdapterInterface;
 use \Drupal\facetapi\QueryType\QueryTypePluginBase;

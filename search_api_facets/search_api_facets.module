@@ -73,7 +73,7 @@ function search_api_facets_facetapi_facet_info() {
             if (in_array($field->getType(), $term_types)) {
               $facet_info[$searcher_name][$field_name] = array(
                 'name' => $field_name,
-                'label' => $field->getDataDefinition()->getLabel(),
+                'label' => $field->getLabel(),
                 'field' => $field->getFieldIdentifier(),
                 'query type plugin' => 'search_api_term',
                 'searcher' => $searcher_name,
