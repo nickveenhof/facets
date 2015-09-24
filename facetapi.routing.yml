@@ -4,3 +4,32 @@ entity.search_api_index.facets:
     _entity_form: 'search_api_index.facets'
   requirements:
     _entity_access: 'search_api_index.facets'
+
+entity.search_api_index.facets.add_form:
+  path: '/admin/config/search/search-api/add-index'
+  defaults:
+    _entity_form: 'facetapi_facet.default'
+  requirements:
+    _entity_create_access: 'search_api_index'
+
+entity.search_api_index.facets.canonical:
+  path: '/admin/config/search/search-api/index/{search_api_index}'
+  defaults:
+    _controller: '\Drupal\facetapi\Controller\FacetController::page'
+    _title_callback: '\Drupal\facetapi\Controller\FacetController::pageTitle'
+  requirements:
+    _entity_access: 'facetapi_facet.view'
+
+entity.search_api_index.facets.edit_form:
+  path: '/admin/config/search/search-api/index/{search_api_index}/edit'
+  defaults:
+    _entity_form: 'facetapi_facet.edit'
+  requirements:
+    _entity_access: 'facetapi_facet.edit'
+
+entity.search_api_index.facets.delete_form:
+  path: '/admin/config/search/search-api/index/{search_api_index}/delete'
+  defaults:
+    _entity_form: 'facetapi_facet.delete'
+  requirements:
+    _entity_access: 'facetapi_facet.delete'
