@@ -7,6 +7,8 @@
 
 namespace Drupal\facetapi\Adapter;
 
+use Drupal\facetapi\FacetInterface;
+
 interface AdapterInterface {
 
   /**
@@ -220,6 +222,8 @@ interface AdapterInterface {
 
   /**
    * Build the facets and get the render arrays for all facets.
+   *
+   * @param FacetInterface $facet
    *
    * @return array
    *   Facet render arrays.

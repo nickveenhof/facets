@@ -15,6 +15,7 @@ use Drupal\facetapi\UrlProcessor\UrlProcessorInterface;
 use Drupal\facetapi\UrlProcessor\UrlProcessorPluginManager;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Drupal\Component\Plugin\PluginManagerInterface;
+use \Drupal\facetapi\Entity\Facet;
 
 /**
  * Base class for Facet API adapters.
@@ -295,12 +296,13 @@ abstract class AdapterPluginBase extends PluginBase implements AdapterInterface,
    * @see FacetapiAdapter::initActiveFilters()
    */
   public function alterQuery(&$query) {
+    /** @var Facet[] $facets */
     $facets = $this->getEnabledFacets();
     // Get the searcher name from the query.
     $search_id = $this->searcher_id;
     foreach ($facets[$search_id] as $facet) {
       // Create the query type plugin.
-      $query_type_plugin = $this->query_type_plugin_manager->createInstance($facet['query type plugin'], array('query' => $query, 'facet' => $facet));
+      $query_type_plugin = $this->query_type_plugin_manager->createInstance($facet->getQueryType(), array('query' => $query, 'facet' => $facet));
       // Let the query type alter the query.
       $query_type_plugin->execute();
     }
@@ -319,11 +321,12 @@ abstract class AdapterPluginBase extends PluginBase implements AdapterInterface,
   /**
    * Returns enabled facets for the searcher associated with this adapter.
    *
-   * @return array
+   * @return Facet[]
    *   An array of enabled facets.
    */
   public function getEnabledFacets() {
     // Use the hook_info to discover facets.
+    /** @var Facet[] $facet_definitions */
     $facet_definitions = $this->module_handler->invokeAll('facetapi_facet_info');
     // Maybe also add different discovery methods later,
     // for instance in the adapter itself.
@@ -453,15 +456,15 @@ abstract class AdapterPluginBase extends PluginBase implements AdapterInterface,
   public function build($facet) {
     // Process the facets.
     // @TODO: inject the searcher id on create of the adapter.
-    $this->searcher_id = $facet['searcher'];
+    $this->searcher_id = $facet->getSearcherName();
     $results = $this->processFacets();
     // Let the plugin render the facet.
     $configuration = array(
       'query' => NULL,
       'facet' => $facet,
-      'results' => $results[$facet['name']]
+      'results' => $results[$facet->getName()]
     );
-    $query_type_plugin = $this->query_type_plugin_manager->createInstance($facet['query type plugin'],
+    $query_type_plugin = $this->query_type_plugin_manager->createInstance($facet->getQueryType(),
       $configuration
     );
     // Return the render array.

@@ -10,6 +10,14 @@ use Drupal\Core\Config\Entity\ConfigEntityInterface;
 
 interface FacetInterface extends ConfigEntityInterface {
 
+
+  /**
+   * Get field identifier.
+   *
+   * @return mixed
+   */
+  public function getFieldIdentifier();
+
   /**
    * Get the field alias used to identify the facet in the url.
    *
@@ -17,6 +25,14 @@ interface FacetInterface extends ConfigEntityInterface {
    */
   public function getFieldAlias();
 
+  /**
+   * Get the field name of the facet as used in the index.
+   *
+   * @TODO: Check if fieldIdentifier can be used as well!
+   *
+   * @return mixed
+   */
+  public function getName();
   /**
    * Sets an item with value to active.
    *
@@ -30,6 +46,21 @@ interface FacetInterface extends ConfigEntityInterface {
    * @return mixed
    */
   public function getActiveItems();
+
+
+  /**
+   * Get the query type plugin name.
+   *
+   * @return mixed
+   */
+  public function getQueryType();
+
+  /**
+   * Get the name of the searcher.
+   *
+   * @return mixed
+   */
+  public function getSearcherName();
 
   /**
    * Retrieves an option.

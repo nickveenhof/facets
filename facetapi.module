@@ -9,6 +9,7 @@ use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Entity\EntityManagerInterface;
 use Drupal\search_api\Entity\Index;
 use Drupal\search_api\Query\QueryInterface;
+use Drupal\facetapi\Entity\Facet;
 use Drupal\Component\Plugin\PluginBase;
 
 /**
@@ -125,13 +126,26 @@ function facetapi_facetapi_facet_info() {
               'integer',
             );
             if (in_array($field->getType(), $term_types)) {
-              $facet_info[$searcher_name][$field_name] = array(
+//              $properties = array(
+//                'name' => $field_name,
+//                'label' => $field->getLabel(),
+//                'field' => $field->getFieldIdentifier(),
+//                'query type plugin' => 'search_api_term',
+//                'searcher' => $searcher_name,
+//              );
+              $properties = array(
                 'name' => $field_name,
                 'label' => $field->getLabel(),
-                'field' => $field->getFieldIdentifier(),
-                'query type plugin' => 'search_api_term',
-                'searcher' => $searcher_name,
+                'field_identifier' => $field->getFieldIdentifier(),
+                'query_type_name' => 'search_api_term',
+                'searcher_name' => $searcher_name,
               );
+
+
+              $facet = Facet::create($properties);
+
+
+              $facet_info[$searcher_name][$field_name] = $facet;
             }
 
           }

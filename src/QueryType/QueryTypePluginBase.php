@@ -8,6 +8,7 @@ namespace Drupal\facetapi\QueryType;
 use Drupal\Component\Plugin\ConfigurablePluginInterface;
 use Drupal\Core\Entity\DependencyTrait;
 use Drupal\Core\Plugin\PluginBase;
+use Drupal\facetapi\FacetInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 abstract class QueryTypePluginBase extends PluginBase implements QueryTypeInterface, ConfigurablePluginInterface {
@@ -38,7 +39,7 @@ abstract class QueryTypePluginBase extends PluginBase implements QueryTypeInterf
   /**
    * Holds the facet.
    *
-   * @var
+   * @var FacetInterface
    */
   protected $facet;
 

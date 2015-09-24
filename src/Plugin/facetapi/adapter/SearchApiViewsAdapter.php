@@ -6,6 +6,7 @@ namespace Drupal\facetapi\Plugin\facetapi\adapter;
 
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\facetapi\Adapter\AdapterPluginBase;
+use Drupal\facetapi\FacetInterface;
 use Drupal\facetapi\QueryType\QueryTypePluginManager;
 use Drupal\facetapi\UrlProcessor\UrlProcessorPluginManager;
 use Drupal\search_api\Query\QueryInterface;
@@ -72,18 +73,18 @@ class SearchApiViewsAdapter extends AdapterPluginBase {
    * Helper method only for search api.
    * Don't move up!!!
    *
-   * @param array $facet
+   * @param FacetInterface $facet
    * @param \Drupal\search_api\Query\QueryInterface $query
    */
-  public function addFacet(array $facet, QueryInterface $query) {
-    if (isset($this->fields[$facet['name']])) {
+  public function addFacet(FacetInterface $facet, QueryInterface $query) {
+    if (isset($this->fields[$facet->getName()])) {
       $options = &$query->getOptions();
-      $facet_info = $this->fields[$facet['name']];
-      if (!empty($facet['query_options'])) {
+      $facet_info = $this->fields[$facet->getName()];
+      if (!empty($facet->getOption('query_options'))) {
         // Let facet-specific query options override the set options.
-        $facet_info = $facet['query_options'] + $facet_info;
+        $facet_info = $facet->getOption('query_options') + $facet_info;
       }
-      $options['search_api_facets'][$facet['name']] = $facet_info;
+      $options['search_api_facets'][$facet->getName()] = $facet_info;
     }
   }
 
