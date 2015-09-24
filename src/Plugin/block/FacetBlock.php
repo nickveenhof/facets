@@ -13,7 +13,6 @@ use Drupal\Core\Block\BlockBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
-use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Provides a 'FacetBlock' block.
@@ -76,7 +75,7 @@ class FacetBlock extends BlockBase implements ContainerFactoryPluginInterface {
     // For now hard code the id.
     // This should be based on facet definitions.
     // The plugin manager should be injected.
-    $plugin_id = 'search_api';
+    $plugin_id = 'search_api_views';
     list($search_id, $facet_key) = explode(':::', $this->configuration['facet_identifier']);
     $adapter = $this->pluginManager->getMyOwnChangeLaterInstance($plugin_id, $search_id);
 

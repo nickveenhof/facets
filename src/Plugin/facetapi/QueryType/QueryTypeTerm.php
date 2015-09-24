@@ -1,11 +1,10 @@
 <?php
 /**
- * User: jur
- * Date: 17-04-15
- * Time: 16:28
+ * @file
+ * Contains Drupal\facetapi\Plugin\facetapi\querytype\QueryTypeTerm
  */
 
-namespace Drupal\search_api_facets\Plugin\facetapi\QueryType;
+namespace Drupal\facetapi\Plugin\facetapi\querytype;
 
 use Drupal\facetapi\Adapter\AdapterInterface;
 use \Drupal\facetapi\QueryType\QueryTypePluginBase;

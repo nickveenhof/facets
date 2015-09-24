@@ -2,7 +2,7 @@
 /**
  * Search api adapter.
  */
-namespace Drupal\search_api_facets\Plugin\facetapi\adapter;
+namespace Drupal\facetapi\Plugin\facetapi\adapter;
 
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\facetapi\Adapter\AdapterPluginBase;
@@ -14,7 +14,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * @FacetApiAdapter(
- *   id = "search_api",
+ *   id = "search_api_views",
  *   label = @Translation("Search api"),
  *   description = @Translation("Search api facet api adapter"),
  * )

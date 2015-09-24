@@ -73,7 +73,7 @@ class IndexFacetsForm extends EntityForm {
     }
 
     // Instantiates adapter, loads realm.
-    $adapter = $this->adapterManager->getDefinition('search_api');
+    $adapter = $this->adapterManager->getDefinition('search_api_views');
 
     // @todo inject realmManager to load realms. Look at the DataSourceDerivative
     $realm_name = $index->getServerId() . ':' . $index->id();
