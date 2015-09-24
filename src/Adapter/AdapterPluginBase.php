@@ -11,6 +11,8 @@ use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\Plugin\PluginBase;
 use Drupal\facetapi\QueryType\QueryTypePluginManager;
+use Drupal\facetapi\UrlProcessor\UrlProcessorInterface;
+use Drupal\facetapi\UrlProcessor\UrlProcessorPluginManager;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Drupal\Component\Plugin\PluginManagerInterface;
 
@@ -31,6 +33,13 @@ abstract class AdapterPluginBase extends PluginBase implements AdapterInterface,
    * The plugin manager.
    */
   protected $query_type_plugin_manager;
+
+  /**
+   * The url processor plugin manager.
+   *
+   * @var UrlProcessorPluginManager
+   */
+  protected $url_processor_plugin_manager;
 
   /**
    * @var ModuleHandlerInterface
@@ -76,9 +85,7 @@ abstract class AdapterPluginBase extends PluginBase implements AdapterInterface,
    * @TODO: generalize to ProcessorInterface and properly type hint in __construct().
    * The url processor plugin associated with this adapter.
    *
-   * @var FacetapiUrlProcessor
-   *
-   * @see FacetapiUrlProcessor
+   * @var UrlProcessorInterface
    */
   protected $urlProcessor;
 
@@ -144,6 +151,7 @@ abstract class AdapterPluginBase extends PluginBase implements AdapterInterface,
    * @var string
    */
   protected $searcher_id;
+
   /**
    * Returns the search path associated with this searcher.
    *
@@ -165,8 +173,11 @@ abstract class AdapterPluginBase extends PluginBase implements AdapterInterface,
     // @var PluginManagerInterface
     $query_type_plugin_manager = $container->get('plugin.manager.facetapi.query_type');
 
+    // Insert the plugin manager for url processors.
+    $url_processor_plugin_manager = $container->get('plugin.manager.facetapi.url_processor');
 
-    $plugin = new static($configuration, $plugin_id, $plugin_definition, $module_handler, $query_type_plugin_manager);
+
+    $plugin = new static($configuration, $plugin_id, $plugin_definition, $module_handler, $query_type_plugin_manager, $url_processor_plugin_manager);
     return $plugin;
   }
 
@@ -192,12 +203,14 @@ abstract class AdapterPluginBase extends PluginBase implements AdapterInterface,
     array $configuration,
     $plugin_id, $plugin_definition,
     ModuleHandlerInterface $module_handler,
-    QueryTypePluginManager $query_type_plugin_manager
+    QueryTypePluginManager $query_type_plugin_manager,
+    UrlProcessorPluginManager $url_processor_plugin_manager
   ) {
 
     parent::__construct($configuration, $plugin_id, $plugin_definition);
     $this->module_handler = $module_handler;
     $this->query_type_plugin_manager = $query_type_plugin_manager;
+    $this->url_processor_plugin_manager = $url_processor_plugin_manager;
   }
 
   /**
@@ -434,7 +447,7 @@ abstract class AdapterPluginBase extends PluginBase implements AdapterInterface,
    * @todo For clarity, should this method be named buildFacets()?
    */
   public function processFacets() {
-    // TODO: Implement processFacets() method.
+
   }
 
   public function build($facet) {

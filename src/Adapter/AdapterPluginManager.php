@@ -1,6 +1,6 @@
 <?php
 /**
- * Contains Drupal\facetapi\AdapterManager
+ * Contains Drupal\facetapi\Adapter\AdapterManager
  */
 
 namespace Drupal\facetapi\Adapter;
