@@ -1,19 +1,20 @@
 entity.search_api_index.facets:
   path: '/admin/config/search/search-api/index/{search_api_index}/facets'
   defaults:
-    _entity_form: 'search_api_index.facets'
+    _title: 'facets'
+    _entity_list: 'facetapi_facet'
   requirements:
-    _entity_access: 'search_api_index.facets'
+    _entity_create_access: 'search_api_index'
 
 entity.search_api_index.facets.add_form:
-  path: '/admin/config/search/search-api/add-index'
+  path: '/admin/config/search/search-api/{search_api_index}/facets/add-facet'
   defaults:
     _entity_form: 'facetapi_facet.default'
   requirements:
     _entity_create_access: 'search_api_index'
 
 entity.search_api_index.facets.canonical:
-  path: '/admin/config/search/search-api/index/{search_api_index}'
+  path: '/admin/config/search/search-api/index/{search_api_index}/facets/{facet}'
   defaults:
     _controller: '\Drupal\facetapi\Controller\FacetController::page'
     _title_callback: '\Drupal\facetapi\Controller\FacetController::pageTitle'
@@ -21,14 +22,14 @@ entity.search_api_index.facets.canonical:
     _entity_access: 'facetapi_facet.view'
 
 entity.search_api_index.facets.edit_form:
-  path: '/admin/config/search/search-api/index/{search_api_index}/edit'
+  path: '/admin/config/search/search-api/index/{search_api_index}/facets/{facet}/edit'
   defaults:
     _entity_form: 'facetapi_facet.edit'
   requirements:
     _entity_access: 'facetapi_facet.edit'
 
 entity.search_api_index.facets.delete_form:
-  path: '/admin/config/search/search-api/index/{search_api_index}/delete'
+  path: '/admin/config/search/search-api/index/{search_api_index}/facets/{facet}/delete'
   defaults:
     _entity_form: 'facetapi_facet.delete'
   requirements:
