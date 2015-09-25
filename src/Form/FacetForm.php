@@ -181,7 +181,7 @@ class FacetForm extends EntityForm {
   }
 
   /**
-   * Builds the configuration forms for all selected datasources.
+   * Builds the configuration forms for all selected contexts.
    *
    * @param \Drupal\search_api\IndexInterface $index
    *   The index begin created or edited.
@@ -193,7 +193,7 @@ class FacetForm extends EntityForm {
     foreach ($facet->getContextIds() as $context_id => $context) {
       // @todo Create, use and save SubFormState already here, not only in
       //   validate(). Also, use proper subset of $form for first parameter?
-      if ($config_form = $datasource->buildConfigurationForm(array(), $form_state)) {
+      if ($config_form = $context->buildConfigurationForm(array(), $form_state)) {
         $form['context_configs'][$context_id]['#type'] = 'details';
         $form['context_configs'][$context_id]['#title'] = $this->t('Configure the %datasource datasource', array('%datasource' => $context->getPluginDefinition()['label']));
         $form['context_configs'][$context_id]['#open'] = $facet->isNew();

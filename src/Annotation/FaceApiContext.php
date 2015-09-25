@@ -17,7 +17,7 @@ use Drupal\Component\Annotation\Plugin;
  *
  * @Annotation
  */
-class FaceApiContext extends Plugin {
+class FacetApiContext extends Plugin {
 
   /**
    * The adapter plugin id
