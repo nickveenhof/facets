@@ -59,15 +59,32 @@ class FacetListBuilder extends ConfigEntityListBuilder {
    * {@inheritdoc}
    */
   public function getDefaultOperations(EntityInterface $entity) {
-    $operations = parent::getDefaultOperations($entity);
+    $operations = array();
 
     if ($entity instanceof FacetInterface) {
       $route_parameters['facet'] = $entity->id();
       $route_parameters['search_api_index'] = 'default_index';
+      if ($entity->access('update') && $entity->hasLinkTemplate('edit-form')) {
+        $operations['edit'] = array(
+          'title' => $this->t('Edit'),
+          'weight' => 10,
+          'url' => $entity->urlInfo('edit-form')->setRouteParameters($route_parameters),
+        );
+      }
+      if ($entity->access('delete') && $entity->hasLinkTemplate('delete-form')) {
+        $operations['delete'] = array(
+          'title' => $this->t('Delete'),
+          'weight' => 100,
+          'url' => $entity->urlInfo('delete-form')->setRouteParameters($route_parameters),
+        );
+      }
+
     }
 
     return $operations;
   }
+
+
 
   /**
    * {@inheritdoc}

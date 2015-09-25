@@ -11,7 +11,7 @@ entity.facetapi_facet.add_form:
   defaults:
     _entity_form: 'facetapi_facet.default'
   requirements:
-    _entity_create_access: 'search_api_index'
+    _entity_create_access: 'facetapi_facet'
 
 entity.facetapi_facet.canonical:
   path: '/admin/config/search/search-api/index/{search_api_index}/facets/{facet}'
