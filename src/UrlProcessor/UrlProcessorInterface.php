@@ -6,7 +6,7 @@
 
 namespace Drupal\facetapi\UrlProcessor;
 
-use Drupal\facetapi\Facet\FacetInterface;
+use Drupal\facetapi\FacetInterface;
 
 /**
  * Interface UrlProcessorInterface

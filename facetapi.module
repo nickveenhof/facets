@@ -10,6 +10,7 @@ use Drupal\Core\Entity\EntityManagerInterface;
 use Drupal\search_api\Entity\Index;
 use Drupal\search_api\Query\QueryInterface;
 use Drupal\facetapi\Entity\Facet;
+use Drupal\facetapi\FacetInterface;
 use Drupal\Component\Plugin\PluginBase;
 
 /**
@@ -44,12 +45,12 @@ function facetapi_theme()
 /**
  * Get all facet definitions.
  *
- * @return mixed
+ * @return FacetInterface[]
  */
 function facetapi_get_enabled_facets() {
   $module_handler = \Drupal::service('module_handler');
-  $facet_definitions = $module_handler->invokeAll('facetapi_facet_info');
-  return $facet_definitions;
+  $facets = $module_handler->invokeAll('facetapi_facet_info');
+  return $facets;
 }
 
 /**
@@ -117,9 +118,6 @@ function facetapi_facetapi_facet_info() {
           // @TODO: This should be a function in search api. Look it up.
           $searcher_name = 'search_api_views:' . $view_id . ':' . $display['id'];
           foreach ($fields as $field_name => $field) {
-            if ( empty($facet_info[$searcher_name])) {
-              $facet_info[$searcher_name] = array();
-            }
             // Determine the query type.
             $term_types = array(
               'string',
@@ -139,13 +137,14 @@ function facetapi_facetapi_facet_info() {
                 'field_identifier' => $field->getFieldIdentifier(),
                 'query_type_name' => 'search_api_term',
                 'searcher_name' => $searcher_name,
+                'url_processor_name' => 'query_string',
               );
 
 
               $facet = Facet::create($properties);
 
 
-              $facet_info[$searcher_name][$field_name] = $facet;
+              $facet_info[$searcher_name . '::' . $field_name] = $facet;
             }
 
           }

@@ -87,7 +87,7 @@ class Facet extends ConfigEntityBase implements FacetInterface {
    *
    * @var string
    */
-  protected $field_indentifier;
+  protected $field_identifier;
 
   /**
    * The query type name.
@@ -102,6 +102,15 @@ class Facet extends ConfigEntityBase implements FacetInterface {
    * @var string
    */
   protected $searcher_name;
+
+  /**
+   * The plugin name of the url processor.
+   *
+   * @var string
+   */
+  protected $url_processor_name;
+
+  protected $active_values = array();
 
   /**
    * {@inheritdoc}
@@ -130,7 +139,9 @@ class Facet extends ConfigEntityBase implements FacetInterface {
    * @return mixed
    */
   public function getFieldAlias() {
-    return NULL;
+    // For now, create the field alias based on the field identifier.
+    $field_alias = preg_replace('/[:\/]+/', '_', $this->field_identifier);
+    return $field_alias;
   }
 
   /**
@@ -139,7 +150,9 @@ class Facet extends ConfigEntityBase implements FacetInterface {
    * @param $value
    */
   public function setActiveItem($value) {
-    return NULL;
+    if (!in_array($value, $this->active_values)) {
+      $this->active_values[] = $value;
+    }
   }
 
   /**
@@ -182,7 +195,7 @@ class Facet extends ConfigEntityBase implements FacetInterface {
   }
 
   public function getFieldIdentifier() {
-    return $this->field_indentifier;
+    return $this->field_identifier;
   }
 
   public function getQueryType() {
@@ -191,6 +204,10 @@ class Facet extends ConfigEntityBase implements FacetInterface {
 
   public function getSearcherName() {
     return $this->searcher_name;
+  }
+
+  public function getUrlProcessorName() {
+    return $this->url_processor_name;
   }
 
   public function getName() {

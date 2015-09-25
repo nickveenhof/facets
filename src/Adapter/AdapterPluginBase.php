@@ -10,6 +10,7 @@ namespace Drupal\facetapi\Adapter;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\Plugin\PluginBase;
+use Drupal\facetapi\FacetInterface;
 use Drupal\facetapi\QueryType\QueryTypePluginManager;
 use Drupal\facetapi\UrlProcessor\UrlProcessorInterface;
 use Drupal\facetapi\UrlProcessor\UrlProcessorPluginManager;
@@ -55,9 +56,9 @@ abstract class AdapterPluginBase extends PluginBase implements AdapterInterface,
   protected $keys;
 
   /**
-   * An array of FacetapiFacet objects for facets being rendered.
+   * An array of FacetInterface objects for facets being rendered.
    *
-   * @var array
+   * @var FacetInterface[]
    *
    * @see FacetapiFacet
    */
@@ -212,6 +213,11 @@ abstract class AdapterPluginBase extends PluginBase implements AdapterInterface,
     $this->module_handler = $module_handler;
     $this->query_type_plugin_manager = $query_type_plugin_manager;
     $this->url_processor_plugin_manager = $url_processor_plugin_manager;
+
+    // Immediately initialize the facets.
+    // This can be done directly because the only thing needed is
+    // the url.
+    $this->initFacets();
   }
 
   /**
@@ -300,11 +306,15 @@ abstract class AdapterPluginBase extends PluginBase implements AdapterInterface,
     $facets = $this->getEnabledFacets();
     // Get the searcher name from the query.
     $search_id = $this->searcher_id;
-    foreach ($facets[$search_id] as $facet) {
-      // Create the query type plugin.
-      $query_type_plugin = $this->query_type_plugin_manager->createInstance($facet->getQueryType(), array('query' => $query, 'facet' => $facet));
-      // Let the query type alter the query.
-      $query_type_plugin->execute();
+    foreach ($facets as $facet) {
+      // Only if the facet is for this query, alter the query.
+      if ($facet->getSearcherName() == $search_id) {
+        // Create the query type plugin.
+        $query_type_plugin = $this->query_type_plugin_manager->createInstance($facet->getQueryType(),
+          array('query' => $query, 'facet' => $facet));
+        // Let the query type alter the query.
+        $query_type_plugin->execute();
+      }
     }
   }
 
@@ -450,6 +460,25 @@ abstract class AdapterPluginBase extends PluginBase implements AdapterInterface,
    * @todo For clarity, should this method be named buildFacets()?
    */
   public function processFacets() {
+
+  }
+
+  /**
+   * Initialize enabled facets.
+   *
+   * In this method the url processor is used
+   * to check for each facet what the active items are.
+   */
+  protected function initFacets() {
+    if (empty($this->facets)) {
+      $this->facets = $this->getEnabledFacets();
+      foreach ($this->facets as $facet) {
+        /** @var UrlProcessorInterface $url_processor */
+        $url_processor_name = $facet->getUrlProcessorName();
+        $url_processor = $this->url_processor_plugin_manager->createInstance($url_processor_name);
+        $url_processor->processFacet($facet);
+      }
+    }
 
   }
 

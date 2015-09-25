@@ -63,6 +63,13 @@ interface FacetInterface extends ConfigEntityInterface {
   public function getSearcherName();
 
   /**
+   * Get the plugin name for the url processor.
+   *
+   * @return mixed
+   */
+  public function getUrlProcessorName();
+
+  /**
    * Retrieves an option.
    *
    * @param string $name
