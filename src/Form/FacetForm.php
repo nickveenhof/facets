@@ -16,6 +16,7 @@ use Drupal\Core\Url;
 use Drupal\facetapi\FacetInterface;
 use Drupal\facetapi\FacetApiException;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Drupal\facetapi\Context;
 
 /**
  * Provides a form for creating and editing search servers.
@@ -188,7 +189,7 @@ class FacetForm extends EntityForm {
    */
   public function buildContextForm(array &$form, FormStateInterface $form_state, FacetInterface $facet) {
     /**
-     * @var FacetApiContext $context
+     * @var Context\ContextPluginManager $context
      */
     foreach ($facet->getContextIds() as $context_id => $context) {
       // @todo Create, use and save SubFormState already here, not only in
