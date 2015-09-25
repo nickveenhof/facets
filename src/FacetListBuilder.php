@@ -89,14 +89,17 @@ class FacetListBuilder extends ConfigEntityListBuilder {
    * {@inheritdoc}
    */
   public function buildHeader() {
-    return array(
-      'type' => $this->t('Type'),
-      'title' => $this->t('Name'),
-      'status' => array(
-        'data' => $this->t('Status'),
-        'class' => array('checkbox'),
-      ),
-    ) + parent::buildHeader();
+    return [
+      'title' => $this->t('Facet'),
+      'description' => [
+        'data' => $this->t('Description'),
+        'class' => [RESPONSIVE_PRIORITY_MEDIUM],
+      ],
+      'status' => [
+        'data' => $this->t('Enabled'),
+        'class' => ['checkbox'],
+      ],
+    ] + parent::buildHeader();
   }
 
   /**
@@ -118,17 +121,12 @@ class FacetListBuilder extends ConfigEntityListBuilder {
 
     return array(
       'data' => array(
-        'type' => array(
-          'data' => $this->t('Facet'),
-          'class' => array('search-api-type'),
-        ),
         'title' => array(
-          'data' => array(
-              '#type' => 'link',
-              '#title' => $entity->label(),
-              '#suffix' => '<div>' . $entity->get('description') . '</div>',
-            ) + $entity->urlInfo('canonical')->toRenderArray(),
+          'data' => $entity->label(),
           'class' => array('search-api-title'),
+        ),
+        'description' => array(
+          'data' => 'Todo: field info for current facet here.',
         ),
         'status' => array(
           'data' => $status_icon,
