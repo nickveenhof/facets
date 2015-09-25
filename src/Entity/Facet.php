@@ -40,7 +40,7 @@ use Drupal\facetapi\FacetInterface;
  *     "options",
  *   },
  *   links = {
- *     "canonical" = "/admin/config/search/search-api/index/{search_api_index}/facets/{facetapi_facet}",
+ *     "canonical" = "/admin/config/search/search-api/index/{search_api_index}/facets",
  *     "add-form" = "/admin/config/search/search-api/index/{search_api_index}/facets/add-facet",
  *     "edit-form" = "/admin/config/search/search-api/index/{search_api_index}/facets/{facetapi_facet}/edit",
  *     "delete-form" = "/admin/config/search/search-api/index/{search_api_index}/facets/{facetapi_facet}/delete",

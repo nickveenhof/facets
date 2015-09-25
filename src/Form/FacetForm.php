@@ -140,7 +140,7 @@ class FacetForm extends EntityForm {
   public function submitForm(array &$form, FormStateInterface $form_state) {
     parent::submitForm($form, $form_state);
 
-    /** @var \Drupal\facetapi\FacetInterface $server */
+    /** @var \Drupal\facetapi\FacetInterface $facet */
     $facet = $this->getEntity();
 
     return $facet;
@@ -156,7 +156,7 @@ class FacetForm extends EntityForm {
         $facet = $this->getEntity();
         $facet->save();
         drupal_set_message($this->t('The facet was successfully saved.'));
-        $form_state->setRedirect('entity.facetapi_facet.canonical', array('facetapi_facet' => $facet->id()));
+        $form_state->setRedirect('entity.search_api_index.facets', array('search_api_index' => 'default_index'));
       }
       catch (FacetApiException $e) {
         $form_state->setRebuild();
