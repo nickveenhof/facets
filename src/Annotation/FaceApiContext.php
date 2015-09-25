@@ -11,6 +11,7 @@ use Drupal\Component\Annotation\Plugin;
 /**
  * Defines a Facet API FaceApiContext annotation object.
  *
+ * @see \Drupal\facetapi\Context\ContextInterface
  * @see plugin_api
  *
  * @ingroup plugin_api
