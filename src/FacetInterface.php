@@ -114,4 +114,11 @@ interface FacetInterface extends ConfigEntityInterface {
    */
   public function setOptions(array $options);
 
+
+  /**
+   * Gets the adapter plugin id
+   * @return string
+   */
+  public function getAdapterPluginId();
+
 }

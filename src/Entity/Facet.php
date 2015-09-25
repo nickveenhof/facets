@@ -221,4 +221,13 @@ class Facet extends ConfigEntityBase implements FacetInterface {
     //$parameters['search_api_index'] = $this->search_api_index;
     return $parameters;
   }
+
+  /**
+   * Until facet api supports more than just search api, this is enough.
+   *
+   * @return string
+   */
+  public function getAdapterPluginId() {
+    return 'search_api_views';
+  }
 }
