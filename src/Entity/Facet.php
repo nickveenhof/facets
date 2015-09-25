@@ -38,9 +38,6 @@ use Drupal\facetapi\FacetInterface;
  *     "name",
  *     "description",
  *     "options",
- *     "field_identifier",
- *     "query_type_name",
- *     "searcher_name",
  *   },
  *   links = {
  *     "canonical" = "/admin/config/search/search-api/index/{search_api_index}/facets/{facet}",
@@ -212,5 +209,16 @@ class Facet extends ConfigEntityBase implements FacetInterface {
 
   public function getName() {
     return $this->name;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function urlRouteParameters($rel) {
+    $parameters = parent::urlRouteParameters($rel);
+    $parameters['search_api_index'] = 'default_index';
+
+    //$parameters['search_api_index'] = $this->search_api_index;
+    return $parameters;
   }
 }

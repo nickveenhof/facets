@@ -14,7 +14,7 @@ entity.facetapi_facet.add_form:
     _entity_create_access: 'facetapi_facet'
 
 entity.facetapi_facet.canonical:
-  path: '/admin/config/search/search-api/index/{search_api_index}/facets/{facet}'
+  path: '/admin/config/search/search-api/index/{search_api_index}/facets/{facetapi_facet}'
   defaults:
     _controller: '\Drupal\facetapi\Controller\FacetController::page'
     _title_callback: '\Drupal\facetapi\Controller\FacetController::pageTitle'
@@ -22,14 +22,14 @@ entity.facetapi_facet.canonical:
     _entity_access: 'facetapi_facet.view'
 
 entity.facetapi_facet.edit_form:
-  path: '/admin/config/search/search-api/index/{search_api_index}/facets/{facet}/edit'
+  path: '/admin/config/search/search-api/index/{search_api_index}/facets/{facetapi_facet}/edit'
   defaults:
     _entity_form: 'facetapi_facet.edit'
   requirements:
     _entity_access: 'facetapi_facet.edit'
 
 entity.facetapi_facet.delete_form:
-  path: '/admin/config/search/search-api/index/{search_api_index}/facets/{facet}/delete'
+  path: '/admin/config/search/search-api/index/{search_api_index}/facets/{facetapi_facet}/delete'
   defaults:
     _entity_form: 'facetapi_facet.delete'
   requirements:
