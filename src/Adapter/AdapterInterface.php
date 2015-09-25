@@ -221,6 +221,13 @@ interface AdapterInterface {
   public function processFacets();
 
   /**
+   * Update the facet results.
+   *
+   * Each facet should be updated with a list of Result objects.
+   */
+  public function updateResults();
+
+  /**
    * Build the facets and get the render arrays for all facets.
    *
    * @param FacetInterface $facet

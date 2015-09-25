@@ -7,7 +7,9 @@ namespace Drupal\facetapi\QueryType;
 
 use Drupal\Component\Plugin\ConfigurablePluginInterface;
 use Drupal\Core\Entity\DependencyTrait;
+use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\Plugin\PluginBase;
+use Drupal\Core\Utility\LinkGeneratorInterface;
 use Drupal\facetapi\FacetInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -51,6 +53,13 @@ abstract class QueryTypePluginBase extends PluginBase implements QueryTypeInterf
   protected $results;
 
   /**
+   * The injected link generator.
+   *
+   * @var LinkGeneratorInterface
+   */
+  protected $link_generator;
+
+  /**
    * {@inheritdoc}
    */
   public function defaultConfiguration() {
@@ -78,4 +87,5 @@ abstract class QueryTypePluginBase extends PluginBase implements QueryTypeInterf
     $this->addDependency('module', $this->getPluginDefinition()['provider']);
     return $this->dependencies;
   }
+
 }

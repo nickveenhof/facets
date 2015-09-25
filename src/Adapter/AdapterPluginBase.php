@@ -12,6 +12,7 @@ use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\Plugin\PluginBase;
 use Drupal\facetapi\FacetInterface;
 use Drupal\facetapi\QueryType\QueryTypePluginManager;
+use Drupal\facetapi\Result\Result;
 use Drupal\facetapi\UrlProcessor\UrlProcessorInterface;
 use Drupal\facetapi\UrlProcessor\UrlProcessorPluginManager;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -303,10 +304,9 @@ abstract class AdapterPluginBase extends PluginBase implements AdapterInterface,
    */
   public function alterQuery(&$query) {
     /** @var Facet[] $facets */
-    $facets = $this->getEnabledFacets();
     // Get the searcher name from the query.
     $search_id = $this->searcher_id;
-    foreach ($facets as $facet) {
+    foreach ($this->facets as $facet) {
       // Only if the facet is for this query, alter the query.
       if ($facet->getSearcherName() == $search_id) {
         // Create the query type plugin.
@@ -460,7 +460,11 @@ abstract class AdapterPluginBase extends PluginBase implements AdapterInterface,
    * @todo For clarity, should this method be named buildFacets()?
    */
   public function processFacets() {
+    // First add the results to the facets.
+    $this->updateResults();
 
+    // Then update the urls
+    $this->updateResultUrls();
   }
 
   /**
@@ -486,17 +490,59 @@ abstract class AdapterPluginBase extends PluginBase implements AdapterInterface,
     // Process the facets.
     // @TODO: inject the searcher id on create of the adapter.
     $this->searcher_id = $facet->getSearcherName();
-    $results = $this->processFacets();
+
+    $this->processFacets();
     // Let the plugin render the facet.
-    $configuration = array(
-      'query' => NULL,
-      'facet' => $facet,
-      'results' => $results[$facet->getName()]
-    );
-    $query_type_plugin = $this->query_type_plugin_manager->createInstance($facet->getQueryType(),
-      $configuration
-    );
+
+    // @TODO: functionality to alter the state of the facet should
+    // somewhere else. Now here for speed reasons for proof of concept.
+
     // Return the render array.
-    return $query_type_plugin->build();
+    return $this->buildRenderArray($facet);
+  }
+
+  abstract public function updateResults();
+
+  /**
+   * Build the facet information,
+   * so it can be rendered.
+   *
+   * @TODO: REMOVE THIS: this only for demo purposes.
+   * Later this should be replaced by a render plugin.
+   *
+   * @return mixed
+   */
+  protected function buildRenderArray(FacetInterface $facet) {
+    // @TODO: Move the rendering to it's own object.
+    // Here only the links should be gererated.
+    $build = array();
+    /** @var Result[] $results */
+    $results = $facet->getResults();
+    if (! empty ($results)) {
+      $items = array();
+      foreach ($results as $result) {
+        if ($result->getCount()) {
+          // Get the link.
+          $text = $result->getValue() . ' (' . $result->getCount() . ')';
+//          $link = $this->link_generator->generate($text, );
+          $items[] = $text;
+        }
+      }
+      $build = array(
+        '#theme' => 'item_list',
+        '#items' => $items,
+      );
+    }
+    return $build;
+  }
+
+  protected function updateResultUrls() {
+    // Create the urls for the facets using the url processor.
+    foreach ($this->facets as $facet) {
+      /** @var UrlProcessorInterface $url_processor */
+      $url_processor_name = $facet->getUrlProcessorName();
+      $url_processor = $this->url_processor_plugin_manager->createInstance($url_processor_name);
+      $url_processor->processFacet($facet);
+    }
   }
 }

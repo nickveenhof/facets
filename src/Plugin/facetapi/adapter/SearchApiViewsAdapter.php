@@ -93,12 +93,25 @@ class SearchApiViewsAdapter extends AdapterPluginBase {
    * for a test only. This method should disappear later
    * when facetapi does it.
    */
-  public function processFacets() {
+  public function updateResults() {
     // Get the facet values from the query that has been done.
     // Store all information in $this->facets.
     $results = $this->searchResultsCache->getResults($this->searcher_id);
 
-    return $results->getExtraData('search_api_facets');
+    $facet_results = $results->getExtraData('search_api_facets');
+
+    foreach ($this->facets as $facet) {
+      $configuration = array(
+        'query' => NULL,
+        'facet' => $facet,
+        'results' => $facet_results[$facet->getName()],
+      );
+      $query_type_plugin = $this->query_type_plugin_manager->createInstance($facet->getQueryType(),
+        $configuration
+      );
+      $query_type_plugin->build();
+    }
+
   }
 
 }

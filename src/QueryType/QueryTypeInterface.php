@@ -21,7 +21,7 @@ interface QueryTypeInterface {
    * Build the facet information,
    * so it can be rendered.
    *
-   * @return mixed
+   * @TODO: maybe it should be renamed to addResults.
    */
   public function build();
 

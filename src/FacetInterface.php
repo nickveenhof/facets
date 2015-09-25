@@ -7,6 +7,7 @@
 namespace Drupal\facetapi;
 
 use Drupal\Core\Config\Entity\ConfigEntityInterface;
+use Drupal\facetapi\Result\ResultInterface;
 
 interface FacetInterface extends ConfigEntityInterface {
 
@@ -46,6 +47,20 @@ interface FacetInterface extends ConfigEntityInterface {
    * @return mixed
    */
   public function getActiveItems();
+
+  /**
+   * Get the result for the facet.
+   *
+   * @return mixed
+   */
+  public function getResults();
+
+  /**
+   * Sets the reuslts for the facet.
+   *
+   * @param ResultInterface[] $results
+   */
+  public function setResults(array $results);
 
 
   /**

@@ -9,6 +9,8 @@ namespace Drupal\facetapi\Entity;
 
 use Drupal\Core\Config\Entity\ConfigEntityBase;
 use Drupal\facetapi\FacetInterface;
+use Drupal\facetapi\Result\Result;
+use Drupal\facetapi\Result\ResultInterface;
 
 /**
  * Defines the search index configuration entity.
@@ -107,6 +109,13 @@ class Facet extends ConfigEntityBase implements FacetInterface {
    */
   protected $url_processor_name;
 
+  /**
+   * The results.
+   *
+   * @var Result[]
+   */
+  protected $results;
+
   protected $active_values = array();
 
   /**
@@ -158,7 +167,7 @@ class Facet extends ConfigEntityBase implements FacetInterface {
    * @return mixed
    */
   public function getActiveItems() {
-
+    return $this->active_values;
   }
 
   /**
@@ -220,5 +229,13 @@ class Facet extends ConfigEntityBase implements FacetInterface {
 
     //$parameters['search_api_index'] = $this->search_api_index;
     return $parameters;
+  }
+
+  public function getResults() {
+    return $this->results;
+  }
+
+  public function setResults(array $results) {
+    $this->results = $results;
   }
 }

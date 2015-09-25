@@ -8,6 +8,8 @@ namespace Drupal\facetapi\Plugin\facetapi\querytype;
 
 use Drupal\facetapi\Adapter\AdapterInterface;
 use \Drupal\facetapi\QueryType\QueryTypePluginBase;
+use Drupal\facetapi\Result\Result;
+use Drupal\search_api\Query\Query;
 
 
 /**
@@ -26,9 +28,11 @@ class QueryTypeTerm extends QueryTypePluginBase {
    * @return mixed
    */
   public function execute() {
+    /** @var  Query $query */
+    $query = $this->query;
     // Alter the query here.
-    if (! empty($this->query)) {
-      $options = &$this->query->getOptions();
+    if (! empty($query)) {
+      $options = &$query->getOptions();
 
       $field_name = $this->facet->getName();
       $options['search_api_facets'][$field_name] = array(
@@ -37,6 +41,16 @@ class QueryTypeTerm extends QueryTypePluginBase {
         'operator'  => 'and',
         'min_count' => 0,
       );
+
+      // Add the filter to the query if there are active values.
+      $active_items = $this->facet->getActiveItems();
+      if (count($active_items)) {
+        foreach ($active_items as $value) {
+          $filter = $query->createFilter();
+          $filter->condition($this->facet->getFieldIdentifier(), $value);
+          $query->filter($filter);
+        }
+      }
     }
   }
 
@@ -47,20 +61,14 @@ class QueryTypeTerm extends QueryTypePluginBase {
    * @return mixed
    */
   public function build() {
-    // TODO: Implement build() method.
-    $build = array();
     if (! empty ($this->results)) {
-      $items = array();
+      $facet_results = array();
       foreach ($this->results as $result) {
-        $items[] = $result['filter'] . ' (' . $result['count'] . ')';
+        if ($result['count']) {
+          $facet_results[] = new Result(trim($result['filter'], '"'), $result['count']);
+        }
       }
-      $build = array(
-        '#theme' => 'item_list',
-        '#items' => $items,
-      );
-      return $build;
+      $this->facet->setResults($facet_results);
     }
-    return;
   }
-
 }
