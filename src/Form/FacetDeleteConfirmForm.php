@@ -27,7 +27,7 @@ class FacetDeleteConfirmForm extends EntityConfirmFormBase {
    * {@inheritdoc}
    */
   public function getCancelUrl() {
-    return new Url('entity.facetapi_facet.canonical', array('search_api_server' => $this->entity->id()));
+    return new Url('entity.facetapi_facet.canonical', array('facetapi_facet' => $this->entity->id()));
   }
 
   /**
@@ -42,8 +42,8 @@ class FacetDeleteConfirmForm extends EntityConfirmFormBase {
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
     $this->entity->delete();
-    drupal_set_message($this->t('The search server %name has been deleted.', array('%name' => $this->entity->label())));
-    $form_state->setRedirect('search_api.overview');
+    drupal_set_message($this->t('The facet %name has been deleted.', array('%name' => $this->entity->label())));
+    $form_state->setRedirect('entity.search_api_index.facets');
   }
 
 }

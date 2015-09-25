@@ -62,7 +62,8 @@ class FacetListBuilder extends ConfigEntityListBuilder {
     $operations = parent::getDefaultOperations($entity);
 
     if ($entity instanceof FacetInterface) {
-      $route_parameters['facetapi_facet'] = $entity->id();
+      $route_parameters['facet'] = $entity->id();
+      $route_parameters['search_api_index'] = 'default_index';
     }
 
     return $operations;
@@ -131,7 +132,9 @@ class FacetListBuilder extends ConfigEntityListBuilder {
    * {@inheritdoc}
    */
   public function render() {
-    $entity_groups = $this->loadGroups();
+    $facets = $this->storage->loadMultiple();
+    $this->sortByStatusThenAlphabetically($facets);
+
     $list['#type'] = 'container';
     $list['#attached']['library'][] = 'search_api/drupal.search_api.admin_css';
 
@@ -144,54 +147,14 @@ class FacetListBuilder extends ConfigEntityListBuilder {
         'id' => 'search-api-entity-list',
       ),
     );
-    foreach ($entity_groups['facets'] as $facet_groups) {
-      /** @var \Drupal\Core\Config\Entity\ConfigEntityInterface $entity */
-      foreach ($facet_groups as $entity) {
-        $list['facets']['#rows'][$entity->getEntityTypeId() . '.' . $entity->id()] = $this->buildRow($entity);
-      }
+    /** @var \Drupal\Core\Config\Entity\ConfigEntityInterface $entity */
+    foreach ($facets as $entity) {
+      $list['facets']['#rows'][$entity->getEntityTypeId() . '.' . $entity->id()] = $this->buildRow($entity);
     }
 
     return $list;
   }
 
-  /**
-   * Loads search servers and indexes, grouped by servers.
-   *
-   * @return \Drupal\Core\Config\Entity\ConfigEntityInterface[][]
-   *   An associative array with two keys:
-   *   - servers: All available search servers, each followed by all search
-   *     indexes attached to it.
-   *   - lone_indexes: All search indexes that aren't attached to any server.
-   */
-  public function loadGroups() {
-    $indexes = $this->storage->loadMultiple();
-    /** @var \Drupal\search_api\ServerInterface[] $servers */
-    $servers = $this->serverStorage->loadMultiple();
-
-    $this->sortByStatusThenAlphabetically($indexes);
-    $this->sortByStatusThenAlphabetically($servers);
-
-    $server_groups = array();
-    foreach ($servers as $server) {
-      $server_group = array(
-        'server.' . $server->id() => $server,
-      );
-
-      foreach ($server->getIndexes() as $index) {
-        $server_group['index.' . $index->id()] = $index;
-        // Remove this index from $index so it will finally only contain those
-        // indexes not belonging to any server.
-        unset($indexes[$index->id()]);
-      }
-
-      $server_groups['server.' . $server->id()] = $server_group;
-    }
-
-    return array(
-      'servers' => $server_groups,
-      'lone_indexes' => $indexes,
-    );
-  }
 
   /**
    * Sorts an array of entities by status and then alphabetically.

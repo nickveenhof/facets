@@ -156,7 +156,7 @@ class FacetForm extends EntityForm {
         $facet = $this->getEntity();
         $facet->save();
         drupal_set_message($this->t('The facet was successfully saved.'));
-        $form_state->setRedirect('entity.search_api_index.facets.canonical', array('facetapi_facet' => $facet->id()));
+        $form_state->setRedirect('entity.facetapi_facet.canonical', array('facetapi_facet' => $facet->id()));
       }
       catch (FacetApiException $e) {
         $form_state->setRebuild();
@@ -170,7 +170,7 @@ class FacetForm extends EntityForm {
    * {@inheritdoc}
    */
   public function delete(array $form, FormStateInterface $form_state) {
-    $form_state->setRedirect('entity.search_api_index.facets.delete_form', array('facetapi_facet' => $this->getEntity()->id()));
+    $form_state->setRedirect('entity.facetapi_facet.delete_form', array('facetapi_facet' => $this->getEntity()->id()));
   }
 
 }
