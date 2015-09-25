@@ -114,4 +114,11 @@ interface FacetInterface extends ConfigEntityInterface {
    */
   public function setOptions(array $options);
 
+
+  /**
+   * Gets the context
+   * @return array
+   */
+  public function getContextIds();
+
 }

@@ -8,6 +8,12 @@ services:
   plugin.manager.facetapi.url_processor:
     class: Drupal\facetapi\UrlProcessor\UrlProcessorPluginManager
     parent: default_plugin_manager
+  plugin.manager.facetapi.datasource:
+    class: Drupal\search_api\Datasource\DatasourcePluginManager
+    parent: default_plugin_manager
+  plugin.manager.facetapi.context:
+    class: Drupal\facetapi\Context\ContextPluginManager
+    parent: default_plugin_manager
   search_api_facets.get_facets:
     class: \Drupal\facetapi\GetFacets
     arguments:

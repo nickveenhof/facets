@@ -107,6 +107,13 @@ class Facet extends ConfigEntityBase implements FacetInterface {
    */
   protected $url_processor_name;
 
+  /**
+   * The ids of the configured contexts
+   *
+   * @var array
+   */
+  protected $context_ids = [];
+
   protected $active_values = array();
 
   /**
@@ -209,6 +216,10 @@ class Facet extends ConfigEntityBase implements FacetInterface {
 
   public function getName() {
     return $this->name;
+  }
+
+  public function getContextIds() {
+    return $this->context_ids;
   }
 
   /**

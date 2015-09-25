@@ -29,6 +29,9 @@ class FacetForm extends EntityForm {
    */
   protected $storage;
 
+
+  protected $contextPluginManager;
+
   /**
    * Constructs a ServerForm object.
    *
@@ -58,6 +61,16 @@ class FacetForm extends EntityForm {
    */
   protected function getStorage() {
     return $this->storage ?: \Drupal::service('entity.manager')->getStorage('facetapi_facet');
+  }
+
+  /**
+   * Returns the datasource plugin manager.
+   *
+   * @return \Drupal\search_api\Datasource\DatasourcePluginManager
+   *   The datasource plugin manager.
+   */
+  protected function getContextPluginManager() {
+    return $this->contextPluginManager ?: \Drupal::service('plugin.manager.facetapi.context');
   }
 
   /**
@@ -121,6 +134,73 @@ class FacetForm extends EntityForm {
       '#description' => $this->t('Only enabled facets can be displayed.'),
       '#default_value' => $facet->status(),
     );
+
+    $context_options = [];
+    foreach ($this->getContextPluginManager()->getDefinitions() as $context_id => $definition) {
+      $context_options[$context_id] = !empty($definition['label']) ? $definition['label'] : $context_id;
+    }
+    $form['contexts'] = [
+      '#type' => 'select',
+      '#title' => $this->t('Contexts'),
+      '#description' => $this->t('Select one or more contexts this facet will react on.'),
+      '#options' => $context_options,
+      '#default_value' => $facet->getContextIds(),
+      '#multiple' => TRUE,
+      '#required' => TRUE,
+      '#ajax' => [
+        'trigger_as' => ['name' => 'contexts_configure'],
+        'callback' => '::buildAjaxDatasourceConfigForm',
+        'wrapper' => 'facet-api-contexts-config-form',
+        'method' => 'replace',
+        'effect' => 'fade',
+      ],
+    ];
+
+    $form['context_configs'] = [
+      '#type' => 'container',
+      '#attributes' => [
+        'id' => 'facet-api-contexts-config-form',
+      ],
+      '#tree' => TRUE,
+    ];
+
+    $form['context_config_configure_button'] = [
+      '#type' => 'submit',
+      '#name' => 'datasourcepluginids_configure',
+      '#value' => $this->t('Configure'),
+      '#limit_validation_errors' => [['datasources']],
+      '#submit' => ['::submitAjaxDatasourceConfigForm'],
+      '#ajax' => [
+        'callback' => '::buildAjaxDatasourceConfigForm',
+        'wrapper' => 'search-api-datasources-config-form',
+      ],
+      '#attributes' => ['class' => ['js-hide']],
+    ];
+
+    $this->buildContextForm($form, $form_state, $facet);
+  }
+
+  /**
+   * Builds the configuration forms for all selected datasources.
+   *
+   * @param \Drupal\search_api\IndexInterface $index
+   *   The index begin created or edited.
+   */
+  public function buildContextForm(array &$form, FormStateInterface $form_state, FacetInterface $facet) {
+    /**
+     * @var FacetApiContext $context
+     */
+    foreach ($facet->getContextIds() as $context_id => $context) {
+      // @todo Create, use and save SubFormState already here, not only in
+      //   validate(). Also, use proper subset of $form for first parameter?
+      if ($config_form = $datasource->buildConfigurationForm(array(), $form_state)) {
+        $form['context_configs'][$context_id]['#type'] = 'details';
+        $form['context_configs'][$context_id]['#title'] = $this->t('Configure the %datasource datasource', array('%datasource' => $context->getPluginDefinition()['label']));
+        $form['context_configs'][$context_id]['#open'] = $facet->isNew();
+
+        $form['context_configs'][$context_id] += $config_form;
+      }
+    }
   }
 
   /**
