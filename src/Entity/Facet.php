@@ -18,11 +18,11 @@ use Drupal\facetapi\FacetInterface;
  *   label = @Translation("Facet"),
  *   handlers = {
  *     "storage" = "Drupal\Core\Config\Entity\ConfigEntityStorage",
- *     "list_builder" = "Drupal\search_api\FacetListBuilder",
+ *     "list_builder" = "Drupal\facetapi\FacetListBuilder",
  *     "form" = {
- *       "default" = "Drupal\search_api\Form\FacetForm",
- *       "edit" = "Drupal\search_api\Form\FacetForm",
- *       "delete" = "Drupal\search_api\Form\FacetDeleteConfirmForm",
+ *       "default" = "Drupal\facetapi\Form\FacetForm",
+ *       "edit" = "Drupal\facetapi\Form\FacetForm",
+ *       "delete" = "Drupal\facetapi\Form\FacetDeleteConfirmForm",
  *     },
  *   },
  *   admin_permission = "administer facetapi",
