@@ -117,7 +117,8 @@ class FacetForm extends EntityForm {
     );
     $form['block_enabled'] = array(
       '#type' => 'checkbox',
-      '#title' => $this->t('Create a block for this facet.'),
+      '#title' => $this->t('Create a block.'),
+      '#description' => $this->t('Exposes this facet in a block.'),
       '#default_value' => TRUE,
     );
     $form['status'] = array(
