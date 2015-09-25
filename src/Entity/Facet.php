@@ -39,6 +39,7 @@ use Drupal\facetapi\Result\ResultInterface;
  *     "id",
  *     "name",
  *     "description",
+ *     "search_api_index",
  *     "options",
  *   },
  *   links = {
@@ -101,6 +102,13 @@ class Facet extends ConfigEntityBase implements FacetInterface {
    * @var string
    */
   protected $searcher_name;
+
+  /**
+   * The search api index this facet belongs to.
+   *
+   * @var string
+   */
+  protected $search_api_index;
 
   /**
    * The plugin name of the url processor.
@@ -220,14 +228,21 @@ class Facet extends ConfigEntityBase implements FacetInterface {
     return $this->name;
   }
 
+  public function setSearchApiIndex($search_api_index) {
+    $this->search_api_index = $search_api_index;
+    return $this;
+  }
+
+  public function getSearchApiIndex() {
+    return $this->search_api_index;
+  }
+
   /**
    * {@inheritdoc}
    */
   protected function urlRouteParameters($rel) {
     $parameters = parent::urlRouteParameters($rel);
-    $parameters['search_api_index'] = 'default_index';
-
-    //$parameters['search_api_index'] = $this->search_api_index;
+    $parameters['search_api_index'] = $this->getSearchApiIndex();
     return $parameters;
   }
 

@@ -150,13 +150,14 @@ class FacetForm extends EntityForm {
    * {@inheritdoc}
    */
   public function save(array $form, FormStateInterface $form_state) {
-    // Only save the server if the form doesn't need to be rebuilt.
+    // Only save the facet if the form doesn't need to be rebuilt.
     if (!$form_state->isRebuilding()) {
       try {
         $facet = $this->getEntity();
+        $facet->setSearchApiIndex("default_index"); // TODO: fetch from url.
         $facet->save();
         drupal_set_message($this->t('The facet was successfully saved.'));
-        $form_state->setRedirect('entity.search_api_index.facets', array('search_api_index' => 'default_index'));
+        $form_state->setRedirect('entity.search_api_index.facets', array('search_api_index' => $facet->getSearchApiIndex()));
       }
       catch (FacetApiException $e) {
         $form_state->setRebuild();
