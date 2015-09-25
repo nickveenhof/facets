@@ -42,10 +42,10 @@ use Drupal\facetapi\Result\ResultInterface;
  *     "options",
  *   },
  *   links = {
- *     "canonical" = "/admin/config/search/search-api/index/{search_api_index}/facets/{facet}",
+ *     "canonical" = "/admin/config/search/search-api/index/{search_api_index}/facets",
  *     "add-form" = "/admin/config/search/search-api/index/{search_api_index}/facets/add-facet",
- *     "edit-form" = "/admin/config/search/search-api/index/{search_api_index}/facets/{facet}/edit",
- *     "delete-form" = "/admin/config/search/search-api/index/{search_api_index}/facets/{facet}/delete",
+ *     "edit-form" = "/admin/config/search/search-api/index/{search_api_index}/facets/{facetapi_facet}/edit",
+ *     "delete-form" = "/admin/config/search/search-api/index/{search_api_index}/facets/{facetapi_facet}/delete",
  *   }
  * )
  */
@@ -237,5 +237,14 @@ class Facet extends ConfigEntityBase implements FacetInterface {
 
   public function setResults(array $results) {
     $this->results = $results;
+  }
+
+  /**
+   * Until facet api supports more than just search api, this is enough.
+   *
+   * @return string
+   */
+  public function getAdapterPluginId() {
+    return 'search_api_views';
   }
 }

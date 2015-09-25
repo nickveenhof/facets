@@ -23,7 +23,7 @@ class AdapterPluginManager extends DefaultPluginManager implements AdapterPlugin
   }
 
   public function getMyOwnChangeLaterInstance($plugin_id, $search_id) {
-    if ( isset($this->adapters[$search_id])) {
+    if (isset($this->adapters[$search_id])) {
       return $this->adapters[$search_id];
     }
     /** @var AdapterInterface $adapter */

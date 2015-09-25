@@ -12,3 +12,8 @@ services:
     class: \Drupal\facetapi\GetFacets
     arguments:
       - '@entity.manager'
+  aggregator.feed_context:
+    class: Drupal\facetapi\ContextProvider\FacetContextProvider
+    arguments: ['@entity.manager']
+    tags:
+      - { name: context_provider }

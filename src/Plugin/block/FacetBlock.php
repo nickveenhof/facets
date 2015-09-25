@@ -12,6 +12,7 @@ namespace Drupal\facetapi\Plugin\Block;
 use Drupal\Core\Block\BlockBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
+use Drupal\facetapi\Entity\Facet;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -19,7 +20,10 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  *
  * @Block(
  *  id = "facet_block",
- *  admin_label = @Translation("Facet block")
+ *  admin_label = @Translation("Facet block"),
+ *  context = {
+ *    "facet" = @ContextDefinition("entity:facetapi_facet", label=@Translation("Facet"))
+ *  }
  * )
  */
 class FacetBlock extends BlockBase implements ContainerFactoryPluginInterface {
@@ -75,40 +79,43 @@ class FacetBlock extends BlockBase implements ContainerFactoryPluginInterface {
     // For now hard code the id.
     // This should be based on facet definitions.
     // The plugin manager should be injected.
-    $plugin_id = 'search_api_views';
-    $adapter = $this->pluginManager->getMyOwnChangeLaterInstance($plugin_id, $search_id);
 
-    // Get the facet definitions.
-    $facet_definitions = facetapi_get_enabled_facets();
-    $facet = $facet_definitions[$this->configuration['facet_identifier']];
-    $build = $adapter->build($facet);
+    /** @var Facet $facet */
+    $facet = $this->getContextValue('facet');
+
+    $plugin_id = 'search_api_views';
+
+    /** @var \Drupal\facetapi\Adapter\AdapterInterface $adapter */
+    $adapter = $this->pluginManager->getMyOwnChangeLaterInstance(
+      $plugin_id,
+      $facet->getSearcherName()
+    );
 
     // Let the adapter build the facets.
-//    $adapter->
+    $build = $adapter->build($facet);
 
     return $build;
   }
 
   public function blockForm($form, FormStateInterface $form_state) {
-    $form =  parent::blockForm(
-      $form,
-      $form_state
-    );
+    $form = parent::blockForm($form, $form_state);
+
     // Get the facet definitions.
     $facets = facetapi_get_enabled_facets();
     $facet_options = array();
-      foreach ($facets as $facet_name => $facet) {
-        $identifier = $facet_name;
-        $facet_options[$identifier] = $facet->getSearcherName() . ' facet: ' . $facet->getName();
-      }
+
+    foreach ($facets as $facet_name => $facet) {
+      $identifier = $facet_name;
+      $facet_options[$identifier] = $facet->getSearcherName() . ' facet: ' . $facet->getName();
+    }
 
     $form['facet_identifier'] = array(
-      '#type'          => 'select',
-      '#required'      => TRUE,
-      '#title'         => t('Facet to render'),
+      '#type' => 'select',
+      '#required' => TRUE,
+      '#title' => t('Facet to render'),
       '#default_value' => $this->configuration['facet_identifier'],
-      '#empty_option'  => t('- Select -'),
-      '#options'       => $facet_options,
+      '#empty_option' => t('- Select -'),
+      '#options' => $facet_options,
     );
     return $form;
   }
