@@ -76,12 +76,11 @@ class FacetBlock extends BlockBase implements ContainerFactoryPluginInterface {
     // This should be based on facet definitions.
     // The plugin manager should be injected.
     $plugin_id = 'search_api_views';
-    list($search_id, $facet_key) = explode(':::', $this->configuration['facet_identifier']);
     $adapter = $this->pluginManager->getMyOwnChangeLaterInstance($plugin_id, $search_id);
 
     // Get the facet definitions.
     $facet_definitions = facetapi_get_enabled_facets();
-    $facet = $facet_definitions[$search_id][$facet_key];
+    $facet = $facet_definitions[$this->configuration['facet_identifier']];
     $build = $adapter->build($facet);
 
     // Let the adapter build the facets.
@@ -96,15 +95,12 @@ class FacetBlock extends BlockBase implements ContainerFactoryPluginInterface {
       $form_state
     );
     // Get the facet definitions.
-    $facet_definitions = facetapi_get_enabled_facets();
+    $facets = facetapi_get_enabled_facets();
     $facet_options = array();
-    foreach ($facet_definitions as $searcher_name => $searcher_facets) {
-      $identifier_prefix = $searcher_name;
-      foreach ($searcher_facets as $facet_name => $facet_definition) {
-        $identifier = $identifier_prefix . ':::' . $facet_name;
-        $facet_options[$identifier] = $searcher_name . ' facet: ' . $facet_definition['label'];
+      foreach ($facets as $facet_name => $facet) {
+        $identifier = $facet_name;
+        $facet_options[$identifier] = $facet->getSearcherName() . ' facet: ' . $facet->getName();
       }
-    }
 
     $form['facet_identifier'] = array(
       '#type'          => 'select',
