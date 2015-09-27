@@ -10,6 +10,7 @@ namespace Drupal\facetapi\Controller;
 use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\facetapi\FacetInterface;
+use Drupal\search_api\IndexInterface;
 
 /**
  * Provides route responses for facets.
@@ -34,6 +35,20 @@ class FacetController extends ControllerBase {
       ),
     );
     return $render;
+  }
+
+  /**
+   * Returns a form to add a new facet to a search api index.
+   *
+   * @param \Drupal\search_api\IndexInterface $search_api_index
+   *   The search api index this facet will be added to.
+   *
+   * @return array
+   *   The facet add form.
+   */
+  public function addForm(IndexInterface $search_api_index) {
+    $facet = $this->entityManager()->getStorage('facetapi_facet')->create(array('search_api_index' => $search_api_index->id()));
+    return $this->entityFormBuilder()->getForm($facet);
   }
 
   /**

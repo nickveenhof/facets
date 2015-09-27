@@ -9,7 +9,8 @@ entity.search_api_index.facets:
 entity.facetapi_facet.add_form:
   path: '/admin/config/search/search-api/{search_api_index}/facets/add-facet'
   defaults:
-    _entity_form: 'facetapi_facet.default'
+    _controller: '\Drupal\facetapi\Controller\FacetController::addForm'
+    _title: 'Add facet'
   requirements:
     _entity_create_access: 'facetapi_facet'
 

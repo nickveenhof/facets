@@ -154,7 +154,6 @@ class FacetForm extends EntityForm {
     if (!$form_state->isRebuilding()) {
       try {
         $facet = $this->getEntity();
-        $facet->setSearchApiIndex("default_index"); // TODO: fetch from url.
         $facet->save();
         drupal_set_message($this->t('The facet was successfully saved.'));
         $form_state->setRedirect('entity.search_api_index.facets', array('search_api_index' => $facet->getSearchApiIndex()));
