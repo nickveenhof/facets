@@ -1,7 +1,7 @@
 entity.search_api_index.facets:
   path: '/admin/config/search/search-api/index/{search_api_index}/facets'
   defaults:
-    _title: 'facets'
+    _title: 'Facets'
     _entity_list: 'facetapi_facet'
   requirements:
     _entity_create_access: 'search_api_index'

@@ -228,11 +228,6 @@ class Facet extends ConfigEntityBase implements FacetInterface {
     return $this->name;
   }
 
-  public function setSearchApiIndex($search_api_index) {
-    $this->search_api_index = $search_api_index;
-    return $this;
-  }
-
   public function getSearchApiIndex() {
     return $this->search_api_index;
   }

@@ -2,3 +2,4 @@ entity.search_api_server.facets:
   route_name: entity.search_api_index.facets
   base_route: entity.search_api_index.canonical
   title: 'Facets'
+  weight: 30
