@@ -32,8 +32,7 @@ class FacetContextProvider implements ContextProviderInterface {
       ->execute();
     $contexts = [];
     foreach ($this->facetStorage->loadMultiple($ids) as $facet) {
-      $context = new Context(new ContextDefinition('entity:facetapi_facet'));
-      $context->setContextValue($facet);
+      $context = new Context(new ContextDefinition('entity:facetapi_facet'), $facet);
       $contexts[$facet->uuid()] = $context;
     }
     return $contexts;
@@ -47,9 +46,9 @@ class FacetContextProvider implements ContextProviderInterface {
     $contexts = [];
     foreach ($facets as $facet) {
       $context = new Context(
-        new ContextDefinition('entity:facetapi_facet', $facet->label())
+        new ContextDefinition('entity:facetapi_facet', $facet->label()),
+        $facet
       );
-      $context->setContextValue($facet);
       $contexts[$facet->uuid()] = $context;
     }
 
