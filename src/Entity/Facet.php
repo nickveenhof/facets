@@ -213,14 +213,17 @@ class Facet extends ConfigEntityBase implements FacetInterface {
   }
 
   public function getQueryType() {
+    return "search_api_term"; // TODO: Do not hardcode this.
     return $this->query_type_name;
   }
 
-  public function getSearcherName() {
+  public function getSearcherName() { //QUESTION: Should this be defined in the facet-entity?  Guess this belongs somewhere else as 1 facet can be used in multiple searchers.  Maybe we should define this as a context in the block?
+    return "search_api_views:search_content:page_1"; // TODO: Do not hardcode this.
     return $this->searcher_name;
   }
 
   public function getUrlProcessorName() {
+    return 'query_string'; // TODO: Do not hardcode this.
     return $this->url_processor_name;
   }
 
