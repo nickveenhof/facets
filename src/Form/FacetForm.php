@@ -70,7 +70,7 @@ class FacetForm extends EntityForm {
 
     $form = parent::form($form, $form_state);
 
-    /** @var \Drupal\facetapi\FacetInterface $server */
+    /** @var \Drupal\facetapi\FacetInterface $facet */
     $facet = $this->getEntity();
 
     // Set the page title according to whether we are creating or editing the
