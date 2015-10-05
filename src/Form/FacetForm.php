@@ -24,20 +24,20 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 class FacetForm extends EntityForm {
 
   /**
-   * The server storage controller.
+   * The facet storage controller.
    *
    * @var \Drupal\Core\Entity\EntityStorageInterface
    */
-  protected $storage;
+  protected $facetStorage;
 
   /**
-   * Constructs a ServerForm object.
+   * Constructs a FacetForm object.
    *
    * @param \Drupal\Core\Entity\EntityManagerInterface $entity_manager
    *   The entity manager.
    */
   public function __construct(EntityManagerInterface $entity_manager) {
-    $this->storage = $entity_manager->getStorage('facetapi_facet');
+    $this->facetStorage = $entity_manager->getStorage('facetapi_facet');
   }
 
   /**
@@ -50,13 +50,13 @@ class FacetForm extends EntityForm {
   }
 
   /**
-   * Retrieves the server storage controller.
+   * Retrieves the facet storage controller.
    *
    * @return \Drupal\Core\Entity\EntityStorageInterface
-   *   The server storage controller.
+   *   The facet storage controller.
    */
-  protected function getStorage() {
-    return $this->storage ?: \Drupal::service('entity.manager')->getStorage('facetapi_facet');
+  protected function getFacetStorage() {
+    return $this->facetStorage ?: \Drupal::service('entity.manager')->getStorage('facetapi_facet');
   }
 
   /**
@@ -113,7 +113,7 @@ class FacetForm extends EntityForm {
       '#maxlength' => 50,
       '#required' => TRUE,
       '#machine_name' => array(
-        'exists' => array($this->getStorage(), 'load'),
+        'exists' => array($this->getFacetStorage(), 'load'),
         'source' => array('name'),
       ),
     );
