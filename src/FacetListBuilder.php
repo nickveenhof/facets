@@ -126,7 +126,7 @@ class FacetListBuilder extends ConfigEntityListBuilder {
           'class' => array('search-api-title'),
         ),
         'description' => array(
-          'data' => 'Todo: field info for current facet here.',
+          'data' => 'Field: ' . $entity->getFieldAlias() . ', Widget: ' . $entity->getWidget(),
         ),
         'status' => array(
           'data' => $status_icon,
