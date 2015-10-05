@@ -20,3 +20,6 @@ facetapi.facet.*:
     field_identifier:
       type: string
       label: 'Field identifier'
+    widget:
+      type: string
+      label: 'Field identifier'
