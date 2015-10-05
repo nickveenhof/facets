@@ -524,8 +524,12 @@ abstract class AdapterPluginBase extends PluginBase implements AdapterInterface,
         if ($result->getCount()) {
           // Get the link.
           $text = $result->getValue() . ' (' . $result->getCount() . ')';
-//          $link = $this->link_generator->generate($text, );
-          $items[] = $text;
+          if ($result->isActive()) {
+            $text = '(-) ' . $text;
+          }
+          $link_generator = \Drupal::linkGenerator();
+          $link = $link_generator->generate($text, $result->getUrl());
+          $items[] = $link;
         }
       }
       $build = array(
@@ -542,7 +546,7 @@ abstract class AdapterPluginBase extends PluginBase implements AdapterInterface,
       /** @var UrlProcessorInterface $url_processor */
       $url_processor_name = $facet->getUrlProcessorName();
       $url_processor = $this->url_processor_plugin_manager->createInstance($url_processor_name);
-      $url_processor->processFacet($facet);
+      $url_processor->addUriToResults($facet);
     }
   }
 }

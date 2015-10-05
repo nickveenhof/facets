@@ -30,7 +30,7 @@ interface UrlProcessorInterface {
    *
    * @return mixed
    */
-  public function getUri(FacetInterface $facet, $value);
+  public function addUriToResults(FacetInterface $facet, $value);
 
   /**
    * Returns the filter key.

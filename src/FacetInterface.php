@@ -49,9 +49,17 @@ interface FacetInterface extends ConfigEntityInterface {
   public function getActiveItems();
 
   /**
+   * Check if a value is active.
+   *
+   * @param string $value
+   * @return bool
+   */
+  public function isActiveValue($value);
+
+  /**
    * Get the result for the facet.
    *
-   * @return mixed
+   * @return ResultInterface[] $results
    */
   public function getResults();
 

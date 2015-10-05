@@ -25,6 +25,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  *    "facet" = @ContextDefinition("entity:facetapi_facet", label=@Translation("Facet"))
  *  }
  * )
+ *
  */
 class FacetBlock extends BlockBase implements ContainerFactoryPluginInterface {
 
@@ -81,9 +82,11 @@ class FacetBlock extends BlockBase implements ContainerFactoryPluginInterface {
     // The plugin manager should be injected.
 
     /** @var Facet $facet */
-    $facet = $this->getContextValue('facet');
+//    $facet = $this->getContextValue('facet');
 
     $plugin_id = 'search_api_views';
+    $facets = facetapi_get_enabled_facets();
+    $facet = $facets[$this->configuration['facet_identifier']];
 
     /** @var \Drupal\facetapi\Adapter\AdapterInterface $adapter */
     $adapter = $this->pluginManager->getMyOwnChangeLaterInstance(

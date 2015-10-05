@@ -31,6 +31,13 @@ class Result implements ResultInterface{
    */
   protected $url;
 
+  /**
+   * Wether the value is active (selected) or not.
+   *
+   * @var bool
+   */
+  protected $active = FALSE;
+
   function __construct($value, $count) {
     $this->value = $value;
     $this->count = $count;
@@ -71,4 +78,21 @@ class Result implements ResultInterface{
   public function setUrl(Url $url) {
     $this->url = $url;
   }
+
+  /**
+   * @inheritdoc
+   */
+  public function setActiveState($active) {
+    $this->active = $active;
+  }
+
+
+  /**
+   * @inheritdoc
+   */
+  public function isActive() {
+    return $this->active;
+  }
+
+
 }

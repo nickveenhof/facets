@@ -39,4 +39,18 @@ interface ResultInterface {
    */
   public function setUrl(Url $url);
 
+  /**
+   * Indicate that the value is active (selected).
+   *
+   * @param bool $active
+   */
+  public function setActiveState($active);
+
+  /**
+   * Returns true if the value is active (selected).
+   *
+   * @return bool $active
+   */
+  public function isActive();
+
 }

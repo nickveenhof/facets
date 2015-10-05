@@ -247,6 +247,15 @@ class Facet extends ConfigEntityBase implements FacetInterface {
 
   public function setResults(array $results) {
     $this->results = $results;
+    // If there are active values,
+    // set the results which are active to active.
+    if (count($this->active_values)) {
+      foreach ($this->results as $result) {
+        if (in_array($result->getValue(), $this->active_values)) {
+          $result->setActiveState(TRUE);
+        }
+      }
+    }
   }
 
   /**
@@ -256,5 +265,16 @@ class Facet extends ConfigEntityBase implements FacetInterface {
    */
   public function getAdapterPluginId() {
     return 'search_api_views';
+  }
+
+  /**
+   * @inheritdoc
+   */
+  public function isActiveValue($value) {
+    $is_active = FALSE;
+    if (in_array($value, $this->active_values)) {
+      $is_active = TRUE;
+    }
+    return $is_active;
   }
 }
