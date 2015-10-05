@@ -19,8 +19,7 @@ use Drupal\Core\Url;
  * Implements hook_help().
  */
 
-function facetapi_help($route_name, RouteMatchInterface $route_match)
-{
+function facetapi_help($route_name, RouteMatchInterface $route_match) {
   switch ($route_name) {
     // Main module help for the facetapi module.
     case 'help.page.facetapi':
@@ -36,8 +35,7 @@ function facetapi_help($route_name, RouteMatchInterface $route_match)
  * Implements hook_theme().
  */
 
-function facetapi_theme()
-{
+function facetapi_theme() {
   $theme = [];
 
   return $theme;
@@ -109,13 +107,13 @@ function facetapi_facetapi_facet_info() {
 function facetapi_simple_facet_discovery() {
   /*
    * From Drupal.org:
-   * All functions requiring a static variable to persist or cache data within 
-   * a single page request are encouraged to use this function unless it is 
-   * absolutely certain that the static variable will not need to be reset 
-   * during the page request. By centralizing static variable storage through 
-   * this function, other functions can rely on a consistent API for 
+   * All functions requiring a static variable to persist or cache data within
+   * a single page request are encouraged to use this function unless it is
+   * absolutely certain that the static variable will not need to be reset
+   * during the page request. By centralizing static variable storage through
+   * this function, other functions can rely on a consistent API for
    * resetting any other function's static variables.
-   * 
+   *
    * See: http://api.drupal.org/api/drupal/includes!bootstrap.inc/function/drupal_static/7
    */
   $facet_info = &drupal_static(__FUNCTION__);
