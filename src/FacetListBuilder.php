@@ -112,7 +112,7 @@ class FacetListBuilder extends ConfigEntityListBuilder {
     $status_label = $entity->status() ? $this->t('Enabled') : $this->t('Disabled');
     $status_icon = array(
       '#theme' => 'image',
-      '#uri' => $entity->status() ? 'core/misc/icons/73b355/check.svg' : 'core/misc/icons/ea2800/error.svg',
+      '#uri' => $entity->status() ? 'core/misc/icons/73b355/check.svg' : 'core/misc/icons/e32700/error.svg',
       '#width' => 18,
       '#height' => 18,
       '#alt' => $status_label,
