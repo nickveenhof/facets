@@ -15,6 +15,7 @@ use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Url;
 use Drupal\facetapi\FacetInterface;
 use Drupal\facetapi\FacetApiException;
+use Drupal\search_api\IndexInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -82,7 +83,8 @@ class FacetForm extends EntityForm {
       $form['#title'] = $this->t('Edit facet %label', array('%label' => $facet->label()));
     }
 
-    $this->buildEntityForm($form, $form_state, $facet);
+    $search_api_index = $form_state->get('search_api_index');
+    $this->buildEntityForm($form, $form_state, $facet, $search_api_index);
 
     return $form;
   }
@@ -92,9 +94,10 @@ class FacetForm extends EntityForm {
    *
    * @param \Drupal\facetapi\FacetInterface $facet
    *   The server that is being created or edited.
+   * @param \Drupal\search_api\IndexInterface $search_api_index
+   *   The search index we're creating a facet for.
    */
-  public function buildEntityForm(array &$form, FormStateInterface $form_state, FacetInterface $facet) {
-    $form['#attached']['library'][] = 'search_api/drupal.search_api.admin_css';
+  public function buildEntityForm(array &$form, FormStateInterface $form_state, FacetInterface $facet, IndexInterface $search_api_index) {
 
     $form['name'] = array(
       '#type' => 'textfield',
@@ -103,6 +106,7 @@ class FacetForm extends EntityForm {
       '#default_value' => $facet->label(),
       '#required' => TRUE,
     );
+
     $form['id'] = array(
       '#type' => 'machine_name',
       '#default_value' => $facet->id(),
@@ -113,12 +117,42 @@ class FacetForm extends EntityForm {
         'source' => array('name'),
       ),
     );
+
+    $form['field_identifier'] = [
+      '#type' => 'select',
+      '#options' => $this->getIndexedFields($search_api_index),
+      '#title' => $this->t('Facet field'),
+      '#description' => $this->t('Choose the indexed field.'),
+      '#required' => TRUE,
+      '#default_value' => $facet->getFieldIdentifier()
+    ];
+
     $form['status'] = array(
       '#type' => 'checkbox',
       '#title' => $this->t('Enabled'),
       '#description' => $this->t('Only enabled facets can be displayed.'),
       '#default_value' => $facet->status(),
     );
+  }
+
+  /**
+   * Gets all indexed fields for this search index.
+   *
+   * @param \Drupal\search_api\IndexInterface $search_index
+   *   The search index we're creating a facet for.
+   * @return array
+   *   An array of all indexed fields.
+   */
+  protected function getIndexedFields(IndexInterface $search_api_index) {
+    $indexed_fields = [];
+
+    foreach ($search_api_index->getDatasources() as $datasource_id => $datasource) {
+      $fields = $search_api_index->getFieldsByDatasource($datasource_id);
+      foreach ($fields as $field) {
+        $indexed_fields[$field->getFieldIdentifier()] = $field->getLabel();
+      }
+    }
+    return $indexed_fields;
   }
 
   /**

@@ -38,9 +38,8 @@ use Drupal\facetapi\Result\ResultInterface;
  *   config_export = {
  *     "id",
  *     "name",
- *     "description",
  *     "search_api_index",
- *     "options",
+ *     "field_identifier",
  *   },
  *   links = {
  *     "canonical" = "/admin/config/search/search-api/index/{search_api_index}/facets",
@@ -210,6 +209,11 @@ class Facet extends ConfigEntityBase implements FacetInterface {
 
   public function getFieldIdentifier() {
     return $this->field_identifier;
+  }
+
+  public function setFieldIdentifier($field_identifier) {
+    $this->field_identifier = $field_identifier;
+    return $this;
   }
 
   public function getQueryType() {

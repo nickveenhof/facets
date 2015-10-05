@@ -1,0 +1,22 @@
+facetapi.facet.*:
+  type: config_entity
+  label : 'Facet'
+  mapping:
+    id:
+      type: string
+      label: 'ID'
+    name:
+      type: label
+      label: Name'
+    uuid:
+      type: string
+      label: 'UUID'
+    status:
+      type: boolean
+      label: 'Status'
+    search_api_index:
+      type: string
+      label: 'Search API index'
+    field_identifier:
+      type: string
+      label: 'Field identifier'
