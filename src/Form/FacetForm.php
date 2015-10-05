@@ -34,8 +34,6 @@ class FacetForm extends EntityForm {
    *
    * @param \Drupal\Core\Entity\EntityManagerInterface $entity_manager
    *   The entity manager.
-   * @param \Drupal\search_api\Backend\BackendPluginManager $backend_plugin_manager
-   *   The backend plugin manager.
    */
   public function __construct(EntityManagerInterface $entity_manager) {
     $this->storage = $entity_manager->getStorage('facetapi_facet');
