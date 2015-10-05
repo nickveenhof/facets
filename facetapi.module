@@ -95,7 +95,7 @@ function facetapi_search_api_query_alter(QueryInterface &$query) {
  * @return array
  */
 function facetapi_facetapi_facet_info() {
-//  return facetapi_simple_facet_discovery();
+  return facetapi_simple_facet_discovery();
   $get_facets = \Drupal::service('search_api_facets.get_facets');
   return $get_facets->getFacets();
 }

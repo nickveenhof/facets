@@ -68,27 +68,6 @@ class SearchApiViewsAdapter extends AdapterPluginBase {
   }
 
   /**
-   * Add the given facet to the query.
-   *
-   * Helper method only for search api.
-   * Don't move up!!!
-   *
-   * @param FacetInterface $facet
-   * @param \Drupal\search_api\Query\QueryInterface $query
-   */
-  public function addFacet(FacetInterface $facet, QueryInterface $query) {
-    if (isset($this->fields[$facet->getName()])) {
-      $options = &$query->getOptions();
-      $facet_info = $this->fields[$facet->getName()];
-      if (!empty($facet->getOption('query_options'))) {
-        // Let facet-specific query options override the set options.
-        $facet_info = $facet->getOption('query_options') + $facet_info;
-      }
-      $options['search_api_facets'][$facet->getName()] = $facet_info;
-    }
-  }
-
-  /**
    * Process the facets in this adapter in this adapter
    * for a test only. This method should disappear later
    * when facetapi does it.

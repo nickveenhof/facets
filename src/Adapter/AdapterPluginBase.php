@@ -66,59 +66,12 @@ abstract class AdapterPluginBase extends PluginBase implements AdapterInterface,
   protected $facets = array();
 
   /**
-   * An array of FacetapiFacetProcessor objects.
-   *
-   * @var array
-   *
-   * @see FacetapiFacetProcessor
-   * @see FacetapiAdapter::processFacets()
-   */
-  protected $processors = array();
-
-  /**
-   * An array of executed query type plugins keyed by field name.
-   *
-   * @var array
-   *
-   * @see FacetapiQueryTypeInterface
-   */
-  protected $queryTypes = array();
-
-  /**
    * @TODO: generalize to ProcessorInterface and properly type hint in __construct().
    * The url processor plugin associated with this adapter.
    *
    * @var UrlProcessorInterface
    */
   protected $urlProcessor;
-
-  /**
-   * An array of active items created by FacetapiAdapter::processActiveItems().
-   *
-   * In order to retrieve data efficiently, the active items are stored in two
-   * ways. The "filter" key is an associative array of active items keyed by
-   * the raw filter passed through the source, usually in field:value format.
-   * The "facet" key is a multidimensional array where the second dimension is
-   * keyed by the machine name of the facet and the third dimension is an array
-   * of active items keyed by the facet value.
-   *
-   * The active items are associative arrays containing (but not limited to):
-   * - field alias: The facet alias defined in the facet definition.
-   * - value: The active value passed through the source (usually $_GET) to
-   *   filter the result set.
-   * - pos: The zero-based position of the value in the source data. The url
-   *   processor plugin uses the "pos" to efficiently remove certain values when
-   *   building query strings in FacetapiQueryTypeInterface::getQueryString().
-   *
-   * Additional keys may be added to this array via the query type plugin's
-   * FacetapiQueryTypeInterface::extract() method. For example, date and range
-   * query types add the "start" and "end" values of the range.
-   *
-   * @var array
-   *
-   * @see FacetapiAdapter::processActiveItems()
-   */
-  protected $activeItems;
 
   /**
    * A boolean flagging whether the facets have been processed, or built.
@@ -319,16 +272,6 @@ abstract class AdapterPluginBase extends PluginBase implements AdapterInterface,
   }
 
   /**
-   * Hook that allows the backend to initialize its query object for faceting.
-   *
-   * @param mixed $query
-   *   The backend's native object.
-   */
-  public function initActiveFilters($query) {
-    // TODO: Implement initActiveFilters() method.
-  }
-
-  /**
    * Returns enabled facets for the searcher associated with this adapter.
    *
    * @return Facet[]
@@ -352,103 +295,6 @@ abstract class AdapterPluginBase extends PluginBase implements AdapterInterface,
   }
 
   /**
-   * Returns a FacetapiFacet instance for the facet being rendered.
-   *
-   * @param array $facet
-   *   The facet definition as returned by facetapi_facet_load().
-   *
-   * @return FacetapiFacet
-   *   The facet rendering object object.
-   */
-  public function getFacet(array $facet) {
-    // TODO: Implement getFacet() method.
-  }
-
-  /**
-   * Returns the facet's instantiated query type plugin.
-   *
-   * @param array|string $facet
-   *   Either the facet definition as returned by facetapi_facet_load() or the
-   *   machine readable name of the facet.
-   *
-   * @return FacetapiQueryTypeInterface|NULL
-   *   The instantiated query type plugin, NULL if the passed facet is not valid
-   *   or does not have a query type plugin associated with it.
-   */
-  public function getFacetQuery($facet) {
-    // TODO: Implement getFacetQuery() method.
-  }
-
-  /**
-   * Maps a facet's index value to a human readable value displayed to the user.
-   *
-   * @param string $facet_name
-   *   The machine readable name of the facet.
-   * @param string $value
-   *   The raw value passed through the query string.
-   *
-   * @return string
-   *   The mapped value.
-   */
-  public function getMappedValue($facet_name, $value) {
-    // TODO: Implement getMappedValue() method.
-  }
-
-  /**
-   * Returns the processor associated with the facet.
-   *
-   * @param string $facet_name
-   *   The machine readable name of the facet.
-   *
-   * @return FacetapiFacetProcessor|FALSE
-   *   The instantiated processor object, FALSE if the passed facet is not valid
-   *   or does not have processor instantiated for it.
-   */
-  public function getProcessor($facet_name) {
-    // TODO: Implement getProcessor() method.
-  }
-
-  /**
-   * Helper function that returns the query string variables for a facet item.
-   *
-   * @param array $facet
-   *   The facet definition as returned by facetapi_facet_load().
-   * @param array $values
-   *   An array containing the item's values being added to or removed from the
-   *   query string dependent on whether or not the item is active.
-   * @param int $active
-   *   An integer flagging whether the item is active or not.
-   *
-   * @return array
-   *   The query string vriables.
-   *
-   * @see FacetapiUrlProcessor::getQueryString()
-   */
-  public function getQueryString(array $facet, array $values, $active) {
-    // TODO: Implement getQueryString() method.
-  }
-
-  /**
-   * Helper function that returns the path for a facet link.
-   *
-   * @param array $facet
-   *   The facet definition as returned by facetapi_facet_load().
-   * @param array $values
-   *   An array containing the item's values being added to or removed from the
-   *   query string dependent on whether or not the item is active.
-   * @param int $active
-   *   An integer flagging whether the item is active or not.
-   *
-   * @return string
-   *   The facet path.
-   *
-   * @see FacetapiUrlProcessor::getFacetPath()
-   */
-  public function getFacetPath(array $facet, array $values, $active) {
-    // TODO: Implement getFacetPath() method.
-  }
-
-  /**
    * Initializes facet builds, sets the breadcrumb trail.
    *
    * Facets are built via FacetapiFacetProcessor objects. Facets only need to be
@@ -460,11 +306,16 @@ abstract class AdapterPluginBase extends PluginBase implements AdapterInterface,
    * @todo For clarity, should this method be named buildFacets()?
    */
   public function processFacets() {
-    // First add the results to the facets.
-    $this->updateResults();
+    if (! $this->processed) {
+      // First add the results to the facets.
+      $this->updateResults();
 
-    // Then update the urls
-    $this->updateResultUrls();
+      // Then update the urls
+      $this->updateResultUrls();
+
+      // Set the facets to be processed.
+      $this->processed = TRUE;
+    }
   }
 
   /**

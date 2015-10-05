@@ -100,14 +100,6 @@ interface AdapterInterface {
   public function alterQuery(&$query);
 
   /**
-   * Hook that allows the backend to initialize its query object for faceting.
-   *
-   * @param mixed $query
-   *   The backend's native object.
-   */
-  public function initActiveFilters($query);
-
-  /**
    * Returns enabled facets for the searcher associated with this adapter.
    *
    * @return array
@@ -121,91 +113,6 @@ interface AdapterInterface {
    * @return string
    */
   public function getSearcherId();
-
-  /**
-   * Returns a FacetapiFacet instance for the facet being rendered.
-   *
-   * @param array $facet
-   *   The facet definition as returned by facetapi_facet_load().
-   *
-   * @return FacetapiFacet
-   *   The facet rendering object object.
-   */
-  public function getFacet(array $facet);
-
-  /**
-   * Returns the facet's instantiated query type plugin.
-   *
-   * @param array|string $facet
-   *   Either the facet definition as returned by facetapi_facet_load() or the
-   *   machine readable name of the facet.
-   *
-   * @return FacetapiQueryTypeInterface|NULL
-   *   The instantiated query type plugin, NULL if the passed facet is not valid
-   *   or does not have a query type plugin associated with it.
-   */
-  public function getFacetQuery($facet);
-
-  /**
-   * Maps a facet's index value to a human readable value displayed to the user.
-   *
-   * @param string $facet_name
-   *   The machine readable name of the facet.
-   * @param string $value
-   *   The raw value passed through the query string.
-   *
-   * @return string
-   *   The mapped value.
-   */
-  public function getMappedValue($facet_name, $value);
-
-  /**
-   * Returns the processor associated with the facet.
-   *
-   * @param string $facet_name
-   *   The machine readable name of the facet.
-   *
-   * @return FacetapiFacetProcessor|FALSE
-   *   The instantiated processor object, FALSE if the passed facet is not valid
-   *   or does not have processor instantiated for it.
-   */
-  public function getProcessor($facet_name);
-
-  /**
-   * Helper function that returns the query string variables for a facet item.
-   *
-   * @param array $facet
-   *   The facet definition as returned by facetapi_facet_load().
-   * @param array $values
-   *   An array containing the item's values being added to or removed from the
-   *   query string dependent on whether or not the item is active.
-   * @param int $active
-   *   An integer flagging whether the item is active or not.
-   *
-   * @return array
-   *   The query string vriables.
-   *
-   * @see FacetapiUrlProcessor::getQueryString()
-   */
-  public function getQueryString(array $facet, array $values, $active);
-
-  /**
-   * Helper function that returns the path for a facet link.
-   *
-   * @param array $facet
-   *   The facet definition as returned by facetapi_facet_load().
-   * @param array $values
-   *   An array containing the item's values being added to or removed from the
-   *   query string dependent on whether or not the item is active.
-   * @param int $active
-   *   An integer flagging whether the item is active or not.
-   *
-   * @return string
-   *   The facet path.
-   *
-   * @see FacetapiUrlProcessor::getFacetPath()
-   */
-  public function getFacetPath(array $facet, array $values, $active);
 
   /**
    * Initializes facet builds, sets the breadcrumb trail.
