@@ -25,7 +25,8 @@ entity.facetapi_facet.canonical:
 entity.facetapi_facet.edit_form:
   path: '/admin/config/search/search-api/index/{search_api_index}/facets/{facetapi_facet}/edit'
   defaults:
-    _entity_form: 'facetapi_facet.edit'
+    _controller: '\Drupal\facetapi\Controller\FacetController::editForm'
+    _title: 'Add facet'
   requirements:
     _entity_access: 'facetapi_facet.edit'
 

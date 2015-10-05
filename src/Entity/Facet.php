@@ -38,9 +38,9 @@ use Drupal\facetapi\Result\ResultInterface;
  *   config_export = {
  *     "id",
  *     "name",
- *     "description",
  *     "search_api_index",
- *     "options",
+ *     "field_identifier",
+ *     "widget",
  *   },
  *   links = {
  *     "canonical" = "/admin/config/search/search-api/index/{search_api_index}/facets",
@@ -72,6 +72,13 @@ class Facet extends ConfigEntityBase implements FacetInterface {
    * @var string
    */
   protected $description;
+
+  /**
+   * A string describing the widget.
+   *
+   * @var string
+   */
+  protected $widget;
 
   /**
    * An array of options configuring this index.
@@ -148,6 +155,22 @@ class Facet extends ConfigEntityBase implements FacetInterface {
   }
 
   /**
+   * @param string $widget
+   * @return $this
+   */
+  public function setWidget($widget) {
+    $this->widget = $widget;
+    return $this;
+  }
+
+  /**
+   * @return string
+   */
+  public function getWidget() {
+    return $this->widget;
+  }
+
+  /**
    * Get the field alias used to identify the facet in the url.
    *
    * @return mixed
@@ -210,6 +233,11 @@ class Facet extends ConfigEntityBase implements FacetInterface {
 
   public function getFieldIdentifier() {
     return $this->field_identifier;
+  }
+
+  public function setFieldIdentifier($field_identifier) {
+    $this->field_identifier = $field_identifier;
+    return $this;
   }
 
   public function getQueryType() {

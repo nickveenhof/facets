@@ -48,7 +48,27 @@ class FacetController extends ControllerBase {
    */
   public function addForm(IndexInterface $search_api_index) {
     $facet = $this->entityManager()->getStorage('facetapi_facet')->create(array('search_api_index' => $search_api_index->id()));
-    return $this->entityFormBuilder()->getForm($facet);
+
+    $form_state_additions = ['search_api_index' => $search_api_index];
+    return $this->entityFormBuilder()->getForm($facet, 'default', $form_state_additions);
+  }
+
+  /**
+   * Returns a form to edit a facet on a search api index.
+   *
+   * @param \Drupal\search_api\IndexInterface $search_api_index
+   *   The search api index this facet will be added to.
+   * @param \Drupal\facetapi\FacetInterface $facetapi_facet
+   *   Facet currently being edited
+   *
+   * @return array
+   *   The facet edit form.
+   */
+  public function editForm(IndexInterface $search_api_index, FacetInterface $facetapi_facet) {
+    $facet = $this->entityManager()->getStorage('facetapi_facet')->load($facetapi_facet->id());
+
+    $form_state_additions = ['search_api_index' => $search_api_index];
+    return $this->entityFormBuilder()->getForm($facet, 'default', $form_state_additions);
   }
 
   /**
