@@ -7,12 +7,9 @@
 
 namespace Drupal\facetapi\Form;
 
-use Drupal\Component\Utility\Html;
-use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Core\Entity\EntityForm;
 use Drupal\Core\Entity\EntityManagerInterface;
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\Core\Url;
 use Drupal\facetapi\FacetInterface;
 use Drupal\facetapi\FacetApiException;
 use Drupal\search_api\IndexInterface;
