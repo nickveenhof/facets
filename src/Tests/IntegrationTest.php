@@ -71,7 +71,7 @@ class IntegrationTest extends FacetWebTestBase {
       'name' => $facetName,
       'id' => 'test_facet',
       'status' => 1,
-      'widget' => 'checkbox',
+      'widget' => 'links',
       'field_identifier' => 'entity:node/title',
     ];
     $this->drupalPostForm($facet_add_page, $edit, $this->t('Save'));
