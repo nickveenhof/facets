@@ -13,7 +13,7 @@ use Drupal\search_api\Entity\Index;
 /**
  * Tests the overall functionality of the Facet API admin UI.
  *
- * @group facet_api
+ * @group facetapi
  */
 class IntegrationTest extends FacetWebTestBase {
 
