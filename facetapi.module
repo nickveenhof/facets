@@ -187,19 +187,3 @@ function facetapi_simple_facet_discovery() {
 
   return $facet_info;
 }
-
-/**
- * Implements hook_entity_operation_alter().
- *
- * Adds facets as an operation to entities of type IndexInterface.
- */
-function facetapi_entity_operation_alter(array &$operations, \Drupal\Core\Entity\EntityInterface $entity) {
-  if ($entity instanceof IndexInterface) {
-    $route_parameters['search_api_index'] = $entity->id();
-    $operations['facets'] = array(
-      'title' => t('Facets'),
-      'weight' => 40,
-      'url' => Url::fromRoute('facetapi.overview', $route_parameters),
-    );
-  }
-}
