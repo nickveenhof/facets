@@ -54,6 +54,30 @@ class IntegrationTest extends FacetWebTestBase {
     $this->drupalGet($facet_add_page);
     $this->assertResponse(200);
 
+    $edit = [
+      'name' => '',
+      'id' => 'test_facet',
+      'status' => 1,
+      'field_identifier' => 'entity:node/title',
+      'widget' => 'checkbox',
+    ];
+
+    $this->drupalPostForm($facet_add_page, $edit, $this->t('Save'));
+    $this->assertText($this->t('Facet name field is required.'));
+    $this->assertText($this->t('1 error has been found'));
+
+    $facetName = "Test Facet Name";
+    $edit = [
+      'name' => $facetName,
+      'id' => 'test_facet',
+      'status' => 1,
+      'widget' => 'checkbox',
+      'field_identifier' => 'entity:node/title',
+    ];
+    $this->drupalPostForm($facet_add_page, $edit, $this->t('Save'));
+    $this->assertUrl($facet_overview);
+    $this->assertText($facetName);
+
   }
 
   protected function addFieldsToIndex() {
