@@ -21,7 +21,7 @@ class AdapterTest extends WebTestBase {
    *
    * @var array
    */
-  public static $modules = array('facetapi_dummy');
+  public static $modules = array('facetapi');
 
   /**
    * The URL generator.
@@ -35,6 +35,10 @@ class AdapterTest extends WebTestBase {
    */
   public function setUp() {
     parent::setUp();
+  }
+
+  public function testMock() {
+    $this->verbose("We need to have at least one test method in a test or otherwise all tests fail.");
   }
 
 
