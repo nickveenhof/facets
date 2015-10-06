@@ -14,6 +14,7 @@ use Drupal\Core\Form\FormStateInterface;
 use Drupal\facetapi\FacetInterface;
 use Drupal\facetapi\FacetApiException;
 use Drupal\facetapi\Widget\WidgetPluginManager;
+use Drupal\search_api\Entity\Index;
 use Drupal\search_api\Form\SubFormState;
 use Drupal\search_api\IndexInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -116,10 +117,8 @@ class FacetForm extends EntityForm {
    *
    * @param \Drupal\facetapi\FacetInterface $facet
    *   The server that is being created or edited.
-   * @param \Drupal\search_api\IndexInterface $search_api_index
-   *   The search index we're creating a facet for.
    */
-  public function buildEntityForm(array &$form, FormStateInterface $form_state, FacetInterface $facet, IndexInterface $search_api_index) {
+  public function buildEntityForm(array &$form, FormStateInterface $form_state, FacetInterface $facet) {
 
     $form['name'] = array(
       '#type' => 'textfield',
@@ -142,7 +141,7 @@ class FacetForm extends EntityForm {
 
     $form['field_identifier'] = [
       '#type' => 'select',
-      '#options' => $this->getIndexedFields($search_api_index),
+      '#options' => $this->getIndexedFields(),
       '#title' => $this->t('Facet field'),
       '#description' => $this->t('Choose the indexed field.'),
       '#required' => TRUE,
@@ -205,13 +204,16 @@ class FacetForm extends EntityForm {
    * @return array
    *   An array of all indexed fields.
    */
-  protected function getIndexedFields(IndexInterface $search_api_index) {
+  protected function getIndexedFields() {
     $indexed_fields = [];
 
-    foreach ($search_api_index->getDatasources() as $datasource_id => $datasource) {
-      $fields = $search_api_index->getFieldsByDatasource($datasource_id);
-      foreach ($fields as $field) {
-        $indexed_fields[$field->getFieldIdentifier()] = $field->getLabel();
+    $search_api_indexes = Index::loadMultiple();
+    foreach($search_api_indexes as $search_api_index){
+      foreach ($search_api_index->getDatasources() as $datasource_id => $datasource) {
+        $fields = $search_api_index->getFieldsByDatasource($datasource_id);
+        foreach ($fields as $field) {
+          $indexed_fields[$field->getFieldIdentifier()] = $field->getLabel();
+        }
       }
     }
     return $indexed_fields;
@@ -295,7 +297,7 @@ class FacetForm extends EntityForm {
         $facet = $this->getEntity();
         $facet->save();
         drupal_set_message($this->t('The facet was successfully saved.'));
-        $form_state->setRedirect('entity.search_api_index.facets', array('search_api_index' => $facet->getSearchApiIndex()));
+        $form_state->setRedirect('facetapi.overview');
       }
       catch (FacetApiException $e) {
         $form_state->setRebuild();

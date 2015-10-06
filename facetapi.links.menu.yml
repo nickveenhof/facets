@@ -1,0 +1,6 @@
+facetapi.overview:
+  title: Facet API
+  description: 'Configure facets for Search API searchers.'
+  route_name: facetapi.overview
+  weight: 30
+  parent: system.admin_config_search

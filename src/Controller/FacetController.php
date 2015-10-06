@@ -46,11 +46,9 @@ class FacetController extends ControllerBase {
    * @return array
    *   The facet add form.
    */
-  public function addForm(IndexInterface $search_api_index) {
-    $facet = $this->entityManager()->getStorage('facetapi_facet')->create(array('search_api_index' => $search_api_index->id()));
-
-    $form_state_additions = ['search_api_index' => $search_api_index];
-    return $this->entityFormBuilder()->getForm($facet, 'default', $form_state_additions);
+  public function addForm() {
+    $facet = $this->entityManager()->getStorage('facetapi_facet')->create();
+    return $this->entityFormBuilder()->getForm($facet, 'default');
   }
 
   /**
@@ -64,11 +62,9 @@ class FacetController extends ControllerBase {
    * @return array
    *   The facet edit form.
    */
-  public function editForm(IndexInterface $search_api_index, FacetInterface $facetapi_facet) {
+  public function editForm(FacetInterface $facetapi_facet) {
     $facet = $this->entityManager()->getStorage('facetapi_facet')->load($facetapi_facet->id());
-
-    $form_state_additions = ['search_api_index' => $search_api_index];
-    return $this->entityFormBuilder()->getForm($facet, 'default', $form_state_additions);
+    return $this->entityFormBuilder()->getForm($facet, 'default');
   }
 
   /**

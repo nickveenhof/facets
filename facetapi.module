@@ -199,7 +199,7 @@ function facetapi_entity_operation_alter(array &$operations, \Drupal\Core\Entity
     $operations['facets'] = array(
       'title' => t('Facets'),
       'weight' => 40,
-      'url' => Url::fromRoute('entity.search_api_index.facets', $route_parameters),
+      'url' => Url::fromRoute('facetapi.overview', $route_parameters),
     );
   }
 }

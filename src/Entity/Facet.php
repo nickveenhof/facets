@@ -44,10 +44,10 @@ use Drupal\facetapi\Result\ResultInterface;
  *     "widget_configs",
  *   },
  *   links = {
- *     "canonical" = "/admin/config/search/search-api/index/{search_api_index}/facets",
- *     "add-form" = "/admin/config/search/search-api/index/{search_api_index}/facets/add-facet",
- *     "edit-form" = "/admin/config/search/search-api/index/{search_api_index}/facets/{facetapi_facet}/edit",
- *     "delete-form" = "/admin/config/search/search-api/index/{search_api_index}/facets/{facetapi_facet}/delete",
+ *     "canonical" = "/admin/config/search/facet-api",
+ *     "add-form" = "/admin/config/search/facet-api/add-facet",
+ *     "edit-form" = "/admin/config/search/facet-api/{facetapi_facet}/edit",
+ *     "delete-form" = "/admin/config/search/facet-api/{facetapi_facet}/delete",
  *   }
  * )
  */
@@ -117,13 +117,6 @@ class Facet extends ConfigEntityBase implements FacetInterface {
    * @var string
    */
   protected $searcher_name;
-
-  /**
-   * The search api index this facet belongs to.
-   *
-   * @var string
-   */
-  protected $search_api_index;
 
   /**
    * The plugin name of the url processor.
@@ -264,16 +257,11 @@ class Facet extends ConfigEntityBase implements FacetInterface {
     return $this->name;
   }
 
-  public function getSearchApiIndex() {
-    return $this->search_api_index;
-  }
-
   /**
    * {@inheritdoc}
    */
   protected function urlRouteParameters($rel) {
     $parameters = parent::urlRouteParameters($rel);
-    $parameters['search_api_index'] = $this->getSearchApiIndex();
     return $parameters;
   }
 
