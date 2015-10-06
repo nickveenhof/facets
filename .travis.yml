@@ -71,6 +71,9 @@ before_script:
   - drush en --yes simpletest
   - drush cr
   - phpenv rehash
+  # Add the search_api module.
+  - cd $TRAVIS_BUILD_DIR/../drupal/modules/
+  - git clone --depth 1 --branch 8.x-1.x http://git.drupal.org/project/search_api.git
 
 script:
   # go to our Drupal module directory
