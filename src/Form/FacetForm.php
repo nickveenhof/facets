@@ -7,6 +7,7 @@
 
 namespace Drupal\facetapi\Form;
 
+use Drupal\Core\Config\Config;
 use Drupal\Core\Entity\EntityForm;
 use Drupal\Core\Entity\EntityManagerInterface;
 use Drupal\Core\Form\FormStateInterface;
@@ -236,12 +237,13 @@ class FacetForm extends EntityForm {
       $widget_instance = $this->getWidgetPluginManager()->createInstance($widget);
       // @todo Create, use and save SubFormState already here, not only in
       //   validate(). Also, use proper subset of $form for first parameter?
-      if ($config_form = $widget_instance->buildConfigurationForm([], $form_state)) {
-        $form['widget_config']['#type'] = 'details';
-        $form['widget_config']['#title'] = $this->t('Configure the %widget widget', ['%widget' => $this->getWidgetPluginManager()->getDefinition($widget)['label']]);
-        $form['widget_config']['#open'] = $facet->isNew();
+      $config = $this->config('facetapi.facet.' . $facet->id());
+      if ($config_form = $widget_instance->buildConfigurationForm([], $form_state, ($config instanceof Config) ? $config : null )) {
+        $form['widget_configs']['#type'] = 'details';
+        $form['widget_configs']['#title'] = $this->t('Configure the %widget widget', ['%widget' => $this->getWidgetPluginManager()->getDefinition($widget)['label']]);
+        $form['widget_configs']['#open'] = $facet->isNew();
 
-        $form['widget_config'] += $config_form;
+        $form['widget_configs'] += $config_form;
       }
     }
   }

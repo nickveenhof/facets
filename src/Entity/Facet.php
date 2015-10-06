@@ -41,6 +41,7 @@ use Drupal\facetapi\Result\ResultInterface;
  *     "search_api_index",
  *     "field_identifier",
  *     "widget",
+ *     "widget_configs",
  *   },
  *   links = {
  *     "canonical" = "/admin/config/search/search-api/index/{search_api_index}/facets",
@@ -79,6 +80,13 @@ class Facet extends ConfigEntityBase implements FacetInterface {
    * @var string
    */
   protected $widget;
+
+  /**
+   * Configuration for the widget. This is a key-value stored array.
+   *
+   * @var string
+   */
+  protected $widget_configs;
 
   /**
    * An array of options configuring this index.

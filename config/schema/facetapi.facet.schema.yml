@@ -23,3 +23,9 @@ facetapi.facet.*:
     widget:
       type: string
       label: 'Field identifier'
+    widget_configs:
+      type: sequence
+      label: 'Widget plugin configurations'
+      sequence:
+        type: string
+        label: 'Widget plugin configurations'

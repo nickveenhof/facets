@@ -9,7 +9,7 @@ use Drupal\facetapi\Widget\WidgetInterface;
 /**
  * @FacetApiWidget(
  *   id = "checkbox",
- *   label = @Translation("Checkbox widget"),
+ *   label = @Translation("List of checkboxes"),
  *   description = @Translation("A widget that shows checkboxes"),
  * )
  *
@@ -36,7 +36,26 @@ class CheckboxWidget implements WidgetInterface {
   /**
    * {@inheritdoc}
    */
-  public function buildConfigurationForm(array $form, FormStateInterface $form_state) {
+  public function buildConfigurationForm(array $form, FormStateInterface $form_state, $config) {
+    $checkbox_options = [
+      'before' => $this->t('Before'),
+      'after' => $this->t('After'),
+    ];
+
+    $form['checkbox_placement'] = [
+      '#type' => 'radios',
+      '#title' => $this->t('Checkbox placement'),
+      '#description' => $this->t('Choose where the checkboxes should be placed'),
+      '#options' => $checkbox_options,
+      '#required' => TRUE,
+    ];
+    if (!is_null($config)) {
+      $widget_configs = $config->get('widget_configs');
+      if (isset($widget_configs['checkbox_placement'])) {
+        $form['checkbox_placement']['#default_value'] = $widget_configs['checkbox_placement'];
+      }
+    }
+
     return $form;
   }
 
