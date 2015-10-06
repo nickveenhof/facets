@@ -199,7 +199,7 @@ class FacetForm extends EntityForm {
   /**
    * Gets all indexed fields for this search index.
    *
-   * @param \Drupal\search_api\IndexInterface $search_index
+   * @param \Drupal\search_api\IndexInterface $search_api_index
    *   The search index we're creating a facet for.
    * @return array
    *   An array of all indexed fields.
