@@ -50,6 +50,12 @@ class CheckboxWidget implements WidgetInterface {
       '#options' => $checkbox_options,
       '#required' => TRUE,
     ];
+
+    $form['test_stuff'] = [
+      '#type' => 'textfield',
+      '#title' => 'test',
+    ];
+
     if (!is_null($config)) {
       $widget_configs = $config->get('widget_configs');
       if (isset($widget_configs['checkbox_placement'])) {

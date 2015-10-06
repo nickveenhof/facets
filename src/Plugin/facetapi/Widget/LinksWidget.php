@@ -35,7 +35,7 @@ class LinksWidget implements WidgetInterface {
    * {@inheritdoc}
    */
   public function buildConfigurationForm(array $form, FormStateInterface $form_state) {
-    return $form;
+    return false;
   }
 
 }

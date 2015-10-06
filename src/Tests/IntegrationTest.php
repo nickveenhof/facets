@@ -57,9 +57,9 @@ class IntegrationTest extends FacetWebTestBase {
     $edit = [
       'name' => '',
       'id' => 'test_facet',
-      'status' => 1,
       'field_identifier' => 'entity:node/title',
-      'widget' => 'checkbox',
+      'widget' => 'links',
+      'status' => 1,
     ];
 
     $this->drupalPostForm($facet_add_page, $edit, $this->t('Save'));
@@ -70,11 +70,15 @@ class IntegrationTest extends FacetWebTestBase {
     $edit = [
       'name' => $facetName,
       'id' => 'test_facet',
-      'status' => 1,
-      'widget' => 'links',
       'field_identifier' => 'entity:node/title',
+      'widget' => 'links',
+      'status' => 1,
     ];
-    $this->drupalPostForm($facet_add_page, $edit, $this->t('Save'));
+    // Configure the widget
+    $this->drupalPostForm(NULL, $edit, $this->t('Configure'));
+
+    // Save the facet
+    $this->drupalPostForm(NULL, $edit, $this->t('Save'));
     $this->assertUrl($facet_overview);
     $this->assertText($facetName);
 
