@@ -8,8 +8,8 @@ use Drupal\facetapi\Widget\WidgetInterface;
 /**
  * @FacetApiWidget(
  *   id = "links",
- *   label = @Translation("Links widget"),
- *   description = @Translation("A widget that shows links"),
+ *   label = @Translation("List of links"),
+ *   description = @Translation("A simple widget that shows a list of links"),
  * )
  *
  * Class LinksWidget
@@ -27,6 +27,7 @@ class LinksWidget implements WidgetInterface {
    * {@inheritdoc}
    */
   public function build() {
+    // @TODO actually build the correct render array.
     return ['#markup' => 'links widget'];
   }
 

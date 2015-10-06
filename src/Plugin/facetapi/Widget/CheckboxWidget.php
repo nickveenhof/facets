@@ -10,7 +10,7 @@ use Drupal\facetapi\Widget\WidgetInterface;
  * @FacetApiWidget(
  *   id = "checkbox",
  *   label = @Translation("List of checkboxes"),
- *   description = @Translation("A widget that shows checkboxes"),
+ *   description = @Translation("A configurable widget that shows a list of checkboxes"),
  * )
  *
  * Class CheckboxWidget
@@ -30,6 +30,7 @@ class CheckboxWidget implements WidgetInterface {
    * {@inheritdoc}
    */
   public function build() {
+    // @TODO actually build the correct render array.
     return ['#markup' => 'checkbox widget'];
   }
 
