@@ -1,7 +1,7 @@
-name: Facet api
+name: 'Facet API'
 type: module
-description: Facetapi test
+description: 'Faceted search interfaces that can be used on Search API searchers.'
 core: 8.x
-package: Other
+package: Search
 dependencies:
   - search_api
