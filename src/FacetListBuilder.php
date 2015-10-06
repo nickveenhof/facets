@@ -11,10 +11,7 @@ use Drupal\Component\Utility\Html;
 use Drupal\Core\Config\Entity\ConfigEntityInterface;
 use Drupal\Core\Config\Entity\ConfigEntityListBuilder;
 use Drupal\Core\Entity\EntityInterface;
-use Drupal\Core\Entity\EntityStorageInterface;
-use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Url;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Builds a listing of search index entities.
@@ -22,44 +19,19 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 class FacetListBuilder extends ConfigEntityListBuilder {
 
   /**
-   * The entity storage class for the 'facetapi_facet' entity type.
-   *
-   * @var \Drupal\Core\Entity\EntityStorageInterface
-   */
-  protected $serverStorage;
-
-  /**
-   * Constructs an IndexListBuilder object.
-   *
-   * @param \Drupal\Core\Entity\EntityTypeInterface $entity_type
-   *   The entity type definition.
-   * @param \Drupal\Core\Entity\EntityStorageInterface $storage
-   *   The entity storage class.
-   * @param \Drupal\Core\Entity\EntityStorageInterface $server_storage
-   *   The entity storage class for the 'search_api_server' entity type.
-   */
-  public function __construct(EntityTypeInterface $entity_type, EntityStorageInterface $storage, EntityStorageInterface $server_storage) {
-    parent::__construct($entity_type, $storage);
-
-    $this->serverStorage = $server_storage;
-  }
-
-  /**
    * {@inheritdoc}
    */
-  public static function createInstance(ContainerInterface $container, EntityTypeInterface $entity_type) {
-    return new static(
-      $entity_type,
-      $container->get('entity.manager')->getStorage($entity_type->id()),
-      $container->get('entity.manager')->getStorage('facetapi_facet')
-    );
+  public function load() {
+    $entities = parent::load();
+    $this->sortByStatusThenAlphabetically($entities);
+    return $entities;
   }
 
   /**
    * {@inheritdoc}
    */
   public function getDefaultOperations(EntityInterface $entity) {
-    $operations = array();
+    $operations = parent::getDefaultOperations($entity);
 
     if ($entity instanceof FacetInterface) {
 
@@ -82,8 +54,6 @@ class FacetListBuilder extends ConfigEntityListBuilder {
 
     return $operations;
   }
-
-
 
   /**
    * {@inheritdoc}
@@ -146,27 +116,12 @@ class FacetListBuilder extends ConfigEntityListBuilder {
    * {@inheritdoc}
    */
   public function render() {
-    $facets = $this->storage->loadMultiple();
-    $this->sortByStatusThenAlphabetically($facets);
-
-    $list['#type'] = 'container';
-    $list['#attached']['library'][] = 'search_api/drupal.search_api.admin_css';
-
-    $list['facets'] = array(
-      '#type' => 'table',
-      '#header' => $this->buildHeader(),
-      '#rows' => array(),
-      '#empty' => $this->t('There are no facets defined.'),
-      '#attributes' => array(
-        'id' => 'search-api-entity-list',
-      ),
-    );
-    /** @var \Drupal\Core\Config\Entity\ConfigEntityInterface $entity */
-    foreach ($facets as $entity) {
-      $list['facets']['#rows'][$entity->getEntityTypeId() . '.' . $entity->id()] = $this->buildRow($entity);
-    }
-
-    return $list;
+    $build = parent::render();
+    $parameters = ['search_api_index' => 'default_index']; // TODO: Do not hardcode this value.
+    $build['table']['#empty'] = $this->t('There are no facets defined. <a href=":link">Add new facet</a>.', [
+      ':link' => Url::fromRoute('entity.facetapi_facet.add_form', $parameters)->toString()
+    ]);
+    return $build;
   }
 
 
