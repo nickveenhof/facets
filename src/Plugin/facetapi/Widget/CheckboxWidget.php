@@ -39,14 +39,14 @@ class CheckboxWidget implements WidgetInterface {
    */
   public function buildConfigurationForm(array $form, FormStateInterface $form_state, $config) {
     $checkbox_options = [
-      'before' => $this->t('Before'),
-      'after' => $this->t('After'),
+      'radio' => $this->t('Radio'),
+      'checkboxes' => $this->t('Checkboxes'),
     ];
 
     $form['checkbox_placement'] = [
       '#type' => 'radios',
-      '#title' => $this->t('Checkbox placement'),
-      '#description' => $this->t('Choose where the checkboxes should be placed'),
+      '#title' => $this->t('Type of selection'),
+      '#description' => $this->t('Choose if checkboxes or radio boxes should be used.'),
       '#options' => $checkbox_options,
       '#required' => TRUE,
     ];
