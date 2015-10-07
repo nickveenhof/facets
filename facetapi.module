@@ -48,9 +48,8 @@ function facetapi_theme() {
  * @return FacetInterface[]
  */
 function facetapi_get_enabled_facets() {
-  $module_handler = \Drupal::service('module_handler');
-  $facets = $module_handler->invokeAll('facetapi_facet_info');
-  return $facets;
+  $em = \Drupal::entityManager();
+  return $em->getStorage('facetapi_facet')->loadMultiple();
 }
 
 /**
