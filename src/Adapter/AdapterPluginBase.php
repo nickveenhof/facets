@@ -122,14 +122,15 @@ abstract class AdapterPluginBase extends PluginBase implements AdapterInterface,
 
   public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
     // Insert the module handler.
-    // @var ModuleHandlerInterface
+    /** @var \Drupal\Core\Extension\ModuleHandlerInterface $module_handler */
     $module_handler = $container->get('module_handler');
 
     // Insert the plugin manager for query types.
-    // @var PluginManagerInterface
+    /** @var \Drupal\facetapi\QueryType\QueryTypePluginManager $query_type_plugin_manager */
     $query_type_plugin_manager = $container->get('plugin.manager.facetapi.query_type');
 
     // Insert the plugin manager for url processors.
+    /** @var UrlProcessorPluginManager $url_processor_plugin_manager */
     $url_processor_plugin_manager = $container->get('plugin.manager.facetapi.url_processor');
 
     $plugin = new static($configuration, $plugin_id, $plugin_definition, $module_handler, $query_type_plugin_manager, $url_processor_plugin_manager);
