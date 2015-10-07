@@ -68,7 +68,6 @@ class IntegrationTest extends FacetWebTestBase {
 
     $this->drupalPostForm($facet_add_page, $edit, $this->t('Save'));
     $this->assertText($this->t('Facet name field is required.'));
-    $this->assertText($this->t('1 error has been found'));
 
     $facetName = "Test Facet Name";
     $edit = [
