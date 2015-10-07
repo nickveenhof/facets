@@ -251,7 +251,7 @@ class FacetForm extends EntityForm {
         $form['widget_configs']['#type'] = 'container';
         $form['widget_configs']['#open'] = true;
         $form['widget_configs']['widget_information_dummy'] = [
-          '#type' => 'textfield',
+          '#type' => 'hidden',
           '#value' => '1',
           '#default_value' => '1',
         ];
