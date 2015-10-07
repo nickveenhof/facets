@@ -45,7 +45,7 @@ class IntegrationTest extends FacetWebTestBase {
   }
 
   protected function addFacet() {
-    $facet_overview = $this->urlGenerator->generateFromRoute('facetapi.overview', ['search_api_index' => 'webtest_index']);
+    $facet_overview = $this->urlGenerator->generateFromRoute('facetapi.overview');
     $this->drupalGet($facet_overview);
     $this->assertResponse(200);
     $this->assertText($this->t('There are no facets defined.'));
