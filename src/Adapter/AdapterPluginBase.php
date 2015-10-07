@@ -132,7 +132,6 @@ abstract class AdapterPluginBase extends PluginBase implements AdapterInterface,
     // Insert the plugin manager for url processors.
     $url_processor_plugin_manager = $container->get('plugin.manager.facetapi.url_processor');
 
-
     $plugin = new static($configuration, $plugin_id, $plugin_definition, $module_handler, $query_type_plugin_manager, $url_processor_plugin_manager);
     return $plugin;
   }
@@ -180,7 +179,7 @@ abstract class AdapterPluginBase extends PluginBase implements AdapterInterface,
    * @param string $keys
    *   The search keys, or query text, submitted by the user.
    *
-   * @return FacetapiAdapter
+   * @return self
    *   An instance of this class.
    */
   public function setSearchKeys($keys) {

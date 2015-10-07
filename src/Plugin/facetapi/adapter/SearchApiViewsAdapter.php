@@ -19,28 +19,30 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  *   label = @Translation("Search api"),
  *   description = @Translation("Search api facet api adapter"),
  * )
- *
  */
 class SearchApiViewsAdapter extends AdapterPluginBase {
 
-  /*
-   * @var Drupal\search_api\Query\QueryInterface
+  /**
+   * @var \Drupal\search_api\Query\QueryInterface
    */
   protected $searchApiQuery;
 
+  /**
+   * @var \Drupal\search_api\Query\ResultsCacheInterface
+   */
   protected $searchResultsCache;
 
   public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
     // Insert the module handler.
-    // @var ModuleHandlerInterface
+    /** @var \Drupal\Core\Extension\ModuleHandlerInterface $module_handler */
     $module_handler = $container->get('module_handler');
 
     // Insert the plugin manager for query types.
-    // @var PluginManagerInterface
+    /** @var \Drupal\facetapi\QueryType\QueryTypePluginManager $query_type_plugin_manager */
     $query_type_plugin_manager = $container->get('plugin.manager.facetapi.query_type');
 
     // Get the ResultsCache from the container.
-    // @var ResultsCacheInterface
+    /** @var \Drupal\search_api\Query\ResultsCacheInterface $results_cache */
     $results_cache = $container->get('search_api.results_static_cache');
 
     // Insert the plugin manager for url processors.
@@ -48,10 +50,7 @@ class SearchApiViewsAdapter extends AdapterPluginBase {
     $url_processor_plugin_manager = $container->get('plugin.manager.facetapi.url_processor');
 
 
-    $plugin = new static($configuration, $plugin_id, $plugin_definition, $module_handler, $query_type_plugin_manager, $results_cache, $url_processor_plugin_manager);
-
-
-    return $plugin;
+    return new static($configuration, $plugin_id, $plugin_definition, $module_handler, $query_type_plugin_manager, $results_cache, $url_processor_plugin_manager);
   }
 
   public function __construct(
