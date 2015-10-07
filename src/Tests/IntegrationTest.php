@@ -41,6 +41,10 @@ class IntegrationTest extends FacetWebTestBase {
     $this->index = $this->getTestIndex();
 
     $this->addFieldsToIndex();
+
+    // Clear all the caches.
+    $this->resetAll();
+
     $this->addFacet();
   }
 
