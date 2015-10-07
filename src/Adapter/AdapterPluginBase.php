@@ -396,7 +396,10 @@ abstract class AdapterPluginBase extends PluginBase implements AdapterInterface,
       /** @var UrlProcessorInterface $url_processor */
       $url_processor_name = $facet->getUrlProcessorName();
       $url_processor = $this->url_processor_plugin_manager->createInstance($url_processor_name);
-      $url_processor->addUriToResults($facet);
+      // @TODO this value we're passing on into
+      // \Drupal\facetapi\UrlProcessor\UrlProcessorInterface::addUriToResults is
+      // should be corrected.
+      $url_processor->addUriToResults($facet, '');
     }
   }
 }
