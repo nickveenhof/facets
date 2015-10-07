@@ -76,6 +76,7 @@ before_script:
   - git clone --depth 1 --branch 8.x-1.x http://git.drupal.org/project/search_api.git
 
 script:
+  - ls -la $TRAVIS_BUILD_DIR
   # go to our Drupal module directory
   - mkdir $TRAVIS_BUILD_DIR/../drupal/modules/facetapi
   - cp -R $TRAVIS_BUILD_DIR/* $TRAVIS_BUILD_DIR/../drupal/modules/facetapi/
