@@ -76,17 +76,11 @@ class FacetBlock extends BlockBase implements ContainerFactoryPluginInterface {
    * {@inheritdoc}
    */
   public function build() {
-    // Get the adapter.
-    // For now hard code the id.
-    // This should be based on facet definitions.
-    // The plugin manager should be injected.
-
     /** @var Facet $facet */
     $facet = $this->getContextValue('facet');
 
+    // This should be changeable when we support more than just search API.
     $plugin_id = 'search_api_views';
-//    $facets = facetapi_get_enabled_facets();
-//    $facet = $facets[$this->configuration['facet_identifier']];
 
     /** @var \Drupal\facetapi\Adapter\AdapterInterface $adapter */
     $adapter = $this->pluginManager->getMyOwnChangeLaterInstance(
@@ -100,6 +94,9 @@ class FacetBlock extends BlockBase implements ContainerFactoryPluginInterface {
     return $build;
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function blockForm($form, FormStateInterface $form_state) {
     $form = parent::blockForm($form, $form_state);
 
@@ -123,6 +120,9 @@ class FacetBlock extends BlockBase implements ContainerFactoryPluginInterface {
     return $form;
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function blockSubmit($form, FormStateInterface $form_state) {
     parent::blockSubmit($form, $form_state);
     $this->configuration['facet_identifier'] = $form_state->getValue('facet_identifier');
@@ -132,6 +132,8 @@ class FacetBlock extends BlockBase implements ContainerFactoryPluginInterface {
    * {@inheritdoc}
    */
   public function getCacheMaxAge() {
+    // Makes sure a facet block is never cached.
+    // @TODO Make blocks cacheable, see: https://www.drupal.org/node/2581629
     return 0;
   }
 
