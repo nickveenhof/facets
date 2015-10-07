@@ -79,6 +79,10 @@ class FacetBlock extends BlockBase implements ContainerFactoryPluginInterface {
     /** @var Facet $facet */
     $facet = $this->getContextValue('facet');
 
+    if (is_null($facet->getSearcherName())) {
+      return ['#markup' => "This is why we can't have nice things."];
+    }
+
     // This should be changeable when we support more than just search API.
     $plugin_id = 'search_api_views';
 
