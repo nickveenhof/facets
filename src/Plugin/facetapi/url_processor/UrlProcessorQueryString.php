@@ -48,6 +48,11 @@ class UrlProcessorQueryString extends UrlProcessorPluginBase{
 
     $results = $facet->getResults();
 
+    // No results are found for this facet, so dont try to create urls.
+    if (is_null($results)) {
+      return;
+    }
+
     foreach ($results as $result) {
       $filter_string = $facet->getFieldAlias() . ':' . $result->getValue();
       $result_get_params = clone $get_params;

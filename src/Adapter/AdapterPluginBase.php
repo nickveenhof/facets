@@ -306,7 +306,7 @@ abstract class AdapterPluginBase extends PluginBase implements AdapterInterface,
    * @todo For clarity, should this method be named buildFacets()?
    */
   public function processFacets() {
-    if (! $this->processed) {
+    if (!$this->processed) {
       // First add the results to the facets.
       $this->updateResults();
 
