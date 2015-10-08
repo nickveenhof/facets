@@ -14,9 +14,9 @@ facetapi.facet.*:
     status:
       type: boolean
       label: 'Status'
-    search_api_index:
+    facet_source:
       type: string
-      label: 'Search API index'
+      label: 'Facet source'
     field_identifier:
       type: string
       label: 'Field identifier'

@@ -38,8 +38,8 @@ use Drupal\facetapi\Result\ResultInterface;
  *   config_export = {
  *     "id",
  *     "name",
- *     "search_api_index",
  *     "field_identifier",
+ *     "facet_source",
  *     "widget",
  *     "widget_configs",
  *   },
@@ -112,18 +112,18 @@ class Facet extends ConfigEntityBase implements FacetInterface {
   protected $query_type_name;
 
   /**
-   * The searcher name.
-   *
-   * @var string
-   */
-  protected $searcher_name;
-
-  /**
    * The plugin name of the url processor.
    *
    * @var string
    */
   protected $url_processor_name;
+
+  /**
+   * The name of the facet source.
+   *
+   * @var string
+   */
+  protected $facet_source;
 
   /**
    * The results.
@@ -245,16 +245,27 @@ class Facet extends ConfigEntityBase implements FacetInterface {
     return $this->query_type_name;
   }
 
-  public function getSearcherName() {
-    return $this->searcher_name;
-  }
-
   public function getUrlProcessorName() {
     return $this->url_processor_name;
   }
 
   public function getName() {
     return $this->name;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setFacetSource($facet_source) {
+    $this->facet_source = $facet_source;
+    return $this;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getFacetSource() {
+    return $this->facet_source;
   }
 
   /**

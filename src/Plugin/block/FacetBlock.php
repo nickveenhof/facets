@@ -79,7 +79,7 @@ class FacetBlock extends BlockBase implements ContainerFactoryPluginInterface {
     /** @var Facet $facet */
     $facet = $this->getContextValue('facet');
 
-    if (is_null($facet->getSearcherName())) {
+    if (is_null($facet->getFacetSource())) {
       return ['#markup' => "This is why we can't have nice things."];
     }
 
@@ -89,7 +89,7 @@ class FacetBlock extends BlockBase implements ContainerFactoryPluginInterface {
     /** @var \Drupal\facetapi\Adapter\AdapterInterface $adapter */
     $adapter = $this->pluginManager->getMyOwnChangeLaterInstance(
       $plugin_id,
-      $facet->getSearcherName()
+      $facet->getFacetSource()
     );
 
     // Let the adapter build the facets.
@@ -110,7 +110,7 @@ class FacetBlock extends BlockBase implements ContainerFactoryPluginInterface {
 
     foreach ($facets as $facet_name => $facet) {
       $identifier = $facet_name;
-      $facet_options[$identifier] = $facet->getSearcherName() . ' facet: ' . $facet->getName();
+      $facet_options[$identifier] = $facet->getFacetSource() . ' facet: ' . $facet->getName();
     }
 
     $form['facet_identifier'] = array(

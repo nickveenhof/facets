@@ -261,7 +261,7 @@ abstract class AdapterPluginBase extends PluginBase implements AdapterInterface,
     $search_id = $this->searcher_id;
     foreach ($this->facets as $facet) {
       // Only if the facet is for this query, alter the query.
-      if ($facet->getSearcherName() == $search_id) {
+      if ($facet->getFacetSource() == $search_id) {
         // Create the query type plugin.
         $query_type_plugin = $this->query_type_plugin_manager->createInstance($facet->getQueryType(),
           array('query' => $query, 'facet' => $facet));
@@ -340,7 +340,7 @@ abstract class AdapterPluginBase extends PluginBase implements AdapterInterface,
   public function build($facet) {
     // Process the facets.
     // @TODO: inject the searcher id on create of the adapter.
-    $this->searcher_id = $facet->getSearcherName();
+    $this->searcher_id = $facet->getFacetSource();
 
     $this->processFacets();
     // Let the plugin render the facet.

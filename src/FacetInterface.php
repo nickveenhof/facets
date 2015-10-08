@@ -79,13 +79,6 @@ interface FacetInterface extends ConfigEntityInterface {
   public function getQueryType();
 
   /**
-   * Get the name of the searcher.
-   *
-   * @return mixed
-   */
-  public function getSearcherName();
-
-  /**
    * Get the plugin name for the url processor.
    *
    * @return mixed
@@ -143,5 +136,21 @@ interface FacetInterface extends ConfigEntityInterface {
    * @return string
    */
   public function getAdapterPluginId();
+
+  /**
+   * Sets a string representation of the Facet source plugin.
+   *
+   * This is usually the name of the Search-api view.
+   *
+   * @param string $facet_source
+   * @return $this
+   */
+  public function setFacetSource($facet_source);
+
+  /**
+   * Returns the Facet source.
+   * @return string
+   */
+  public function getFacetSource();
 
 }

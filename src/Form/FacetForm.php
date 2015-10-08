@@ -10,6 +10,7 @@ namespace Drupal\facetapi\Form;
 use Drupal\Core\Config\Config;
 use Drupal\Core\Entity\EntityForm;
 use Drupal\Core\Entity\EntityManagerInterface;
+use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\facetapi\FacetInterface;
 use Drupal\facetapi\FacetApiException;
@@ -138,6 +139,16 @@ class FacetForm extends EntityForm {
         'source' => array('name'),
       ),
     );
+
+    $facet_sources = $this->getFacetSources();
+    $form['facet_source'] = [
+      '#type' => 'select',
+      '#title' => $this->t('Facet source'),
+      '#description' => $this->t('Select the source where this facet can find it\'s fields.'),
+      '#options' => $facet_sources,
+      '#default_value' => $facet->getFacetSource(),
+      '#required' => TRUE,
+    ];
 
     $form['field_identifier'] = [
       '#type' => 'select',
@@ -312,6 +323,36 @@ class FacetForm extends EntityForm {
    */
   public function delete(array $form, FormStateInterface $form_state) {
     $form_state->setRedirect('entity.facetapi_facet.delete_form', array('facetapi_facet' => $this->getEntity()->id()));
+  }
+
+  /**
+   * Gets the possible sources for faceted searches.
+   *
+   * @return array
+   */
+  protected function getFacetSources() {
+    $sources = [];
+
+    // Gets views that are made on sapi. We have to return an array with keys
+    // that look like: "search_api_views:search_content:page_1" and values that
+    // represent a textual representation of that.
+
+    /** @var \Drupal\Core\Entity\EntityStorageInterface $viewsStorage */
+    $viewsStorage = $this->entityManager->getStorage('view');
+    $allViews = $viewsStorage->loadMultiple();
+
+    /** @var \Drupal\views\Entity\View $view */
+    foreach ($allViews as $view) {
+      // Hardcoded usage of search api views, for now.
+      if ($view->get('base_table') == 'search_api_index_default_index') {
+        $displays = $view->get('display');
+        foreach ($displays as $name => $display_info) {
+          $sources['search_api_views' . ':' . $view->id() . ':' . $name] = $this->t('Search api view: ' . $view->label() . ' display: ' . $display_info['display_title']);
+        }
+      }
+    }
+
+    return $sources;
   }
 
 }
