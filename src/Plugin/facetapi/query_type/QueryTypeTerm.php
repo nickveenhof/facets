@@ -1,10 +1,11 @@
 <?php
+
 /**
  * @file
- * Contains Drupal\facetapi\Plugin\facetapi\querytype\QueryTypeTerm
+ * Contains \Drupal\facetapi\Plugin\facetapi\query_type\QueryTypeTerm
  */
 
-namespace Drupal\facetapi\Plugin\facetapi\querytype;
+namespace Drupal\facetapi\Plugin\facetapi\query_type;
 
 use Drupal\facetapi\Adapter\AdapterInterface;
 use \Drupal\facetapi\QueryType\QueryTypePluginBase;
