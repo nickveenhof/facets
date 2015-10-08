@@ -3,6 +3,8 @@
 namespace Drupal\facetapi\Plugin\facetapi\Widget;
 
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\facetapi\FacetInterface;
+use Drupal\facetapi\Result\Result;
 use Drupal\facetapi\Widget\WidgetInterface;
 
 /**
@@ -26,9 +28,30 @@ class LinksWidget implements WidgetInterface {
   /**
    * {@inheritdoc}
    */
-  public function build() {
-    // @TODO actually build the correct render array.
-    return ['#markup' => 'links widget'];
+  public function build(FacetInterface $facet) {
+    $build = array();
+    /** @var Result[] $results */
+    $results = $facet->getResults();
+    if (! empty ($results)) {
+      $items = array();
+      foreach ($results as $result) {
+        if ($result->getCount()) {
+          // Get the link.
+          $text = $result->getValue() . ' (' . $result->getCount() . ')';
+          if ($result->isActive()) {
+            $text = '(-) ' . $text;
+          }
+          $link_generator = \Drupal::linkGenerator();
+          $link = $link_generator->generate($text, $result->getUrl());
+          $items[] = $link;
+        }
+      }
+      $build = array(
+        '#theme' => 'item_list',
+        '#items' => $items,
+      );
+    }
+    return $build;
   }
 
   /**

@@ -6,6 +6,8 @@
 
 namespace Drupal\facetapi\Widget;
 
+use Drupal\facetapi\FacetInterface;
+
 interface WidgetInterface {
 
   /**
@@ -18,6 +20,6 @@ interface WidgetInterface {
   /**
    * Builds the widget for rendering
    */
-  public function build();
+  public function build(FacetInterface $facet);
 
 }

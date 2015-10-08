@@ -9,6 +9,7 @@ use Drupal\facetapi\Adapter\AdapterPluginBase;
 use Drupal\facetapi\FacetInterface;
 use Drupal\facetapi\QueryType\QueryTypePluginManager;
 use Drupal\facetapi\UrlProcessor\UrlProcessorPluginManager;
+use Drupal\facetapi\Widget\WidgetPluginManager;
 use Drupal\search_api\Query\QueryInterface;
 use Drupal\search_api\Query\ResultsCacheInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -49,8 +50,11 @@ class SearchApiViewsAdapter extends AdapterPluginBase {
     /** @var UrlProcessorPluginManager $url_processor_plugin_manager */
     $url_processor_plugin_manager = $container->get('plugin.manager.facetapi.url_processor');
 
+    /** @var \Drupal\facetapi\Widget\WidgetPluginManager $widget_plugin_manager */
+    $widget_plugin_manager = $container->get('plugin.manager.facetapi.widget');
 
-    return new static($configuration, $plugin_id, $plugin_definition, $module_handler, $query_type_plugin_manager, $results_cache, $url_processor_plugin_manager);
+
+    return new static($configuration, $plugin_id, $plugin_definition, $module_handler, $query_type_plugin_manager, $results_cache, $url_processor_plugin_manager, $widget_plugin_manager);
   }
 
   public function __construct(
@@ -59,10 +63,11 @@ class SearchApiViewsAdapter extends AdapterPluginBase {
     ModuleHandlerInterface $module_handler,
     QueryTypePluginManager $query_type_plugin_manager,
     ResultsCacheInterface $results_cache,
-    UrlProcessorPluginManager $url_processor_plugin_manager
+    UrlProcessorPluginManager $url_processor_plugin_manager,
+    WidgetPluginManager $widget_plugin_manager
   ) {
 
-    parent::__construct($configuration, $plugin_id, $plugin_definition, $module_handler, $query_type_plugin_manager, $url_processor_plugin_manager);
+    parent::__construct($configuration, $plugin_id, $plugin_definition, $module_handler, $query_type_plugin_manager, $url_processor_plugin_manager, $widget_plugin_manager);
     $this->searchResultsCache = $results_cache;
   }
 

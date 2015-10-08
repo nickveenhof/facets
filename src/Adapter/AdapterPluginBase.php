@@ -15,6 +15,7 @@ use Drupal\facetapi\QueryType\QueryTypePluginManager;
 use Drupal\facetapi\Result\Result;
 use Drupal\facetapi\UrlProcessor\UrlProcessorInterface;
 use Drupal\facetapi\UrlProcessor\UrlProcessorPluginManager;
+use Drupal\facetapi\Widget\WidgetPluginManager;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Drupal\Component\Plugin\PluginManagerInterface;
 use \Drupal\facetapi\Entity\Facet;
@@ -133,7 +134,10 @@ abstract class AdapterPluginBase extends PluginBase implements AdapterInterface,
     /** @var UrlProcessorPluginManager $url_processor_plugin_manager */
     $url_processor_plugin_manager = $container->get('plugin.manager.facetapi.url_processor');
 
-    $plugin = new static($configuration, $plugin_id, $plugin_definition, $module_handler, $query_type_plugin_manager, $url_processor_plugin_manager);
+    /** @var \Drupal\facetapi\Widget\WidgetPluginManager $widget_plugin_manager */
+    $widget_plugin_manager = $container->get('plugin.manager.facetapi.widget');
+
+    $plugin = new static($configuration, $plugin_id, $plugin_definition, $module_handler, $query_type_plugin_manager, $url_processor_plugin_manager, $widget_plugin_manager);
     return $plugin;
   }
 
@@ -160,13 +164,15 @@ abstract class AdapterPluginBase extends PluginBase implements AdapterInterface,
     $plugin_id, $plugin_definition,
     ModuleHandlerInterface $module_handler,
     QueryTypePluginManager $query_type_plugin_manager,
-    UrlProcessorPluginManager $url_processor_plugin_manager
+    UrlProcessorPluginManager $url_processor_plugin_manager,
+    WidgetPluginManager $widget_plugin_manager
   ) {
 
     parent::__construct($configuration, $plugin_id, $plugin_definition);
     $this->module_handler = $module_handler;
     $this->query_type_plugin_manager = $query_type_plugin_manager;
     $this->url_processor_plugin_manager = $url_processor_plugin_manager;
+    $this->widget_plugin_manager = $widget_plugin_manager;
 
     // Immediately initialize the facets.
     // This can be done directly because the only thing needed is
@@ -348,48 +354,14 @@ abstract class AdapterPluginBase extends PluginBase implements AdapterInterface,
     // @TODO: functionality to alter the state of the facet should
     // somewhere else. Now here for speed reasons for proof of concept.
 
-    // Return the render array.
-    return $this->buildRenderArray($facet);
+    /** @var \Drupal\facetapi\Widget\WidgetInterface $widget */
+    $widget = $this->widget_plugin_manager->createInstance($facet->getWidget());
+
+    // Returns the render array
+    return $widget->build($facet);
   }
 
   abstract public function updateResults();
-
-  /**
-   * Build the facet information,
-   * so it can be rendered.
-   *
-   * @TODO: REMOVE THIS: this only for demo purposes.
-   * Later this should be replaced by a render plugin.
-   *
-   * @return mixed
-   */
-  protected function buildRenderArray(FacetInterface $facet) {
-    // @TODO: Move the rendering to it's own object.
-    // Here only the links should be gererated.
-    $build = array();
-    /** @var Result[] $results */
-    $results = $facet->getResults();
-    if (! empty ($results)) {
-      $items = array();
-      foreach ($results as $result) {
-        if ($result->getCount()) {
-          // Get the link.
-          $text = $result->getValue() . ' (' . $result->getCount() . ')';
-          if ($result->isActive()) {
-            $text = '(-) ' . $text;
-          }
-          $link_generator = \Drupal::linkGenerator();
-          $link = $link_generator->generate($text, $result->getUrl());
-          $items[] = $link;
-        }
-      }
-      $build = array(
-        '#theme' => 'item_list',
-        '#items' => $items,
-      );
-    }
-    return $build;
-  }
 
   protected function updateResultUrls() {
     // Create the urls for the facets using the url processor.
