@@ -117,7 +117,7 @@ class FacetBlock extends BlockBase implements ContainerFactoryPluginInterface {
       '#type' => 'select',
       '#required' => TRUE,
       '#title' => t('Facet to render'),
-      '#default_value' => $this->configuration['facet_identifier'],
+      '#default_value' => isset($this->configuration['facet_identifier']) ? $this->configuration['facet_identifier'] : '',
       '#empty_option' => t('- Select -'),
       '#options' => $facet_options,
     );
