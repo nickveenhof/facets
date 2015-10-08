@@ -53,16 +53,6 @@ function facetapi_get_enabled_facets() {
 }
 
 /**
- * Implements hook_entity_type_build().
- */
-function facetapi_entity_type_build(array &$entity_types) {
-  /** @var $entity_types \Drupal\Core\Entity\EntityTypeInterface[] */
-  $entity_types['search_api_index']
-    ->setFormClass('facets', 'Drupal\facetapi\Form\IndexFacetsForm');
-}
-
-
-/**
  * Implementation of hook_search_api_query_alter.
  *
  * @param \Drupal\search_api\Query\QueryInterface $query
