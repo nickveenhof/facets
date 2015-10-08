@@ -344,7 +344,7 @@ class FacetForm extends EntityForm {
     /** @var \Drupal\views\Entity\View $view */
     foreach ($allViews as $view) {
       // Hardcoded usage of search api views, for now.
-      if ($view->get('base_table') == 'search_api_index_default_index') {
+      if (strpos($view->get('base_table'), 'search_api_index') !== FALSE) {
         $displays = $view->get('display');
         foreach ($displays as $name => $display_info) {
           $sources['search_api_views' . ':' . $view->id() . ':' . $name] = $this->t('Search api view: ' . $view->label() . ' display: ' . $display_info['display_title']);

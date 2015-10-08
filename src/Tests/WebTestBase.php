@@ -24,7 +24,7 @@ abstract class WebTestBase extends SimpletestWebTestBase {
    *
    * @var string[]
    */
-  public static $modules = ['node', 'search_api', 'search_api_test_backend', 'facetapi'];
+  public static $modules = ['views', 'node', 'search_api', 'search_api_test_backend', 'facetapi', 'search_api_test_views'];
 
   /**
    * An admin user used for this test.
