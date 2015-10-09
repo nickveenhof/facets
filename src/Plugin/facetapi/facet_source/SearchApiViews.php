@@ -2,12 +2,14 @@
 
 /**
  * @file
- *   Contains \Drupal\facetapi\Plugin\facet_api\facet_source\SearchApiViewsFacetSource
+ *   Contains \Drupal\facetapi\Plugin\facet_api\facet_source\SearchApiViews
  */
 
 namespace Drupal\facetapi\Plugin\facet_api\facet_source;
 
+use Drupal\Core\Form\FormStateInterface;
 use Drupal\facetapi\FacetSource\FacetSourcePluginBase;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 
 /**
@@ -18,7 +20,7 @@ use Drupal\facetapi\FacetSource\FacetSourcePluginBase;
  *   deriver = "Drupal\facetapi\Plugin\facetapi\facet_source\SearchApiViewsDeriver"
  * )
  */
-class SearchApiViewsFacetSource extends FacetSourcePluginBase {
+class SearchApiViews extends FacetSourcePluginBase {
 
   /**
    * The entity manager.
@@ -329,6 +331,7 @@ class SearchApiViewsFacetSource extends FacetSourcePluginBase {
    * {@inheritdoc}
    */
   public function buildConfigurationForm(array $form, FormStateInterface $form_state) {
+    var_dump($this->configuration);
     if ($this->hasBundles()) {
       $bundles = $this->getEntityBundleOptions();
       $form['default'] = array(

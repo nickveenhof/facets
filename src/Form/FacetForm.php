@@ -40,6 +40,11 @@ class FacetForm extends EntityForm {
   protected $widgetPluginManager;
 
   /**
+   * @var array
+   */
+  protected $facetSourcePlugins;
+
+  /**
    * Constructs a FacetForm object.
    *
    * @param \Drupal\Core\Entity\EntityManagerInterface $entity_manager
@@ -87,6 +92,16 @@ class FacetForm extends EntityForm {
    */
   protected function getWidgetPluginManager() {
     return $this->widgetPluginManager?: \Drupal::service('plugin.manager.facetapi.widget');
+  }
+
+  /**
+   * Returns the facet source plugin manager.
+   *
+   * @return \Drupal\facetapi\FacetSource\FacetSourcePluginManager
+   *   The facet source plugin manager.
+   */
+  protected function getFacetSourcePluginManager() {
+    return $this->facetSourcePluginManager ?: \Drupal::service('plugin.manager.facetapi.facet_source');
   }
 
   /**
@@ -155,6 +170,7 @@ class FacetForm extends EntityForm {
       '#default_value' => $facet->getFacetSource(),
       '#required' => TRUE,
     ];
+    $this->buildFacetSourceConfigForm($form, $form_state, $facet);
 
     $form['field_identifier'] = [
       '#type' => 'select',
@@ -272,6 +288,28 @@ class FacetForm extends EntityForm {
           '#value' => '1',
           '#default_value' => '1',
         ];
+      }
+    }
+  }
+
+  /**
+   * Builds the configuration forms for all possible facet sources.
+   *
+   * @param array $form
+   * @param \Drupal\Core\Form\FormStateInterface $form_state
+   * @param \Drupal\facetapi\FacetInterface $facet
+   *   The facet being updated or created.
+   */
+  public function buildFacetSourceConfigForm(array &$form, FormStateInterface $form_state, FacetInterface $facet) {
+    foreach ($facet->getFacetSources() as $datasource_id => $datasource) {
+      // @todo Create, use and save SubFormState already here, not only in
+      //   validate(). Also, use proper subset of $form for first parameter?
+      if ($config_form = $datasource->buildConfigurationForm(array(), $form_state)) {
+        $form['datasource_configs'][$datasource_id]['#type'] = 'details';
+        $form['datasource_configs'][$datasource_id]['#title'] = $this->t('Configure the %datasource datasource', array('%datasource' => $datasource->getPluginDefinition()['label']));
+        $form['datasource_configs'][$datasource_id]['#open'] = $facet->isNew();
+
+        $form['datasource_configs'][$datasource_id] += $config_form;
       }
     }
   }
