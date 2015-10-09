@@ -97,7 +97,10 @@ class SearchApiViewsAdapter extends AdapterPluginBase {
 
   }
 
-  public function setResults($facet) {
+  /**
+   * {@inheritdoc}
+   */
+  public function setResults(FacetInterface $facet) {
     $results = $this->searchResultsCache->getResults($this->searcher_id);
 
     $facet_results = $results->getExtraData('search_api_facets');
@@ -107,7 +110,7 @@ class SearchApiViewsAdapter extends AdapterPluginBase {
       'facet' => $facet,
       'results' => $facet_results[$facet->getFieldIdentifier()],
     );
-    
+
     $query_type_plugin = $this->query_type_plugin_manager->createInstance($facet->getQueryType(),
       $configuration
     );

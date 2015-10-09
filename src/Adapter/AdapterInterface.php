@@ -144,6 +144,15 @@ interface AdapterInterface {
    */
   public function build($facet);
 
-  public function setResults($facet);
+  /**
+   * Sets results to a facet.
+   *
+   * @param \Drupal\facetapi\FacetInterface $facet
+   *   The facet to add results.
+   *
+   * @return \Drupal\facetapi\FacetInterface
+   *   The facet with the results.
+   */
+  public function setResults(FacetInterface $facet);
 
 }
