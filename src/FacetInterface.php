@@ -7,10 +7,25 @@
 namespace Drupal\facetapi;
 
 use Drupal\Core\Config\Entity\ConfigEntityInterface;
+use Drupal\facetapi\FacetSource\FacetSourceInterface;
 use Drupal\facetapi\Result\ResultInterface;
 
 interface FacetInterface extends ConfigEntityInterface {
 
+  /**
+   * Sets the facet's widget plugin id.
+   *
+   * @param string  $widget
+   * @return $this
+   */
+  public function setWidget($widget);
+
+  /**
+   * Returns the facet's widget plugin id.
+   *
+   * @return string
+   */
+  public function getWidget();
 
   /**
    * Get field identifier.
@@ -18,6 +33,13 @@ interface FacetInterface extends ConfigEntityInterface {
    * @return mixed
    */
   public function getFieldIdentifier();
+
+  /**
+   * Set field identifier.
+   *
+   * @return mixed
+   */
+  public function setFieldIdentifier($field_identifier);
 
   /**
    * Get the field alias used to identify the facet in the url.
@@ -152,5 +174,13 @@ interface FacetInterface extends ConfigEntityInterface {
    * @return string
    */
   public function getFacetSource();
+
+  /**
+   * Load the facet sources for this facet.
+   *
+   * @param bool|TRUE $only_enabled
+   * @return FacetSourceInterface[]
+   */
+  public function getFacetSources($only_enabled = TRUE);
 
 }

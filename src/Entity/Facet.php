@@ -135,6 +135,13 @@ class Facet extends ConfigEntityBase implements FacetInterface {
   protected $active_values = array();
 
   /**
+   * An array containing the facet source plugins.
+   *
+   * @var array
+   */
+  protected $facetSourcePlugins;
+
+  /**
    * {@inheritdoc}
    */
   public function __construct(array $values, $entity_type) {
@@ -156,8 +163,7 @@ class Facet extends ConfigEntityBase implements FacetInterface {
   }
 
   /**
-   * @param string $widget
-   * @return $this
+   * {@inheritdoc}
    */
   public function setWidget($widget) {
     $this->widget = $widget;
@@ -165,7 +171,7 @@ class Facet extends ConfigEntityBase implements FacetInterface {
   }
 
   /**
-   * @return string
+   * {@inheritdoc}
    */
   public function getWidget() {
     return $this->widget;
@@ -312,4 +318,38 @@ class Facet extends ConfigEntityBase implements FacetInterface {
     }
     return $is_active;
   }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getFacetSources($only_enabled = false) {
+    if (!isset($this->facetSourcePlugins)) {
+      $this->facetSourcePlugins = [];
+
+      /** @var $facet_source_plugin_manager \Drupal\facetapi\FacetSource\FacetSourcePluginManager */
+      $facet_source_plugin_manager = \Drupal::service('plugin.manager.facetapi.facet_source');
+
+      foreach ($facet_source_plugin_manager->getDefinitions() as $name => $facet_source_definition) {
+        if (class_exists($facet_source_definition['class']) && empty($this->facetSourcePlugins[$name])) {
+          // Create our settings for this facet source..
+          $config = isset($this->facetSourcePlugins[$name]) ? $this->facetSourcePlugins[$name] : [];
+
+          /** @var $facet_source \Drupal\facetapi\FacetSource\FacetSourceInterface */
+          $facet_source = $facet_source_plugin_manager->createInstance($name, $config);
+          $this->facetSourcePlugins[$name] = $facet_source;
+        }
+        elseif (!class_exists($facet_source_definition['class'])) {
+          \Drupal::logger('facetapi')->warning('Facet Source @id specifies a non-existing @class.', ['@id' => $name, '@class' => $facet_source_definition['class']]);
+        }
+      }
+    }
+
+    // Filter datasources by status if required.
+    if (!$only_enabled) {
+      return $this->facetSourcePlugins;
+    }
+
+    return array_intersect_key($this->facetSourcePlugins, array_flip($this->facetSourcePlugins));
+  }
+
 }

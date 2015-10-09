@@ -10,14 +10,11 @@ namespace Drupal\facetapi\Form;
 use Drupal\Core\Config\Config;
 use Drupal\Core\Entity\EntityForm;
 use Drupal\Core\Entity\EntityManagerInterface;
-use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\facetapi\FacetInterface;
 use Drupal\facetapi\FacetApiException;
+use Drupal\facetapi\FacetSource\FacetSourcePluginManager;
 use Drupal\facetapi\Widget\WidgetPluginManager;
-use Drupal\search_api\Entity\Index;
-use Drupal\search_api\Form\SubFormState;
-use Drupal\search_api\IndexInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -39,6 +36,11 @@ class FacetForm extends EntityForm {
   protected $widgetPluginManager;
 
   /**
+   * @var array
+   */
+  protected $facetSourcePlugins;
+
+  /**
    * Constructs a FacetForm object.
    *
    * @param \Drupal\Core\Entity\EntityManagerInterface $entity_manager
@@ -46,9 +48,10 @@ class FacetForm extends EntityForm {
    * @param \Drupal\facetapi\Widget\WidgetPluginManager $widget_plugin_manager
    *   Plugin manager for widgets.
    */
-  public function __construct(EntityManagerInterface $entity_manager, WidgetPluginManager $widgetPluginManager) {
+  public function __construct(EntityManagerInterface $entity_manager, WidgetPluginManager $widgetPluginManager, FacetSourcePluginManager $facetSourcePluginManager) {
     $this->facetStorage = $entity_manager->getStorage('facetapi_facet');
     $this->widgetPluginManager = $widgetPluginManager;
+    $this->facetSourcePluginManager = $facetSourcePluginManager;
   }
 
   /**
@@ -60,7 +63,11 @@ class FacetForm extends EntityForm {
 
     /** @var \Drupal\facetapi\Widget\WidgetPluginManager $widget_plugin_manager */
     $widget_plugin_manager = $container->get('plugin.manager.facetapi.widget');
-    return new static($entity_manager, $widget_plugin_manager);
+
+    /** @var \Drupal\facetapi\FacetSource\FacetSourcePluginManager $facet_source_plugin_manager */
+    $facet_source_plugin_manager = $container->get('plugin.manager.facetapi.facet_source');
+
+    return new static($entity_manager, $widget_plugin_manager, $facet_source_plugin_manager);
   }
 
   /**
@@ -81,6 +88,16 @@ class FacetForm extends EntityForm {
    */
   protected function getWidgetPluginManager() {
     return $this->widgetPluginManager?: \Drupal::service('plugin.manager.facetapi.widget');
+  }
+
+  /**
+   * Returns the facet source plugin manager.
+   *
+   * @return \Drupal\facetapi\FacetSource\FacetSourcePluginManager
+   *   The facet source plugin manager.
+   */
+  protected function getFacetSourcePluginManager() {
+    return $this->facetSourcePluginManager ?: \Drupal::service('plugin.manager.facetapi.facet_source');
   }
 
   /**
@@ -107,8 +124,7 @@ class FacetForm extends EntityForm {
       $form['#title'] = $this->t('Edit facet %label', array('%label' => $facet->label()));
     }
 
-    $search_api_index = $form_state->get('search_api_index');
-    $this->buildEntityForm($form, $form_state, $facet, $search_api_index);
+    $this->buildEntityForm($form, $form_state, $facet);
 
     return $form;
   }
@@ -148,16 +164,36 @@ class FacetForm extends EntityForm {
       '#options' => $facet_sources,
       '#default_value' => $facet->getFacetSource(),
       '#required' => TRUE,
+      '#ajax' => [
+        'trigger_as' => ['name' => 'facet_source_configure'],
+        'callback' => '::buildAjaxFacetSourceConfigForm',
+        'wrapper' => 'facetapi-facet-sources-config-form',
+        'method' => 'replace',
+        'effect' => 'fade',
+      ],
     ];
 
-    $form['field_identifier'] = [
-      '#type' => 'select',
-      '#options' => $this->getIndexedFields(),
-      '#title' => $this->t('Facet field'),
-      '#description' => $this->t('Choose the indexed field.'),
-      '#required' => TRUE,
-      '#default_value' => $facet->getFieldIdentifier()
+    $form['facet_source_configs'] = [
+      '#type' => 'container',
+      '#attributes' => [
+        'id' => 'facetapi-facet-sources-config-form',
+      ],
+      '#tree' => TRUE,
     ];
+
+    $form['facet_source_configure_button'] = [
+      '#type' => 'submit',
+      '#name' => 'facet_source_configure',
+      '#value' => $this->t('Configure'),
+      '#limit_validation_errors' => [['facet_source']],
+      '#submit' => ['::submitAjaxFacetSourceConfigForm'],
+      '#ajax' => [
+        'callback' => '::buildAjaxFacetSourceConfigForm',
+        'wrapper' => 'facetapi-facet-sources-config-form',
+      ],
+      '#attributes' => ['class' => ['js-hide']],
+    ];
+    $this->buildFacetSourceConfigForm($form, $form_state, $facet);
 
     $widget_options = [];
     foreach ($this->getWidgetPluginManager()->getDefinitions() as $widget_id => $definition) {
@@ -208,29 +244,6 @@ class FacetForm extends EntityForm {
   }
 
   /**
-   * Gets all indexed fields for this search index.
-   *
-   * @param \Drupal\search_api\IndexInterface $search_api_index
-   *   The search index we're creating a facet for.
-   * @return array
-   *   An array of all indexed fields.
-   */
-  protected function getIndexedFields() {
-    $indexed_fields = [];
-
-    $search_api_indexes = Index::loadMultiple();
-    foreach($search_api_indexes as $search_api_index){
-      foreach ($search_api_index->getDatasources() as $datasource_id => $datasource) {
-        $fields = $search_api_index->getFieldsByDatasource($datasource_id);
-        foreach ($fields as $field) {
-          $indexed_fields[$field->getFieldIdentifier()] = $field->getLabel();
-        }
-      }
-    }
-    return $indexed_fields;
-  }
-
-  /**
    * Handles changes to the selected widgets.
    */
   public function buildAjaxWidgetConfigForm(array $form, FormStateInterface $form_state) {
@@ -271,6 +284,45 @@ class FacetForm extends EntityForm {
   }
 
   /**
+   * Builds the configuration forms for all possible facet sources.
+   *
+   * @param array $form
+   * @param \Drupal\Core\Form\FormStateInterface $form_state
+   * @param \Drupal\facetapi\FacetInterface $facet
+   *   The facet being updated or created.
+   */
+  public function buildFacetSourceConfigForm(array &$form, FormStateInterface $form_state, FacetInterface $facet) {
+    /** @var \Drupal\facetapi\FacetSource\FacetSourceInterface $facet_source */
+    foreach ($facet->getFacetSources() as $facet_source_id => $facet_source) {
+      // @todo Create, use and save SubFormState already here, not only in
+      //   validate(). Also, use proper subset of $form for first parameter?
+      if ($config_form = $facet_source->buildConfigurationForm(array(), $form_state, $facet, $facet_source)) {
+        $form['facet_source_configs'][$facet_source_id]['#type'] = 'details';
+        $form['facet_source_configs'][$facet_source_id]['#title'] = $this->t('Configure %plugin facet source', ['%plugin' => $facet_source->getPluginDefinition()['label']]);
+        $form['facet_source_configs'][$facet_source_id]['#open'] = TRUE;
+
+        $form['facet_source_configs'][$facet_source_id] += $config_form;
+      }
+    }
+  }
+
+  /**
+   * Form submission handler for buildEntityForm().
+   *
+   * Takes care of changes in the selected datasources.
+   */
+  public function submitAjaxFacetSourceConfigForm($form, FormStateInterface $form_state) {
+    $form_state->setRebuild();
+  }
+
+  /**
+   * Handles changes to the selected datasources.
+   */
+  public function buildAjaxFacetSourceConfigForm(array $form, FormStateInterface $form_state) {
+    return $form['facet_source_configs'];
+  }
+
+  /**
    * Form submission handler for buildEntityForm().
    *
    * Takes care of changes in the selected datasources.
@@ -294,6 +346,12 @@ class FacetForm extends EntityForm {
 
     /** @var \Drupal\facetapi\FacetInterface $facet */
     $facet = $this->getEntity();
+
+    $facet_source = $form_state->getValue('facet_source');
+    $field_identifier = $form_state->getValue('facet_source_configs')[$facet_source]['field_identifier'];
+
+    $facet->setFieldIdentifier($field_identifier);
+    $facet->save();
 
     return $facet;
   }
@@ -332,24 +390,10 @@ class FacetForm extends EntityForm {
    */
   protected function getFacetSources() {
     $sources = [];
+    $facet_definitions = $this->facetSourcePluginManager->getDefinitions();
 
-    // Gets views that are made on sapi. We have to return an array with keys
-    // that look like: "search_api_views:search_content:page_1" and values that
-    // represent a textual representation of that.
-
-    /** @var \Drupal\Core\Entity\EntityStorageInterface $viewsStorage */
-    $viewsStorage = $this->entityManager->getStorage('view');
-    $allViews = $viewsStorage->loadMultiple();
-
-    /** @var \Drupal\views\Entity\View $view */
-    foreach ($allViews as $view) {
-      // Hardcoded usage of search api views, for now.
-      if (strpos($view->get('base_table'), 'search_api_index') !== FALSE) {
-        $displays = $view->get('display');
-        foreach ($displays as $name => $display_info) {
-          $sources['search_api_views' . ':' . $view->id() . ':' . $name] = $this->t('Search api view: ' . $view->label() . ' display: ' . $display_info['display_title']);
-        }
-      }
+    foreach ($facet_definitions as $definition) {
+      $sources[$definition['id']] = $definition['label'];
     }
 
     return $sources;

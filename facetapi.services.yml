@@ -11,6 +11,9 @@ services:
   plugin.manager.facetapi.widget:
     class: Drupal\facetapi\Widget\WidgetPluginManager
     parent: default_plugin_manager
+  plugin.manager.facetapi.facet_source:
+    class: Drupal\facetapi\FacetSource\FacetSourcePluginManager
+    parent: default_plugin_manager
   search_api_facets.get_facets:
     class: \Drupal\facetapi\GetFacets
     arguments:
