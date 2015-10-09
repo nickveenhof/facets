@@ -71,5 +71,6 @@ class QueryTypeTerm extends QueryTypePluginBase {
       }
       $this->facet->setResults($facet_results);
     }
+    return $this->facet;
   }
 }

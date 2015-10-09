@@ -144,4 +144,6 @@ interface AdapterInterface {
    */
   public function build($facet);
 
+  public function setResults($facet);
+
 }

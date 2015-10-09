@@ -39,6 +39,7 @@ use Drupal\facetapi\Result\ResultInterface;
  *     "id",
  *     "name",
  *     "field_identifier",
+ *     "query_type_name",
  *     "facet_source",
  *     "widget",
  *     "widget_configs",
@@ -146,6 +147,8 @@ class Facet extends ConfigEntityBase implements FacetInterface {
    */
   public function __construct(array $values, $entity_type) {
     parent::__construct($values, $entity_type);
+    // @TODO Added only for test.
+    $this->query_type_name = 'search_api_term';
   }
 
   /**
@@ -250,6 +253,8 @@ class Facet extends ConfigEntityBase implements FacetInterface {
   public function getQueryType() {
     return $this->query_type_name;
   }
+
+
 
   public function getUrlProcessorName() {
     return $this->url_processor_name;

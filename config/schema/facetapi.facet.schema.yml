@@ -20,6 +20,9 @@ facetapi.facet.*:
     field_identifier:
       type: string
       label: 'Field identifier'
+    query_type_name:
+      type: string
+      label: 'Query Type Name'
     widget:
       type: string
       label: 'Field identifier'

@@ -267,6 +267,8 @@ abstract class AdapterPluginBase extends PluginBase implements AdapterInterface,
     $search_id = $this->searcher_id;
     foreach ($this->facets as $facet) {
       // Only if the facet is for this query, alter the query.
+      // @TODO use the line for tests only.
+      //if ($facet->getName() == 'entity:node/uid' || $facet->getName() == 'entity:node/type') {
       if ($facet->getFacetSource() == $search_id) {
         // Create the query type plugin.
         $query_type_plugin = $this->query_type_plugin_manager->createInstance($facet->getQueryType(),
@@ -340,15 +342,16 @@ abstract class AdapterPluginBase extends PluginBase implements AdapterInterface,
         $url_processor->processFacet($facet);
       }
     }
-
   }
 
   public function build($facet) {
     // Process the facets.
     // @TODO: inject the searcher id on create of the adapter.
     $this->searcher_id = $facet->getFacetSource();
+    // @TODO: Should we update facets each time we build a block?
+    //$this->processFacets();
+    $facet = $this->setResults($facet);
 
-    $this->processFacets();
     // Let the plugin render the facet.
 
     // @TODO: functionality to alter the state of the facet should
