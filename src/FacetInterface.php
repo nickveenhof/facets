@@ -12,6 +12,20 @@ use Drupal\facetapi\Result\ResultInterface;
 
 interface FacetInterface extends ConfigEntityInterface {
 
+  /**
+   * Sets the facet's widget plugin id.
+   *
+   * @param string  $widget
+   * @return $this
+   */
+  public function setWidget($widget);
+
+  /**
+   * Returns the facet's widget plugin id.
+   *
+   * @return string
+   */
+  public function getWidget();
 
   /**
    * Get field identifier.

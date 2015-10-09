@@ -163,8 +163,7 @@ class Facet extends ConfigEntityBase implements FacetInterface {
   }
 
   /**
-   * @param string $widget
-   * @return $this
+   * {@inheritdoc}
    */
   public function setWidget($widget) {
     $this->widget = $widget;
@@ -172,7 +171,7 @@ class Facet extends ConfigEntityBase implements FacetInterface {
   }
 
   /**
-   * @return string
+   * {@inheritdoc}
    */
   public function getWidget() {
     return $this->widget;
