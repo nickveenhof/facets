@@ -5,7 +5,7 @@
  *   Contains \Drupal\facetapi\Plugin\facet_api\facet_source\SearchApiViews
  */
 
-namespace Drupal\facetapi\Plugin\facet_api\facet_source;
+namespace Drupal\facetapi\Plugin\facetapi\facet_source;
 
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\facetapi\FacetSource\FacetSourcePluginBase;
