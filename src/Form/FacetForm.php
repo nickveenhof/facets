@@ -301,15 +301,14 @@ class FacetForm extends EntityForm {
    *   The facet being updated or created.
    */
   public function buildFacetSourceConfigForm(array &$form, FormStateInterface $form_state, FacetInterface $facet) {
-    foreach ($facet->getFacetSources() as $datasource_id => $datasource) {
+    foreach ($facet->getFacetSources() as $facet_source_id => $facet_source) {
       // @todo Create, use and save SubFormState already here, not only in
       //   validate(). Also, use proper subset of $form for first parameter?
-      if ($config_form = $datasource->buildConfigurationForm(array(), $form_state)) {
-        $form['datasource_configs'][$datasource_id]['#type'] = 'details';
-        $form['datasource_configs'][$datasource_id]['#title'] = $this->t('Configure the %datasource datasource', array('%datasource' => $datasource->getPluginDefinition()['label']));
-        $form['datasource_configs'][$datasource_id]['#open'] = $facet->isNew();
+      if ($config_form = $facet_source->buildConfigurationForm(array(), $form_state, $facet, $facet_source)) {
+        $form['datasource_configs'][$facet_source_id]['#type'] = 'details';
+        $form['datasource_configs'][$facet_source_id]['#open'] = $facet->isNew();
 
-        $form['datasource_configs'][$datasource_id] += $config_form;
+        $form['datasource_configs'][$facet_source_id] += $config_form;
       }
     }
   }

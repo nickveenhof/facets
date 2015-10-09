@@ -7,6 +7,8 @@
 
 namespace Drupal\facetapi\FacetSource;
 
+use Drupal\Component\Plugin\PluginBase;
+
 /**
  * Defines a base class from which other facet sources may extend.
  *
@@ -21,7 +23,7 @@ namespace Drupal\facetapi\FacetSource;
  * @see \Drupal\facetapi\FacetSource\FacetSourceInterface
  * @see plugin_api
  */
-abstract class FacetSourcePluginBase implements FacetSourceInterface {
+abstract class FacetSourcePluginBase extends PluginBase implements FacetSourceInterface {
 
   public function getAllowedQueryTypes() {
     return [];
@@ -30,5 +32,4 @@ abstract class FacetSourcePluginBase implements FacetSourceInterface {
   public function getFields() {
     return [];
   }
-
 }

@@ -8,7 +8,13 @@
 namespace Drupal\facetapi\Plugin\facetapi\facet_source;
 
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\StringTranslation\StringTranslationTrait;
+use Drupal\facetapi\FacetInterface;
+use Drupal\facetapi\FacetSource\FacetSourceInterface;
 use Drupal\facetapi\FacetSource\FacetSourcePluginBase;
+use Drupal\search_api\Plugin\views\query\SearchApiQuery;
+use Drupal\views\Entity\View;
+use Drupal\views\Views;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 
@@ -21,6 +27,8 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * )
  */
 class SearchApiViews extends FacetSourcePluginBase {
+
+  use StringTranslationTrait;
 
   /**
    * The entity manager.
@@ -318,59 +326,43 @@ class SearchApiViews extends FacetSourcePluginBase {
    * {@inheritdoc}
    */
   public function defaultConfiguration() {
-    if ($this->hasBundles()) {
-      return array(
-        'default' => 1,
-        'bundles' => array(),
-      );
-    }
-    return array();
+    return [];
   }
 
   /**
    * {@inheritdoc}
    */
-  public function buildConfigurationForm(array $form, FormStateInterface $form_state) {
-    var_dump($this->configuration);
-    if ($this->hasBundles()) {
-      $bundles = $this->getEntityBundleOptions();
-      $form['default'] = array(
-        '#type' => 'radios',
-        '#title' => $this->t('What should be indexed?'),
-        '#options' => array(
-          1 => $this->t('All except those selected'),
-          0 => $this->t('None except those selected'),
-        ),
-        '#default_value' => $this->configuration['default'],
-      );
-      $form['bundles'] = array(
-        '#type' => 'checkboxes',
-        '#title' => $this->t('Bundles'),
-        '#options' => $bundles,
-        '#default_value' => $this->configuration['bundles'],
-        '#size' => min(4, count($bundles)),
-        '#multiple' => TRUE,
-      );
+  public function buildConfigurationForm(array $form, FormStateInterface $form_state, FacetInterface $facet, FacetSourceInterface $facet_source) {
+
+    $plugin_def = $facet_source->getPluginDefinition();
+    $view = Views::getView($plugin_def['view_id']);
+    $view->setDisplay($plugin_def['view_display']);
+    $query = $view->getQuery();
+
+    if (!$query instanceof SearchApiQuery) {
+      return [];
     }
 
-    return $form;
-  }
+    $index = $query->getIndex();
 
-  /**
-   * Retrieves the available bundles of this entity type as an options list.
-   *
-   * @return array
-   *   An associative array of bundle labels, keyed by the bundle name.
-   */
-  protected function getEntityBundleOptions() {
-    $options = array();
-    if (($bundles = $this->getEntityBundles())) {
-      unset($bundles[$this->getEntityTypeId()]);
-      foreach ($bundles as $bundle => $bundle_info) {
-        $options[$bundle] = Html::escape($bundle_info['label']);
+    $indexed_fields = [];
+    foreach ($index->getDatasources() as $datasource_id => $datasource) {
+      $fields = $index->getFieldsByDatasource($datasource_id);
+      foreach ($fields as $field) {
+        $indexed_fields[$field->getFieldIdentifier()] = $field->getLabel();
       }
     }
-    return $options;
+
+    $form['field_identifier'] = [
+      '#type' => 'select',
+      '#options' => $indexed_fields,
+      '#title' => $this->t('Facet field'),
+      '#description' => $this->t('Choose the indexed field.'),
+      '#required' => TRUE,
+      '#default_value' => $facet->getFieldIdentifier()
+    ];
+
+    return $form;
   }
 
   /**
@@ -444,26 +436,6 @@ class SearchApiViews extends FacetSourcePluginBase {
   public function getEntityTypeId() {
     $plugin_definition = $this->getPluginDefinition();
     return $plugin_definition['entity_type'];
-  }
-
-  /**
-   * Determines whether the entity type supports bundles.
-   *
-   * @return bool
-   *   TRUE if the entity type supports bundles, FALSE otherwise.
-   */
-  protected function hasBundles() {
-    return $this->getEntityType()->hasKey('bundle');
-  }
-
-  /**
-   * Retrieves all bundles of this datasource's entity type.
-   *
-   * @return array
-   *   An associative array of bundle infos, keyed by the bundle names.
-   */
-  protected function getEntityBundles() {
-    return $this->hasBundles() ? $this->getEntityManager()->getBundleInfo($this->getEntityTypeId()) : array();
   }
 
   /**

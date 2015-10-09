@@ -7,6 +7,7 @@
 namespace Drupal\facetapi;
 
 use Drupal\Core\Config\Entity\ConfigEntityInterface;
+use Drupal\facetapi\FacetSource\FacetSourceInterface;
 use Drupal\facetapi\Result\ResultInterface;
 
 interface FacetInterface extends ConfigEntityInterface {
@@ -152,5 +153,13 @@ interface FacetInterface extends ConfigEntityInterface {
    * @return string
    */
   public function getFacetSource();
+
+  /**
+   * Load the facet sources for this facet.
+   *
+   * @param bool|TRUE $only_enabled
+   * @return FacetSourceInterface[]
+   */
+  public function getFacetSources($only_enabled);
 
 }

@@ -321,12 +321,9 @@ class Facet extends ConfigEntityBase implements FacetInterface {
   }
 
   /**
-   * Load the facet sources for this facet.
-   *
-   * @param bool|TRUE $only_enabled
-   * @return array
+   * {@inheritdoc}
    */
-  public function getFacetSources($only_enabled = TRUE) {
+  public function getFacetSources($only_enabled = false) {
     if (!isset($this->facetSourcePlugins)) {
       $this->facetSourcePlugins = [];
 
@@ -335,13 +332,12 @@ class Facet extends ConfigEntityBase implements FacetInterface {
 
       foreach ($facet_source_plugin_manager->getDefinitions() as $name => $facet_source_definition) {
         if (class_exists($facet_source_definition['class']) && empty($this->facetSourcePlugins[$name])) {
-          // Create our settings for this datasource.
+          // Create our settings for this facet source..
           $config = isset($this->facetSourcePlugins[$name]) ? $this->facetSourcePlugins[$name] : [];
-          $config += array('index' => $this);
 
-          /** @var $datasource \Drupal\search_api\Datasource\DatasourceInterface */
-          $datasource = $facet_source_plugin_manager->createInstance($name, $config);
-          $this->facetSourcePlugins[$name] = $datasource;
+          /** @var $facet_source \Drupal\facetapi\FacetSource\FacetSourceInterface */
+          $facet_source = $facet_source_plugin_manager->createInstance($name, $config);
+          $this->facetSourcePlugins[$name] = $facet_source;
         }
         elseif (!class_exists($facet_source_definition['class'])) {
           \Drupal::logger('facetapi')->warning('Facet Source @id specifies a non-existing @class.', ['@id' => $name, '@class' => $facet_source_definition['class']]);
