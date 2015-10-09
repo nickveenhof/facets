@@ -160,6 +160,6 @@ interface FacetInterface extends ConfigEntityInterface {
    * @param bool|TRUE $only_enabled
    * @return FacetSourceInterface[]
    */
-  public function getFacetSources($only_enabled);
+  public function getFacetSources($only_enabled = TRUE);
 
 }

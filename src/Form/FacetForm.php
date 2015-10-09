@@ -169,6 +169,34 @@ class FacetForm extends EntityForm {
       '#options' => $facet_sources,
       '#default_value' => $facet->getFacetSource(),
       '#required' => TRUE,
+      '#ajax' => [
+        'trigger_as' => ['name' => 'facetsourcepluginids_configure'],
+        'callback' => '::buildAjaxFacetSourceConfigForm',
+        'wrapper' => 'facetapi-facet-sources-config-form',
+        'method' => 'replace',
+        'effect' => 'fade',
+      ],
+    ];
+
+    $form['facetsource_configs'] = [
+      '#type' => 'container',
+      '#attributes' => [
+        'id' => 'facetapi-facet-sources-config-form',
+      ],
+      '#tree' => TRUE,
+    ];
+
+    $form['facet_source_configure_button'] = [
+      '#type' => 'submit',
+      '#name' => 'facetsourcepluginids_configure',
+      '#value' => $this->t('Configure'),
+      '#limit_validation_errors' => [['datasources']],
+      '#submit' => ['::submitAjaxFacetSourceConfigForm'],
+      '#ajax' => [
+        'callback' => '::buildAjaxFacetSourceConfigForm',
+        'wrapper' => 'facetapi-facet-sources-config-form',
+      ],
+//      '#attributes' => ['class' => ['js-hide']],
     ];
     $this->buildFacetSourceConfigForm($form, $form_state, $facet);
 
@@ -305,12 +333,28 @@ class FacetForm extends EntityForm {
       // @todo Create, use and save SubFormState already here, not only in
       //   validate(). Also, use proper subset of $form for first parameter?
       if ($config_form = $facet_source->buildConfigurationForm(array(), $form_state, $facet, $facet_source)) {
-        $form['datasource_configs'][$facet_source_id]['#type'] = 'details';
-        $form['datasource_configs'][$facet_source_id]['#open'] = $facet->isNew();
+        $form['facetsource_configs'][$facet_source_id]['#type'] = 'details';
+        $form['facetsource_configs'][$facet_source_id]['#open'] = $facet->isNew();
 
-        $form['datasource_configs'][$facet_source_id] += $config_form;
+        $form['facetsource_configs'][$facet_source_id] += $config_form;
       }
     }
+  }
+
+  /**
+   * Form submission handler for buildEntityForm().
+   *
+   * Takes care of changes in the selected datasources.
+   */
+  public function submitAjaxDatasourceConfigForm($form, FormStateInterface $form_state) {
+    $form_state->setRebuild();
+  }
+
+  /**
+   * Handles changes to the selected datasources.
+   */
+  public function buildAjaxDatasourceConfigForm(array $form, FormStateInterface $form_state) {
+    return $form['facetsource_configs'];
   }
 
   /**
