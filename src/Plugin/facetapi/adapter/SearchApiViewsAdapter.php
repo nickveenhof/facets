@@ -107,8 +107,7 @@ class SearchApiViewsAdapter extends AdapterPluginBase {
       'facet' => $facet,
       'results' => $facet_results[$facet->getFieldIdentifier()],
     );
-    // @TODO The query type is not added to the facet.
-    //$facet->getQueryType()
+    
     $query_type_plugin = $this->query_type_plugin_manager->createInstance($facet->getQueryType(),
       $configuration
     );
