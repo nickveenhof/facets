@@ -170,7 +170,7 @@ class FacetForm extends EntityForm {
       '#default_value' => $facet->getFacetSource(),
       '#required' => TRUE,
       '#ajax' => [
-        'trigger_as' => ['name' => 'facetsourcepluginids_configure'],
+        'trigger_as' => ['name' => 'facetsource_configure'],
         'callback' => '::buildAjaxFacetSourceConfigForm',
         'wrapper' => 'facetapi-facet-sources-config-form',
         'method' => 'replace',
@@ -188,26 +188,17 @@ class FacetForm extends EntityForm {
 
     $form['facet_source_configure_button'] = [
       '#type' => 'submit',
-      '#name' => 'facetsourcepluginids_configure',
+      '#name' => 'facetsource_configure',
       '#value' => $this->t('Configure'),
-      '#limit_validation_errors' => [['datasources']],
+      '#limit_validation_errors' => [['facet_source']],
       '#submit' => ['::submitAjaxFacetSourceConfigForm'],
       '#ajax' => [
         'callback' => '::buildAjaxFacetSourceConfigForm',
         'wrapper' => 'facetapi-facet-sources-config-form',
       ],
-//      '#attributes' => ['class' => ['js-hide']],
+      '#attributes' => ['class' => ['js-hide']],
     ];
     $this->buildFacetSourceConfigForm($form, $form_state, $facet);
-
-    $form['field_identifier'] = [
-      '#type' => 'select',
-      '#options' => $this->getIndexedFields(),
-      '#title' => $this->t('Facet field'),
-      '#description' => $this->t('Choose the indexed field.'),
-      '#required' => TRUE,
-      '#default_value' => $facet->getFieldIdentifier()
-    ];
 
     $widget_options = [];
     foreach ($this->getWidgetPluginManager()->getDefinitions() as $widget_id => $definition) {
@@ -255,29 +246,6 @@ class FacetForm extends EntityForm {
       '#description' => $this->t('Only enabled facets can be displayed.'),
       '#default_value' => $facet->status(),
     );
-  }
-
-  /**
-   * Gets all indexed fields for this search index.
-   *
-   * @param \Drupal\search_api\IndexInterface $search_api_index
-   *   The search index we're creating a facet for.
-   * @return array
-   *   An array of all indexed fields.
-   */
-  protected function getIndexedFields() {
-    $indexed_fields = [];
-
-    $search_api_indexes = Index::loadMultiple();
-    foreach($search_api_indexes as $search_api_index){
-      foreach ($search_api_index->getDatasources() as $datasource_id => $datasource) {
-        $fields = $search_api_index->getFieldsByDatasource($datasource_id);
-        foreach ($fields as $field) {
-          $indexed_fields[$field->getFieldIdentifier()] = $field->getLabel();
-        }
-      }
-    }
-    return $indexed_fields;
   }
 
   /**
@@ -346,14 +314,14 @@ class FacetForm extends EntityForm {
    *
    * Takes care of changes in the selected datasources.
    */
-  public function submitAjaxDatasourceConfigForm($form, FormStateInterface $form_state) {
+  public function submitAjaxFacetSourceConfigForm($form, FormStateInterface $form_state) {
     $form_state->setRebuild();
   }
 
   /**
    * Handles changes to the selected datasources.
    */
-  public function buildAjaxDatasourceConfigForm(array $form, FormStateInterface $form_state) {
+  public function buildAjaxFacetSourceConfigForm(array $form, FormStateInterface $form_state) {
     return $form['facetsource_configs'];
   }
 
@@ -381,6 +349,12 @@ class FacetForm extends EntityForm {
 
     /** @var \Drupal\facetapi\FacetInterface $facet */
     $facet = $this->getEntity();
+
+    $facet_source = $form_state->getValue('facet_source');
+    $field_identifier = $form_state->getValue('facetsource_configs')[$facet_source]['field_identifier'];
+
+    $facet->setFieldIdentifier($field_identifier);
+    $facet->save();
 
     return $facet;
   }

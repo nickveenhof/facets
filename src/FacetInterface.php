@@ -21,6 +21,13 @@ interface FacetInterface extends ConfigEntityInterface {
   public function getFieldIdentifier();
 
   /**
+   * Set field identifier.
+   *
+   * @return mixed
+   */
+  public function setFieldIdentifier($field_identifier);
+
+  /**
    * Get the field alias used to identify the facet in the url.
    *
    * @return mixed
