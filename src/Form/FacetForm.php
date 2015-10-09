@@ -184,7 +184,7 @@ class FacetForm extends EntityForm {
     $form['facet_source_configure_button'] = [
       '#type' => 'submit',
       '#name' => 'facet_source_configure',
-      '#value' => $this->t('Configure'),
+      '#value' => $this->t('Configure facet source'),
       '#limit_validation_errors' => [['facet_source']],
       '#submit' => ['::submitAjaxFacetSourceConfigForm'],
       '#ajax' => [
@@ -224,7 +224,7 @@ class FacetForm extends EntityForm {
     $form['widget_configure_button'] = [
       '#type' => 'submit',
       '#name' => 'widget_configure',
-      '#value' => $this->t('Configure'),
+      '#value' => $this->t('Configure widget'),
       '#limit_validation_errors' => [['widget']],
       '#submit' => ['::submitAjaxWidgetConfigForm'],
       '#ajax' => [

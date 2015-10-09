@@ -42,12 +42,12 @@ class IntegrationTest extends FacetWebTestBase {
 
     $this->addFieldsToIndex();
 
-    // Clear all the caches.
-    $this->resetAll();
-
     $this->addFacet();
   }
 
+  /**
+   * Tests adding a facet trough the interface.
+   */
   protected function addFacet() {
     $facet_overview = $this->urlGenerator->generateFromRoute('facetapi.overview');
     $this->drupalGet($facet_overview);
@@ -61,7 +61,8 @@ class IntegrationTest extends FacetWebTestBase {
     $edit = [
       'name' => '',
       'id' => 'test_facet',
-      'field_identifier' => 'entity:node/title',
+      'facet_source' => 'search_api_views:search_api_test_views_fulltext:default',
+      'facet_source_configs[search_api_views:search_api_test_views_fulltext:default][field_identifier]' => 'entity:node/title',
       'widget' => 'links',
       'status' => 1,
     ];
@@ -73,14 +74,16 @@ class IntegrationTest extends FacetWebTestBase {
     $edit = [
       'name' => $facetName,
       'id' => 'test_facet',
-      'field_identifier' => 'entity:node/title',
+      'facet_source' => 'search_api_views:search_api_test_views_fulltext:default',
+      'facet_source_configs[search_api_views:search_api_test_views_fulltext:default][field_identifier]' => 'entity:node/title',
       'widget' => 'links',
       'status' => 1,
     ];
-    // Configure the widget
-    $this->drupalPostForm(NULL, $edit, $this->t('Configure'));
+    // Configure the facet source & widget.
+    $this->drupalPostForm(NULL, $edit, $this->t('Configure facet source'));
+    $this->drupalPostForm(NULL, $edit, $this->t('Configure Widget'));
 
-    // Save the facet
+    // Save the facet.
     $this->drupalPostForm(NULL, $edit, $this->t('Save'));
     $this->assertUrl($facet_overview);
     $this->assertText($facetName);
