@@ -14,6 +14,7 @@ use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\facetapi\FacetInterface;
 use Drupal\facetapi\FacetApiException;
+use Drupal\facetapi\FacetSource\FacetSourcePluginManager;
 use Drupal\facetapi\Widget\WidgetPluginManager;
 use Drupal\search_api\Entity\Index;
 use Drupal\search_api\Form\SubFormState;
@@ -46,9 +47,10 @@ class FacetForm extends EntityForm {
    * @param \Drupal\facetapi\Widget\WidgetPluginManager $widget_plugin_manager
    *   Plugin manager for widgets.
    */
-  public function __construct(EntityManagerInterface $entity_manager, WidgetPluginManager $widgetPluginManager) {
+  public function __construct(EntityManagerInterface $entity_manager, WidgetPluginManager $widgetPluginManager, FacetSourcePluginManager $facetSourcePluginManager) {
     $this->facetStorage = $entity_manager->getStorage('facetapi_facet');
     $this->widgetPluginManager = $widgetPluginManager;
+    $this->facetSourcePluginManager = $facetSourcePluginManager;
   }
 
   /**
@@ -60,7 +62,11 @@ class FacetForm extends EntityForm {
 
     /** @var \Drupal\facetapi\Widget\WidgetPluginManager $widget_plugin_manager */
     $widget_plugin_manager = $container->get('plugin.manager.facetapi.widget');
-    return new static($entity_manager, $widget_plugin_manager);
+
+    /** @var \Drupal\facetapi\FacetSource\FacetSourcePluginManager $facet_source_plugin_manager */
+    $facet_source_plugin_manager = $container->get('plugin.manager.facetapi.facet_source');
+
+    return new static($entity_manager, $widget_plugin_manager, $facet_source_plugin_manager);
   }
 
   /**
@@ -332,24 +338,10 @@ class FacetForm extends EntityForm {
    */
   protected function getFacetSources() {
     $sources = [];
+    $facet_definitions = $this->facetSourcePluginManager->getDefinitions();
 
-    // Gets views that are made on sapi. We have to return an array with keys
-    // that look like: "search_api_views:search_content:page_1" and values that
-    // represent a textual representation of that.
-
-    /** @var \Drupal\Core\Entity\EntityStorageInterface $viewsStorage */
-    $viewsStorage = $this->entityManager->getStorage('view');
-    $allViews = $viewsStorage->loadMultiple();
-
-    /** @var \Drupal\views\Entity\View $view */
-    foreach ($allViews as $view) {
-      // Hardcoded usage of search api views, for now.
-      if (strpos($view->get('base_table'), 'search_api_index') !== FALSE) {
-        $displays = $view->get('display');
-        foreach ($displays as $name => $display_info) {
-          $sources['search_api_views' . ':' . $view->id() . ':' . $name] = $this->t('Search api view: ' . $view->label() . ' display: ' . $display_info['display_title']);
-        }
-      }
+    foreach ($facet_definitions as $definition) {
+      $sources[$definition['id']] = $definition['label'];
     }
 
     return $sources;
