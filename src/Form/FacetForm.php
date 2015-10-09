@@ -124,8 +124,7 @@ class FacetForm extends EntityForm {
       $form['#title'] = $this->t('Edit facet %label', array('%label' => $facet->label()));
     }
 
-    $search_api_index = $form_state->get('search_api_index');
-    $this->buildEntityForm($form, $form_state, $facet, $search_api_index);
+    $this->buildEntityForm($form, $form_state, $facet);
 
     return $form;
   }
