@@ -10,15 +10,11 @@ namespace Drupal\facetapi\Form;
 use Drupal\Core\Config\Config;
 use Drupal\Core\Entity\EntityForm;
 use Drupal\Core\Entity\EntityManagerInterface;
-use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\facetapi\FacetInterface;
 use Drupal\facetapi\FacetApiException;
 use Drupal\facetapi\FacetSource\FacetSourcePluginManager;
 use Drupal\facetapi\Widget\WidgetPluginManager;
-use Drupal\search_api\Entity\Index;
-use Drupal\search_api\Form\SubFormState;
-use Drupal\search_api\IndexInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -170,7 +166,7 @@ class FacetForm extends EntityForm {
       '#default_value' => $facet->getFacetSource(),
       '#required' => TRUE,
       '#ajax' => [
-        'trigger_as' => ['name' => 'facetsource_configure'],
+        'trigger_as' => ['name' => 'facet_source_configure'],
         'callback' => '::buildAjaxFacetSourceConfigForm',
         'wrapper' => 'facetapi-facet-sources-config-form',
         'method' => 'replace',
@@ -178,7 +174,7 @@ class FacetForm extends EntityForm {
       ],
     ];
 
-    $form['facetsource_configs'] = [
+    $form['facet_source_configs'] = [
       '#type' => 'container',
       '#attributes' => [
         'id' => 'facetapi-facet-sources-config-form',
@@ -188,7 +184,7 @@ class FacetForm extends EntityForm {
 
     $form['facet_source_configure_button'] = [
       '#type' => 'submit',
-      '#name' => 'facetsource_configure',
+      '#name' => 'facet_source_configure',
       '#value' => $this->t('Configure'),
       '#limit_validation_errors' => [['facet_source']],
       '#submit' => ['::submitAjaxFacetSourceConfigForm'],
@@ -297,14 +293,16 @@ class FacetForm extends EntityForm {
    *   The facet being updated or created.
    */
   public function buildFacetSourceConfigForm(array &$form, FormStateInterface $form_state, FacetInterface $facet) {
+    /** @var \Drupal\facetapi\FacetSource\FacetSourceInterface $facet_source */
     foreach ($facet->getFacetSources() as $facet_source_id => $facet_source) {
       // @todo Create, use and save SubFormState already here, not only in
       //   validate(). Also, use proper subset of $form for first parameter?
       if ($config_form = $facet_source->buildConfigurationForm(array(), $form_state, $facet, $facet_source)) {
-        $form['facetsource_configs'][$facet_source_id]['#type'] = 'details';
-        $form['facetsource_configs'][$facet_source_id]['#open'] = $facet->isNew();
+        $form['facet_source_configs'][$facet_source_id]['#type'] = 'details';
+        $form['facet_source_configs'][$facet_source_id]['#title'] = $this->t('Configure %plugin facet source', ['%plugin' => $facet_source->getPluginDefinition()['label']]);
+        $form['facet_source_configs'][$facet_source_id]['#open'] = TRUE;
 
-        $form['facetsource_configs'][$facet_source_id] += $config_form;
+        $form['facet_source_configs'][$facet_source_id] += $config_form;
       }
     }
   }
@@ -322,7 +320,7 @@ class FacetForm extends EntityForm {
    * Handles changes to the selected datasources.
    */
   public function buildAjaxFacetSourceConfigForm(array $form, FormStateInterface $form_state) {
-    return $form['facetsource_configs'];
+    return $form['facet_source_configs'];
   }
 
   /**
@@ -351,7 +349,7 @@ class FacetForm extends EntityForm {
     $facet = $this->getEntity();
 
     $facet_source = $form_state->getValue('facet_source');
-    $field_identifier = $form_state->getValue('facetsource_configs')[$facet_source]['field_identifier'];
+    $field_identifier = $form_state->getValue('facet_source_configs')[$facet_source]['field_identifier'];
 
     $facet->setFieldIdentifier($field_identifier);
     $facet->save();
