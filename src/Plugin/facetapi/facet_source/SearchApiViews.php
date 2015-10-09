@@ -7,15 +7,14 @@
 
 namespace Drupal\facetapi\Plugin\facetapi\facet_source;
 
+use Drupal\Core\DependencyInjection\DependencySerializationTrait;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\facetapi\FacetInterface;
 use Drupal\facetapi\FacetSource\FacetSourceInterface;
 use Drupal\facetapi\FacetSource\FacetSourcePluginBase;
 use Drupal\search_api\Plugin\views\query\SearchApiQuery;
-use Drupal\views\Entity\View;
 use Drupal\views\Views;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 
 
 /**
@@ -29,6 +28,8 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 class SearchApiViews extends FacetSourcePluginBase {
 
   use StringTranslationTrait;
+
+  use DependencySerializationTrait;
 
   /**
    * The entity manager.
