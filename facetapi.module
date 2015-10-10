@@ -62,7 +62,6 @@ function facetapi_search_api_query_alter(QueryInterface &$query) {
   // Get the plugin manager.
   /** @var \Drupal\facetapi\Adapter\AdapterPluginManagerInterface $plugin_manager */
   $plugin_manager = \Drupal::service('plugin.manager.facetapi.adapter');
-
   // Get the searcher id.
   // This is the id of the view.
   $search_id = $query->getOption('search id');

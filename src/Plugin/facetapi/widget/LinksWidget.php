@@ -42,7 +42,7 @@ class LinksWidget implements WidgetInterface {
             $text = '(-) ' . $text;
           }
           $link_generator = \Drupal::linkGenerator();
-          $link = $text;//$link_generator->generate($text, $result->getUrl());
+          $link = $link_generator->generate($text, $result->getUrl());
           $items[] = $link;
         }
       }

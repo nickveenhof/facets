@@ -35,9 +35,9 @@ class QueryTypeTerm extends QueryTypePluginBase {
     if (! empty($query)) {
       $options = &$query->getOptions();
 
-      $field_name = $this->facet->getName();
-      $options['search_api_facets'][$field_name] = array(
-        'field'     => $field_name,
+      $field_identifier = $this->facet->getFieldIdentifier();
+      $options['search_api_facets'][$field_identifier] = array(
+        'field'     => $field_identifier,
         'limit'     => 50,
         'operator'  => 'and',
         'min_count' => 0,

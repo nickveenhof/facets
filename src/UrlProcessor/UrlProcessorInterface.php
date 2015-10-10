@@ -21,16 +21,15 @@ use Drupal\facetapi\FacetInterface;
 interface UrlProcessorInterface {
 
   /**
-   * Get the uri for a facet for a value.
+   * Add the uri's to all results of the facets.
    *
    * The facet knows which values are active or not.
    *
    * @param FacetInterface $facet
-   * @param $value
    *
    * @return mixed
    */
-  public function addUriToResults(FacetInterface $facet, $value);
+  public function addUriToResults(FacetInterface $facet);
 
   /**
    * Returns the filter key.

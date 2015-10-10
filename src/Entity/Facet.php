@@ -257,7 +257,8 @@ class Facet extends ConfigEntityBase implements FacetInterface {
 
 
   public function getUrlProcessorName() {
-    return $this->url_processor_name;
+    // @Todo: for now if the url processor is not set, defualt to query_string.
+    return isset($this->url_processor_name) ? $this->url_processor_name : 'query_string';
   }
 
   public function getName() {

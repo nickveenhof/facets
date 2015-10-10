@@ -41,7 +41,7 @@ class UrlProcessorQueryString extends UrlProcessorPluginBase{
   }
 
 
-  public function addUriToResults(FacetInterface $facet, $value) {
+  public function addUriToResults(FacetInterface $facet) {
     // Create links for all the values.
     // First get the current list of get paramaters.
     $get_params = $this->request->query;

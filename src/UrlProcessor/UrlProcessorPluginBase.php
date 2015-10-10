@@ -19,7 +19,7 @@ abstract class UrlProcessorPluginBase extends PluginBase implements UrlProcessor
   /** @var Request  */
   protected $request;
 
-  abstract public function addUriToResults(FacetInterface $facet, $value);
+  abstract public function addUriToResults(FacetInterface $facet);
 
   public function getFilterKey() {
     return $this->filter_key;

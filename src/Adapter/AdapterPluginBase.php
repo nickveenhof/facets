@@ -286,12 +286,13 @@ abstract class AdapterPluginBase extends PluginBase implements AdapterInterface,
    *   An array of enabled facets.
    */
   public function getEnabledFacets() {
-    // Use the hook_info to discover facets.
-    /** @var Facet[] $facet_definitions */
-    $facet_definitions = $this->module_handler->invokeAll('facetapi_facet_info');
+    // Get the enabled facets.
+    // @Todo: inject the entitymanager in the adapter and use that.
+    /** @var Facet[] $facets */
+    $facets = facetapi_get_enabled_facets();;
     // Maybe also add different discovery methods later,
     // for instance in the adapter itself.
-    return $facet_definitions;
+    return $facets;
   }
 
 
@@ -345,18 +346,28 @@ abstract class AdapterPluginBase extends PluginBase implements AdapterInterface,
   }
 
   public function build($facet) {
+    // It might be that the facet received here,
+    // is not the same as the already loaded facets in the adapter.
+    // For that reason, get the facet from the already loaded facets
+    // in the adapter.
+    // If this is omitted, building will fail.
+    $facet = $this->facets[$facet->id()];
+
     // Process the facets.
     // @TODO: inject the searcher id on create of the adapter.
     $this->searcher_id = $facet->getFacetSource();
-    // @TODO: Should we update facets each time we build a block?
-    //$this->processFacets();
-    $facet = $this->setResults($facet);
 
-    // Let the plugin render the facet.
+    // For clarity, process facets is called each build.
+    // The first facet therefor will trigger the processing.
+    // Note that processing is done only once, so repeatedly
+    // calling this method will not trigger the processing more than once.
+    // Furthermore: don't add any processing after this method call!
+    // All processing should be done in the processFacets method.
+    // After the processFacets is finished, all information for rendering
+    // is added to the facet.
+    $this->processFacets();
 
-    // @TODO: functionality to alter the state of the facet should
-    // somewhere else. Now here for speed reasons for proof of concept.
-
+    // Let the widget plugin render the facet.
     /** @var \Drupal\facetapi\Widget\WidgetInterface $widget */
     $widget = $this->widget_plugin_manager->createInstance($facet->getWidget());
 
@@ -372,10 +383,7 @@ abstract class AdapterPluginBase extends PluginBase implements AdapterInterface,
       /** @var UrlProcessorInterface $url_processor */
       $url_processor_name = $facet->getUrlProcessorName();
       $url_processor = $this->url_processor_plugin_manager->createInstance($url_processor_name);
-      // @TODO this value we're passing on into
-      // \Drupal\facetapi\UrlProcessor\UrlProcessorInterface::addUriToResults is
-      // should be corrected.
-      $url_processor->addUriToResults($facet, '');
+      $url_processor->addUriToResults($facet);
     }
   }
 }

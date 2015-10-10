@@ -12,6 +12,7 @@ use Drupal\facetapi\UrlProcessor\UrlProcessorPluginManager;
 use Drupal\facetapi\Widget\WidgetPluginManager;
 use Drupal\search_api\Query\QueryInterface;
 use Drupal\search_api\Query\ResultsCacheInterface;
+use Drupal\search_api\Query\ResultSetInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -81,41 +82,24 @@ class SearchApiViewsAdapter extends AdapterPluginBase {
     // Store all information in $this->facets.
     $results = $this->searchResultsCache->getResults($this->searcher_id);
 
-    $facet_results = $results->getExtraData('search_api_facets');
+    if ($results instanceof ResultSetInterface) {
+      $facet_results = $results->getExtraData('search_api_facets');
 
-    foreach ($this->facets as $facet) {
-      $configuration = array(
-        'query' => NULL,
-        'facet' => $facet,
-        'results' => $facet_results[$facet->getName()],
-      );
-      $query_type_plugin = $this->query_type_plugin_manager->createInstance($facet->getQueryType(),
-        $configuration
-      );
-      $query_type_plugin->build();
+      foreach ($this->facets as $facet) {
+        $configuration = array(
+          'query' => NULL,
+          'facet' => $facet,
+          'results' => $facet_results[$facet->getFieldIdentifier()],
+        );
+        $query_type_plugin = $this->query_type_plugin_manager->createInstance($facet->getQueryType(),
+          $configuration
+        );
+        $query_type_plugin->build();
+      }
+    }
+    else {
+      // @Todo: perform the query so there are results.
     }
 
   }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function setResults(FacetInterface $facet) {
-    $results = $this->searchResultsCache->getResults($this->searcher_id);
-
-    $facet_results = $results->getExtraData('search_api_facets');
-
-    $configuration = array(
-      'query' => NULL,
-      'facet' => $facet,
-      'results' => $facet_results[$facet->getFieldIdentifier()],
-    );
-
-    $query_type_plugin = $this->query_type_plugin_manager->createInstance($facet->getQueryType(),
-      $configuration
-    );
-
-    return $query_type_plugin->build();
-  }
-
 }
