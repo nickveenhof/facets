@@ -7,8 +7,8 @@
 
 namespace Drupal\facetapi\FacetSource;
 
-use Drupal\Core\TypedData\ComplexDataInterface;
-use Drupal\search_api\Plugin\IndexPluginInterface;
+use Drupal\Core\Form\FormStateInterface;
+use Drupal\facetapi\FacetInterface;
 
 /**
  * Describes a source for facet items.
@@ -36,5 +36,15 @@ interface FacetSourceInterface {
    * @return array
    */
   public function getFields();
+
+  /**
+   * Adds a configuration form for this facet source.
+   *
+   * @param array $form
+   * @param \Drupal\Core\Form\FormStateInterface $form_state
+   * @param \Drupal\facetapi\FacetInterface $facet
+   * @param \Drupal\facetapi\FacetSource\FacetSourceInterface $facet_source
+   */
+  public function buildConfigurationForm(array $form, FormStateInterface $form_state, FacetInterface $facet, FacetSourceInterface $facet_source);
 
 }
