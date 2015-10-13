@@ -1,0 +1,29 @@
+/**
+ * @file
+ * Administration styles for the Facet API module.
+ */
+
+/*
+ * Facet API overview page
+ */
+#facetapi-groups-list {
+  margin-bottom: 2em;
+}
+#facetapi-groups-list tr {
+  border-bottom: none;
+}
+
+#facetapi-groups-list tr.facet-source {
+  border-top: 1px solid #E6E4DF;
+}
+#facetapi-groups-list tr.facet:last-of-type {
+  border-bottom: 1px solid #E6E4DF;
+}
+
+#facetapi-groups-list tr.facet-source .facetapi-type,
+#facetapi-groups-list tr.facet-source .search-api-title {
+  font-weight: bold;
+}
+#facetapi-groups-list tr.facet .facetapi-type {
+  padding-left: 3em;
+}

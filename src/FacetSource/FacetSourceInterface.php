@@ -13,7 +13,7 @@ use Drupal\facetapi\FacetInterface;
 /**
  * Describes a source for facet items.
  *
- * A facet source is used to abstract the datasource where facets can be added
+ * A facet source is used to abstract the data source where facets can be added
  * to. A good example of this is a search api view. There are other possible
  * facet data sources, these all implement the FacetSourceInterface.
  * @see plugin_api
