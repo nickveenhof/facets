@@ -215,7 +215,7 @@ class FacetForm extends EntityForm {
       '#default_value' => $facet->getWidget(),
       '#required' => TRUE,
       '#ajax' => [
-        'trigger_as' => ['name' => 'widgets_configure'],
+        'trigger_as' => ['name' => 'widget_configure'],
         'callback' => '::buildAjaxWidgetConfigForm',
         'wrapper' => 'facet-api-widget-config-form',
         'method' => 'replace',
