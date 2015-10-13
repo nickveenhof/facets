@@ -266,7 +266,7 @@ class FacetForm extends EntityForm {
   public function buildWidgetConfigForm(array &$form, FormStateInterface $form_state, FacetInterface $facet) {
     $widget = $facet->getWidget();
 
-    if (!is_null($widget)) {
+    if (!is_null($widget) && $widget !== '') {
       $widget_instance = $this->getWidgetPluginManager()->createInstance($widget);
       // @todo Create, use and save SubFormState already here, not only in
       //   validate(). Also, use proper subset of $form for first parameter?
@@ -299,11 +299,12 @@ class FacetForm extends EntityForm {
    *   The facet being updated or created.
    */
   public function buildFacetSourceConfigForm(array &$form, FormStateInterface $form_state, FacetInterface $facet) {
-    /** @var \Drupal\facetapi\FacetSource\FacetSourceInterface $facet_source */
-    foreach ($facet->getFacetSources() as $facet_source_id => $facet_source) {
-      // @todo Create, use and save SubFormState already here, not only in
-      //   validate(). Also, use proper subset of $form for first parameter?
-      if ($config_form = $facet_source->buildConfigurationForm(array(), $form_state, $facet, $facet_source)) {
+    $facet_source_id = $facet->getFacetSource();
+    if (!is_null($facet_source_id) && $facet_source_id !== '') {
+      /** @var \Drupal\facetapi\FacetSource\FacetSourceInterface $facet_source */
+      $facet_source = $this->getFacetSourcePluginManager()->createInstance($facet_source_id);
+
+      if ($config_form = $facet_source->buildConfigurationForm([], $form_state, $facet, $facet_source)) {
         $form['facet_source_configs'][$facet_source_id]['#type'] = 'details';
         $form['facet_source_configs'][$facet_source_id]['#title'] = $this->t('Configure %plugin facet source', ['%plugin' => $facet_source->getPluginDefinition()['label']]);
         $form['facet_source_configs'][$facet_source_id]['#open'] = TRUE;

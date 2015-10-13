@@ -62,7 +62,6 @@ class IntegrationTest extends FacetWebTestBase {
       'name' => '',
       'id' => 'test_facet',
       'facet_source' => 'search_api_views:search_api_test_views_fulltext:default',
-      'facet_source_configs[search_api_views:search_api_test_views_fulltext:default][field_identifier]' => 'entity:node/title',
       'widget' => 'links',
       'status' => 1,
     ];
@@ -79,13 +78,15 @@ class IntegrationTest extends FacetWebTestBase {
       'widget' => 'links',
       'status' => 1,
     ];
+
     // Configure the facet source & widget.
-    $this->drupalPostForm(NULL, $edit, $this->t('Configure facet source'));
-    $this->drupalPostForm(NULL, $edit, $this->t('Configure Widget'));
+    $this->drupalGet($facet_add_page);
+    $this->drupalPostForm(NULL, ['facet_source' => 'search_api_views:search_api_test_views_fulltext:default'], $this->t('Configure facet source'));
 
     // Save the facet.
     $this->drupalPostForm(NULL, $edit, $this->t('Save'));
-    $this->assertUrl($facet_overview);
+    $this->assertText($this->t('The facet was successfully saved.'));
+    $this->assertUrl($facet_overview, [], 'Correct redirect to index page.');
     $this->assertText($facetName);
 
   }
