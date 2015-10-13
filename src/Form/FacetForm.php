@@ -170,7 +170,7 @@ class FacetForm extends EntityForm {
     $form['facet_source'] = [
       '#type' => 'select',
       '#title' => $this->t('Facet source'),
-      '#description' => $this->t('Select the source where this facet can find it\'s fields.'),
+      '#description' => $this->t('Select the source where this facet can find its fields.'),
       '#options' => $facet_sources,
       '#default_value' => $facet->getFacetSource(),
       '#required' => TRUE,
