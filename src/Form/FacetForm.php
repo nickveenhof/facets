@@ -36,6 +36,13 @@ class FacetForm extends EntityForm {
   protected $widgetPluginManager;
 
   /**
+   * The plugin manager for facet sources.
+   *
+   * @var \Drupal\facetapi\FacetSource\FacetSourcePluginManager
+   */
+  protected $facetSourcePluginManager;
+
+  /**
    * @var array
    */
   protected $facetSourcePlugins;
