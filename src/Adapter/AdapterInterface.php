@@ -142,6 +142,6 @@ interface AdapterInterface {
    * @return array
    *   Facet render arrays.
    */
-  public function build($facet);
+  public function build(FacetInterface $facet);
 
 }
