@@ -110,9 +110,7 @@ class FacetListBuilder extends ConfigEntityListBuilder {
   /**
    * {@inheritdoc}
    */
-  public function buildFacetSourceRow(FacetSourceInterface $facet_source) {
-    /** @var \Drupal\facetapi\FacetSource\FacetSourceInterface $facet_source */
-
+  public function buildFacetSourceRow(array $facet_source = []) {
     return array(
       'data' => array(
         'type' => array(
