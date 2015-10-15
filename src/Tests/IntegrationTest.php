@@ -48,14 +48,17 @@ class IntegrationTest extends FacetWebTestBase {
 
   /**
    * Get the facet overview page and make sure no other facets have been defined
-   * yet, make sure that the "Add new facet" link is showing.
+   * yet.
    */
   protected function checkEmptyOverview() {
     $facet_overview = $this->urlGenerator->generateFromRoute('facetapi.overview');
     $this->drupalGet($facet_overview);
     $this->assertResponse(200);
-    $this->assertText($this->t('There are no facets defined.'));
-    $this->assertText($this->t('Add new facet'));
+
+    // The list overview has Field: field_name, Widget: widget_name as
+    // description. This tests on the absence of that.
+    $this->assertNoText('Widget:');
+    $this->assertNoText('Field:');
   }
 
   /**
