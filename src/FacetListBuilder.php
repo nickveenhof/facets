@@ -94,7 +94,12 @@ class FacetListBuilder extends ConfigEntityListBuilder {
           'class' => array('facetapi-type'),
         ),
         'title' => array(
-          'data' => 'Field: ' . $entity->getFieldAlias() . ', Widget: ' . $entity->getWidget(),
+          'data' => array(
+              '#type' => 'link',
+              '#title' => $entity->getName(),
+              '#suffix' => '<div>' . $entity->getFieldAlias() . ' - ' . $entity->getWidget() . '</div>',
+            ) + $entity->urlInfo('edit-form')->toRenderArray(),
+          'class' => array('search-api-title'),
         ),
         'status' => array(
           'data' => $status_icon,

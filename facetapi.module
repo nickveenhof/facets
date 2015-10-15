@@ -27,7 +27,8 @@ function facetapi_help($route_name, RouteMatchInterface $route_match) {
       $output .= '<h3>' . t('About') . '</h3>';
       $output .= '<p>' . t('Facetapi test') . '</p>';
       return $output;
-    break;
+    case 'facetapi.overview':
+      return t('Below is a list of facets grouped by facetsources they are associated with. A facetsource is the instance where the facet does the actual filtering, e.g. a View on a Search API index.');
   }
 }
 
