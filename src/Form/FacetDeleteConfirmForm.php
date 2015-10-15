@@ -12,7 +12,7 @@ use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Url;
 
 /**
- * Defines a confirm form for deleting a server.
+ * Defines a confirm form for deleting a facet.
  */
 class FacetDeleteConfirmForm extends EntityConfirmFormBase {
 
