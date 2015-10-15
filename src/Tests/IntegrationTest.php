@@ -62,7 +62,7 @@ class IntegrationTest extends FacetWebTestBase {
    * Tests adding a facet trough the interface.
    */
   protected function addFacet($facet_name) {
-    $facet_id = preg_replace('@[^a-z0-9_]+@', '_', $facet_name);
+    $facet_id = preg_replace('@[^a-zA-Z0-9_]+@', '_', strtolower($facet_name));
 
     // Go to the Add facet page and make sure that returns a 200
     $facet_add_page = $this->urlGenerator->generateFromRoute('entity.facetapi_facet.add_form', [], ['absolute' => TRUE]);
@@ -90,6 +90,9 @@ class IntegrationTest extends FacetWebTestBase {
     // Configure the facet source by selecting one of the search api views.
     $this->drupalGet($facet_add_page);
     $this->drupalPostForm(NULL, ['facet_source' => 'search_api_views:search_api_test_views_fulltext:page_1'], $this->t('Configure facet source'));
+
+    // @todo TEMPORARY FIX FOR https://www.drupal.org/node/2593611
+    $this->drupalPostForm(NULL, ['widget' => 'links'], $this->t('Configure widget'));
 
     $this->drupalPostForm(NULL, $form_values, $this->t('Save'));
     $this->assertText($this->t('Facet field field is required.'));
