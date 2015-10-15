@@ -345,7 +345,10 @@ abstract class AdapterPluginBase extends PluginBase implements AdapterInterface,
     }
   }
 
-  public function build($facet) {
+  /**
+   * {@inheritdoc}
+   */
+  public function build(FacetInterface $facet) {
     // It might be that the facet received here,
     // is not the same as the already loaded facets in the adapter.
     // For that reason, get the facet from the already loaded facets

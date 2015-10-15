@@ -42,53 +42,73 @@ class IntegrationTest extends FacetWebTestBase {
 
     $this->addFieldsToIndex();
 
-    $this->addFacet();
+    $this->checkEmptyOverview();
+    $this->addFacet("Test Facet name");
+  }
+
+  /**
+   * Get the facet overview page and make sure no other facets have been defined
+   * yet, make sure that the "Add new facet" link is showing.
+   */
+  protected function checkEmptyOverview() {
+    $facet_overview = $this->urlGenerator->generateFromRoute('facetapi.overview');
+    $this->drupalGet($facet_overview);
+    $this->assertResponse(200);
+    $this->assertText($this->t('There are no facets defined.'));
+    $this->assertText($this->t('Add new facet'));
   }
 
   /**
    * Tests adding a facet trough the interface.
    */
-  protected function addFacet() {
-    $facet_overview = $this->urlGenerator->generateFromRoute('facetapi.overview');
-    $this->drupalGet($facet_overview);
-    $this->assertResponse(200);
-    $this->assertText($this->t('There are no facets defined.'));
+  protected function addFacet($facet_name) {
+    $facet_id = preg_replace('@[^a-zA-Z0-9_]+@', '_', strtolower($facet_name));
 
+    // Go to the Add facet page and make sure that returns a 200
     $facet_add_page = $this->urlGenerator->generateFromRoute('entity.facetapi_facet.add_form', [], ['absolute' => TRUE]);
     $this->drupalGet($facet_add_page);
     $this->assertResponse(200);
 
-    $edit = [
+    $form_values = [
       'name' => '',
-      'id' => 'test_facet',
-      'facet_source' => 'search_api_views:search_api_test_views_fulltext:default',
+      'id' => $facet_id,
       'widget' => 'links',
       'status' => 1,
     ];
 
-    $this->drupalPostForm($facet_add_page, $edit, $this->t('Save'));
+    // Try filling out the form, but without having filled in a name for the
+    // facet to test for form errors.
+    $this->drupalPostForm($facet_add_page, $form_values, $this->t('Save'));
     $this->assertText($this->t('Facet name field is required.'));
+    $this->assertText($this->t('Facet source field is required.'));
 
-    $facetName = "Test Facet Name";
-    $edit = [
-      'name' => $facetName,
-      'id' => 'test_facet',
-      'facet_source' => 'search_api_views:search_api_test_views_fulltext:default',
-      'facet_source_configs[search_api_views:search_api_test_views_fulltext:default][field_identifier]' => 'entity:node/title',
-      'widget' => 'links',
-      'status' => 1,
-    ];
+    // Make sure that when filling out the name, the form error disappears.
+    $form_values['name'] = $facet_name;
+    $this->drupalPostForm(NULL, $form_values, $this->t('Save'));
+    $this->assertNoText($this->t('Facet name field is required.'));
 
-    // Configure the facet source & widget.
+    // Configure the facet source by selecting one of the search api views.
     $this->drupalGet($facet_add_page);
-    $this->drupalPostForm(NULL, ['facet_source' => 'search_api_views:search_api_test_views_fulltext:default'], $this->t('Configure facet source'));
+    $this->drupalPostForm(NULL, ['facet_source' => 'search_api_views:search_api_test_views_fulltext:page_1'], $this->t('Configure facet source'));
 
-    // Save the facet.
-    $this->drupalPostForm(NULL, $edit, $this->t('Save'));
+    // @todo TEMPORARY FIX FOR https://www.drupal.org/node/2593611
+    $this->drupalPostForm(NULL, ['widget' => 'links'], $this->t('Configure widget'));
+
+    $this->drupalPostForm(NULL, $form_values, $this->t('Save'));
+    $this->assertText($this->t('Facet field field is required.'));
+
+    $facet_source_form = [
+      'facet_source' => 'search_api_views:search_api_test_views_fulltext:page_1',
+      'facet_source_configs[search_api_views:search_api_test_views_fulltext:page_1][field_identifier]' => 'entity:entity_test/type',
+    ];
+    $this->drupalPostForm(NULL, $form_values + $facet_source_form, $this->t('Save'));
+    $this->assertNoText('field is required.');
+
+    // Make sure that the redirection back to the overview was successful and
+    // the newly added facet is shown on the overview page.
     $this->assertText($this->t('The facet was successfully saved.'));
-    $this->assertUrl($facet_overview, [], 'Correct redirect to index page.');
-    $this->assertText($facetName);
-
+    $this->assertUrl($this->urlGenerator->generateFromRoute('facetapi.overview'), [], 'Correct redirect to index page.');
+    $this->assertText($facet_name);
   }
 
   protected function addFieldsToIndex() {
