@@ -60,6 +60,7 @@ class IntegrationTest extends FacetWebTestBase {
 
     $this->checkEmptyOverview();
     $this->addFacet("Test Facet name");
+    $this->editFacet("Test Facet name");
   }
 
   /**
@@ -79,6 +80,8 @@ class IntegrationTest extends FacetWebTestBase {
 
   /**
    * Tests adding a facet trough the interface.
+   *
+   * @param $facet_name
    */
   protected function addFacet($facet_name) {
     $facet_id = preg_replace('@[^a-zA-Z0-9_]+@', '_', strtolower($facet_name));
@@ -125,6 +128,46 @@ class IntegrationTest extends FacetWebTestBase {
 
     // Make sure that the redirection back to the overview was successful and
     // the newly added facet is shown on the overview page.
+    $this->assertText($this->t('The facet was successfully saved.'));
+    $this->assertUrl($this->urlGenerator->generateFromRoute('facetapi.overview'), [], 'Correct redirect to index page.');
+    $this->assertText($facet_name);
+  }
+
+  /**
+   * Tests editing of a facet through the UI.
+   *
+   * @param $facet_name
+   */
+  public function editFacet($facet_name) {
+    $facet_id = preg_replace('@[^a-zA-Z0-9_]+@', '_', strtolower($facet_name));
+
+    $facet_edit_page = $this->urlGenerator->generateFromRoute('entity.facetapi_facet.edit_form', ['facetapi_facet' => $facet_id], ['absolute' => TRUE]);
+
+    // Go to the facet edit page and make sure "edit facet %facet" is present.
+    $this->drupalGet($facet_edit_page);
+    $this->assertResponse(200);
+    $this->assertRaw($this->t('Edit facet %facet', ['%facet' => $facet_name]));
+
+    // Change the facet name to add in "-2" to test editing of a facet works.
+    $form_values = ['name' => $facet_name . ' - 2'];
+    $this->drupalPostForm($facet_edit_page, $form_values, $this->t('Save'));
+
+    // Make sure that the redirection back to the overview was successful and
+    // the edited facet is shown on the overview page.
+    $this->assertText($this->t('The facet was successfully saved.'));
+    $this->assertUrl($this->urlGenerator->generateFromRoute('facetapi.overview'), [], 'Correct redirect to index page.');
+    $this->assertText($facet_name);
+
+    // Make sure the "-2" suffix is still on the facet when editing a facet.
+    $this->drupalGet($facet_edit_page);
+    $this->assertRaw($this->t('Edit facet %facet', ['%facet' => $facet_name . ' - 2']));
+
+    // Edit the form and change the facet's name back to the initial name.
+    $form_values = ['name' => $facet_name];
+    $this->drupalPostForm($facet_edit_page, $form_values, $this->t('Save'));
+
+    // Make sure that the redirection back to the overview was successful and
+    // the edited facet is shown on the overview page.
     $this->assertText($this->t('The facet was successfully saved.'));
     $this->assertUrl($this->urlGenerator->generateFromRoute('facetapi.overview'), [], 'Correct redirect to index page.');
     $this->assertText($facet_name);
