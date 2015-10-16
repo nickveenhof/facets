@@ -31,6 +31,22 @@ class IntegrationTest extends FacetWebTestBase {
   }
 
   /**
+   * Tests the facet api permissions.
+   */
+  public function testOverviewPermissions() {
+    $facet_overview = $this->urlGenerator->generateFromRoute('facetapi.overview');
+
+    $this->drupalLogin($this->unauthorizedUser);
+    $this->drupalGet($facet_overview);
+    $this->assertResponse(403);
+    $this->assertText('Access denied');
+
+    $this->drupalLogin($this->adminUser);
+    $this->drupalGet($facet_overview);
+    $this->assertResponse(200);
+  }
+
+  /**
    * Tests various operations via the Facet API's admin UI.
    */
   public function testFramework() {
