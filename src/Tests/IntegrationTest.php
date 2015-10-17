@@ -18,29 +18,20 @@ use Drupal\search_api\Entity\Index;
 class IntegrationTest extends FacetWebTestBase {
 
   /**
-   * @var Index $index
-   *   A search api index.
-   */
-  protected $index;
-
-  /**
-   * {@inheritdoc}
-   */
-  public function setUp() {
-    parent::setUp();
-  }
-
-  /**
    * Tests the facet api permissions.
    */
   public function testOverviewPermissions() {
     $facet_overview = $this->urlGenerator->generateFromRoute('facetapi.overview');
 
+    // Login with a user that is not authorized to administer facets and test
+    // that we're correctly getting a 403 HTTP response code.
     $this->drupalLogin($this->unauthorizedUser);
     $this->drupalGet($facet_overview);
     $this->assertResponse(403);
     $this->assertText('Access denied');
 
+    // Login with a user that has the correct permissions and test for the
+    // correct HTTP response code.
     $this->drupalLogin($this->adminUser);
     $this->drupalGet($facet_overview);
     $this->assertResponse(200);
@@ -50,24 +41,29 @@ class IntegrationTest extends FacetWebTestBase {
    * Tests various operations via the Facet API's admin UI.
    */
   public function testFramework() {
+
+    // Make sure we're logged in with a user that has sufficient permissions.
     $this->drupalLogin($this->adminUser);
 
-    // Create search api test server & index.
+    // Create search api test server & index and add fields to the index.
     $this->getTestServer();
-    $this->index = $this->getTestIndex();
-
+    $this->getTestIndex();
     $this->addFieldsToIndex();
 
+    // Check if the overview is empty.
     $this->checkEmptyOverview();
+
+    // Add a new facet and edit it.
     $this->addFacet("Test Facet name");
     $this->editFacet("Test Facet name");
 
+    // Delete the facet and make sure the overview is empty again.
     $this->deleteUnusedFacet("Test Facet name");
+    $this->checkEmptyOverview();
   }
 
   /**
-   * Get the facet overview page and make sure no other facets have been defined
-   * yet.
+   * Get the facet overview page and make sure the overview is empty.
    */
   protected function checkEmptyOverview() {
     $facet_overview = $this->urlGenerator->generateFromRoute('facetapi.overview');
@@ -86,7 +82,7 @@ class IntegrationTest extends FacetWebTestBase {
    * @param $facet_name
    */
   protected function addFacet($facet_name) {
-    $facet_id = preg_replace('@[^a-zA-Z0-9_]+@', '_', strtolower($facet_name));
+    $facet_id = $this->convertNameToMachineName($facet_name);
 
     // Go to the Add facet page and make sure that returns a 200
     $facet_add_page = $this->urlGenerator->generateFromRoute('entity.facetapi_facet.add_form', [], ['absolute' => TRUE]);
@@ -118,9 +114,12 @@ class IntegrationTest extends FacetWebTestBase {
     // @todo TEMPORARY FIX FOR https://www.drupal.org/node/2593611
     $this->drupalPostForm(NULL, ['widget' => 'links'], $this->t('Configure widget'));
 
+    // The facet field is still required.
     $this->drupalPostForm(NULL, $form_values, $this->t('Save'));
     $this->assertText($this->t('Facet field field is required.'));
 
+    // Fill in all fields and make sure the 'field is required' message is no
+    // longer shown.
     $facet_source_form = [
       'facet_source' => 'search_api_views:search_api_test_views_fulltext:page_1',
       'facet_source_configs[search_api_views:search_api_test_views_fulltext:page_1][field_identifier]' => 'entity:entity_test/type',
@@ -141,7 +140,7 @@ class IntegrationTest extends FacetWebTestBase {
    * @param $facet_name
    */
   public function editFacet($facet_name) {
-    $facet_id = preg_replace('@[^a-zA-Z0-9_]+@', '_', strtolower($facet_name));
+    $facet_id = $this->convertNameToMachineName($facet_name);
 
     $facet_edit_page = $this->urlGenerator->generateFromRoute('entity.facetapi_facet.edit_form', ['facetapi_facet' => $facet_id], ['absolute' => TRUE]);
 
@@ -181,7 +180,7 @@ class IntegrationTest extends FacetWebTestBase {
    * @param string $facet_name
    */
   protected function deleteUnusedFacet($facet_name) {
-    $facet_id = preg_replace('@[^a-zA-Z0-9_]+@', '_', strtolower($facet_name));
+    $facet_id = $this->convertNameToMachineName($facet_name);
 
     $facet_delete_page = $this->urlGenerator->generateFromRoute('entity.facetapi_facet.delete_form', ['facetapi_facet' => $facet_id], ['absolute' => TRUE]);
 
@@ -205,8 +204,11 @@ class IntegrationTest extends FacetWebTestBase {
     $this->assertNoText($facet_name);
   }
 
+  /**
+   * Add fields to search api index.
+   */
   protected function addFieldsToIndex() {
-    $edit = array(
+    $edit = [
       'fields[entity:node/nid][indexed]' => 1,
       'fields[entity:node/title][indexed]' => 1,
       'fields[entity:node/title][type]' => 'text',
@@ -214,10 +216,20 @@ class IntegrationTest extends FacetWebTestBase {
       'fields[entity:node/body][indexed]' => 1,
       'fields[entity:node/uid][indexed]' => 1,
       'fields[entity:node/uid][type]' => 'search_api_test_data_type',
-    );
+    ];
 
     $this->drupalPostForm('admin/config/search/search-api/index/webtest_index/fields', $edit, $this->t('Save changes'));
     $this->assertText($this->t('The changes were successfully saved.'));
+  }
+
+  /**
+   * Covert facet name to machine name.
+   *
+   * @param $facet_name
+   * @return string
+   */
+  protected function convertNameToMachineName($facet_name) {
+    return preg_replace('@[^a-zA-Z0-9_]+@', '_', strtolower($facet_name));
   }
 
 }
