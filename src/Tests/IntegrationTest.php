@@ -61,6 +61,8 @@ class IntegrationTest extends FacetWebTestBase {
     $this->checkEmptyOverview();
     $this->addFacet("Test Facet name");
     $this->editFacet("Test Facet name");
+
+    $this->deleteUnusedFacet("Test Facet name");
   }
 
   /**
@@ -171,6 +173,36 @@ class IntegrationTest extends FacetWebTestBase {
     $this->assertText($this->t('The facet was successfully saved.'));
     $this->assertUrl($this->urlGenerator->generateFromRoute('facetapi.overview'), [], 'Correct redirect to index page.');
     $this->assertText($facet_name);
+  }
+
+  /**
+   * This deletes an unused facet through the UI.
+   *
+   * @param string $facet_name
+   */
+  protected function deleteUnusedFacet($facet_name) {
+    $facet_id = preg_replace('@[^a-zA-Z0-9_]+@', '_', strtolower($facet_name));
+
+    $facet_delete_page = $this->urlGenerator->generateFromRoute('entity.facetapi_facet.delete_form', ['facetapi_facet' => $facet_id], ['absolute' => TRUE]);
+
+    // Go to the facet delete page and make the warning is shown.
+    $this->drupalGet($facet_delete_page);
+    $this->assertResponse(200);
+    $this->assertText($this->t('Are you sure you want to delete the facet'));
+
+    // Actually submit the confirmation form.
+    $this->drupalPostForm(NULL, [], $this->t('Delete'));
+
+    // Check that the facet by testing for the message and the absence of the
+    // facet name on the overview.
+    $this->assertRaw($this->t('The facet %facet has been deleted.', ['%facet' => $facet_name]));
+
+    // Refresh the page because on the previous page the $facet_name is still
+    // visible (in the message).
+    $facet_overview = $this->urlGenerator->generateFromRoute('facetapi.overview');
+    $this->drupalGet($facet_overview);
+    $this->assertResponse(200);
+    $this->assertNoText($facet_name);
   }
 
   protected function addFieldsToIndex() {
