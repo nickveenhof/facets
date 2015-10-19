@@ -183,4 +183,18 @@ interface FacetInterface extends ConfigEntityInterface {
    */
   public function getFacetSources($only_enabled = TRUE);
 
+  /**
+   * Get the path to which the facet should link.
+   *
+   * @param string $path
+   */
+  public function setPath($path);
+
+  /**
+   * Get the path to which the facet should link.
+   *
+   * @return NULL|string
+   */
+  public function getPath();
+
 }

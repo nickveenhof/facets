@@ -11,6 +11,7 @@ use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\Plugin\PluginBase;
 use Drupal\facetapi\FacetInterface;
+use Drupal\facetapi\FacetSource\FacetSourcePluginManager;
 use Drupal\facetapi\QueryType\QueryTypePluginManager;
 use Drupal\facetapi\Result\Result;
 use Drupal\facetapi\UrlProcessor\UrlProcessorInterface;
@@ -44,6 +45,13 @@ abstract class FacetManagerPluginBase extends PluginBase implements FacetManager
    * @var UrlProcessorPluginManager
    */
   protected $url_processor_plugin_manager;
+
+  /**
+   * The facet source plugin manager.
+   *
+   * @var FacetSourcePluginManager
+   */
+  protected $facet_source_manager;
 
   /**
    * @var ModuleHandlerInterface
@@ -137,7 +145,10 @@ abstract class FacetManagerPluginBase extends PluginBase implements FacetManager
     /** @var \Drupal\facetapi\Widget\WidgetPluginManager $widget_plugin_manager */
     $widget_plugin_manager = $container->get('plugin.manager.facetapi.widget');
 
-    $plugin = new static($configuration, $plugin_id, $plugin_definition, $module_handler, $query_type_plugin_manager, $url_processor_plugin_manager, $widget_plugin_manager);
+    /** @var \Drupal\facetapi\FacetManager\FacetSourcePluginManager $facet_source_plugin_manager */
+    $facet_source_plugin_manager = $container->get('plugin.manager.facetapi.facet_source');
+
+    $plugin = new static($configuration, $plugin_id, $plugin_definition, $module_handler, $query_type_plugin_manager, $url_processor_plugin_manager, $widget_plugin_manager, $facet_source_plugin_manager);
     return $plugin;
   }
 
@@ -165,7 +176,8 @@ abstract class FacetManagerPluginBase extends PluginBase implements FacetManager
     ModuleHandlerInterface $module_handler,
     QueryTypePluginManager $query_type_plugin_manager,
     UrlProcessorPluginManager $url_processor_plugin_manager,
-    WidgetPluginManager $widget_plugin_manager
+    WidgetPluginManager $widget_plugin_manager,
+    FacetSourcePluginManager $facet_source_manager
   ) {
 
     parent::__construct($configuration, $plugin_id, $plugin_definition);
@@ -173,6 +185,7 @@ abstract class FacetManagerPluginBase extends PluginBase implements FacetManager
     $this->query_type_plugin_manager = $query_type_plugin_manager;
     $this->url_processor_plugin_manager = $url_processor_plugin_manager;
     $this->widget_plugin_manager = $widget_plugin_manager;
+    $this->facet_source_manager = $facet_source_manager;
 
     // Immediately initialize the facets.
     // This can be done directly because the only thing needed is

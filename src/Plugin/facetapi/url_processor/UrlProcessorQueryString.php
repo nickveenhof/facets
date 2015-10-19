@@ -43,7 +43,7 @@ class UrlProcessorQueryString extends UrlProcessorPluginBase{
 
   public function addUriToResults(FacetInterface $facet) {
     // Create links for all the values.
-    // First get the current list of get paramaters.
+    // First get the current list of get parameters.
     $get_params = $this->request->query;
 
     $results = $facet->getResults();
@@ -73,7 +73,11 @@ class UrlProcessorQueryString extends UrlProcessorPluginBase{
       }
 
       $result_get_params->set($this->filter_key, $filter_params);
-      $url = Url::createFromRequest($this->request);
+      $request = $this->request;
+      if ($facet->getPath()) {
+        $request = Request::create('/' . $facet->getPath());
+      }
+      $url = Url::createFromRequest($request);
       $url->setOption('query', $result_get_params->all());
       $result->setUrl($url);
     }

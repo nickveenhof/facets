@@ -7,7 +7,6 @@
 
 namespace Drupal\facetapi\Plugin\facetapi\query_type;
 
-use Drupal\facetapi\FacetManager\FacetManagerInterface;
 use \Drupal\facetapi\QueryType\QueryTypePluginBase;
 use Drupal\facetapi\Result\Result;
 use Drupal\search_api\Query\Query;

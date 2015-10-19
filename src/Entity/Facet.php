@@ -127,6 +127,13 @@ class Facet extends ConfigEntityBase implements FacetInterface {
   protected $facet_source;
 
   /**
+   * The path all the links should point to.
+   *
+   * @var string
+   */
+  protected $path;
+
+  /**
    * The results.
    *
    * @var Result[]
@@ -317,7 +324,7 @@ class Facet extends ConfigEntityBase implements FacetInterface {
    * @return string
    */
   public function getManagerPluginId() {
-    return 'search_api_views';
+    return 'facetapi_default';
   }
 
   /**
@@ -363,5 +370,14 @@ class Facet extends ConfigEntityBase implements FacetInterface {
 
     return array_intersect_key($this->facetSourcePlugins, array_flip($this->facetSourcePlugins));
   }
+
+  public function setPath($path) {
+    $this->path = $path;
+  }
+
+  public function getPath() {
+    return $this->path;
+  }
+
 
 }

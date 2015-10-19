@@ -7,6 +7,8 @@ namespace Drupal\facetapi\Plugin\facetapi\facet_manager;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\facetapi\FacetManager\FacetManagerPluginBase;
 use Drupal\facetapi\FacetInterface;
+use Drupal\facetapi\FacetSource\FacetSourceInterface;
+use Drupal\facetapi\FacetSource\FacetSourcePluginManager;
 use Drupal\facetapi\QueryType\QueryTypePluginManager;
 use Drupal\facetapi\UrlProcessor\UrlProcessorPluginManager;
 use Drupal\facetapi\Widget\WidgetPluginManager;
@@ -17,12 +19,12 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * @FacetApiFacetManager(
- *   id = "search_api_views",
- *   label = @Translation("Search api"),
+ *   id = "facetapi_default",
+ *   label = @Translation("Dafault manager"),
  *   description = @Translation("Search api facet api facet_manager"),
  * )
  */
-class SearchApiViewsFacetManager extends FacetManagerPluginBase {
+class DefaultFacetManager extends FacetManagerPluginBase {
 
   /**
    * @var \Drupal\search_api\Query\QueryInterface
@@ -54,8 +56,11 @@ class SearchApiViewsFacetManager extends FacetManagerPluginBase {
     /** @var \Drupal\facetapi\Widget\WidgetPluginManager $widget_plugin_manager */
     $widget_plugin_manager = $container->get('plugin.manager.facetapi.widget');
 
+    /** @var FacetSourcePluginManager $facet_plugin_manager */
+    $facet_plugin_manager = $container->get('plugin.manager.facetapi.facet_source');
 
-    return new static($configuration, $plugin_id, $plugin_definition, $module_handler, $query_type_plugin_manager, $results_cache, $url_processor_plugin_manager, $widget_plugin_manager);
+
+    return new static($configuration, $plugin_id, $plugin_definition, $module_handler, $query_type_plugin_manager, $results_cache, $url_processor_plugin_manager, $widget_plugin_manager, $facet_plugin_manager);
   }
 
   public function __construct(
@@ -65,10 +70,11 @@ class SearchApiViewsFacetManager extends FacetManagerPluginBase {
     QueryTypePluginManager $query_type_plugin_manager,
     ResultsCacheInterface $results_cache,
     UrlProcessorPluginManager $url_processor_plugin_manager,
-    WidgetPluginManager $widget_plugin_manager
+    WidgetPluginManager $widget_plugin_manager,
+    FacetSourcePluginManager $facet_source_manager
   ) {
 
-    parent::__construct($configuration, $plugin_id, $plugin_definition, $module_handler, $query_type_plugin_manager, $url_processor_plugin_manager, $widget_plugin_manager);
+    parent::__construct($configuration, $plugin_id, $plugin_definition, $module_handler, $query_type_plugin_manager, $url_processor_plugin_manager, $widget_plugin_manager, $facet_source_manager);
     $this->searchResultsCache = $results_cache;
   }
 
@@ -77,28 +83,11 @@ class SearchApiViewsFacetManager extends FacetManagerPluginBase {
    * method should disappear later when facetapi does it.
    */
   public function updateResults() {
-    // Get the facet values from the query that has been done.
-    // Store all information in $this->facets.
-    $results = $this->searchResultsCache->getResults($this->searcher_id);
+    // Get an instance of the facet source.
+    /** @var FacetSourceInterface $facet_source_plugin */
+    $facet_source_plugin = $this->facet_source_manager->createInstance($this->searcher_id);
 
-    if ($results instanceof ResultSetInterface) {
-      $facet_results = $results->getExtraData('search_api_facets');
-
-      foreach ($this->facets as $facet) {
-        $configuration = array(
-          'query' => NULL,
-          'facet' => $facet,
-          'results' => $facet_results[$facet->getFieldIdentifier()],
-        );
-        $query_type_plugin = $this->query_type_plugin_manager->createInstance($facet->getQueryType(),
-          $configuration
-        );
-        $query_type_plugin->build();
-      }
-    }
-    else {
-      // @Todo: perform the query so there are results.
-    }
+    $facet_source_plugin->addResults($this->facets);
 
   }
 }

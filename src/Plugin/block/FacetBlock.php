@@ -84,7 +84,7 @@ class FacetBlock extends BlockBase implements ContainerFactoryPluginInterface {
     }
 
     // This should be changeable when we support more than just search API.
-    $plugin_id = 'search_api_views';
+    $plugin_id = 'facetapi_default';
 
     /** @var \Drupal\facetapi\FacetManager\FacetManagerInterface $manager */
     $manager = $this->pluginManager->getMyOwnChangeLaterInstance(

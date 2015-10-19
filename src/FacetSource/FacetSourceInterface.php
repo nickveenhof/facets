@@ -47,4 +47,12 @@ interface FacetSourceInterface {
    */
   public function buildConfigurationForm(array $form, FormStateInterface $form_state, FacetInterface $facet, FacetSourceInterface $facet_source);
 
+  /**
+   * Add the results to the facets.
+   *
+   * @param FacetInterface[] $facets
+   * @return mixed
+   */
+  public function addResults($facets);
+
 }
