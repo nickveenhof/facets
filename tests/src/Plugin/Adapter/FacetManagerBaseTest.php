@@ -4,9 +4,9 @@
  * Contains \Drupal\Tests\facetapi\Plugin\Url\FacetUrlProcessorStandardTest.
  */
 
-namespace Drupal\Tests\facetapi\Plugin\Adapter;
+namespace Drupal\Tests\facetapi\Plugin\FacetManager;
 
-use Drupal\facetapi\Plugin\Adapter\AdapterBase;
+use Drupal\facetapi\FacetManager\FacetManagerPluginBase;
 use Drupal\Tests\UnitTestCase;
 
 /**
@@ -15,7 +15,7 @@ use Drupal\Tests\UnitTestCase;
  * @group facetapi
  *
  */
-class AdapterBaseTest extends UnitTestCase {
+class FacetManagerBaseTest extends UnitTestCase {
 
   /**
    * Stores the processor which is not tested here.
@@ -25,11 +25,11 @@ class AdapterBaseTest extends UnitTestCase {
   protected $processor;
 
   /**
-   * Stores the adapter under test.
+   * Stores the facet_manager under test.
    *
-   * @var \Drupal\facetapi\Adapter\AdapterInterface
+   * @var \Drupal\facetapi\FacetManager\FacetManagerInterface
    */
-  protected $adapter;
+  protected $manager;
 
   /**
    * {@inheritdoc}
@@ -39,7 +39,7 @@ class AdapterBaseTest extends UnitTestCase {
 
     // @TODO: implement the setup.
 //    // Create a mock for the URL to be returned.
-//    $this->adapter = $this->getMock('Drupal\facetapi\Adapter\AdapterInterface');
+//    $this->facet_manager = $this->getMock('Drupal\facetapi\FacetManager\FacetManagerInterface');
     // Create the URL-Processor and set the mocked indexer.
 //    $this->processor = $this->getMock('Drupal\facetapi\Ur');
   }

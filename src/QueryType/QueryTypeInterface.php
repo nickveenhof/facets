@@ -6,7 +6,7 @@
 
 namespace Drupal\facetapi\QueryType;
 
-use Drupal\facetapi\Adapter\AdapterInterface;
+use Drupal\facetapi\FacetManager\FacetManagerInterface;
 
 interface QueryTypeInterface {
 

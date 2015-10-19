@@ -22,14 +22,14 @@ use Drupal\Component\Annotation\Plugin;
 class FacetApiQueryType extends Plugin {
 
   /**
-   * The adapter plugin id
+   * The facet_manager plugin id
    *
    * @var string
    */
   public $id;
 
   /**
-   * The human-readable name of the adapter plugin
+   * The human-readable name of the facet_manager plugin
    *
    * @ingroup plugin_translatable
    *
@@ -38,7 +38,7 @@ class FacetApiQueryType extends Plugin {
   public $label;
 
   /**
-   * The adapter description.
+   * The facet_manager description.
    *
    * @ingroup plugin_translatable
    *
@@ -47,7 +47,7 @@ class FacetApiQueryType extends Plugin {
   public $description;
 
   /**
-   * Class used to retrieve derivative definitions of the adapter.
+   * Class used to retrieve derivative definitions of the facet_manager.
    *
    * @var string
    */

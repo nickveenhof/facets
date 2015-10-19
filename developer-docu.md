@@ -15,8 +15,8 @@ Later on we will replace the hooks by events.
 ### Searchers (hook_facetapi_searcher_info)
 
 Searchers are synonymous with search pages, or environments. Multiple
-searchers can share the same adapter class, but each searcher will spawn a
-separate instance of the adapter. Each searcher must be unique, so it is
+searchers can share the same facet_manager class, but each searcher will spawn a
+separate instance of the facet_manager. Each searcher must be unique, so it is
 common practice to prefix the name with the module implementing the hook,
 such as "apachesolr@searcher-x", "search_api@searcher-y", etc.
 
@@ -28,7 +28,7 @@ The searchers are used for the following things:
 The info we need per searcher are:
 
 - label
-- Adapter
+- FacetManager
 - Url processor
 - path
 
@@ -45,9 +45,9 @@ source data be stored in Drupal. For example, if you are indexing external
 RSS feeds, facets can be defined that filter by the field in the index that
 stores the publication dates.
 
-### Adapters
+### FacetManagers
 
-And adapter was a plugin in the drupal 7 module and will be the same in drupal 8.
+And facet_manager was a plugin in the drupal 7 module and will be the same in drupal 8.
 
 ### Query types
 
@@ -66,9 +66,9 @@ Builds base render array used as a starting point for rendering.
 The processor constructs the base render array used by widgets across all
 realms. It is responsible for mapping the raw data returned by the index to
 human readable values, processing hierarchical data, and building the query
-strings for each facet item via the adapter's url processor plugin.
+strings for each facet item via the facet_manager's url processor plugin.
 
-The processors are generated per facets in the processFacets method in the adapter.
+The processors are generated per facets in the processFacets method in the facet_manager.
 Dependencies are injected upon generation (in the constructor).
 
 ### FacetapiFacet (helper class)
@@ -88,14 +88,14 @@ however custom plugis can be written to retrieve data from the path as well.
 In addition to facet data retrieval, the url processor plugin is also
 responsible for building facet links and setting breadcrumb trails.
 
-Each adapter instance is associated with a single url processor plugin. The
-plugin is associated with the adapter via hook_facetapi_searcher_info()
+Each facet_manager instance is associated with a single url processor plugin. The
+plugin is associated with the facet_manager via hook_facetapi_searcher_info()
 implementations.
 
-### Adapter (plugin)
+### FacetManager (plugin)
 
-Adapters are responsible for abstracting interactions with the Search backend
-that are necessary for faceted search. The adapter is also responsible for
+FacetManagers are responsible for abstracting interactions with the Search backend
+that are necessary for faceted search. The facet_manager is also responsible for
 retrieving facet information passed by the user via the url processor plugin
 taking the appropriate action, whether it is checking dependencies for all
 enabled facets or passing the appropriate query type plugin to the backend

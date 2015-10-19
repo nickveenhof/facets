@@ -21,7 +21,7 @@ use Drupal\Component\Annotation\Plugin;
 class FacetApiUrlProcessor extends Plugin {
 
   /**
-   * The adapter plugin id
+   * The facet_manager plugin id
    *
    * @var string
    */

@@ -1,14 +1,14 @@
 <?php
 
 /**
- * @file Contains Drupal\facetapi\Adapter\AdapterPluginManagerInterface
+ * @file Contains Drupal\facetapi\FacetManager\FacetManagerPluginManagerInterface
  */
 
-namespace Drupal\facetapi\Adapter;
+namespace Drupal\facetapi\FacetManager;
 
 use Drupal\Component\Plugin\PluginManagerInterface;
 
-interface AdapterPluginManagerInterface extends PluginManagerInterface {
+interface FacetManagerPluginManagerInterface extends PluginManagerInterface {
 
   /**
    * Get an instance based on search id.

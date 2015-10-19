@@ -54,7 +54,7 @@ class FacetApiWidget extends Plugin {
   public $queryType = [];
 
   /**
-   * Class used to retrieve derivative definitions of the adapter.
+   * Class used to retrieve derivative definitions of the facet_manager.
    *
    * @var string
    */

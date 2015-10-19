@@ -2,14 +2,14 @@
 
 /**
  * @file
- * Contains Drupal\facetapi\Adapter\AdapterInterface.
+ * Contains Drupal\facetapi\FacetManager\FacetManagerInterface.
  */
 
-namespace Drupal\facetapi\Adapter;
+namespace Drupal\facetapi\FacetManager;
 
 use Drupal\facetapi\FacetInterface;
 
-interface AdapterInterface {
+interface FacetManagerInterface {
 
   /**
    * Set the search id.
@@ -35,7 +35,7 @@ interface AdapterInterface {
    * @param string $keys
    *   The search keys, or query text, submitted by the user.
    *
-   * @return FacetapiAdapter
+   * @return FacetapiFacetManager
    *   An instance of this class.
    */
   public function setSearchKeys($keys);
@@ -85,7 +85,7 @@ interface AdapterInterface {
    *
    * This method is called by the implementing module to initialize the facet
    * display process. The following actions are taken:
-   * - FacetapiAdapter::initActiveFilters() hook is invoked.
+   * - FacetapiFacetManager::initActiveFilters() hook is invoked.
    * - Dependency plugins are instantiated and executed.
    * - Query type plugins are executed.
    *
@@ -95,12 +95,12 @@ interface AdapterInterface {
    * @todo Should this method be deprecated in favor of one name init()? This
    *   might make the code more readable in implementing modules.
    *
-   * @see FacetapiAdapter::initActiveFilters()
+   * @see FacetapiFacetManager::initActiveFilters()
    */
   public function alterQuery(&$query);
 
   /**
-   * Returns enabled facets for the searcher associated with this adapter.
+   * Returns enabled facets for the searcher associated with this FacetManager.
    *
    * @return array
    *   An array of enabled facets.
@@ -119,7 +119,7 @@ interface AdapterInterface {
    *
    * Facets are built via FacetapiFacetProcessor objects. Facets only need to be
    * processed, or built, once regardless of how many realms they are rendered
-   * in. The FacetapiAdapter::processed semaphore is set when this method is
+   * in. The FacetapiFacetManager::processed semaphore is set when this method is
    * called ensuring that facets are built only once regardless of how many
    * times this method is called.
    *

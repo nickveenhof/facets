@@ -1,11 +1,11 @@
 <?php
 /**
- * Search api adapter.
+ * Search api facet_manager.
  */
-namespace Drupal\facetapi\Plugin\facetapi\adapter;
+namespace Drupal\facetapi\Plugin\facetapi\facet_manager;
 
 use Drupal\Core\Extension\ModuleHandlerInterface;
-use Drupal\facetapi\Adapter\AdapterPluginBase;
+use Drupal\facetapi\FacetManager\FacetManagerPluginBase;
 use Drupal\facetapi\FacetInterface;
 use Drupal\facetapi\QueryType\QueryTypePluginManager;
 use Drupal\facetapi\UrlProcessor\UrlProcessorPluginManager;
@@ -16,13 +16,13 @@ use Drupal\search_api\Query\ResultSetInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
- * @FacetApiAdapter(
+ * @FacetApiFacetManager(
  *   id = "search_api_views",
  *   label = @Translation("Search api"),
- *   description = @Translation("Search api facet api adapter"),
+ *   description = @Translation("Search api facet api facet_manager"),
  * )
  */
-class SearchApiViewsAdapter extends AdapterPluginBase {
+class SearchApiViewsFacetManager extends FacetManagerPluginBase {
 
   /**
    * @var \Drupal\search_api\Query\QueryInterface
@@ -73,7 +73,7 @@ class SearchApiViewsAdapter extends AdapterPluginBase {
   }
 
   /**
-   * Process the facets in this adapter in this adapter for a test only. This
+   * Process the facets in this facet_manager in this facet_manager for a test only. This
    * method should disappear later when facetapi does it.
    */
   public function updateResults() {

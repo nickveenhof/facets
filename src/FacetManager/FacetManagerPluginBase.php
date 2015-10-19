@@ -2,10 +2,10 @@
 
 /**
  * @file
- * Contains Drupal\facetapi\Plugin\Adapter\AdapterBase.
+ * Contains Drupal\facetapi\Plugin\FacetManager\FacetManagerBase.
  */
 
-namespace Drupal\facetapi\Adapter;
+namespace Drupal\facetapi\FacetManager;
 
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
@@ -21,17 +21,17 @@ use Drupal\Component\Plugin\PluginManagerInterface;
 use \Drupal\facetapi\Entity\Facet;
 
 /**
- * Base class for Facet API adapters.
+ * Base class for Facet API FacetManagers.
  *
  * @TODO: rewrite D7 comment block:
- * Adapters are responsible for abstracting interactions with the Search backend
- * that are necessary for faceted search. The adapter is also responsible for
+ * FacetManagers are responsible for abstracting interactions with the Search backend
+ * that are necessary for faceted search. The FacetManager is also responsible for
  * retrieving facet information passed by the user via the a processor plugin
  * taking the appropriate action, whether it is checking dependencies for all
  * enabled facets or passing the appropriate query type plugin to the backend
  * so that it can execute the actual facet query.
  */
-abstract class AdapterPluginBase extends PluginBase implements AdapterInterface, ContainerFactoryPluginInterface {
+abstract class FacetManagerPluginBase extends PluginBase implements FacetManagerInterface, ContainerFactoryPluginInterface {
 
   /**
    * The plugin manager.
@@ -68,7 +68,7 @@ abstract class AdapterPluginBase extends PluginBase implements AdapterInterface,
 
   /**
    * @TODO: generalize to ProcessorInterface and properly type hint in __construct().
-   * The url processor plugin associated with this adapter.
+   * The url processor plugin associated with this FacetManager.
    *
    * @var UrlProcessorInterface
    */
@@ -77,12 +77,12 @@ abstract class AdapterPluginBase extends PluginBase implements AdapterInterface,
   /**
    * A boolean flagging whether the facets have been processed, or built.
    *
-   * This variable acts as a per-adapter semaphore that ensures facet data is
+   * This variable acts as a per-FacetManager semaphore that ensures facet data is
    * processed only once.
    *
    * @var boolean
    *
-   * @see FacetapiAdapter::processFacets()
+   * @see FacetapiFacetManager::processFacets()
    */
   protected $processed = FALSE;
 
@@ -98,7 +98,7 @@ abstract class AdapterPluginBase extends PluginBase implements AdapterInterface,
    *
    * @var array
    *
-   * @see FacetapiAdapter::getFacetSettings()
+   * @see FacetapiFacetManager::getFacetSettings()
    */
   protected $settings = array();
 
@@ -249,7 +249,7 @@ abstract class AdapterPluginBase extends PluginBase implements AdapterInterface,
    *
    * This method is called by the implementing module to initialize the facet
    * display process. The following actions are taken:
-   * - FacetapiAdapter::initActiveFilters() hook is invoked.
+   * - FacetapiFacetManager::initActiveFilters() hook is invoked.
    * - Dependency plugins are instantiated and executed.
    * - Query type plugins are executed.
    *
@@ -259,7 +259,7 @@ abstract class AdapterPluginBase extends PluginBase implements AdapterInterface,
    * @todo Should this method be deprecated in favor of one name init()? This
    *   might make the code more readable in implementing modules.
    *
-   * @see FacetapiAdapter::initActiveFilters()
+   * @see FacetapiFacetManager::initActiveFilters()
    */
   public function alterQuery(&$query) {
     /** @var Facet[] $facets */
@@ -279,18 +279,18 @@ abstract class AdapterPluginBase extends PluginBase implements AdapterInterface,
   }
 
   /**
-   * Returns enabled facets for the searcher associated with this adapter.
+   * Returns enabled facets for the searcher associated with this FacetManager.
    *
    * @return Facet[]
    *   An array of enabled facets.
    */
   public function getEnabledFacets() {
     // Get the enabled facets.
-    // @Todo: inject the entitymanager in the adapter and use that.
+    // @Todo: inject the entitymanager in the FacetManager and use that.
     /** @var Facet[] $facets */
     $facets = facetapi_get_enabled_facets();
     // Maybe also add different discovery methods later,
-    // for instance in the adapter itself.
+    // for instance in the FacetManager itself.
     return $facets;
   }
 
@@ -307,7 +307,7 @@ abstract class AdapterPluginBase extends PluginBase implements AdapterInterface,
    *
    * Facets are built via FacetapiFacetProcessor objects. Facets only need to be
    * processed, or built, once regardless of how many realms they are rendered
-   * in. The FacetapiAdapter::processed semaphore is set when this method is
+   * in. The FacetapiFacetManager::processed semaphore is set when this method is
    * called ensuring that facets are built only once regardless of how many
    * times this method is called.
    *
@@ -349,14 +349,14 @@ abstract class AdapterPluginBase extends PluginBase implements AdapterInterface,
    */
   public function build(FacetInterface $facet) {
     // It might be that the facet received here,
-    // is not the same as the already loaded facets in the adapter.
+    // is not the same as the already loaded facets in the FacetManager.
     // For that reason, get the facet from the already loaded facets
-    // in the adapter.
+    // in the FacetManager.
     // If this is omitted, building will fail.
     $facet = $this->facets[$facet->id()];
 
     // Process the facets.
-    // @TODO: inject the searcher id on create of the adapter.
+    // @TODO: inject the searcher id on create of the FacetManager.
     $this->searcher_id = $facet->getFacetSource();
 
     // For clarity, process facets is called each build.

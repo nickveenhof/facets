@@ -316,7 +316,7 @@ class Facet extends ConfigEntityBase implements FacetInterface {
    *
    * @return string
    */
-  public function getAdapterPluginId() {
+  public function getManagerPluginId() {
     return 'search_api_views';
   }
 

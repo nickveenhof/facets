@@ -154,10 +154,10 @@ interface FacetInterface extends ConfigEntityInterface {
 
 
   /**
-   * Gets the adapter plugin id
+   * Gets the facet manager plugin id
    * @return string
    */
-  public function getAdapterPluginId();
+  public function getManagerPluginId();
 
   /**
    * Sets a string representation of the Facet source plugin.

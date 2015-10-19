@@ -14,7 +14,7 @@ use Drupal\facetapi\FacetInterface;
  * The url processor takes care of retrieving facet information
  * from the url, and also handles the generation of facet links.
  *
- * A facetapi adapter has one url processor.
+ * A facetapi facet_manager has one url processor.
  *
  * @package Drupal\facetapi\UrlProcessor
  */

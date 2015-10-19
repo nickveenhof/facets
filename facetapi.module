@@ -59,20 +59,20 @@ function facetapi_get_enabled_facets() {
  * @param \Drupal\search_api\Query\QueryInterface $query
  */
 function facetapi_search_api_query_alter(QueryInterface &$query) {
-  // Get the adapter derivative.
+  // Get the facet_manager derivative.
   // Get the plugin manager.
-  /** @var \Drupal\facetapi\Adapter\AdapterPluginManagerInterface $plugin_manager */
-  $plugin_manager = \Drupal::service('plugin.manager.facetapi.adapter');
+  /** @var \Drupal\facetapi\FacetManager\FacetManagerPluginManagerInterface $plugin_manager */
+  $plugin_manager = \Drupal::service('plugin.manager.facetapi.manager');
   // Get the searcher id.
   // This is the id of the view.
   $search_id = $query->getOption('search id');
 
   $plugin_id = 'search_api_views';
 
-  $adapter = $plugin_manager->getMyOwnChangeLaterInstance($plugin_id, $search_id);
+  $manager = $plugin_manager->getMyOwnChangeLaterInstance($plugin_id, $search_id);
 
   // Add the active filters.
-  $adapter->alterQuery($query);
+  $manager->alterQuery($query);
 
 }
 

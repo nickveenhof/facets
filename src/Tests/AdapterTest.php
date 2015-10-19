@@ -1,6 +1,6 @@
 <?php
 /**
- * Tests Facet API's Adapter implementation.
+ * Tests Facet API's FacetManager implementation.
  */
 
 namespace Drupal\facetapi\Tests;
@@ -9,10 +9,10 @@ use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\simpletest\WebTestBase;
 
 /**
- * @coversDefaultClass Drupal\facetapi\Tests\Adapter
+ * @coversDefaultClass Drupal\facetapi\Tests\FacetManager
  * @group facetapi
  */
-class AdapterTest extends WebTestBase {
+class FacetManagerTest extends WebTestBase {
 
   use StringTranslationTrait;
 
