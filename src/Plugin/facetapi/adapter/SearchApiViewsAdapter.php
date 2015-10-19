@@ -73,9 +73,8 @@ class SearchApiViewsAdapter extends AdapterPluginBase {
   }
 
   /**
-   * Process the facets in this adapter in this adapter
-   * for a test only. This method should disappear later
-   * when facetapi does it.
+   * Process the facets in this adapter in this adapter for a test only. This
+   * method should disappear later when facetapi does it.
    */
   public function updateResults() {
     // Get the facet values from the query that has been done.

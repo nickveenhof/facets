@@ -292,6 +292,12 @@ class Facet extends ConfigEntityBase implements FacetInterface {
     return $this->results;
   }
 
+  /**
+   * Set an array of Result objects.
+   *
+   * @param array $results
+   *   Array containing \Drupal\facetapi\Result\Result objects.
+   */
   public function setResults(array $results) {
     $this->results = $results;
     // If there are active values,
