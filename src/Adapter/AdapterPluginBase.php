@@ -268,7 +268,6 @@ abstract class AdapterPluginBase extends PluginBase implements AdapterInterface,
     foreach ($this->facets as $facet) {
       // Only if the facet is for this query, alter the query.
       // @TODO use the line for tests only.
-      //if ($facet->getName() == 'entity:node/uid' || $facet->getName() == 'entity:node/type') {
       if ($facet->getFacetSource() == $search_id) {
         // Create the query type plugin.
         $query_type_plugin = $this->query_type_plugin_manager->createInstance($facet->getQueryType(),
@@ -289,7 +288,7 @@ abstract class AdapterPluginBase extends PluginBase implements AdapterInterface,
     // Get the enabled facets.
     // @Todo: inject the entitymanager in the adapter and use that.
     /** @var Facet[] $facets */
-    $facets = facetapi_get_enabled_facets();;
+    $facets = facetapi_get_enabled_facets();
     // Maybe also add different discovery methods later,
     // for instance in the adapter itself.
     return $facets;
