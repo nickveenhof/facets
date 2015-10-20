@@ -21,7 +21,7 @@ interface WidgetOrderProcessorInterface extends BuildProcessorInterface {
    *   A string denoting the order in which we should sort, either 'ASC' or
    *   'DESC'
    *
-   * @return array
+   * @return \Drupal\facetapi\Result\Result[]
    *   The same array that was passed in, ordered by  $order
    */
   public function sortResults(array $results, $order = 'ASC');
