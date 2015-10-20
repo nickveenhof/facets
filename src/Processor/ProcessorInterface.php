@@ -16,6 +16,21 @@ use Drupal\facetapi\FacetInterface;
 interface ProcessorInterface {
 
   /**
+   * Processing stage: pre_query.
+   */
+  const STAGE_PRE_QUERY= 'pre_query';
+
+  /**
+   * Processing stage: post_query.
+   */
+  const STAGE_POST_QUERY = 'post query';
+
+  /**
+   * Processing stage: build.
+   */
+  const STAGE_BUILD = 'build';
+
+  /**
    * Adds a configuration form for this processor
    *
    * @param array $form
