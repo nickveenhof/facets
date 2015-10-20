@@ -83,7 +83,7 @@ env:
 
     # Use phpunit-core to test modules with phpunit with Drupal 8 core.
     # Enable php-unit core again once we have working phpunit tests
-    # - DRUPAL_TI_RUNNERS="phpunit-core"
+    - DRUPAL_TI_RUNNERS="phpunit-core"
 
 mysql:
   database: drupal_travis_db
