@@ -13,7 +13,7 @@ class ProcessorPluginBase implements ProcessorInterface {
    */
   public function buildConfigurationForm(array $form, FormStateInterface $form_state, FacetInterface $facet) {
     // By default, there should be no config form.
-    return FALSE;
+    return [];
   }
 
 }

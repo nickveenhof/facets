@@ -43,6 +43,7 @@ use Drupal\facetapi\Result\ResultInterface;
  *     "facet_source",
  *     "widget",
  *     "widget_configs",
+ *     "processor_configs",
  *   },
  *   links = {
  *     "canonical" = "/admin/config/search/facet-api",

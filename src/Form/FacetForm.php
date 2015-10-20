@@ -14,6 +14,8 @@ use Drupal\Core\Form\FormStateInterface;
 use Drupal\facetapi\FacetInterface;
 use Drupal\facetapi\FacetApiException;
 use Drupal\facetapi\FacetSource\FacetSourcePluginManager;
+use Drupal\facetapi\Processor\ProcessorInterface;
+use Drupal\facetapi\Processor\ProcessorPluginManager;
 use Drupal\facetapi\Widget\WidgetPluginManager;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -44,6 +46,13 @@ class FacetForm extends EntityForm {
   protected $facetSourcePluginManager;
 
   /**
+   * The plugin manager for processors.
+   *
+   * @var \Drupal\facetapi\Processor\ProcessorPluginManager
+   */
+  protected $processorPluginManager;
+
+  /**
    * @var array
    */
   protected $facetSourcePlugins;
@@ -57,11 +66,14 @@ class FacetForm extends EntityForm {
    *   The plugin manager for widgets.
    * @param \Drupal\facetapi\FacetSource\FacetSourcePluginManager $facetSourcePluginManager
    *   The plugin manager for facet sources.
+   * @param \Drupal\facetapi\Processor\ProcessorPluginManager $processorPluginManager
+   *   The plugin manager for processors.
    */
-  public function __construct(EntityManagerInterface $entity_manager, WidgetPluginManager $widgetPluginManager, FacetSourcePluginManager $facetSourcePluginManager) {
+  public function __construct(EntityManagerInterface $entity_manager, WidgetPluginManager $widgetPluginManager, FacetSourcePluginManager $facetSourcePluginManager, ProcessorPluginManager $processorPluginManager) {
     $this->facetStorage = $entity_manager->getStorage('facetapi_facet');
     $this->widgetPluginManager = $widgetPluginManager;
     $this->facetSourcePluginManager = $facetSourcePluginManager;
+    $this->processorPluginManager = $processorPluginManager;
   }
 
   /**
@@ -77,7 +89,10 @@ class FacetForm extends EntityForm {
     /** @var \Drupal\facetapi\FacetSource\FacetSourcePluginManager $facet_source_plugin_manager */
     $facet_source_plugin_manager = $container->get('plugin.manager.facetapi.facet_source');
 
-    return new static($entity_manager, $widget_plugin_manager, $facet_source_plugin_manager);
+    /** @var \Drupal\facetapi\Processor\ProcessorPluginManager $processor_plugin_manager */
+    $processor_plugin_manager = $container->get('plugin.manager.facetapi.processor');
+
+    return new static($entity_manager, $widget_plugin_manager, $facet_source_plugin_manager, $processor_plugin_manager);
   }
 
   /**
@@ -108,6 +123,17 @@ class FacetForm extends EntityForm {
    */
   protected function getFacetSourcePluginManager() {
     return $this->facetSourcePluginManager ?: \Drupal::service('plugin.manager.facetapi.facet_source');
+  }
+
+
+  /**
+   * Returns the processor plugin manager.
+   *
+   * @return \Drupal\facetapi\Processor\ProcessorPluginManager
+   *   The processor plugin manager.
+   */
+  protected function getProcessorPluginManager() {
+    return $this->processorPluginManager ?: \Drupal::service('plugin.manager.facetapi.processor');
   }
 
   /**
@@ -242,6 +268,34 @@ class FacetForm extends EntityForm {
       '#attributes' => ['class' => ['js-hide']],
     ];
     $this->buildWidgetConfigForm($form, $form_state, $facet);
+
+    $form['processor_configs'] = [
+      '#type' => 'details',
+      '#title' => $this->t('Processors'),
+      '#tree' => TRUE,
+      '#open' => TRUE,
+    ];
+    foreach ($this->getProcessorPluginManager()->getDefinitions() as $id => $definition) {
+      $form['processor_configs'][$id] = [
+        '#type' => 'details',
+        '#title' => $this->t('Processor: %id', ['%id' => $id]),
+        '#open' => TRUE,
+      ];
+      $config = $this->config('facetapi.facet.' . $facet->id());
+      $config = $config->get('processor_configs')[$id];
+
+      $form['processor_configs'][$id]['id'] = [
+        '#type' => 'hidden',
+        '#value' => $id,
+      ];
+
+      $form['processor_configs'][$id]['settings'] = [
+        '#type' => 'container'
+      ];
+      /** @var ProcessorInterface $build_processor */
+      $build_processor = $this->getProcessorPluginManager()->createInstance($id);
+      $form['processor_configs'][$id]['settings'][] = $build_processor->buildConfigurationForm($form, $form_state, $facet);
+    }
 
     $form['status'] = [
       '#type' => 'checkbox',

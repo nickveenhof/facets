@@ -32,3 +32,15 @@ facetapi.facet.*:
       sequence:
         type: string
         label: 'Widget plugin configurations'
+    processor_configs:
+      type: sequence
+      label: 'Configuration for processors'
+      sequence:
+        id:
+          type: string
+          label: 'Plugin name'
+        settings:
+          type: sequence
+          label: 'Plugin setting'
+          sequence:
+            type: string
