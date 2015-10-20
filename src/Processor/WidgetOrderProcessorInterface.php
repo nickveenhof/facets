@@ -5,6 +5,7 @@
  * Contains \Drupal\facetapi\Processor\WidgetOrderProcessorInterface.
  */
 
+namespace Drupal\facetapi\Processor;
 
 /**
  * Processor runs before the renderable array is created.

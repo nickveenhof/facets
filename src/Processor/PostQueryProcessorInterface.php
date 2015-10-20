@@ -4,9 +4,8 @@
  * @file
  * Contains \Drupal\facetapi\Processor\PostQueryProcessorInterface.
  */
+namespace Drupal\facetapi\Processor;
 
-use \Drupal\facetapi\Processor\ProcessorInterface;
-use Drupal\facetapi\Result\Result;
 
 /**
  * Processor runs after the query was executed.

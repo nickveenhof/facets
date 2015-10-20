@@ -9,6 +9,7 @@ use Drupal\facetapi\FacetManager\FacetManagerPluginBase;
 use Drupal\facetapi\FacetInterface;
 use Drupal\facetapi\FacetSource\FacetSourceInterface;
 use Drupal\facetapi\FacetSource\FacetSourcePluginManager;
+use Drupal\facetapi\Processor\ProcessorPluginManager;
 use Drupal\facetapi\QueryType\QueryTypePluginManager;
 use Drupal\facetapi\UrlProcessor\UrlProcessorPluginManager;
 use Drupal\facetapi\Widget\WidgetPluginManager;
@@ -59,8 +60,10 @@ class DefaultFacetManager extends FacetManagerPluginBase {
     /** @var FacetSourcePluginManager $facet_plugin_manager */
     $facet_plugin_manager = $container->get('plugin.manager.facetapi.facet_source');
 
+    /** @var \Drupal\facetapi\Processor\ProcessorPluginManager $processor_plugin_manager */
+    $processor_plugin_manager = $container->get('plugin.manager.facetapi.processor');
 
-    return new static($configuration, $plugin_id, $plugin_definition, $module_handler, $query_type_plugin_manager, $results_cache, $url_processor_plugin_manager, $widget_plugin_manager, $facet_plugin_manager);
+    return new static($configuration, $plugin_id, $plugin_definition, $module_handler, $query_type_plugin_manager, $results_cache, $url_processor_plugin_manager, $widget_plugin_manager, $facet_plugin_manager, $processor_plugin_manager);
   }
 
   public function __construct(
@@ -71,10 +74,11 @@ class DefaultFacetManager extends FacetManagerPluginBase {
     ResultsCacheInterface $results_cache,
     UrlProcessorPluginManager $url_processor_plugin_manager,
     WidgetPluginManager $widget_plugin_manager,
-    FacetSourcePluginManager $facet_source_manager
+    FacetSourcePluginManager $facet_source_manager,
+    ProcessorPluginManager $processor_plugin_manager
   ) {
 
-    parent::__construct($configuration, $plugin_id, $plugin_definition, $module_handler, $query_type_plugin_manager, $url_processor_plugin_manager, $widget_plugin_manager, $facet_source_manager);
+    parent::__construct($configuration, $plugin_id, $plugin_definition, $module_handler, $query_type_plugin_manager, $url_processor_plugin_manager, $widget_plugin_manager, $facet_source_manager, $processor_plugin_manager);
     $this->searchResultsCache = $results_cache;
   }
 

@@ -12,6 +12,9 @@ use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\Plugin\PluginBase;
 use Drupal\facetapi\FacetInterface;
 use Drupal\facetapi\FacetSource\FacetSourcePluginManager;
+use Drupal\facetapi\Processor\BuildProcessorInterface;
+use Drupal\facetapi\Processor\ProcessorInterface;
+use Drupal\facetapi\Processor\ProcessorPluginManager;
 use Drupal\facetapi\QueryType\QueryTypePluginManager;
 use Drupal\facetapi\Result\Result;
 use Drupal\facetapi\UrlProcessor\UrlProcessorInterface;
@@ -52,6 +55,13 @@ abstract class FacetManagerPluginBase extends PluginBase implements FacetManager
    * @var FacetSourcePluginManager
    */
   protected $facet_source_manager;
+
+  /**
+   * The processor plugin manager.
+   *
+   * @var \Drupal\facetapi\Processor\ProcessorPluginManager
+   */
+  protected $processor_plugin_manager;
 
   /**
    * @var ModuleHandlerInterface
@@ -148,8 +158,10 @@ abstract class FacetManagerPluginBase extends PluginBase implements FacetManager
     /** @var \Drupal\facetapi\FacetSource\FacetSourcePluginManager $facet_source_plugin_manager */
     $facet_source_plugin_manager = $container->get('plugin.manager.facetapi.facet_source');
 
-    $plugin = new static($configuration, $plugin_id, $plugin_definition, $module_handler, $query_type_plugin_manager, $url_processor_plugin_manager, $widget_plugin_manager, $facet_source_plugin_manager);
-    return $plugin;
+    /** @var \Drupal\facetapi\Processor\ProcessorPluginManager $processor_plugin_manager */
+    $processor_plugin_manager = $container->get('plugin.manager.facetapi.processor');
+
+    return new static($configuration, $plugin_id, $plugin_definition, $module_handler, $query_type_plugin_manager, $url_processor_plugin_manager, $widget_plugin_manager, $facet_source_plugin_manager, $processor_plugin_manager);
   }
 
   /**
@@ -177,7 +189,8 @@ abstract class FacetManagerPluginBase extends PluginBase implements FacetManager
     QueryTypePluginManager $query_type_plugin_manager,
     UrlProcessorPluginManager $url_processor_plugin_manager,
     WidgetPluginManager $widget_plugin_manager,
-    FacetSourcePluginManager $facet_source_manager
+    FacetSourcePluginManager $facet_source_manager,
+    ProcessorPluginManager $processor_plugin_manager
   ) {
 
     parent::__construct($configuration, $plugin_id, $plugin_definition);
@@ -186,6 +199,7 @@ abstract class FacetManagerPluginBase extends PluginBase implements FacetManager
     $this->url_processor_plugin_manager = $url_processor_plugin_manager;
     $this->widget_plugin_manager = $widget_plugin_manager;
     $this->facet_source_manager = $facet_source_manager;
+    $this->processor_plugin_manager = $processor_plugin_manager;
 
     // Immediately initialize the facets.
     // This can be done directly because the only thing needed is
@@ -381,6 +395,16 @@ abstract class FacetManagerPluginBase extends PluginBase implements FacetManager
     // After the processFacets is finished, all information for rendering
     // is added to the facet.
     $this->processFacets();
+
+    $results = $facet->getResults();
+    foreach ($this->processor_plugin_manager->getDefinitions() as $definition) {
+      if (is_array($definition['stages']) && array_key_exists(ProcessorInterface::STAGE_BUILD, $definition['stages'])) {
+        /** @var BuildProcessorInterface $build_processor */
+        $build_processor = $this->processor_plugin_manager->createInstance($definition['id']);
+        $results = $build_processor->build($results);
+      }
+    }
+    $facet->setResults($results);
 
     // Let the widget plugin render the facet.
     /** @var \Drupal\facetapi\Widget\WidgetInterface $widget */

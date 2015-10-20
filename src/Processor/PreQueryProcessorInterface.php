@@ -5,7 +5,8 @@
  * Contains \Drupal\facetapi\Processor\PreQueryProcessorInterface.
  */
 
-use \Drupal\facetapi\Processor\ProcessorInterface;
+namespace Drupal\facetapi\Processor;
+
 use \Drupal\facetapi\QueryType\QueryTypeInterface;
 use \Drupal\search_api\Query\Query;
 

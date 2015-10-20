@@ -4,8 +4,8 @@
  * @file
  * Contains \Drupal\facetapi\Processor\BuildProcessorInterface.
  */
+namespace Drupal\facetapi\Processor;
 
-use \Drupal\facetapi\Processor\ProcessorInterface;
 
 /**
  * Processor runs before the renderable array is created.
