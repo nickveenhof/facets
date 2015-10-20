@@ -103,7 +103,7 @@ before_script:
   - drupal-ti before_script
 
 script:
-  - drush dl search_api-8.x-1.x -y --destination=$TRAVIS_BUILD_DIR/drupal-8/drupal/modules
+  - drush dl search_api-8.x-1.x -y --destination=$TRAVIS_BUILD_DIR/../drupal-8/drupal/modules
   - drupal-ti script
 
 after_script:
