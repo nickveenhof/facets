@@ -34,7 +34,7 @@ class CountWidgetOrderProcessorTest extends UnitTestCase {
   }
 
   /**
-   * Test sorting ascending
+   * Test sorting ascending.
    */
   public function testAscending() {
     $results = [
@@ -53,6 +53,9 @@ class CountWidgetOrderProcessorTest extends UnitTestCase {
     $this->assertEquals('duck', $sorted_results[2]->getValue());
   }
 
+  /**
+   * Test sorting descending.
+   */
   public function testDescending() {
     $results = [
       new Result('llama', 10),

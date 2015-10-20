@@ -387,15 +387,21 @@ abstract class FacetManagerPluginBase extends PluginBase implements FacetManager
     $this->searcher_id = $facet->getFacetSource();
 
     // For clarity, process facets is called each build.
-    // The first facet therefor will trigger the processing.
-    // Note that processing is done only once, so repeatedly
-    // calling this method will not trigger the processing more than once.
-    // Furthermore: don't add any processing after this method call!
-    // All processing should be done in the processFacets method.
+    // The first facet therefor will trigger the processing. Note that
+    // processing is done only once, so repeatedly calling this method will not
+    // trigger the processing more than once.
+    // Furthermore: don't add any processing after this method call! All
+    // processing should be done in the processFacets method.
+    //
     // After the processFacets is finished, all information for rendering
     // is added to the facet.
     $this->processFacets();
 
+    // Get the current results from the facets and let all processors that
+    // trigger on the build step do their build processing.
+
+    // @see \Drupal\facetapi\Processor\BuildProcessorInterface
+    // @see \Drupal\facetapi\Processor\WidgetOrderProcessorInterface
     $results = $facet->getResults();
     foreach ($this->processor_plugin_manager->getDefinitions() as $definition) {
       if (is_array($definition['stages']) && array_key_exists(ProcessorInterface::STAGE_BUILD, $definition['stages'])) {
