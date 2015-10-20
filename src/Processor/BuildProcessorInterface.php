@@ -6,7 +6,6 @@
  */
 
 use \Drupal\facetapi\Processor\ProcessorInterface;
-use Drupal\facetapi\Result\Result;
 
 /**
  * Processor runs before the renderable array is created.
