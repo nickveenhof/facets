@@ -145,7 +145,7 @@ abstract class FacetManagerPluginBase extends PluginBase implements FacetManager
     /** @var \Drupal\facetapi\Widget\WidgetPluginManager $widget_plugin_manager */
     $widget_plugin_manager = $container->get('plugin.manager.facetapi.widget');
 
-    /** @var \Drupal\facetapi\FacetManager\FacetSourcePluginManager $facet_source_plugin_manager */
+    /** @var \Drupal\facetapi\FacetSource\FacetSourcePluginManager $facet_source_plugin_manager */
     $facet_source_plugin_manager = $container->get('plugin.manager.facetapi.facet_source');
 
     $plugin = new static($configuration, $plugin_id, $plugin_definition, $module_handler, $query_type_plugin_manager, $url_processor_plugin_manager, $widget_plugin_manager, $facet_source_plugin_manager);
