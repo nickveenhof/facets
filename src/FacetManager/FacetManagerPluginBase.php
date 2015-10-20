@@ -407,7 +407,7 @@ abstract class FacetManagerPluginBase extends PluginBase implements FacetManager
       if (is_array($definition['stages']) && array_key_exists(ProcessorInterface::STAGE_BUILD, $definition['stages'])) {
         /** @var BuildProcessorInterface $build_processor */
         $build_processor = $this->processor_plugin_manager->createInstance($definition['id']);
-        $results = $build_processor->build($results);
+        $results = $build_processor->build($facet, $results);
       }
     }
     $facet->setResults($results);
