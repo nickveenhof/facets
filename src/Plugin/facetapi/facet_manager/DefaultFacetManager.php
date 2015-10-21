@@ -50,10 +50,6 @@ class DefaultFacetManager extends FacetManagerPluginBase {
     /** @var \Drupal\search_api\Query\ResultsCacheInterface $results_cache */
     $results_cache = $container->get('search_api.results_static_cache');
 
-    // Insert the plugin manager for url processors.
-    /** @var UrlProcessorPluginManager $url_processor_plugin_manager */
-    $url_processor_plugin_manager = $container->get('plugin.manager.facetapi.url_processor');
-
     /** @var \Drupal\facetapi\Widget\WidgetPluginManager $widget_plugin_manager */
     $widget_plugin_manager = $container->get('plugin.manager.facetapi.widget');
 
@@ -63,7 +59,7 @@ class DefaultFacetManager extends FacetManagerPluginBase {
     /** @var \Drupal\facetapi\Processor\ProcessorPluginManager $processor_plugin_manager */
     $processor_plugin_manager = $container->get('plugin.manager.facetapi.processor');
 
-    return new static($configuration, $plugin_id, $plugin_definition, $module_handler, $query_type_plugin_manager, $results_cache, $url_processor_plugin_manager, $widget_plugin_manager, $facet_plugin_manager, $processor_plugin_manager);
+    return new static($configuration, $plugin_id, $plugin_definition, $module_handler, $query_type_plugin_manager, $results_cache, $widget_plugin_manager, $facet_plugin_manager, $processor_plugin_manager);
   }
 
   public function __construct(
@@ -72,13 +68,12 @@ class DefaultFacetManager extends FacetManagerPluginBase {
     ModuleHandlerInterface $module_handler,
     QueryTypePluginManager $query_type_plugin_manager,
     ResultsCacheInterface $results_cache,
-    UrlProcessorPluginManager $url_processor_plugin_manager,
     WidgetPluginManager $widget_plugin_manager,
     FacetSourcePluginManager $facet_source_manager,
     ProcessorPluginManager $processor_plugin_manager
   ) {
 
-    parent::__construct($configuration, $plugin_id, $plugin_definition, $module_handler, $query_type_plugin_manager, $url_processor_plugin_manager, $widget_plugin_manager, $facet_source_manager, $processor_plugin_manager);
+    parent::__construct($configuration, $plugin_id, $plugin_definition, $module_handler, $query_type_plugin_manager, $widget_plugin_manager, $facet_source_manager, $processor_plugin_manager);
     $this->searchResultsCache = $results_cache;
   }
 

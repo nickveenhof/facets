@@ -5,61 +5,68 @@
  * Contains Drupal\facetapi\Plugin\facetapi\url_processor\UrlProcessorQueryString
  */
 
-namespace Drupal\facetapi\Plugin\facetapi\url_processor;
+namespace Drupal\facetapi\Plugin\facetapi\processor;
 
 use Drupal\Core\Url;
 use Drupal\facetapi\FacetInterface;
-use Drupal\facetapi\UrlProcessor\UrlProcessorPluginBase;
+use Drupal\facetapi\Processor\UrlProcessorPluginBase;
+use Drupal\facetapi\Result\Result;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
- * @FacetApiUrlProcessor(
+ * @FacetApiProcessor(
  *   id = "query_string",
  *   label = @Translation("Query string url processor"),
  *   description = @Translation("Most simple url processor which uses the query sting."),
+ *   stages = {
+ *     "pre_query" = 50,
+ *     "build" = 15,
+ *   }
  * )
- *
- * Class UrlProcessorQueryString
- * @package Drupal\facetapi\Plugin\facetapi\url_processor
  */
-class UrlProcessorQueryString extends UrlProcessorPluginBase{
+class QueryStringUrlProcessor extends UrlProcessorPluginBase {
 
+  /**
+   * A string that separates the filters in the query string
+   */
   const SEPARATOR = ':';
 
-  protected $active_filters = array();
+  /**
+   * @var array
+   *   An array containing the active filters
+   */
+  protected $active_filters = [];
 
-  public function __construct(
-    array $configuration,
-    $plugin_id,
-    $plugin_definition,
-    Request $request
-  ) {
-    parent::__construct($configuration, $plugin_id, $plugin_definition,
-      $request);
-
+  /**
+   * {@inheritdoc}
+   */
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, Request $request) {
+    parent::__construct($configuration, $plugin_id, $plugin_definition, $request);
     $this->initializeActiveFilters();
   }
 
-
-  public function addUriToResults(FacetInterface $facet) {
+  /**
+   * {@inheritdoc}
+   */
+  public function build(FacetInterface $facet, array $results) {
     // Create links for all the values.
     // First get the current list of get parameters.
     $get_params = $this->request->query;
 
-    $results = $facet->getResults();
-
-    // No results are found for this facet, so dont try to create urls.
+    // No results are found for this facet, so don't try to create urls.
     if (is_null($results)) {
-      return;
+      return [];
     }
 
-    foreach ($results as $result) {
+    $return_results = [];
+
+    /** @var Result $result */
+    foreach ($results as &$result) {
       $filter_string = $facet->getFieldAlias() . ':' . $result->getValue();
       $result_get_params = clone $get_params;
 
       $filter_params = $result_get_params->get($this->filter_key, [], TRUE);
-      // If the value is active, remove the filter string from the
-      // parameters.
+      // If the value is active, remove the filter string from the parameters.
       if ($result->isActive()) {
         foreach ($filter_params as $key => $filter_param) {
           if ($filter_param == $filter_string) {
@@ -79,12 +86,18 @@ class UrlProcessorQueryString extends UrlProcessorPluginBase{
       }
       $url = Url::createFromRequest($request);
       $url->setOption('query', $result_get_params->all());
+
+
       $result->setUrl($url);
     }
 
+    return $results;
   }
 
-  public function processFacet(FacetInterface $facet) {
+  /**
+   * {@inheritdoc}
+   */
+  public function preQuery(FacetInterface $facet) {
     // Get the filterkey of the facet.
     if (isset($this->active_filters[$facet->getFieldAlias()])) {
       foreach ($this->active_filters[$facet->getFieldAlias()] as $value) {
@@ -96,11 +109,9 @@ class UrlProcessorQueryString extends UrlProcessorPluginBase{
   /**
    * Initialize the active filters.
    *
-   * Get all the filters that are active.
-   * This method only get's all the filters,
-   * but doesn't assign them to facets.
-   * In the processFacet method the active values
-   * for a specific facet are added to the facet.
+   * Get all the filters that are active. This method only get's all the
+   * filters but doesn't assign them to facets. In the processFacet method the
+   * active values for a specific facet are added to the facet.
    */
   protected function initializeActiveFilters() {
     $url_parameters = $this->request->query;

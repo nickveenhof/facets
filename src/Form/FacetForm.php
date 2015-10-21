@@ -285,7 +285,7 @@ class FacetForm extends EntityForm {
       $form['processor_configs'][$id]['processor_id'] = [
         '#title' => 'id',
         '#type' => 'hidden',
-        '#value' => 'count_widget_order'
+        '#value' => $id
       ];
 
       $form['processor_configs'][$id]['settings'] = [

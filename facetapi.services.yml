@@ -5,9 +5,6 @@ services:
   plugin.manager.facetapi.query_type:
     class: Drupal\facetapi\QueryType\QueryTypePluginManager
     parent: default_plugin_manager
-  plugin.manager.facetapi.url_processor:
-    class: Drupal\facetapi\UrlProcessor\UrlProcessorPluginManager
-    parent: default_plugin_manager
   plugin.manager.facetapi.widget:
     class: Drupal\facetapi\Widget\WidgetPluginManager
     parent: default_plugin_manager
