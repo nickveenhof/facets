@@ -32,7 +32,7 @@ class LinksWidget implements WidgetInterface {
     $build = array();
     /** @var Result[] $results */
     $results = $facet->getResults();
-    if (! empty ($results)) {
+    if (!empty($results)) {
       $items = array();
       foreach ($results as $result) {
         if ($result->getCount()) {

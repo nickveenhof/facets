@@ -5,15 +5,15 @@ services:
   plugin.manager.facetapi.query_type:
     class: Drupal\facetapi\QueryType\QueryTypePluginManager
     parent: default_plugin_manager
-  plugin.manager.facetapi.url_processor:
-    class: Drupal\facetapi\UrlProcessor\UrlProcessorPluginManager
-    parent: default_plugin_manager
   plugin.manager.facetapi.widget:
     class: Drupal\facetapi\Widget\WidgetPluginManager
     parent: default_plugin_manager
   plugin.manager.facetapi.facet_source:
     class: Drupal\facetapi\FacetSource\FacetSourcePluginManager
     parent: default_plugin_manager
+  plugin.manager.facetapi.processor:
+    class: Drupal\facetapi\Processor\ProcessorPluginManager
+    arguments: ['@container.namespaces', '@cache.discovery', '@module_handler', '@string_translation']
   search_api_facets.get_facets:
     class: \Drupal\facetapi\GetFacets
     arguments:

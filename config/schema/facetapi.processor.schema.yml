@@ -1,0 +1,10 @@
+facetapi.processor.plugin.count_widget_order:
+  type: mapping
+  label: 'Count widget order'
+  mapping:
+    enabled:
+      type: boolean
+      label: 'Is the widget enabled?'
+    sort:
+      type: string
+      label: sort order

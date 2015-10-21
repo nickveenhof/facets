@@ -43,6 +43,7 @@ use Drupal\facetapi\Result\ResultInterface;
  *     "facet_source",
  *     "widget",
  *     "widget_configs",
+ *     "processor_configs",
  *   },
  *   links = {
  *     "canonical" = "/admin/config/search/facet-api",
@@ -148,6 +149,13 @@ class Facet extends ConfigEntityBase implements FacetInterface {
    * @var array
    */
   protected $facetSourcePlugins;
+
+  /**
+   * An array containing all processors and their configuration.
+   *
+   * @var array
+   */
+  protected $processor_configs;
 
   /**
    * {@inheritdoc}
@@ -377,6 +385,19 @@ class Facet extends ConfigEntityBase implements FacetInterface {
 
   public function getPath() {
     return $this->path;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getProcessorConfigs() {
+    return $this->processor_configs;
+  }
+  /**
+   * {@inheritdoc}
+   */
+  public function setProcessorConfigs($processor_config = []) {
+    $this->processor_configs = $processor_config;
   }
 
 
