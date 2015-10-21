@@ -14,9 +14,13 @@ abstract class WidgetOrderPluginBase extends ProcessorPluginBase implements \Dru
    * {@inheritdoc}
    */
   public function buildConfigurationForm(array $form, FormStateInterface $form_state, FacetInterface $facet) {
+    $processor_configs = $facet->getProcessorConfigs();
+    $config = $processor_configs[$this->getPluginId()];
+
     $build['enabled'] = [
       '#type' => 'checkbox',
       '#title' => $this->t('Enable processor'),
+      '#default_value' => $config['settings']['enabled']
     ];
     $build['sort'] = [
       '#type' => 'radios',
@@ -24,8 +28,10 @@ abstract class WidgetOrderPluginBase extends ProcessorPluginBase implements \Dru
       '#options' => [
         'ASC' => $this->t('Ascending'),
         'DESC' => $this->t('Descending')
-      ]
+      ],
+      '#default_value' => $config['settings']['sort'],
     ];
+
 
     return $build;
   }
