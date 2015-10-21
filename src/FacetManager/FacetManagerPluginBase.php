@@ -10,6 +10,7 @@ namespace Drupal\facetapi\FacetManager;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\Plugin\PluginBase;
+use Drupal\facetapi\FacetApiException;
 use Drupal\facetapi\FacetInterface;
 use Drupal\facetapi\FacetSource\FacetSourcePluginManager;
 use Drupal\facetapi\Processor\BuildProcessorInterface;
@@ -409,6 +410,9 @@ abstract class FacetManagerPluginBase extends PluginBase implements FacetManager
       if (is_array($processor_definition['stages']) && array_key_exists(ProcessorInterface::STAGE_BUILD, $processor_definition['stages'])) {
         /** @var BuildProcessorInterface $build_processor */
         $build_processor = $this->processor_plugin_manager->createInstance($processor_configuration['processor_id']);
+        if (!$build_processor instanceof BuildProcessorInterface) {
+          throw new FacetApiException($this->t("The processor @processor has a build definition but doesn't implement the required BuildProcessorInterface interface", ['@processor' => $processor_configuration['processor_id']]));
+        }
         $results = $build_processor->build($facet, $results);
       }
     }
