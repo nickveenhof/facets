@@ -197,4 +197,18 @@ interface FacetInterface extends ConfigEntityInterface {
    */
   public function getPath();
 
+  /**
+   * Returns an array of processors with their configuration.
+   *
+   * @return array
+   */
+  public function getProcessorConfigs();
+
+  /**
+   * Sets the processors with their config.
+   *
+   * @param array $processor_config
+   */
+  public function setProcessorConfigs($processor_config = []);
+
 }

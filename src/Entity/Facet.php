@@ -151,6 +151,13 @@ class Facet extends ConfigEntityBase implements FacetInterface {
   protected $facetSourcePlugins;
 
   /**
+   * An array containing all processors and their configuration.
+   *
+   * @var array
+   */
+  protected $processor_configs;
+
+  /**
    * {@inheritdoc}
    */
   public function __construct(array $values, $entity_type) {
@@ -378,6 +385,19 @@ class Facet extends ConfigEntityBase implements FacetInterface {
 
   public function getPath() {
     return $this->path;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getProcessorConfigs() {
+    return $this->processor_configs;
+  }
+  /**
+   * {@inheritdoc}
+   */
+  public function setProcessorConfigs($processor_config = []) {
+    $this->processor_configs = $processor_config;
   }
 
 

@@ -34,9 +34,11 @@ abstract class WidgetOrderPluginBase extends ProcessorPluginBase implements \Dru
    * {@inheritdoc}
    */
   public function build(FacetInterface $facet, array $results) {
+    $processor_configs = $facet->getProcessorConfigs();
+    $config = $processor_configs[$this->getPluginId()];
 
     // This should load the facet's config to find the ordering direction.
-    return $this->sortResults($results, 'DESC');
+    return $this->sortResults($results, $config['settings']['sort']);
   }
 
 }

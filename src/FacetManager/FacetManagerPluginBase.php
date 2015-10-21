@@ -403,10 +403,12 @@ abstract class FacetManagerPluginBase extends PluginBase implements FacetManager
     // @see \Drupal\facetapi\Processor\BuildProcessorInterface
     // @see \Drupal\facetapi\Processor\WidgetOrderProcessorInterface
     $results = $facet->getResults();
-    foreach ($this->processor_plugin_manager->getDefinitions() as $definition) {
-      if (is_array($definition['stages']) && array_key_exists(ProcessorInterface::STAGE_BUILD, $definition['stages'])) {
+
+    foreach ($facet->getProcessorConfigs() as $processor_configuration) {
+      $processor_definition = $this->processor_plugin_manager->getDefinition($processor_configuration['processor_id']);
+      if (is_array($processor_definition['stages']) && array_key_exists(ProcessorInterface::STAGE_BUILD, $processor_definition['stages'])) {
         /** @var BuildProcessorInterface $build_processor */
-        $build_processor = $this->processor_plugin_manager->createInstance($definition['id']);
+        $build_processor = $this->processor_plugin_manager->createInstance($processor_configuration['processor_id']);
         $results = $build_processor->build($facet, $results);
       }
     }
