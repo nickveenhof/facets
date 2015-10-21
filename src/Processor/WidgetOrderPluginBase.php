@@ -3,12 +3,9 @@
 namespace Drupal\facetapi\Processor;
 
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\facetapi\FacetInterface;
 
-abstract class WidgetOrderPluginBase extends ProcessorPluginBase implements \Drupal\facetapi\Processor\WidgetOrderProcessorInterface {
-
-  use StringTranslationTrait;
+abstract class WidgetOrderPluginBase extends ProcessorPluginBase implements WidgetOrderProcessorInterface {
 
   /**
    * {@inheritdoc}
