@@ -30,7 +30,7 @@ class CountWidgetOrderProcessorTest extends UnitTestCase {
   protected function setUp() {
     parent::setUp();
 
-    $this->processor = new CountWidgetOrderProcessor();
+    $this->processor = new CountWidgetOrderProcessor([], 'count_widget_order', []);
   }
 
   /**
