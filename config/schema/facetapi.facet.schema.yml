@@ -34,10 +34,19 @@ facetapi.facet.*:
         label: 'Widget plugin configurations'
     processor_configs:
       type: sequence
-      label: 'Configuration for processors'
+      label: 'Processor settings'
       sequence:
-        settings:
-          type: sequence
-          label: 'Plugin setting'
-          sequence:
+        type: mapping
+        label: 'A processor'
+        mapping:
+          processor_id:
             type: string
+            label: 'The plugin ID of the processor'
+          weights:
+            type: sequence
+            label: 'The processor''s weights for the different processing stages'
+            sequence:
+              type: integer
+              label: 'The processor''s weight for this stage'
+          settings:
+            type: facetapi.processor.plugin.[%parent.processor_id]

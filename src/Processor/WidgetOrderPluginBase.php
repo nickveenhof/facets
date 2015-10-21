@@ -18,7 +18,7 @@ abstract class WidgetOrderPluginBase extends ProcessorPluginBase implements \Dru
       '#type' => 'checkbox',
       '#title' => $this->t('Enable processor'),
     ];
-    $build['sort_order'] = [
+    $build['sort'] = [
       '#type' => 'radios',
       '#title' => $this->t('Sort order'),
       '#options' => [
