@@ -36,9 +36,6 @@ facetapi.facet.*:
       type: sequence
       label: 'Configuration for processors'
       sequence:
-        id:
-          type: string
-          label: 'Plugin name'
         settings:
           type: sequence
           label: 'Plugin setting'

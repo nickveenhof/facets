@@ -275,18 +275,22 @@ class FacetForm extends EntityForm {
       '#tree' => TRUE,
       '#open' => TRUE,
     ];
+    $form['processor_configs']['count_widget_order']['id'] = [
+      '#title' => 'id',
+      '#type' => 'textfield',
+      '#value' => 'count_widget_order'
+    ];
+    $form['processor_configs']['count_widget_order']['settings']['order'] = [
+      '#title' => 'settings-order',
+      '#type' => 'textfield',
+      '#value' => 'ASC'
+    ];
+
     foreach ($this->getProcessorPluginManager()->getDefinitions() as $id => $definition) {
       $form['processor_configs'][$id] = [
         '#type' => 'details',
         '#title' => $this->t('Processor: %id', ['%id' => $id]),
         '#open' => TRUE,
-      ];
-      $config = $this->config('facetapi.facet.' . $facet->id());
-      $config = $config->get('processor_configs')[$id];
-
-      $form['processor_configs'][$id]['id'] = [
-        '#type' => 'hidden',
-        '#value' => $id,
       ];
 
       $form['processor_configs'][$id]['settings'] = [
@@ -294,7 +298,7 @@ class FacetForm extends EntityForm {
       ];
       /** @var ProcessorInterface $build_processor */
       $build_processor = $this->getProcessorPluginManager()->createInstance($id);
-      $form['processor_configs'][$id]['settings'][] = $build_processor->buildConfigurationForm($form, $form_state, $facet);
+      $form['processor_configs'][$id]['settings'] = $build_processor->buildConfigurationForm($form, $form_state, $facet);
     }
 
     $form['status'] = [
