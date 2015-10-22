@@ -2,12 +2,9 @@
 
 namespace Drupal\facetapi\Plugin\facetapi\Widget;
 
-use Drupal\Component\Plugin\PluginBase;
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\facetapi\FacetInterface;
 use Drupal\facetapi\Result\Result;
-use Drupal\facetapi\Widget\WidgetInterface;
 use Drupal\facetapi\Widget\WidgetPluginBase;
 
 /**
@@ -32,11 +29,10 @@ class LinksWidget extends WidgetPluginBase {
    * {@inheritdoc}
    */
   public function build(FacetInterface $facet) {
-    $build = array();
     /** @var Result[] $results */
     $results = $facet->getResults();
     if (!empty($results)) {
-      $items = array();
+      $items = [];
       foreach ($results as $result) {
         if ($result->getCount()) {
           // Get the link.
@@ -49,17 +45,19 @@ class LinksWidget extends WidgetPluginBase {
           $items[] = $link;
         }
       }
-      $build = array(
+      $build = [
         '#theme' => 'item_list',
         '#items' => $items,
-      );
+      ];
     }
     else {
-      // Empty behavior.
-      $empty_behavior_configs = $facet->get('empty_behavior_configs');
+      // Get the empty behavior id and the configuration.
+      $facet_empty_behavior_configs = $facet->get('empty_behavior_configs');
       $behavior_id = $facet->get('empty_behavior');
-      $empty_behavior = $this->empty_behavior_plugin_manager->createInstance($behavior_id);
-      $build = $empty_behavior->build($empty_behavior_configs);
+
+      // Build the result using the empty behavior configuration.
+      $empty_behavior_plugin = $this->empty_behavior_plugin_manager->createInstance($behavior_id);
+      $build = $empty_behavior_plugin->build($facet_empty_behavior_configs);
     }
     return $build;
   }

@@ -10,7 +10,6 @@ namespace Drupal\facetapi\Plugin\facetapi\empty_behavior;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\facetapi\EmptyBehavior\EmptyBehaviorInterface;
-use Drupal\facetapi\FacetInterface;
 
 /**
  * @FacetApiEmptyBehavior(

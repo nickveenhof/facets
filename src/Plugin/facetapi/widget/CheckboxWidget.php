@@ -7,6 +7,7 @@ use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\facetapi\FacetInterface;
 use Drupal\facetapi\Result\Result;
 use Drupal\facetapi\Widget\WidgetInterface;
+use Drupal\facetapi\Widget\WidgetPluginBase;
 
 /**
  * @FacetApiWidget(
@@ -14,10 +15,8 @@ use Drupal\facetapi\Widget\WidgetInterface;
  *   label = @Translation("List of checkboxes"),
  *   description = @Translation("A configurable widget that shows a list of checkboxes"),
  * )
- *
- * Class CheckboxWidget
  */
-class CheckboxWidget implements WidgetInterface {
+class CheckboxWidget extends WidgetPluginBase {
 
   use StringTranslationTrait;
 
