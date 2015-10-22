@@ -17,6 +17,7 @@ use Drupal\facetapi\FacetSource\FacetSourcePluginManager;
 use Drupal\facetapi\Processor\ProcessorInterface;
 use Drupal\facetapi\Processor\ProcessorPluginManager;
 use Drupal\facetapi\Widget\WidgetPluginManager;
+use Drupal\views\Views;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -412,6 +413,16 @@ class FacetForm extends EntityForm {
 
     $facet->setFieldIdentifier($field_identifier);
     $facet->save();
+
+    // Ensure that the caching of the view display is disabled, so the search
+    // correctly returns the facets. This is a temporary fix, until the cache
+    // metadata is correctly stored on the facet block.
+    list(, $view_id, $display) = explode(':', $facet_source);
+    $view = Views::getView($view_id);
+
+    $display = &$view->storage->getDisplay($display);
+    $display['display_options']['cache']['type'] = 'none';
+    $view->storage->save();
 
     return $facet;
   }
