@@ -44,6 +44,8 @@ use Drupal\facetapi\Result\ResultInterface;
  *     "widget",
  *     "widget_configs",
  *     "processor_configs",
+ *     "empty_behavior",
+ *     "empty_behavior_configs",
  *   },
  *   links = {
  *     "canonical" = "/admin/config/search/facet-api",
@@ -89,6 +91,13 @@ class Facet extends ConfigEntityBase implements FacetInterface {
    * @var string
    */
   protected $widget_configs;
+
+  /**
+   * Configuration for the empty behavior.
+   *
+   * @var string
+   */
+  protected $empty_behavior;
 
   /**
    * An array of options configuring this index.
@@ -269,7 +278,14 @@ class Facet extends ConfigEntityBase implements FacetInterface {
     return $this->query_type_name;
   }
 
+  public function setFieldEmptyBehavior($behavior_id) {
+    $this->empty_behavior = $behavior_id;
+    return $this;
+  }
 
+  public function getFieldEmptyBehavior() {
+    return $this->empty_behavior;
+  }
 
   public function getUrlProcessorName() {
     // @Todo: for now if the url processor is not set, defualt to query_string.
