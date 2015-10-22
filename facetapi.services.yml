@@ -14,6 +14,9 @@ services:
   plugin.manager.facetapi.processor:
     class: Drupal\facetapi\Processor\ProcessorPluginManager
     arguments: ['@container.namespaces', '@cache.discovery', '@module_handler', '@string_translation']
+  plugin.manager.facetapi.empty_behavior:
+    class: Drupal\facetapi\EmptyBehavior\EmptyBehaviorPluginManager
+    parent: default_plugin_manager
   search_api_facets.get_facets:
     class: \Drupal\facetapi\GetFacets
     arguments:
