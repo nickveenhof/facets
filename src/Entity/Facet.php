@@ -304,7 +304,7 @@ class Facet extends ConfigEntityBase implements FacetInterface {
   }
 
   public function getResults() {
-    return $this->results;
+    return $this->results ?: [];
   }
 
   /**
