@@ -32,6 +32,15 @@ facetapi.facet.*:
       sequence:
         type: string
         label: 'Widget plugin configurations'
+    empty_behavior:
+      type: string
+      label: 'Empty Behavior'
+    empty_behavior_configs:
+      type: sequence
+      label: 'Empty Behavior plugin configurations'
+      sequence:
+        type: sequence
+        label: 'Empty Behavior plugin configurations'
     processor_configs:
       type: sequence
       label: 'Processor settings'
