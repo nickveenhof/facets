@@ -432,9 +432,9 @@ class FacetForm extends EntityForm {
       else {
         $form['empty_behavior_configs']['#type'] = 'container';
         $form['empty_behavior_configs']['#open'] = true;
-        $form['empty_behavior_configs']['test_config_field'] = [
+        $form['empty_behavior_configs']['empty_behavior_information_dummy'] = [
           '#type' => 'hidden',
-          '#value' => '1',
+          '#value' => [],
           '#default_value' => '1',
         ];
       }
