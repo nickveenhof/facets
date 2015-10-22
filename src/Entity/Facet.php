@@ -139,9 +139,9 @@ class Facet extends ConfigEntityBase implements FacetInterface {
    *
    * @var Result[]
    */
-  protected $results;
+  protected $results = [];
 
-  protected $active_values = array();
+  protected $active_values = [];
 
   /**
    * An array containing the facet source plugins.
@@ -304,7 +304,7 @@ class Facet extends ConfigEntityBase implements FacetInterface {
   }
 
   public function getResults() {
-    return $this->results ?: [];
+    return $this->results;
   }
 
   /**
