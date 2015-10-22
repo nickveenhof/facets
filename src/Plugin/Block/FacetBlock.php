@@ -97,9 +97,13 @@ class FacetBlock extends BlockBase implements ContainerFactoryPluginInterface {
 
     // Let the facet_manager build the facets.
     $build = $manager->build($facet);
-    $build['#contextual_links']['facetapi_facet'] = array(
-      'route_parameters' => array('facetapi_facet' => $facet->id()),
-    );
+
+    // Add contextual links only when we have results.
+    if (!empty($build)) {
+      $build['#contextual_links']['facetapi_facet'] = array(
+        'route_parameters' => array('facetapi_facet' => $facet->id()),
+      );
+    }
 
     return $build;
   }
