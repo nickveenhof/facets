@@ -63,7 +63,10 @@ class FacetBlock extends BlockBase implements ContainerFactoryPluginInterface {
    * {@inheritdoc}
    */
   public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
+
+    /** @var \Drupal\facetapi\FacetManager\FacetManagerPluginManager $plugin_manager */
     $plugin_manager = $container->get('plugin.manager.facetapi.manager');
+
     return new static(
       $configuration,
       $plugin_id,
@@ -96,32 +99,6 @@ class FacetBlock extends BlockBase implements ContainerFactoryPluginInterface {
     $build = $manager->build($facet);
 
     return $build;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function blockForm($form, FormStateInterface $form_state) {
-    $form = parent::blockForm($form, $form_state);
-
-    // Get the facet definitions.
-    $facets = facetapi_get_enabled_facets();
-    $facet_options = array();
-
-    foreach ($facets as $facet_name => $facet) {
-      $identifier = $facet_name;
-      $facet_options[$identifier] = $facet->getFacetSource() . ' facet: ' . $facet->getName();
-    }
-
-    $form['facet_identifier'] = array(
-      '#type' => 'select',
-      '#required' => TRUE,
-      '#title' => t('Facet to render'),
-      '#default_value' => isset($this->configuration['facet_identifier']) ? $this->configuration['facet_identifier'] : '',
-      '#empty_option' => t('- Select -'),
-      '#options' => $facet_options,
-    );
-    return $form;
   }
 
   /**
