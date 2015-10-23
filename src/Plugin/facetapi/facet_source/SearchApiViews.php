@@ -10,6 +10,7 @@ namespace Drupal\facetapi\Plugin\facetapi\facet_source;
 use Drupal\Core\DependencyInjection\DependencySerializationTrait;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
+use Drupal\Core\Url;
 use Drupal\facetapi\FacetInterface;
 use Drupal\facetapi\FacetSource\FacetSourceInterface;
 use Drupal\facetapi\FacetSource\FacetSourcePluginBase;
@@ -131,7 +132,7 @@ class SearchApiViews extends FacetSourcePluginBase {
       '#type' => 'select',
       '#options' => $indexed_fields,
       '#title' => $this->t('Facet field'),
-      '#description' => $this->t('Choose the indexed field.'),
+      '#description' => $this->t('Choose the indexed field. This shows a list of fields indexed in the <a href="@link">Search api index</a>', ['@link' => Url::fromRoute('entity.search_api_index.fields', ['search_api_index' => $index->id()])->toString()]),
       '#required' => TRUE,
       '#default_value' => $facet->getFieldIdentifier()
     ];
