@@ -40,6 +40,8 @@ class QueryTypeTerm extends QueryTypePluginBase {
         'limit'     => 50,
         'operator'  => 'and',
         'min_count' => 0,
+        // Key used in SearchApiSolrBackend::extractFacets().
+        'missing' => FALSE,
       );
 
       // Add the filter to the query if there are active values.
