@@ -9,7 +9,7 @@ namespace Drupal\facetapi\Plugin\facetapi\empty_behavior;
 
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
-use Drupal\facetapi\EmptyBehavior\EmptyBehaviorInterface;
+use Drupal\facetapi\EmptyBehavior\EmptyBehaviorPluginBase;
 
 /**
  * @FacetApiEmptyBehavior(
@@ -18,7 +18,7 @@ use Drupal\facetapi\EmptyBehavior\EmptyBehaviorInterface;
  *   description = @Translation("Display a text when no results"),
  * )
  */
-class EmptyBehaviorText implements EmptyBehaviorInterface {
+class EmptyBehaviorText extends EmptyBehaviorPluginBase {
 
   use StringTranslationTrait;
 
@@ -32,9 +32,17 @@ class EmptyBehaviorText implements EmptyBehaviorInterface {
   /**
    * {@inheritdoc}
    */
-  public function buildConfigurationForm(array $form, FormStateInterface $form_state, $config) {
+  public function buildConfigurationForm(array $form, FormStateInterface $form_state) {
+    // Get the facet.
+    $facet = $form_state->getFormObject()->getEntity();
+    // Get the configuration for the facet.
+    $config = $this->configFactory->get('facetapi.facet.' . $facet->id());
+
+    // Get the empty behavior configuration from the current facet.
     $value_empty_text = $config->get('empty_behavior_configs')['empty_text']['value'];
     $value_empty_format = $config->get('empty_behavior_configs')['empty_text']['format'];
+
+    // Add the new field to the form.
     $form['empty_text'] = [
       '#type' => 'text_format',
       '#title' => $this->t('Empty text'),

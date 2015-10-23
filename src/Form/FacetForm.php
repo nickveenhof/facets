@@ -325,8 +325,7 @@ class FacetForm extends EntityForm {
       '#attributes' => ['class' => ['js-hide']],
     ];
 
-    $this->buildEmptyBehaviorConfigForm($form, $form_state, $facet);
-
+    $this->buildEmptyBehaviorConfigForm($form, $form_state);
 
     $form['processor_configs'] = [
       '#type' => 'details',
@@ -413,19 +412,20 @@ class FacetForm extends EntityForm {
   /**
    * Builds the configuration forms for all the empty behaviors.
    *
-   * @param \Drupal\facetapi\FacetInterface $facet
-   *   The facet begin created or edited.
+   * @param array $form
+   *   An associative array containing the initial structure of the plugin form.
+   * @param \Drupal\Core\Form\FormStateInterface $form_state
+   *   The current state of the complete form.
    */
-  public function buildEmptyBehaviorConfigForm(array &$form, FormStateInterface $form_state, FacetInterface $facet) {
-    $behavior_id = $facet->getFieldEmptyBehavior();
+  public function buildEmptyBehaviorConfigForm(array &$form, FormStateInterface $form_state) {
+    $behavior_id = $this->getEntity()->getFieldEmptyBehavior();
 
     if (!is_null($behavior_id) && $behavior_id !== '') {
       $empty_behavior_instance = $this->emptyBehaviorPluginManager->createInstance($behavior_id);
-      $config = $this->config('facetapi.facet.' . $facet->id());
-      if ($config_form = $empty_behavior_instance->buildConfigurationForm([], $form_state, ($config instanceof Config) ? $config : null )) {
+      if ($config_form = $empty_behavior_instance->buildConfigurationForm([], $form_state)) {
         $form['empty_behavior_configs']['#type'] = 'details';
         $form['empty_behavior_configs']['#title'] = $this->t('Configure the %behavior empty behavior', ['%behavior' => $this->emptyBehaviorPluginManager->getDefinition($behavior_id)['label']]);
-        $form['empty_behavior_configs']['#open'] = $facet->isNew();
+        $form['empty_behavior_configs']['#open'] = $this->getEntity()->isNew();
 
         $form['empty_behavior_configs'] += $config_form;
       }
