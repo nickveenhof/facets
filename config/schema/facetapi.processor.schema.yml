@@ -8,3 +8,11 @@ facetapi.processor.plugin.count_widget_order:
     sort:
       type: string
       label: sort order
+
+facetapi.processor.plugin.minimum_count:
+  type: mapping
+  label: 'Minimum count widget'
+  mapping:
+    minimum_items:
+      type: integer
+      label: 'Mimimum amount of items to show.'
