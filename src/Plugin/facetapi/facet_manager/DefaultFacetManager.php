@@ -4,7 +4,9 @@
  */
 namespace Drupal\facetapi\Plugin\facetapi\facet_manager;
 
+use Drupal\Core\Entity\EntityManager;
 use Drupal\Core\Extension\ModuleHandlerInterface;
+use Drupal\facetapi\EmptyBehavior\EmptyBehaviorPluginManager;
 use Drupal\facetapi\FacetManager\FacetManagerPluginBase;
 use Drupal\facetapi\FacetInterface;
 use Drupal\facetapi\FacetSource\FacetSourceInterface;
@@ -59,7 +61,12 @@ class DefaultFacetManager extends FacetManagerPluginBase {
     /** @var \Drupal\facetapi\Processor\ProcessorPluginManager $processor_plugin_manager */
     $processor_plugin_manager = $container->get('plugin.manager.facetapi.processor');
 
-    return new static($configuration, $plugin_id, $plugin_definition, $module_handler, $query_type_plugin_manager, $results_cache, $widget_plugin_manager, $facet_plugin_manager, $processor_plugin_manager);
+    /** @var \Drupal\facetapi\EmptyBehavior\EmptyBehaviorPluginManager $empty_behavior_plugin_manager */
+    $empty_behavior_plugin_manager = $container->get('plugin.manager.facetapi.empty_behavior');
+
+    $entity_manager = $container->get('entity.manager');
+
+    return new static($configuration, $plugin_id, $plugin_definition, $module_handler, $query_type_plugin_manager, $results_cache, $widget_plugin_manager, $facet_plugin_manager, $processor_plugin_manager, $empty_behavior_plugin_manager, $entity_manager);
   }
 
   public function __construct(
@@ -70,10 +77,12 @@ class DefaultFacetManager extends FacetManagerPluginBase {
     ResultsCacheInterface $results_cache,
     WidgetPluginManager $widget_plugin_manager,
     FacetSourcePluginManager $facet_source_manager,
-    ProcessorPluginManager $processor_plugin_manager
+    ProcessorPluginManager $processor_plugin_manager,
+    EmptyBehaviorPluginManager $empty_behavior_plugin_manager,
+    EntityManager $entity_manager
   ) {
 
-    parent::__construct($configuration, $plugin_id, $plugin_definition, $module_handler, $query_type_plugin_manager, $widget_plugin_manager, $facet_source_manager, $processor_plugin_manager);
+    parent::__construct($configuration, $plugin_id, $plugin_definition, $module_handler, $query_type_plugin_manager, $widget_plugin_manager, $facet_source_manager, $processor_plugin_manager, $empty_behavior_plugin_manager, $entity_manager);
     $this->searchResultsCache = $results_cache;
   }
 

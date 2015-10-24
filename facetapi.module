@@ -42,17 +42,6 @@ function facetapi_theme() {
   return $theme;
 }
 
-
-/**
- * Get all facet definitions.
- *
- * @return FacetInterface[]
- */
-function facetapi_get_enabled_facets() {
-  $em = \Drupal::entityManager();
-  return $em->getStorage('facetapi_facet')->loadMultiple();
-}
-
 /**
  * Implementation of hook_search_api_query_alter.
  *

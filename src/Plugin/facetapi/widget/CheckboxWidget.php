@@ -7,7 +7,6 @@ use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\facetapi\FacetInterface;
 use Drupal\facetapi\Result\Result;
 use Drupal\facetapi\Widget\WidgetInterface;
-use Drupal\facetapi\Widget\WidgetPluginBase;
 
 /**
  * @FacetApiWidget(
@@ -16,7 +15,7 @@ use Drupal\facetapi\Widget\WidgetPluginBase;
  *   description = @Translation("A configurable widget that shows a list of checkboxes"),
  * )
  */
-class CheckboxWidget extends WidgetPluginBase {
+class CheckboxWidget implements WidgetInterface {
 
   use StringTranslationTrait;
 
@@ -31,28 +30,26 @@ class CheckboxWidget extends WidgetPluginBase {
    * {@inheritdoc}
    */
   public function build(FacetInterface $facet) {
-    $build = [];
     /** @var Result[] $results */
     $results = $facet->getResults();
-    if (! empty ($results)) {
-      $items = [];
-      foreach ($results as $result) {
-        if ($result->getCount()) {
-          // Get the link.
-          $text = $result->getValue() . ' (' . $result->getCount() . ')';
-          if ($result->isActive()) {
-            $text = '(-) ' . $text;
-          }
-          $link_generator = \Drupal::linkGenerator();
-          $link = $link_generator->generate($text, $result->getUrl());
-          $items[] = $link;
+    $items = [];
+    foreach ($results as $result) {
+      if ($result->getCount()) {
+        // Get the link.
+        $text = $result->getValue() . ' (' . $result->getCount() . ')';
+        if ($result->isActive()) {
+          $text = '(-) ' . $text;
         }
+        $link_generator = \Drupal::linkGenerator();
+        $link = $link_generator->generate($text, $result->getUrl());
+        $items[] = $link;
       }
-      $build = [
-        '#theme' => 'item_list',
-        '#items' => $items,
-      ];
     }
+    $build = [
+      '#theme' => 'item_list',
+      '#items' => $items,
+    ];
+
     $build['#prefix'] = $this->t('Checkboxes');
     return $build;
   }

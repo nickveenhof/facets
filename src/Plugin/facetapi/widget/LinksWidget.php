@@ -5,7 +5,7 @@ namespace Drupal\facetapi\Plugin\facetapi\Widget;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\facetapi\FacetInterface;
 use Drupal\facetapi\Result\Result;
-use Drupal\facetapi\Widget\WidgetPluginBase;
+use Drupal\facetapi\Widget\WidgetInterface;
 
 /**
  * @FacetApiWidget(
@@ -16,7 +16,7 @@ use Drupal\facetapi\Widget\WidgetPluginBase;
  *
  * Class LinksWidget
  */
-class LinksWidget extends WidgetPluginBase {
+class LinksWidget implements WidgetInterface {
 
   /**
    * {@inheritdoc}
@@ -31,34 +31,23 @@ class LinksWidget extends WidgetPluginBase {
   public function build(FacetInterface $facet) {
     /** @var Result[] $results */
     $results = $facet->getResults();
-    if (!empty($results)) {
-      $items = [];
-      foreach ($results as $result) {
-        if ($result->getCount()) {
-          // Get the link.
-          $text = $result->getValue() . ' (' . $result->getCount() . ')';
-          if ($result->isActive()) {
-            $text = '(-) ' . $text;
-          }
-          $link_generator = \Drupal::linkGenerator();
-          $link = $link_generator->generate($text, $result->getUrl());
-          $items[] = $link;
+    $items = [];
+    foreach ($results as $result) {
+      if ($result->getCount()) {
+        // Get the link.
+        $text = $result->getValue() . ' (' . $result->getCount() . ')';
+        if ($result->isActive()) {
+          $text = '(-) ' . $text;
         }
+        $link_generator = \Drupal::linkGenerator();
+        $link = $link_generator->generate($text, $result->getUrl());
+        $items[] = $link;
       }
-      $build = [
-        '#theme' => 'item_list',
-        '#items' => $items,
-      ];
     }
-    else {
-      // Get the empty behavior id and the configuration.
-      $facet_empty_behavior_configs = $facet->get('empty_behavior_configs');
-      $behavior_id = $facet->get('empty_behavior');
-
-      // Build the result using the empty behavior configuration.
-      $empty_behavior_plugin = $this->empty_behavior_plugin_manager->createInstance($behavior_id);
-      $build = $empty_behavior_plugin->build($facet_empty_behavior_configs);
-    }
+    $build = [
+      '#theme' => 'item_list',
+      '#items' => $items,
+    ];
     return $build;
   }
 

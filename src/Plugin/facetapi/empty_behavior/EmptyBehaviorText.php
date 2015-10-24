@@ -20,8 +20,6 @@ use Drupal\facetapi\EmptyBehavior\EmptyBehaviorPluginBase;
  */
 class EmptyBehaviorText extends EmptyBehaviorPluginBase {
 
-  use StringTranslationTrait;
-
   /**
    * {@inheritdoc}
    */
