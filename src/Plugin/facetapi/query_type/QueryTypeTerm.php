@@ -67,7 +67,7 @@ class QueryTypeTerm extends QueryTypePluginBase {
       $facet_results = array();
       foreach ($this->results as $result) {
         if ($result['count']) {
-          $facet_results[] = new Result(trim($result['filter'], '"'), $result['count']);
+          $facet_results[] = new Result($result['filter'], trim($result['filter'], '"'), $result['count']);
         }
       }
       $this->facet->setResults($facet_results);

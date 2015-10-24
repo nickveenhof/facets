@@ -8,14 +8,17 @@ namespace Drupal\facetapi\Result;
 
 use Drupal\Core\Url;
 
-class Result implements ResultInterface{
+class Result implements ResultInterface {
 
   /**
    * The facet value
-   *
-   * @var
    */
-  protected $value;
+  protected $display_value;
+
+  /**
+   * The raw facet value
+   */
+  protected $raw_value;
 
   /**
    * The facet count.
@@ -32,48 +35,55 @@ class Result implements ResultInterface{
   protected $url;
 
   /**
-   * Wether the value is active (selected) or not.
+   * Is this a selected value or not.
    *
    * @var bool
    */
   protected $active = FALSE;
 
-  function __construct($value, $count) {
-    $this->value = $value;
+  /**
+   * Construct a new instance of the value object.
+   *
+   * @param $raw_value
+   * @param $display_value
+   * @param $count
+   */
+  function __construct($raw_value, $display_value, $count) {
+    $this->raw_value = $raw_value;
+    $this->display_value = $display_value;
     $this->count = $count;
   }
 
   /**
-   * Gets the value.
-   *
-   * @return mixed
+   * {@inheritdoc}
    */
-  public function getValue() {
-    return $this->value;
+  public function getDisplayValue() {
+    return $this->display_value;
   }
 
   /**
-   * Gets the count.
-   *
-   * @return int
+   * {@inheritdoc}
+   */
+  public function getRawValue() {
+    return $this->raw_value;
+  }
+
+  /**
+   * {@inheritdoc}
    */
   public function getCount() {
     return $this->count;
   }
 
   /**
-   * Gets the url.
-   *
-   * @return \Drupal\Core\Url
+   * {@inheritdoc}
    */
   public function getUrl() {
     return $this->url;
   }
 
   /**
-   * Sets the url.
-   *
-   * @param \Drupal\Core\Url $url
+   * {@inheritdoc}
    */
   public function setUrl(Url $url) {
     $this->url = $url;
@@ -86,13 +96,11 @@ class Result implements ResultInterface{
     $this->active = $active;
   }
 
-
   /**
    * @inheritdoc
    */
   public function isActive() {
     return $this->active;
   }
-
 
 }

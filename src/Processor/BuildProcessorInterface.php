@@ -19,6 +19,8 @@ interface BuildProcessorInterface extends ProcessorInterface {
    *
    * @param \Drupal\facetapi\FacetInterface $facet
    * @param \Drupal\facetapi\Result\Result[] $results
+   *
+   * @return \Drupal\facetapi\Result\Result[] $results
    */
   public function build(FacetInterface $facet, array $results);
 

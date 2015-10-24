@@ -38,9 +38,9 @@ class CountWidgetOrderProcessorTest extends UnitTestCase {
     parent::setUp();
 
     $this->original_results = [
-      new Result('llama', 10),
-      new Result('badger', 5),
-      new Result('duck', 15),
+      new Result('llama', 'llama', 10),
+      new Result('badger', 'badger', 5),
+      new Result('duck', 'duck', 15),
     ];
 
     $this->processor = new CountWidgetOrderProcessor([], 'count_widget_order', []);
@@ -54,11 +54,11 @@ class CountWidgetOrderProcessorTest extends UnitTestCase {
     $sorted_results = $this->processor->sortResults($this->original_results, 'ASC');
 
     $this->assertEquals(5, $sorted_results[0]->getCount());
-    $this->assertEquals('badger', $sorted_results[0]->getValue());
+    $this->assertEquals('badger', $sorted_results[0]->getDisplayValue());
     $this->assertEquals(10, $sorted_results[1]->getCount());
-    $this->assertEquals('llama', $sorted_results[1]->getValue());
+    $this->assertEquals('llama', $sorted_results[1]->getDisplayValue());
     $this->assertEquals(15, $sorted_results[2]->getCount());
-    $this->assertEquals('duck', $sorted_results[2]->getValue());
+    $this->assertEquals('duck', $sorted_results[2]->getDisplayValue());
   }
 
   /**
@@ -69,11 +69,11 @@ class CountWidgetOrderProcessorTest extends UnitTestCase {
     $sorted_results = $this->processor->sortResults($this->original_results, 'DESC');
 
     $this->assertEquals(15, $sorted_results[0]->getCount());
-    $this->assertEquals('duck', $sorted_results[0]->getValue());
+    $this->assertEquals('duck', $sorted_results[0]->getDisplayValue());
     $this->assertEquals(10, $sorted_results[1]->getCount());
-    $this->assertEquals('llama', $sorted_results[1]->getValue());
+    $this->assertEquals('llama', $sorted_results[1]->getDisplayValue());
     $this->assertEquals(5, $sorted_results[2]->getCount());
-    $this->assertEquals('badger', $sorted_results[2]->getValue());
+    $this->assertEquals('badger', $sorted_results[2]->getDisplayValue());
   }
 
 }

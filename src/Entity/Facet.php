@@ -356,7 +356,7 @@ class Facet extends ConfigEntityBase implements FacetInterface {
     // set the results which are active to active.
     if (count($this->active_values)) {
       foreach ($this->results as $result) {
-        if (in_array($result->getValue(), $this->active_values)) {
+        if (in_array($result->getRawValue(), $this->active_values)) {
           $result->setActiveState(TRUE);
         }
       }

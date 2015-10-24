@@ -38,13 +38,13 @@ class DisplayValueWidgetOrderProcessorTest extends UnitTestCase {
     parent::setUp();
 
     $this->original_results = [
-      new Result('thetans', 10),
-      new Result('xenu', 5),
-      new Result('Tom', 15),
-      new Result('Hubbard', 666),
-      new Result('FALSE', 1),
-      new Result('1977', 20),
-      new Result('2', 22),
+      new Result('thetans', 'thetans', 10),
+      new Result('xenu', 'xenu', 5),
+      new Result('Tom', 'Tom', 15),
+      new Result('Hubbard', 'Hubbard', 666),
+      new Result('FALSE', 'FALSE', 1),
+      new Result('1977', '1977', 20),
+      new Result('2', '2', 22),
     ];
 
     $this->processor = new DisplayValueWidgetOrderProcessor([], 'display_value_widget_order', []);
@@ -57,7 +57,7 @@ class DisplayValueWidgetOrderProcessorTest extends UnitTestCase {
     $sorted_results = $this->processor->sortResults($this->original_results, 'ASC');
     $expected_values = array('2', '1977', 'FALSE', 'Hubbard', 'thetans', 'Tom', 'xenu');
     foreach ($expected_values as $index => $value) {
-      $this->assertEquals($value, $sorted_results[$index]->getValue());
+      $this->assertEquals($value, $sorted_results[$index]->getDisplayValue());
     }
   }
 
@@ -68,8 +68,21 @@ class DisplayValueWidgetOrderProcessorTest extends UnitTestCase {
     $sorted_results = $this->processor->sortResults($this->original_results, 'DESC');
     $expected_values = array_reverse(array('2', '1977', 'FALSE', 'Hubbard', 'thetans', 'Tom', 'xenu'));
     foreach ($expected_values as $index => $value) {
-      $this->assertEquals($value, $sorted_results[$index]->getValue());
+      $this->assertEquals($value, $sorted_results[$index]->getDisplayValue());
     }
+  }
+
+  public function testUseActualDisplayValue() {
+    $original = [
+      new Result('bb_test', 'Test AA', 10),
+      new Result('aa_test', 'Test BB', 10),
+    ];
+
+    $sorted_results = $this->processor->sortResults($original, 'DESC');
+
+    $this->assertEquals('Test BB', $sorted_results[0]->getDisplayValue());
+    $this->assertEquals('Test AA', $sorted_results[1]->getDisplayValue());
+
   }
 
 }

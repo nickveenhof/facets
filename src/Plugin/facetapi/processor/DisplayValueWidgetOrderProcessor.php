@@ -33,11 +33,11 @@ class DisplayValueWidgetOrderProcessor extends WidgetOrderPluginBase implements 
   }
 
   protected static function sortDisplayValueAsc(Result $a, Result $b) {
-    return strnatcasecmp($a->getValue(), $b->getValue());
+    return strnatcasecmp($a->getDisplayValue(), $b->getDisplayValue());
   }
 
   protected static function sortDisplayValueDesc(Result $a, Result $b) {
-    return strnatcasecmp($b->getValue(), $a->getValue());
+    return strnatcasecmp($b->getDisplayValue(), $a->getDisplayValue());
   }
 
 }

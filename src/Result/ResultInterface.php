@@ -16,7 +16,14 @@ interface ResultInterface {
    *
    * @return string
    */
-  public function getValue();
+  public function getRawValue();
+
+  /**
+   * Get the display value as present in the index.
+   *
+   * @return string
+   */
+  public function getDisplayValue();
 
   /**
    * Get the count for the result.

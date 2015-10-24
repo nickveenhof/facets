@@ -39,9 +39,9 @@ class MinimumCountProcessorTest extends UnitTestCase {
     parent::setUp();
 
     $this->original_results = [
-      new Result('llama', 10),
-      new Result('badger', 5),
-      new Result('duck', 15),
+      new Result('llama', 'llama', 10),
+      new Result('badger', 'badger', 5),
+      new Result('duck', 'duck', 15),
     ];
 
     $this->processor = new MinimumCountProcessor([], 'minimum_count', []);
@@ -65,9 +65,9 @@ class MinimumCountProcessorTest extends UnitTestCase {
     $this->assertCount(2, $sorted_results);
 
     $this->assertEquals(10, $sorted_results[0]->getCount());
-    $this->assertEquals('llama', $sorted_results[0]->getValue());
+    $this->assertEquals('llama', $sorted_results[0]->getDisplayValue());
     $this->assertEquals(15, $sorted_results[2]->getCount());
-    $this->assertEquals('duck', $sorted_results[2]->getValue());
+    $this->assertEquals('duck', $sorted_results[2]->getDisplayValue());
   }
 
 }
