@@ -58,6 +58,13 @@ abstract class FacetManagerPluginBase extends PluginBase implements FacetManager
   protected $processor_plugin_manager;
 
   /**
+   * The empty behavior plugin manager.
+   *
+   * @var \Drupal\facetapi\EmptyBehavior\EmptyBehaviorPluginManager
+   */
+  protected $empty_behavior_plugin_manager;
+
+  /**
    * @var ModuleHandlerInterface
    */
   protected $module_handler;
