@@ -13,6 +13,7 @@ use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\facetapi\FacetInterface;
 use Drupal\facetapi\FacetSource\FacetSourceInterface;
 use Drupal\facetapi\FacetSource\FacetSourcePluginBase;
+use Drupal\search_api\FacetApiQueryTypeMappingInterface;
 use Drupal\search_api\Plugin\views\query\SearchApiQuery;
 use Drupal\search_api\Query\ResultSetInterface;
 use Drupal\views\Views;
@@ -59,7 +60,14 @@ class SearchApiViewsPage extends FacetSourcePluginBase {
    *
    * @var \Drupal\search_api\Query\ResultsCacheInterface
    */
-  protected $searchResultsCache;
+  protected $searchApiResultsCache;
+
+  /**
+   * The search index.
+   *
+   * @var \Drupal\search_api\IndexInterface
+   */
+  protected $index;
 
   /**
    * {@inheritdoc}
@@ -72,7 +80,27 @@ class SearchApiViewsPage extends FacetSourcePluginBase {
     $this->pluginDefinition = $plugin_definition;
     $this->pluginId = $plugin_id;
     $this->configuration = $configuration + $this->defaultConfiguration();
-    $this->searchResultsCache = $search_results_cache;
+    $this->searchApiResultsCache = $search_results_cache;
+
+    // Load facet plugin definition and depending on those settings; load the
+    // corresponding view with the correct view with the correct display set.
+    // Get that display's query so we can check if this is a search API based
+    // view.
+    $view = Views::getView($plugin_definition['view_id']);
+    if (!empty($view)) {
+      $view->setDisplay($plugin_definition['view_display']);
+      $query = $view->getQuery();
+
+      // Early return when the view is not based on a search API query.
+      if ($query instanceof SearchApiQuery) {
+        // Set the Search Api Index
+        $this->index = $query->getIndex();
+      }
+
+
+    }
+
+
   }
 
   public static function create(
@@ -103,33 +131,9 @@ class SearchApiViewsPage extends FacetSourcePluginBase {
    */
   public function buildConfigurationForm(array $form, FormStateInterface $form_state, FacetInterface $facet, FacetSourceInterface $facet_source) {
 
-    // Load facet plugin definition and depending on those settings; load the
-    // corresponding view with the correct view with the correct display set.
-    // Get that display's query so we can check if this is a search API based
-    // view.
-    $plugin_def = $facet_source->getPluginDefinition();
-    $view = Views::getView($plugin_def['view_id']);
-    $view->setDisplay($plugin_def['view_display']);
-    $query = $view->getQuery();
-
-    // Early return when the view is not based on a search API query.
-    if (!$query instanceof SearchApiQuery) {
-      return [];
-    }
-
-    $index = $query->getIndex();
-
-    $indexed_fields = [];
-    foreach ($index->getDatasources() as $datasource_id => $datasource) {
-      $fields = $index->getFieldsByDatasource($datasource_id);
-      foreach ($fields as $field) {
-        $indexed_fields[$field->getFieldIdentifier()] = $field->getLabel();
-      }
-    }
-
     $form['field_identifier'] = [
       '#type' => 'select',
-      '#options' => $indexed_fields,
+      '#options' => $this->getFields(),
       '#title' => $this->t('Facet field'),
       '#description' => $this->t('Choose the indexed field.'),
       '#required' => TRUE,
@@ -139,48 +143,87 @@ class SearchApiViewsPage extends FacetSourcePluginBase {
     return $form;
   }
 
-  public function addResults($facets) {
-    // Get the facet values from the query that has been done.
-    // Store all information in $this->facets.
-    $results = $this->searchResultsCache->getResults($this->pluginId);
+  /**
+   * {@inheritdoc}
+   */
+  public function fillFacetsWithResults($facets) {
+    // Check if there are results in the static cache.
+    $results = $this->searchApiResultsCache->getResults($this->pluginId);
 
-    if (! $results instanceof ResultSetInterface) {
+    // If our results are not there, execute the view to get the results.
+    if (!$results) {
       // If there are no results, execute the view. and check for results again!
       $view = Views::getView($this->pluginDefinition['view_id']);
       $view->setDisplay($this->pluginDefinition['view_display']);
       $view->execute();
       // Set the path of all facets.
+      // @todo Does that need to happen here?
       $path = $view->getDisplay()->getOption('path');
       if ($path) {
         foreach ($facets as $facet) {
           $facet->setPath($path);
         }
-
       }
-      $results = $this->searchResultsCache->getResults($this->pluginId);
+      $results = $this->searchApiResultsCache->getResults($this->pluginId);
     }
 
-
+    // Get the results from the cache. It is possible it still errored out.
+    // @todo figure out what to do when this errors out.
     if ($results instanceof ResultSetInterface) {
+      // Get our facet data.
       $facet_results = $results->getExtraData('search_api_facets');
 
+      // Loop over each facet and execute the build method from the given
+      // query type
       foreach ($facets as $facet) {
         $configuration = array(
           'query' => NULL,
           'facet' => $facet,
           'results' => $facet_results[$facet->getFieldIdentifier()],
         );
-        $query_type_plugin = $this->query_type_plugin_manager->createInstance($facet->getQueryType(),
-          $configuration
-        );
-        // @TODO: This should be done somewhere else.
-        $query_type_plugin->build();
+
+        // Get the Facet Specific Query Type so we can process the results
+        // using the build() function of the query type.
+        $query_type = $this->queryTypePluginManager->createInstance($facet->getQueryType(), $configuration);
+        $query_type->build();
       }
     }
-    else {
-      // @Todo: perform the query so there are results.
-    }
+  }
 
+  /**
+   * {@inheritdoc}
+   */
+  public function getFields() {
+    $indexed_fields = [];
+    $fields = $this->index->getFields(true);
+    foreach ($fields as $field) {
+      $indexed_fields[$field->getFieldIdentifier()] = $field->getLabel();
+    }
+    return $indexed_fields;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getQueryTypesForFacet(FacetInterface $facet) {
+    // Get our FacetApi Field Identifier, which is equal to the
+    // Search API Field identifier.
+    $field_id = $facet->getFieldIdentifier();
+    // Get the Search API Server.
+    $server = $this->index->getServer();
+    // Get the Search API Backend.
+    $backend = $server->getBackend();
+
+    $query_types = array('text' => 'search_api_text');
+    if ($backend instanceof FacetApiQueryTypeMappingInterface) {
+      $fields = $this->index->getFields(true);
+      foreach ($fields as $field) {
+        if ($field->getFieldIdentifier() == $field_id) {
+          return $backend->getQueryTypesForDataType($field->getType());
+        }
+      }
+    }
+    return $query_types;
   }
 
   /**

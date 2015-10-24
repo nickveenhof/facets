@@ -21,23 +21,6 @@ use Drupal\facetapi\FacetInterface;
 interface FacetSourceInterface {
 
   /**
-   * Returns an array of possible query types associated with this data source.
-   *
-   * @return array
-   */
-  public function getAllowedQueryTypes();
-
-  /**
-   * Returns an array of fields that are defined on the datasource.
-   *
-   * This returns an array of fields that are defined on the source. This array
-   * is keyed by the field's machine name and has values of the field's label.
-   *
-   * @return array
-   */
-  public function getFields();
-
-  /**
    * Adds a configuration form for this facet source.
    *
    * @param array $form
@@ -48,12 +31,20 @@ interface FacetSourceInterface {
   public function buildConfigurationForm(array $form, FormStateInterface $form_state, FacetInterface $facet, FacetSourceInterface $facet_source);
 
   /**
-   * Add the results to the facets.
+   * Fill in facet data in to the configured facets.
    *
    * @param FacetInterface[] $facets
    * @return mixed
    */
-  public function addResults($facets);
+  public function fillFacetsWithResults($facets);
+
+  /**
+   * Get the allowed query types for a given facet for the facet source.
+   *
+   * @param FacetInterface $facet
+   * @return array of allowed query types
+   */
+  public function getQueryTypesForFacet(FacetInterface $facet);
 
   /**
    * Returns true if the Facet source is being rendered in the current request.
@@ -65,5 +56,10 @@ interface FacetSourceInterface {
    * @return boolean
    */
   public function isRenderedInCurrentRequest();
+
+  /**
+   * @return mixed
+   */
+  public function getFields();
 
 }

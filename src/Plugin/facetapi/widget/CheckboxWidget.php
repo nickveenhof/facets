@@ -81,4 +81,11 @@ class CheckboxWidget implements WidgetInterface {
     return $form;
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  public function getQueryType($query_types) {
+    return $query_types['string'];
+  }
+
 }

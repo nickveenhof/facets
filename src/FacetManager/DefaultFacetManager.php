@@ -192,7 +192,6 @@ class DefaultFacetManager {
     /** @var Facet[] $facets */
     foreach ($this->facets as $facet) {
       // Only if the facet is for this query, alter the query.
-      // @TODO use the line for tests only.
       if ($facet->getFacetSourceId() == $this->facetsource_id) {
         // Create the query type plugin.
         $query_type_plugin = $this->query_type_plugin_manager->createInstance($facet->getQueryType(), ['query' => $query, 'facet' => $facet]);
@@ -266,6 +265,8 @@ class DefaultFacetManager {
       }
     }
   }
+
+
 
   /**
    * Build a facet and returns it's render array.
@@ -369,7 +370,7 @@ class DefaultFacetManager {
     /** @var FacetSourceInterface $facet_source_plugin */
     $facet_source_plugin = $this->facet_source_manager->createInstance($this->facetsource_id);
 
-    $facet_source_plugin->addResults($this->facets);
+    $facet_source_plugin->fillFacetsWithResults($this->facets);
 
   }
 }

@@ -10,7 +10,6 @@ namespace Drupal\facetapi\Entity;
 use Drupal\Core\Config\Entity\ConfigEntityBase;
 use Drupal\facetapi\FacetInterface;
 use Drupal\facetapi\Result\Result;
-use Drupal\facetapi\Result\ResultInterface;
 
 /**
  * Defines the search index configuration entity.
@@ -177,12 +176,31 @@ class Facet extends ConfigEntityBase implements FacetInterface {
   protected $only_visible_when_facet_source_is_visible;
 
   /**
+   * Widget Plugin Manager
+   *
+   * @var object
+   */
+  protected $widget_plugin_manager;
+
+  /**
+   * Query Type Plugin Manager
+   *
+   * @var object
+   */
+  protected $query_type_manager;
+
+  /**
    * {@inheritdoc}
    */
   public function __construct(array $values, $entity_type) {
     parent::__construct($values, $entity_type);
-    // @TODO Added only for test.
-    $this->query_type_name = 'search_api_term';
+
+    $container = \Drupal::getContainer();
+    /** @var \Drupal\facetapi\Widget\WidgetPluginManager $widget_plugin_manager */
+    $this->widget_plugin_manager = $container->get('plugin.manager.facetapi.widget');
+    /** @var \Drupal\facetapi\QueryType\QueryTypePluginManager $query_type_manager */
+    $this->query_type_manager = $container->get('plugin.manager.facetapi.query_type');
+
   }
 
   /**
@@ -212,6 +230,22 @@ class Facet extends ConfigEntityBase implements FacetInterface {
    */
   public function getWidget() {
     return $this->widget;
+  }
+
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getQueryType() {
+    $facet_source = $this->getFacetSource();
+    $query_types = $facet_source->getQueryTypesForFacet($this);
+
+    // Get our widget configured for this facet.
+    /** @var \Drupal\facetapi\Widget\WidgetInterface $widget */
+    $widget = $this->widget_plugin_manager->createInstance($this->getWidget());
+    // Give the widget the chance to select a preferred query type. This is
+    // useful with a date widget, as it needs to select the date query type.
+    return $widget->getQueryType($query_types);
   }
 
   /**
@@ -284,7 +318,7 @@ class Facet extends ConfigEntityBase implements FacetInterface {
     return $this;
   }
 
-  public function getQueryType() {
+  public function getQueryTypes() {
     return $this->query_type_name;
   }
 

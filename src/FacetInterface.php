@@ -111,9 +111,9 @@ interface FacetInterface extends ConfigEntityInterface {
 
 
   /**
-   * Get the query type plugin name.
+   * Get the query type instance.
    *
-   * @return mixed
+   * @return string
    */
   public function getQueryType();
 

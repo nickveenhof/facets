@@ -6,14 +6,8 @@
  */
 
 use Drupal\Core\Routing\RouteMatchInterface;
-use Drupal\Core\Entity\EntityManagerInterface;
-use Drupal\search_api\Entity\Index;
 use Drupal\search_api\Query\QueryInterface;
-use Drupal\facetapi\Entity\Facet;
 use Drupal\facetapi\FacetInterface;
-use Drupal\Component\Plugin\PluginBase;
-use Drupal\search_api\IndexInterface;
-use Drupal\Core\Url;
 
 /**
  * Implements hook_help().
@@ -33,16 +27,6 @@ function facetapi_help($route_name, RouteMatchInterface $route_match) {
 }
 
 /**
- * Implements hook_theme().
- */
-
-function facetapi_theme() {
-  $theme = [];
-
-  return $theme;
-}
-
-/**
  * Implementation of hook_search_api_query_alter.
  *
  * @param \Drupal\search_api\Query\QueryInterface $query
@@ -57,105 +41,4 @@ function facetapi_search_api_query_alter(QueryInterface &$query) {
   $facet_manager->setFacetSourceId($search_id);
   $facet_manager->alterQuery($query);
 
-}
-
-/**
- * Implementation of hook_facetapi_facet_info().
- *
- * @return array
- */
-function facetapi_facetapi_facet_info() {
-  return facetapi_simple_facet_discovery();
-  $get_facets = \Drupal::service('search_api_facets.get_facets');
-  return $get_facets->getFacets();
-}
-
-/**
- * Temporary facet discovery function needed for development.
- * Should be removed later.
- *
- * @return array
- */
-function facetapi_simple_facet_discovery() {
-  /*
-   * From Drupal.org:
-   * All functions requiring a static variable to persist or cache data within
-   * a single page request are encouraged to use this function unless it is
-   * absolutely certain that the static variable will not need to be reset
-   * during the page request. By centralizing static variable storage through
-   * this function, other functions can rely on a consistent API for
-   * resetting any other function's static variables.
-   *
-   * See: http://api.drupal.org/api/drupal/includes!bootstrap.inc/function/drupal_static/7
-   */
-  $facet_info = &drupal_static(__FUNCTION__);
-  if ($facet_info === NULL) {
-    $facet_info = array();
-    // Load all views.
-    /**
-     * @var EntityManagerInterface
-     */
-    $entity_manager = \Drupal::entityManager();
-    // @TODO: filter on search api views.
-    $views = $entity_manager->getStorage('view')->loadMultiple();
-    // Get the views executable factory.
-    $views_executable_factory = Drupal::service('views.executable');
-    foreach ($views as $view_id => $view_entity) {
-      $view = $views_executable_factory->get($view_entity);
-      // Determine if the view is an search api view.
-      if (substr($view->storage->get('base_table'), 0, 17) == 'search_api_index_') {
-        // Get the view id.
-        $view_id = $view->id();
-        $index_id = substr($view->storage->get('base_table'), 17);
-        $index = Index::load($index_id);
-        // Get fields.
-        $fields = $index->getFields();
-        // Add facets for each view display which is of type page or block.
-        foreach ($view->storage->get('display') as $display) {
-          $supported_display_plugins = array(
-            'page',
-            'block',
-          );
-          if (in_array($display['display_plugin'], $supported_display_plugins)) {
-            // @TODO: This should be a function in search api. Look it up.
-            $searcher_name = 'search_api_views_page:' . $view_id . ':' . $display['id'];
-            foreach ($fields as $field_name => $field) {
-              // Determine the query type.
-              $term_types = array(
-                'string',
-                'integer',
-              );
-              if (in_array($field->getType(), $term_types)) {
-//              $properties = array(
-//                'name' => $field_name,
-//                'label' => $field->getLabel(),
-//                'field' => $field->getFieldIdentifier(),
-//                'query type plugin' => 'search_api_term',
-//                'searcher' => $searcher_name,
-//              );
-                $properties = array(
-                  'name' => $field_name,
-                  'label' => $field->getLabel(),
-                  'field_identifier' => $field->getFieldIdentifier(),
-                  'query_type_name' => 'search_api_term',
-                  'searcher_name' => $searcher_name,
-                  'url_processor_name' => 'query_string',
-                );
-
-
-                $facet = Facet::create($properties);
-
-
-                $facet_info[$searcher_name . '::' . $field_name] = $facet;
-              }
-
-            }
-
-          }
-        }
-      }
-    }
-  }
-
-  return $facet_info;
 }

@@ -58,4 +58,11 @@ class LinksWidget implements WidgetInterface {
     return false;
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  public function getQueryType($query_types) {
+    return $query_types['string'];
+  }
+
 }
