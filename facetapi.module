@@ -51,7 +51,10 @@ function facetapi_search_api_query_alter(QueryInterface &$query) {
   /** @var \Drupal\facetapi\FacetManager\DefaultFacetManager $facet_manager */
   $facet_manager = \Drupal::service('facetapi.manager');
 
+  $search_id = $query->getOption('search id');
+
   // Add the active filters.
+  $facet_manager->setSearchId($search_id);
   $facet_manager->alterQuery($query);
 
 }
