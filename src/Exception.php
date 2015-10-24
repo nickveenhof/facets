@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\facetapi\FacetApiException.
+ * Contains \Drupal\facetapi\Exception.
  */
 
 namespace Drupal\facetapi;
@@ -10,4 +10,4 @@ namespace Drupal\facetapi;
 /**
  * Represents an exception that occurred in some part of the Facet API.
  */
-class FacetApiException extends \Exception { }
+class Exception extends \Exception { }

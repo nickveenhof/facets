@@ -13,7 +13,7 @@ use Drupal\Core\Entity\EntityManagerInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\facetapi\EmptyBehavior\EmptyBehaviorPluginManager;
 use Drupal\facetapi\FacetInterface;
-use Drupal\facetapi\FacetApiException;
+use Drupal\facetapi\Exception;
 use Drupal\facetapi\FacetSource\FacetSourcePluginManager;
 use Drupal\facetapi\Processor\ProcessorInterface;
 use Drupal\facetapi\Processor\ProcessorPluginManager;
@@ -548,7 +548,7 @@ class FacetForm extends EntityForm {
         drupal_set_message($this->t('The facet was successfully saved.'));
         $form_state->setRedirect('facetapi.overview');
       }
-      catch (FacetApiException $e) {
+      catch (Exception $e) {
         $form_state->setRebuild();
         watchdog_exception('facetapi', $e);
         drupal_set_message($this->t('The facet could not be saved.'), 'error');

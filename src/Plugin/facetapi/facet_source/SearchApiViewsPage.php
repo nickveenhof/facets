@@ -13,6 +13,7 @@ use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\facetapi\FacetInterface;
 use Drupal\facetapi\FacetSource\FacetSourceInterface;
 use Drupal\facetapi\FacetSource\FacetSourcePluginBase;
+use Drupal\facetapi\Exception;
 use Drupal\search_api\FacetApiQueryTypeMappingInterface;
 use Drupal\search_api\Plugin\views\query\SearchApiQuery;
 use Drupal\search_api\Query\ResultSetInterface;
@@ -213,8 +214,7 @@ class SearchApiViewsPage extends FacetSourcePluginBase {
     $server = $this->index->getServer();
     // Get the Search API Backend.
     $backend = $server->getBackend();
-
-    $query_types = array('text' => 'search_api_text');
+    $query_types = [];
     if ($backend instanceof FacetApiQueryTypeMappingInterface) {
       $fields = $this->index->getFields(true);
       foreach ($fields as $field) {
@@ -223,7 +223,7 @@ class SearchApiViewsPage extends FacetSourcePluginBase {
         }
       }
     }
-    return $query_types;
+    throw new Exception($this->t("No available query types were found for facet @facet", ['@facet' => $facet->getName()]));
   }
 
   /**

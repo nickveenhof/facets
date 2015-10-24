@@ -10,7 +10,7 @@ namespace Drupal\facetapi\FacetManager;
 use Drupal\Core\Entity\EntityManager;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\facetapi\EmptyBehavior\EmptyBehaviorPluginManager;
-use Drupal\facetapi\FacetApiException;
+use Drupal\facetapi\Exception;
 use Drupal\facetapi\FacetInterface;
 use Drupal\facetapi\FacetSource\FacetSourceInterface;
 use Drupal\facetapi\FacetSource\FacetSourcePluginManager;
@@ -257,7 +257,7 @@ class DefaultFacetManager {
             /** @var PreQueryProcessorInterface $pre_query_processor */
             $pre_query_processor = $this->processor_plugin_manager->createInstance($processor_configuration['processor_id']);
             if (!$pre_query_processor instanceof PreQueryProcessorInterface) {
-              throw new FacetApiException($this->t("The processor @processor has a pre_query definition but doesn't implement the required PreQueryProcessorInterface interface", ['@processor' => $processor_configuration['processor_id']]));
+              throw new Exception($this->t("The processor @processor has a pre_query definition but doesn't implement the required PreQueryProcessorInterface interface", ['@processor' => $processor_configuration['processor_id']]));
             }
             $pre_query_processor->preQuery($facet);
           }
@@ -284,7 +284,7 @@ class DefaultFacetManager {
    * @return array
    *   Facet render arrays.
    *
-   * @throws \Drupal\facetapi\FacetApiException
+   * @throws \Drupal\facetapi\Exception
    */
   public function build(FacetInterface $facet) {
     // It might be that the facet received here,
@@ -333,7 +333,7 @@ class DefaultFacetManager {
         /** @var BuildProcessorInterface $build_processor */
         $build_processor = $this->processor_plugin_manager->createInstance($processor_configuration['processor_id']);
         if (!$build_processor instanceof BuildProcessorInterface) {
-          throw new FacetApiException($this->t("The processor @processor has a build definition but doesn't implement the required BuildProcessorInterface interface", ['@processor' => $processor_configuration['processor_id']]));
+          throw new Exception($this->t("The processor @processor has a build definition but doesn't implement the required BuildProcessorInterface interface", ['@processor' => $processor_configuration['processor_id']]));
         }
         $results = $build_processor->build($facet, $results);
       }
