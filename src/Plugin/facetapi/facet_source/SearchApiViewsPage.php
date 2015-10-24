@@ -2,7 +2,7 @@
 
 /**
  * @file
- *   Contains \Drupal\facetapi\Plugin\facet_api\facet_source\SearchApiViews
+ *   Contains \Drupal\facetapi\Plugin\facet_api\facet_source\SearchApiViewsPage
  */
 
 namespace Drupal\facetapi\Plugin\facetapi\facet_source;
@@ -10,7 +10,6 @@ namespace Drupal\facetapi\Plugin\facetapi\facet_source;
 use Drupal\Core\DependencyInjection\DependencySerializationTrait;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
-use Drupal\Core\Url;
 use Drupal\facetapi\FacetInterface;
 use Drupal\facetapi\FacetSource\FacetSourceInterface;
 use Drupal\facetapi\FacetSource\FacetSourcePluginBase;
@@ -25,10 +24,10 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  *
  * @FacetApiFacetSource(
  *   id = "search_api_views",
- *   deriver = "Drupal\facetapi\Plugin\facetapi\facet_source\SearchApiViewsDeriver"
+ *   deriver = "Drupal\facetapi\Plugin\facetapi\facet_source\SearchApiViewsPageDeriver"
  * )
  */
-class SearchApiViews extends FacetSourcePluginBase {
+class SearchApiViewsPage extends FacetSourcePluginBase {
 
   use StringTranslationTrait;
 
@@ -132,7 +131,7 @@ class SearchApiViews extends FacetSourcePluginBase {
       '#type' => 'select',
       '#options' => $indexed_fields,
       '#title' => $this->t('Facet field'),
-      '#description' => $this->t('Choose the indexed field. This shows a list of fields indexed in the <a href="@link">Search api index</a>', ['@link' => Url::fromRoute('entity.search_api_index.fields', ['search_api_index' => $index->id()])->toString()]),
+      '#description' => $this->t('Choose the indexed field.'),
       '#required' => TRUE,
       '#default_value' => $facet->getFieldIdentifier()
     ];
@@ -182,5 +181,20 @@ class SearchApiViews extends FacetSourcePluginBase {
       // @Todo: perform the query so there are results.
     }
 
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function isRenderedInCurrentRequest() {
+    $request = \Drupal::requestStack()->getMasterRequest();
+    if ($request->attributes->get('_controller') === 'Drupal\views\Routing\ViewPageController::handle') {
+      list(, $search_api_view_id, $search_api_view_display) = explode(':', $this->getPluginId());
+
+      if ($request->attributes->get('view_id') != $search_api_view_id || $request->attributes->get('display_id') != $search_api_view_display) {
+        return FALSE;
+      }
+    }
+    return TRUE;
   }
 }

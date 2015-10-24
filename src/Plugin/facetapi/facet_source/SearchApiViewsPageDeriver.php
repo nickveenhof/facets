@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\facetapi\Plugin\facet_api\facet_source\SearchApiViewsDeriver.
+ * Contains \Drupal\facetapi\Plugin\facet_api\facet_source\SearchApiViewsPageDeriver.
  */
 
 namespace Drupal\facetapi\Plugin\facetapi\facet_source;
@@ -17,9 +17,9 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 /**
  * Derives a facet source plugin definition for every search api view.
  *
- * @see \Drupal\facetapi\Plugin\facetapi\facet_source\SearchApiViews
+ * @see \Drupal\facetapi\Plugin\facetapi\facet_source\SearchApiViewsPage
  */
-class SearchApiViewsDeriver implements ContainerDeriverInterface {
+class SearchApiViewsPageDeriver implements ContainerDeriverInterface {
 
   use StringTranslationTrait;
 
@@ -103,17 +103,19 @@ class SearchApiViewsDeriver implements ContainerDeriverInterface {
         if (strpos($view->get('base_table'), 'search_api_index') !== FALSE) {
           $displays = $view->get('display');
           foreach ($displays as $name => $display_info) {
-            $machine_name = $view->id() . PluginBase::DERIVATIVE_SEPARATOR . $name;
+            if($display_info['display_plugin'] == "page"){
+              $machine_name = $view->id() . PluginBase::DERIVATIVE_SEPARATOR . $name;
 
-            $plugin_derivatives[$machine_name] = array(
-                'id' => $base_plugin_id . PluginBase::DERIVATIVE_SEPARATOR . $machine_name,
-                'label' => $this->t('Search api view: %view_name, display: %display_title', ['%view_name' => $view->label(), '%display_title' => $display_info['display_title']]),
-                'description' => $this->t('Provides a facet source.'),
-                'view_id' => $view->id(),
-                'view_display' => $name,
-              ) + $base_plugin_definition;
+              $plugin_derivatives[$machine_name] = array(
+                  'id' => $base_plugin_id . PluginBase::DERIVATIVE_SEPARATOR . $machine_name,
+                  'label' => $this->t('Search api view: %view_name, display: %display_title', ['%view_name' => $view->label(), '%display_title' => $display_info['display_title']]),
+                  'description' => $this->t('Provides a facet source.'),
+                  'view_id' => $view->id(),
+                  'view_display' => $name,
+                ) + $base_plugin_definition;
 
-            $sources[] = $this->t('Search api view: ' . $view->label() . ' display: ' . $display_info['display_title']);
+              $sources[] = $this->t('Search api view: ' . $view->label() . ' display: ' . $display_info['display_title']);
+            }
           }
         }
       }
