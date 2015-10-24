@@ -10,6 +10,7 @@ namespace Drupal\facetapi\FacetManager;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\Plugin\PluginBase;
+use Drupal\facetapi\EmptyBehavior\EmptyBehaviorPluginManager;
 use Drupal\facetapi\FacetApiException;
 use Drupal\facetapi\FacetInterface;
 use Drupal\facetapi\FacetSource\FacetSourcePluginManager;
@@ -150,7 +151,10 @@ abstract class FacetManagerPluginBase extends PluginBase implements FacetManager
     /** @var \Drupal\facetapi\Processor\ProcessorPluginManager $processor_plugin_manager */
     $processor_plugin_manager = $container->get('plugin.manager.facetapi.processor');
 
-    return new static($configuration, $plugin_id, $plugin_definition, $module_handler, $query_type_plugin_manager, $widget_plugin_manager, $facet_source_plugin_manager, $processor_plugin_manager);
+    /** @var \Drupal\facetapi\EmptyBehavior\EmptyBehaviorPluginManager $empty_behavior_plugin_manager */
+    $empty_behavior_plugin_manager = $container->get('plugin.manager.facetapi.empty_behavior');
+
+    return new static($configuration, $plugin_id, $plugin_definition, $module_handler, $query_type_plugin_manager, $widget_plugin_manager, $facet_source_plugin_manager, $processor_plugin_manager, $empty_behavior_plugin_manager);
   }
 
   /**
@@ -173,12 +177,14 @@ abstract class FacetManagerPluginBase extends PluginBase implements FacetManager
    */
   public function __construct(
     array $configuration,
-    $plugin_id, $plugin_definition,
+    $plugin_id,
+    $plugin_definition,
     ModuleHandlerInterface $module_handler,
     QueryTypePluginManager $query_type_plugin_manager,
     WidgetPluginManager $widget_plugin_manager,
     FacetSourcePluginManager $facet_source_manager,
-    ProcessorPluginManager $processor_plugin_manager
+    ProcessorPluginManager $processor_plugin_manager,
+    EmptyBehaviorPluginManager $empty_behavior_plugin_manager
   ) {
 
     parent::__construct($configuration, $plugin_id, $plugin_definition);
@@ -187,6 +193,7 @@ abstract class FacetManagerPluginBase extends PluginBase implements FacetManager
     $this->widget_plugin_manager = $widget_plugin_manager;
     $this->facet_source_manager = $facet_source_manager;
     $this->processor_plugin_manager = $processor_plugin_manager;
+    $this->empty_behavior_plugin_manager = $empty_behavior_plugin_manager;
 
     // Immediately initialize the facets.
     // This can be done directly because the only thing needed is
@@ -420,11 +427,24 @@ abstract class FacetManagerPluginBase extends PluginBase implements FacetManager
     }
     $facet->setResults($results);
 
+
+    // Returns the render array, this render array contains the empty behaviour
+    // if no results are found. If there are results we're going to initialize
+    // the widget from the widget plugin manager and return it's build method.
+    if (empty($facet->getResults())) {
+      // Get the empty behavior id and the configuration.
+      $facet_empty_behavior_configs = $facet->get('empty_behavior_configs');
+      $behavior_id = $facet->get('empty_behavior');
+
+      // Build the result using the empty behavior configuration.
+      $empty_behavior_plugin = $this->empty_behavior_plugin_manager->createInstance($behavior_id);
+      return $empty_behavior_plugin->build($facet_empty_behavior_configs);
+    }
+
     // Let the widget plugin render the facet.
     /** @var \Drupal\facetapi\Widget\WidgetInterface $widget */
     $widget = $this->widget_plugin_manager->createInstance($facet->getWidget());
 
-    // Returns the render array
     return $widget->build($facet);
   }
 
