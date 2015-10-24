@@ -112,15 +112,15 @@ class DefaultFacetManager {
    *
    * @var string
    */
-  protected $searcher_id;
+  protected $facetsource_id;
 
   /**
    * Set the search id.
    *
    * @return mixed
    */
-  public function setSearchId($search_id) {
-    $this->searcher_id = $search_id;
+  public function setFacetSourceId($facetsource_id) {
+    $this->facetsource_id = $facetsource_id;
   }
 
   /**
@@ -193,7 +193,7 @@ class DefaultFacetManager {
     foreach ($this->facets as $facet) {
       // Only if the facet is for this query, alter the query.
       // @TODO use the line for tests only.
-      if ($facet->getFacetSourceId() == $this->searcher_id) {
+      if ($facet->getFacetSourceId() == $this->facetsource_id) {
         // Create the query type plugin.
         $query_type_plugin = $this->query_type_plugin_manager->createInstance($facet->getQueryType(), ['query' => $query, 'facet' => $facet]);
         // Let the query type alter the query.
@@ -216,8 +216,8 @@ class DefaultFacetManager {
   /**
    * @return string
    */
-  public function getSearcherId() {
-    return $this->searcher_id;
+  public function getFacetsourceId() {
+    return $this->facetsource_id;
   }
 
   /**
@@ -295,7 +295,7 @@ class DefaultFacetManager {
 
     // Process the facets.
     // @TODO: inject the searcher id on create of the FacetManager.
-    $this->searcher_id = $facet->getFacetSourceId();
+    $this->facetsource_id = $facet->getFacetSourceId();
 
     if ($facet->getOnlyVisibleWhenFacetSourceIsVisible()) {
       // Block rendering and processing should be stopped when the facet source
@@ -367,7 +367,7 @@ class DefaultFacetManager {
   public function updateResults() {
     // Get an instance of the facet source.
     /** @var FacetSourceInterface $facet_source_plugin */
-    $facet_source_plugin = $this->facet_source_manager->createInstance($this->searcher_id);
+    $facet_source_plugin = $this->facet_source_manager->createInstance($this->facetsource_id);
 
     $facet_source_plugin->addResults($this->facets);
 
