@@ -8,8 +8,7 @@
 namespace Drupal\facetapi\FacetManager;
 
 use Drupal\Core\Entity\EntityManager;
-use Drupal\Core\Extension\ModuleHandlerInterface;
-use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
+use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\facetapi\EmptyBehavior\EmptyBehaviorPluginManager;
 use Drupal\facetapi\FacetApiException;
 use Drupal\facetapi\FacetInterface;
@@ -19,10 +18,8 @@ use Drupal\facetapi\Processor\BuildProcessorInterface;
 use Drupal\facetapi\Processor\PreQueryProcessorInterface;
 use Drupal\facetapi\Processor\ProcessorInterface;
 use Drupal\facetapi\Processor\ProcessorPluginManager;
-use Drupal\facetapi\Processor\UrlProcessorInterface;
 use Drupal\facetapi\QueryType\QueryTypePluginManager;
 use Drupal\facetapi\Widget\WidgetPluginManager;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 use \Drupal\facetapi\Entity\Facet;
 
 /**
@@ -37,6 +34,8 @@ use \Drupal\facetapi\Entity\Facet;
  * so that it can execute the actual facet query.
  */
 class DefaultFacetManager {
+
+  use StringTranslationTrait;
 
   /**
    * The plugin manager.
@@ -65,11 +64,6 @@ class DefaultFacetManager {
   protected $empty_behavior_plugin_manager;
 
   /**
-   * @var ModuleHandlerInterface
-   */
-  protected $module_handler;
-
-  /**
    * The search keys, or query text, submitted by the user.
    *
    * @var string
@@ -83,15 +77,7 @@ class DefaultFacetManager {
    *
    * @see FacetapiFacet
    */
-  protected $facets = array();
-
-  /**
-   * @TODO: generalize to ProcessorInterface and properly type hint in __construct().
-   * The url processor plugin associated with this FacetManager.
-   *
-   * @var UrlProcessorInterface
-   */
-  protected $urlProcessor;
+  protected $facets = [];
 
   /**
    * A boolean flagging whether the facets have been processed, or built.
@@ -119,7 +105,7 @@ class DefaultFacetManager {
    *
    * @see FacetapiFacetManager::getFacetSettings()
    */
-  protected $settings = array();
+  protected $settings = [];
 
   /**
    * Searcher id.
@@ -127,18 +113,6 @@ class DefaultFacetManager {
    * @var string
    */
   protected $searcher_id;
-
-  /**
-   * Returns the search path associated with this searcher.
-   *
-   * @return string
-   *   A string containing the search path.
-   *
-   * @todo D8 should provide an API function for this.
-   */
-  public function getSearchPath() {
-    // TODO: Implement getSearchPath() method.
-  }
 
   /**
    * Set the search id.
@@ -150,13 +124,14 @@ class DefaultFacetManager {
   }
 
   /**
-   * Constructs a new instance.
+   * Constructs a new instance of the DefaultFacetManager.
    *
-   * @param array $configuration
-   * @param string $plugin_id
-   * @param mixed $plugin_definition
-   * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
    * @param \Drupal\facetapi\QueryType\QueryTypePluginManager $query_type_plugin_manager
+   * @param \Drupal\facetapi\Widget\WidgetPluginManager $widget_plugin_manager
+   * @param \Drupal\facetapi\FacetSource\FacetSourcePluginManager $facet_source_manager
+   * @param \Drupal\facetapi\Processor\ProcessorPluginManager $processor_plugin_manager
+   * @param \Drupal\facetapi\EmptyBehavior\EmptyBehaviorPluginManager $empty_behavior_plugin_manager
+   * @param \Drupal\Core\Entity\EntityManager $entityManager
    */
   public function __construct(QueryTypePluginManager $query_type_plugin_manager, WidgetPluginManager $widget_plugin_manager, FacetSourcePluginManager $facet_source_manager, ProcessorPluginManager $processor_plugin_manager, EmptyBehaviorPluginManager $empty_behavior_plugin_manager, EntityManager $entityManager) {
 
@@ -197,46 +172,6 @@ class DefaultFacetManager {
   }
 
   /**
-   * Returns the number of results returned by the search query.
-   *
-   * @return int
-   *   The number of results returned by the search query.
-   */
-  public function getResultCount() {
-    // TODO: Implement getResultCount() method.
-  }
-
-  /**
-   * Returns the number of results per page.
-   *
-   * @return int
-   *   The number of results per page, or the limit.
-   */
-  public function getPageLimit() {
-    // TODO: Implement getPageLimit() method.
-  }
-
-  /**
-   * Returns the page number of the search result set.
-   *
-   * @return int
-   *   The current page of the result set.
-   */
-  public function getPageNumber() {
-    // TODO: Implement getPageNumber() method.
-  }
-
-  /**
-   * Returns the total number of pages in the result set.
-   *
-   * @return int
-   *   The total number of pages.
-   */
-  public function getPageTotal() {
-    // TODO: Implement getPageTotal() method.
-  }
-
-  /**
    * Allows the backend to add facet queries to its native query object.
    *
    * This method is called by the implementing module to initialize the facet
@@ -255,15 +190,12 @@ class DefaultFacetManager {
    */
   public function alterQuery(&$query) {
     /** @var Facet[] $facets */
-    // Get the searcher name from the query.
-    $search_id = $this->searcher_id;
     foreach ($this->facets as $facet) {
       // Only if the facet is for this query, alter the query.
       // @TODO use the line for tests only.
-      if ($facet->getFacetSourceId() == $search_id) {
+      if ($facet->getFacetSourceId() == $this->searcher_id) {
         // Create the query type plugin.
-        $query_type_plugin = $this->query_type_plugin_manager->createInstance($facet->getQueryType(),
-          array('query' => $query, 'facet' => $facet));
+        $query_type_plugin = $this->query_type_plugin_manager->createInstance($facet->getQueryType(), ['query' => $query, 'facet' => $facet]);
         // Let the query type alter the query.
         $query_type_plugin->execute();
       }
@@ -293,8 +225,8 @@ class DefaultFacetManager {
    *
    * Facets are built via FacetapiFacetProcessor objects. Facets only need to be
    * processed, or built, once regardless of how many realms they are rendered
-   * in. The FacetapiFacetManager::processed semaphore is set when this method is
-   * called ensuring that facets are built only once regardless of how many
+   * in. The FacetapiFacetManager::processed semaphore is set when this method
+   * is called ensuring that facets are built only once regardless of how many
    * times this method is called.
    *
    * @todo For clarity, should this method be named buildFacets()?
@@ -336,7 +268,22 @@ class DefaultFacetManager {
   }
 
   /**
-   * {@inheritdoc}
+   * Build a facet and returns it's render array.
+   *
+   * This method delegates to the relevant plugins to render a facet, it calls
+   * out to a widget plugin to do the actual rendering when results are found.
+   * When no results are found it calls out to the correct empty result plugin
+   * to build a render array.
+   *
+   * Before doing any rendering, the processors that implement the
+   * BuildProcessorInterface enabled on this facet will run.
+   *
+   * @param FacetInterface $facet
+   *
+   * @return array
+   *   Facet render arrays.
+   *
+   * @throws \Drupal\facetapi\FacetApiException
    */
   public function build(FacetInterface $facet) {
     // It might be that the facet received here,
