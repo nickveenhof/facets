@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\facetapi\Plugin\facetapi\query_type\QueryTypeTerm
+ * Contains \Drupal\facetapi\Plugin\facetapi\query_type\SearchApiTerm
  */
 
 namespace Drupal\facetapi\Plugin\facetapi\query_type;
@@ -20,7 +20,7 @@ use Drupal\search_api\Query\Query;
  * )
  *
  */
-class QueryTypeTerm extends QueryTypePluginBase {
+class SearchApiTerm extends QueryTypePluginBase {
 
   /**
    * Add facet info to the query using the backend native query object.

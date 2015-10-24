@@ -62,6 +62,13 @@ class SearchApiViewsPage extends FacetSourcePluginBase {
   protected $searchResultsCache;
 
   /**
+   * The search index.
+   *
+   * @var \Drupal\search_api\IndexInterface
+   */
+  protected $index;
+
+  /**
    * {@inheritdoc}
    */
   public function __construct(array $configuration, $plugin_id, array $plugin_definition, $query_type_plugin_manager, $search_results_cache) {
@@ -117,19 +124,12 @@ class SearchApiViewsPage extends FacetSourcePluginBase {
       return [];
     }
 
-    $index = $query->getIndex();
-
-    $indexed_fields = [];
-    foreach ($index->getDatasources() as $datasource_id => $datasource) {
-      $fields = $index->getFieldsByDatasource($datasource_id);
-      foreach ($fields as $field) {
-        $indexed_fields[$field->getFieldIdentifier()] = $field->getLabel();
-      }
-    }
+    // Set the Search Api Index
+    $this->index = $query->getIndex();
 
     $form['field_identifier'] = [
       '#type' => 'select',
-      '#options' => $indexed_fields,
+      '#options' => $this->getFields(),
       '#title' => $this->t('Facet field'),
       '#description' => $this->t('Choose the indexed field.'),
       '#required' => TRUE,
@@ -137,6 +137,43 @@ class SearchApiViewsPage extends FacetSourcePluginBase {
     ];
 
     return $form;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getQueryTypes() {
+    return $this->query_type_plugin_manager->getDefinitions();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getFields() {
+    $indexed_fields = [];
+    foreach ($this->index->getDatasources() as $datasource_id => $datasource) {
+      $fields = $this->index->getFieldsByDatasource($datasource_id);
+      foreach ($fields as $field) {
+        $indexed_fields[$field->getFieldIdentifier()] = $field->getLabel();
+      }
+    }
+    return $indexed_fields;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getQueryTypesForFacet(FacetInterface $facet) {
+    // @todo call the mappings hook here. All possible modules are allowed
+    // to alter this.
+    // 1. Get data_type from the facet
+    // 2. Call a hook to find out the query_type plugin for this data type.
+    // 3. Search API will need to implement this hook and make the data type
+    //    and query_type mapping accordingly. Different backends can implement
+    //    this mapping. We will call all mappings and give that back to the
+    //    facet. depending on the backend, it will call the appropriate query
+    //    type.
+    return [];
   }
 
   public function addResults($facets) {
@@ -170,6 +207,9 @@ class SearchApiViewsPage extends FacetSourcePluginBase {
           'facet' => $facet,
           'results' => $facet_results[$facet->getFieldIdentifier()],
         );
+        // allow multiple query types here
+        // $query_types = $this->getQueryTypesForField($facet->getFieldIdentifier())
+        // send multiple query types to the widget.
         $query_type_plugin = $this->query_type_plugin_manager->createInstance($facet->getQueryType(),
           $configuration
         );

@@ -29,17 +29,35 @@ abstract class FacetSourcePluginBase extends PluginBase implements FacetSourceIn
 
   /**
    * The plugin manager.
+   *
+   * @var \Drupal\facetapi\QueryType\QueryTypePluginManager
    */
   protected $query_type_plugin_manager;
 
-  public function getAllowedQueryTypes() {
+  /**
+   * {@inheritdoc}
+   */
+  public function getQueryTypes() {
     return [];
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function getFields() {
     return [];
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  public function getQueryTypesForFacet($facet) {
+    return [];
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function __construct(
     array $configuration,
     $plugin_id,
@@ -50,7 +68,9 @@ abstract class FacetSourcePluginBase extends PluginBase implements FacetSourceIn
     $this->query_type_plugin_manager = $query_type_plugin_manager;
   }
 
-
+  /**
+   * {@inheritdoc}
+   */
   public static function create(
     ContainerInterface $container,
     array $configuration,

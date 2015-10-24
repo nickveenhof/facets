@@ -25,7 +25,7 @@ interface FacetSourceInterface {
    *
    * @return array
    */
-  public function getAllowedQueryTypes();
+  public function getQueryTypes();
 
   /**
    * Returns an array of fields that are defined on the datasource.
@@ -36,6 +36,15 @@ interface FacetSourceInterface {
    * @return array
    */
   public function getFields();
+
+  /**
+   * Returns an array of possible query types that are supported for this facet.
+   *
+   * @param \Drupal\facetapi\FacetInterface $facet
+   * @return array
+   *  List of compatible query types
+   */
+  public function getQueryTypesForFacet(FacetInterface $facet);
 
   /**
    * Adds a configuration form for this facet source.
