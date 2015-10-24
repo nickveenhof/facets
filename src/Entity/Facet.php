@@ -192,24 +192,19 @@ class Facet extends ConfigEntityBase implements FacetInterface {
   protected $widget_plugin_manager;
 
   /**
-   * Query Type Plugin Manager
-   *
-   * @var object
-   */
-  protected $query_type_manager;
-
-  /**
    * {@inheritdoc}
    */
   public function __construct(array $values, $entity_type) {
     parent::__construct($values, $entity_type);
+  }
 
+  /**
+   * @return \Drupal\facetapi\Widget\WidgetPluginManager
+   */
+  public function getWidgetManager() {
     $container = \Drupal::getContainer();
-    /** @var \Drupal\facetapi\Widget\WidgetPluginManager $widget_plugin_manager */
-    $this->widget_plugin_manager = $container->get('plugin.manager.facetapi.widget');
-    /** @var \Drupal\facetapi\QueryType\QueryTypePluginManager $query_type_manager */
-    $this->query_type_manager = $container->get('plugin.manager.facetapi.query_type');
 
+    return $this->widget_plugin_manager ? : $container->get('plugin.manager.facetapi.widget');
   }
 
   /**
@@ -251,7 +246,7 @@ class Facet extends ConfigEntityBase implements FacetInterface {
 
     // Get our widget configured for this facet.
     /** @var \Drupal\facetapi\Widget\WidgetInterface $widget */
-    $widget = $this->widget_plugin_manager->createInstance($this->getWidget());
+    $widget = $this->getWidgetManager()->createInstance($this->getWidget());
     // Give the widget the chance to select a preferred query type. This is
     // useful with a date widget, as it needs to select the date query type.
     return $widget->getQueryType($query_types);
