@@ -36,7 +36,7 @@ class CheckboxWidget implements WidgetInterface {
     foreach ($results as $result) {
       if ($result->getCount()) {
         // Get the link.
-        $text = $result->getValue() . ' (' . $result->getCount() . ')';
+        $text = $result->getDisplayValue() . ' (' . $result->getCount() . ')';
         if ($result->isActive()) {
           $text = '(-) ' . $text;
         }

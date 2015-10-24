@@ -62,7 +62,7 @@ class QueryStringUrlProcessor extends UrlProcessorPluginBase {
 
     /** @var Result $result */
     foreach ($results as &$result) {
-      $filter_string = $facet->getFieldAlias() . ':' . $result->getValue();
+      $filter_string = $facet->getFieldAlias() . ':' . $result->getRawValue();
       $result_get_params = clone $get_params;
 
       $filter_params = $result_get_params->get($this->filter_key, [], TRUE);
