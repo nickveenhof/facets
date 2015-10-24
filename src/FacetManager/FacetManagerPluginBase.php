@@ -7,6 +7,7 @@
 
 namespace Drupal\facetapi\FacetManager;
 
+use Drupal\Core\Entity\EntityManager;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\Plugin\PluginBase;
@@ -191,7 +192,8 @@ abstract class FacetManagerPluginBase extends PluginBase implements FacetManager
     WidgetPluginManager $widget_plugin_manager,
     FacetSourcePluginManager $facet_source_manager,
     ProcessorPluginManager $processor_plugin_manager,
-    EmptyBehaviorPluginManager $empty_behavior_plugin_manager
+    EmptyBehaviorPluginManager $empty_behavior_plugin_manager,
+    EntityManager $entityManager
   ) {
 
     parent::__construct($configuration, $plugin_id, $plugin_definition);
@@ -201,6 +203,7 @@ abstract class FacetManagerPluginBase extends PluginBase implements FacetManager
     $this->facet_source_manager = $facet_source_manager;
     $this->processor_plugin_manager = $processor_plugin_manager;
     $this->empty_behavior_plugin_manager = $empty_behavior_plugin_manager;
+    $this->facet_storage = $entityManager->getStorage('facetapi_facet');
 
     // Immediately initialize the facets.
     // This can be done directly because the only thing needed is
@@ -313,13 +316,7 @@ abstract class FacetManagerPluginBase extends PluginBase implements FacetManager
    *   An array of enabled facets.
    */
   public function getEnabledFacets() {
-    // Get the enabled facets.
-    // @Todo: inject the entitymanager in the FacetManager and use that.
-    /** @var Facet[] $facets */
-    $facets = facetapi_get_enabled_facets();
-    // Maybe also add different discovery methods later,
-    // for instance in the FacetManager itself.
-    return $facets;
+    return $this->facet_storage->loadMultiple();
   }
 
 
