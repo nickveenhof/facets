@@ -237,6 +237,23 @@ interface FacetInterface extends ConfigEntityInterface {
   public function setProcessorConfigs($processor_config = []);
 
   /**
+   * Loads this facets processors for a specific stage.
+   *
+   * @param string $stage
+   *   The stage for which to return the processors. One of the
+   *   \Drupal\facetapi\Processor\ProcessorInterface::STAGE_* constants.
+   * @param bool $only_enabled
+   *   (optional) If FALSE, also include disabled processors. Otherwise, only
+   *   load enabled ones.
+   *
+   * @return \Drupal\facetapi\Processor\ProcessorInterface[]
+   *   An array of all enabled (or available, if if $only_enabled is FALSE)
+   *   processors that support the given stage, ordered by the weight for that
+   *   stage.
+   */
+  public function getProcessorsByStage($stage, $only_enabled = TRUE);
+
+  /**
    * Sets the "only visible when facet source is visible" boolean flag.
    *
    * @param boolean $only_visible_when_facet_source_is_visible

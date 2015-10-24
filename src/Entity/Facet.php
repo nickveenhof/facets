@@ -23,6 +23,7 @@ use Drupal\facetapi\Result\Result;
  *     "form" = {
  *       "default" = "Drupal\facetapi\Form\FacetForm",
  *       "edit" = "Drupal\facetapi\Form\FacetForm",
+ *       "display" = "Drupal\facetapi\Form\FacetDisplayForm",
  *       "delete" = "Drupal\facetapi\Form\FacetDeleteConfirmForm",
  *     },
  *   },
@@ -166,6 +167,14 @@ class Facet extends ConfigEntityBase implements FacetInterface {
    */
   protected $processor_configs;
 
+  /**
+   * Cached information about the processors available for this facet.
+   *
+   * @var \Drupal\facetapi\Processor\ProcessorInterface[]|null
+   *
+   * @see loadProcessors()
+   */
+  protected $processors;
 
   /**
    * A boolean that defines whether or not the facet is only visible when the
@@ -367,6 +376,37 @@ class Facet extends ConfigEntityBase implements FacetInterface {
   }
 
   /**
+   * Retrieves all processors supported by this facet.
+   *
+   * @return \Drupal\facetapi\Processor\ProcessorInterface[]
+   *   The loaded processors, keyed by processor ID.
+   */
+  protected function loadProcessors() {
+    if (!isset($this->processors)) {
+      /** @var $processor_plugin_manager \Drupal\facetapi\Processor\ProcessorPluginManager */
+      $processor_plugin_manager = \Drupal::service('plugin.manager.facetapi.processor');
+      $processor_settings = $this->getOption('processors', array());
+
+      foreach ($processor_plugin_manager->getDefinitions() as $name => $processor_definition) {
+        if (class_exists($processor_definition['class']) && empty($this->processors[$name])) {
+          // Create our settings for this processor.
+          $settings = empty($processor_settings[$name]['settings']) ? array() : $processor_settings[$name]['settings'];
+          $settings['facet'] = $this;
+
+          /** @var $processor \Drupal\facetapi\Processor\ProcessorInterface */
+          $processor = $processor_plugin_manager->createInstance($name, $settings);
+          $this->processors[$name] = $processor;
+        }
+        elseif (!class_exists($processor_definition['class'])) {
+          \Drupal::logger('facetapi')->warning('Processor @id specifies a non-existing @class.', array('@id' => $name, '@class' => $processor_definition['class']));
+        }
+      }
+    }
+
+    return $this->processors;
+  }
+
+  /**
    * {@inheritdoc}
    */
   protected function urlRouteParameters($rel) {
@@ -469,6 +509,53 @@ class Facet extends ConfigEntityBase implements FacetInterface {
    */
   public function setProcessorConfigs($processor_config = []) {
     $this->processor_configs = $processor_config;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getProcessors($only_enabled = TRUE) {
+    $processors = $this->loadProcessors();
+
+    // Filter processors by status if required. Enabled processors are those
+    // which have settings in the "processors" option.
+    if ($only_enabled) {
+      $processors_settings = $this->getOption('processors', array());
+      $processors = array_intersect_key($processors, $processors_settings);
+    }
+
+    return $processors;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getProcessorsByStage($stage, $only_enabled = TRUE) {
+    $processors = $this->loadProcessors();
+    $processor_settings = $this->getOption('processors', array());
+    $processor_weights = array();
+
+    // Get a list of all processors meeting the criteria (stage and, optionally,
+    // enabled) along with their effective weights (user-set or default).
+    foreach ($processors as $name => $processor) {
+      if ($processor->supportsStage($stage) && !($only_enabled && empty($processor_settings[$name]))) {
+        if (!empty($processor_settings[$name]['weights'][$stage])) {
+          $processor_weights[$name] = $processor_settings[$name]['weights'][$stage];
+        }
+        else {
+          $processor_weights[$name] = $processor->getDefaultWeight($stage);
+        }
+      }
+    }
+
+    // Sort requested processors by weight.
+    asort($processor_weights);
+
+    $return_processors = array();
+    foreach ($processor_weights as $name => $weight) {
+      $return_processors[$name] = $processors[$name];
+    }
+    return $return_processors;
   }
 
   /**

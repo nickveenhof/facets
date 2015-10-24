@@ -36,3 +36,10 @@ entity.facetapi_facet.delete_form:
     _entity_form: 'facetapi_facet.delete'
   requirements:
     _entity_access: 'facetapi_facet.delete'
+
+entity.facetapi_facet.display:
+  path: '/admin/config/search/facet-api/{facetapi_facet}/display'
+  defaults:
+    _entity_form: 'facetapi_facet.display'
+  requirements:
+    _entity_access: 'facetapi_facet.edit'
