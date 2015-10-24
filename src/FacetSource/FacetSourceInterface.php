@@ -55,4 +55,15 @@ interface FacetSourceInterface {
    */
   public function addResults($facets);
 
+  /**
+   * Returns true if the Facet source is being rendered in the current request.
+   *
+   * This function will define if all facets for this facet source are shown
+   * when facet source visibility: "being rendered" is configured in the facet
+   * visibility settings.
+   *
+   * @return boolean
+   */
+  public function isRenderedInCurrentRequest();
+
 }

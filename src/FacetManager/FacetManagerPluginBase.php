@@ -282,7 +282,7 @@ abstract class FacetManagerPluginBase extends PluginBase implements FacetManager
     foreach ($this->facets as $facet) {
       // Only if the facet is for this query, alter the query.
       // @TODO use the line for tests only.
-      if ($facet->getFacetSource() == $search_id) {
+      if ($facet->getFacetSourceId() == $search_id) {
         // Create the query type plugin.
         $query_type_plugin = $this->query_type_plugin_manager->createInstance($facet->getQueryType(),
           array('query' => $query, 'facet' => $facet));
@@ -376,7 +376,18 @@ abstract class FacetManagerPluginBase extends PluginBase implements FacetManager
 
     // Process the facets.
     // @TODO: inject the searcher id on create of the FacetManager.
-    $this->searcher_id = $facet->getFacetSource();
+    $this->searcher_id = $facet->getFacetSourceId();
+
+    if ($facet->getOnlyVisibleWhenFacetSourceIsVisible()) {
+      // Block rendering and processing should be stopped when the facet source
+      // is not available on the page. Returning an empty array here should be
+      // enough to halt all further processing. This should probably go in an
+      // earlier step of the facet building process but here's fine for now.
+      $facet_source = $facet->getFacetSource();
+      if(!$facet_source->isRenderedInCurrentRequest()){
+        return [];
+      }
+    }
 
     // For clarity, process facets is called each build.
     // The first facet therefor will trigger the processing. Note that

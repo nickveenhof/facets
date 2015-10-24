@@ -82,17 +82,13 @@ class FacetBlock extends BlockBase implements ContainerFactoryPluginInterface {
     /** @var Facet $facet */
     $facet = $this->getContextValue('facet');
 
-    if (is_null($facet->getFacetSource())) {
-      return ['#markup' => "This is why we can't have nice things."];
-    }
-
     // This should be changeable when we support more than just search API.
     $plugin_id = 'facetapi_default';
 
     /** @var \Drupal\facetapi\FacetManager\FacetManagerInterface $manager */
     $manager = $this->pluginManager->getMyOwnChangeLaterInstance(
       $plugin_id,
-      $facet->getFacetSource()
+      $facet->getFacetSourceId()
     );
 
     // Let the facet_manager build the facets.

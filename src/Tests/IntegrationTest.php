@@ -109,7 +109,7 @@ class IntegrationTest extends FacetWebTestBase {
 
     // Configure the facet source by selecting one of the search api views.
     $this->drupalGet($facet_add_page);
-    $this->drupalPostForm(NULL, ['facet_source' => 'search_api_views:search_api_test_views_fulltext:page_1'], $this->t('Configure facet source'));
+    $this->drupalPostForm(NULL, ['facet_source_id' => 'search_api_views_page:search_api_test_views_fulltext:page_1'], $this->t('Configure facet source'));
 
     // @todo TEMPORARY FIX FOR https://www.drupal.org/node/2593611
     $this->drupalPostForm(NULL, ['widget' => 'links'], $this->t('Configure widget'));
@@ -121,8 +121,8 @@ class IntegrationTest extends FacetWebTestBase {
     // Fill in all fields and make sure the 'field is required' message is no
     // longer shown.
     $facet_source_form = [
-      'facet_source' => 'search_api_views:search_api_test_views_fulltext:page_1',
-      'facet_source_configs[search_api_views:search_api_test_views_fulltext:page_1][field_identifier]' => 'entity:entity_test/type',
+      'facet_source_id' => 'search_api_views_page:search_api_test_views_fulltext:page_1',
+      'facet_source_configs[search_api_views_page:search_api_test_views_fulltext:page_1][field_identifier]' => 'entity:entity_test/type',
     ];
     $this->drupalPostForm(NULL, $form_values + $facet_source_form, $this->t('Save'));
     $this->assertNoText('field is required.');

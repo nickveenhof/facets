@@ -208,12 +208,12 @@ class FacetForm extends EntityForm {
     ];
 
     $facet_sources = $this->getFacetSources();
-    $form['facet_source'] = [
+    $form['facet_source_id'] = [
       '#type' => 'select',
       '#title' => $this->t('Facet source'),
       '#description' => $this->t('Select the source where this facet can find its fields.'),
       '#options' => $facet_sources,
-      '#default_value' => $facet->getFacetSource(),
+      '#default_value' => $facet->getFacetSourceId(),
       '#required' => TRUE,
       '#ajax' => [
         'trigger_as' => ['name' => 'facet_source_configure'],
@@ -354,6 +354,13 @@ class FacetForm extends EntityForm {
       $form['processor_configs'][$id]['settings'] = $build_processor->buildConfigurationForm($form, $form_state, $facet);
     }
 
+    $form['only_visible_when_facet_source_is_visible'] = [
+      '#type' => 'checkbox',
+      '#title' => $this->t('Show the facet only when the facet source is also visible.'),
+      '#description' => $this->t('If checked, the facet will only be rendered on pages where the facet source is being rendered too.  If not checked, the facet can be shown on every page.'),
+      '#default_value' => $facet->getOnlyVisibleWhenFacetSourceIsVisible(),
+    ];
+
     $form['status'] = [
       '#type' => 'checkbox',
       '#title' => $this->t('Enabled'),
@@ -448,7 +455,7 @@ class FacetForm extends EntityForm {
    *   The facet being updated or created.
    */
   public function buildFacetSourceConfigForm(array &$form, FormStateInterface $form_state, FacetInterface $facet) {
-    $facet_source_id = $facet->getFacetSource();
+    $facet_source_id = $facet->getFacetSourceId();
 
     if (!is_null($facet_source_id) && $facet_source_id !== '') {
       /** @var \Drupal\facetapi\FacetSource\FacetSourceInterface $facet_source */
@@ -510,7 +517,7 @@ class FacetForm extends EntityForm {
 
     // Make sure the field identifier is copied from within the facet source
     // config to the facet object and saved there.
-    $facet_source = $form_state->getValue('facet_source');
+    $facet_source = $form_state->getValue('facet_source_id');
     $field_identifier = $form_state->getValue('facet_source_configs')[$facet_source]['field_identifier'];
 
     $facet->setFieldIdentifier($field_identifier);

@@ -135,7 +135,7 @@ function facetapi_simple_facet_discovery() {
           );
           if (in_array($display['display_plugin'], $supported_display_plugins)) {
             // @TODO: This should be a function in search api. Look it up.
-            $searcher_name = 'search_api_views:' . $view_id . ':' . $display['id'];
+            $searcher_name = 'search_api_views_page:' . $view_id . ':' . $display['id'];
             foreach ($fields as $field_name => $field) {
               // Determine the query type.
               $term_types = array(

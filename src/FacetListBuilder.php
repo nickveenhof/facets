@@ -202,7 +202,7 @@ class FacetListBuilder extends ConfigEntityListBuilder {
 
       foreach ($facets as $facet) {
         /** @var \Drupal\Core\Config\Entity\ConfigEntityInterface $facet */
-        if ($facet->getFacetSource() == $facet_source['id']) {
+        if ($facet->getFacetSourceId() == $facet_source['id']) {
           $facet_source_groups[$facet_source['id']]['facets'][$facet->id()] = $facet;
           // Remove this facet from $facet so it will finally only contain those
           // facets not belonging to any facet_source.

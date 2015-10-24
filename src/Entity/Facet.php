@@ -40,12 +40,13 @@ use Drupal\facetapi\Result\ResultInterface;
  *     "name",
  *     "field_identifier",
  *     "query_type_name",
- *     "facet_source",
+ *     "facet_source_id",
  *     "widget",
  *     "widget_configs",
  *     "processor_configs",
  *     "empty_behavior",
  *     "empty_behavior_configs",
+ *     "only_visible_when_facet_source_is_visible",
  *   },
  *   links = {
  *     "canonical" = "/admin/config/search/facet-api",
@@ -130,11 +131,11 @@ class Facet extends ConfigEntityBase implements FacetInterface {
   protected $url_processor_name;
 
   /**
-   * The name of the facet source.
+   * The id of the facet source.
    *
    * @var string
    */
-  protected $facet_source;
+  protected $facet_source_id;
 
   /**
    * The path all the links should point to.
@@ -165,6 +166,15 @@ class Facet extends ConfigEntityBase implements FacetInterface {
    * @var array
    */
   protected $processor_configs;
+
+
+  /**
+   * A boolean that defines whether or not the facet is only visible when the
+   * facet source is visible.
+   *
+   * @var boolean
+   */
+  protected $only_visible_when_facet_source_is_visible;
 
   /**
    * {@inheritdoc}
@@ -299,8 +309,8 @@ class Facet extends ConfigEntityBase implements FacetInterface {
   /**
    * {@inheritdoc}
    */
-  public function setFacetSource($facet_source) {
-    $this->facet_source = $facet_source;
+  public function setFacetSourceId($facet_source_id) {
+    $this->facet_source_id = $facet_source_id;
     return $this;
   }
 
@@ -308,7 +318,18 @@ class Facet extends ConfigEntityBase implements FacetInterface {
    * {@inheritdoc}
    */
   public function getFacetSource() {
-    return $this->facet_source;
+
+    /** @var $facet_source_plugin_manager \Drupal\facetapi\FacetSource\FacetSourcePluginManager */
+    $facet_source_plugin_manager = \Drupal::service('plugin.manager.facetapi.facet_source');
+
+    return $facet_source_plugin_manager->createInstance($this->facet_source_id);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getFacetSourceId() {
+    return $this->facet_source_id;
   }
 
   /**
@@ -416,5 +437,19 @@ class Facet extends ConfigEntityBase implements FacetInterface {
     $this->processor_configs = $processor_config;
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  public function setOnlyVisibleWhenFacetSourceIsVisible($only_visible_when_facet_source_is_visible) {
+    $this->only_visible_when_facet_source_is_visible = $only_visible_when_facet_source_is_visible;
+    return $this;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getOnlyVisibleWhenFacetSourceIsVisible() {
+    return $this->only_visible_when_facet_source_is_visible;
+  }
 
 }

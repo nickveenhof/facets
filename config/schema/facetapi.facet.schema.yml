@@ -14,9 +14,9 @@ facetapi.facet.*:
     status:
       type: boolean
       label: 'Status'
-    facet_source:
+    facet_source_id:
       type: string
-      label: 'Facet source'
+      label: 'Facet source id'
     field_identifier:
       type: string
       label: 'Field identifier'
@@ -41,6 +41,9 @@ facetapi.facet.*:
       sequence:
         type: sequence
         label: 'Empty Behavior plugin configurations'
+    only_visible_when_facet_source_is_visible:
+      type: boolean
+      label: 'Show this facet only when the facet source is visible.'
     processor_configs:
       type: sequence
       label: 'Processor settings'

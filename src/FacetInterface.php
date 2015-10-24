@@ -181,14 +181,22 @@ interface FacetInterface extends ConfigEntityInterface {
    *
    * This is usually the name of the Search-api view.
    *
-   * @param string $facet_source
+   * @param string $facet_source_id
    * @return $this
    */
-  public function setFacetSource($facet_source);
+  public function setFacetSourceId($facet_source_id);
 
   /**
-   * Returns the Facet source.
+   * Returns the Facet source id.
    * @return string
+   */
+  public function getFacetSourceId();
+
+  /**
+   * Returns the plugin instance of a facet source.
+   *
+   * @return \Drupal\facetapi\FacetSource\FacetSourceInterface
+   *   The plugin instance for the facet source.
    */
   public function getFacetSource();
 
@@ -228,4 +236,21 @@ interface FacetInterface extends ConfigEntityInterface {
    */
   public function setProcessorConfigs($processor_config = []);
 
+  /**
+   * Sets the "only visible when facet source is visible" boolean flag.
+   *
+   * @param boolean $only_visible_when_facet_source_is_visible
+   *   A boolean flag indicating if the facet should be hidden on a page that
+   *   does not show the facet source.
+   *
+   * @return $this
+   */
+  public function setOnlyVisibleWhenFacetSourceIsVisible($only_visible_when_facet_source_is_visible);
+
+  /**
+   * Returns the "only visible when facet source is visible" boolean flag.
+   *
+   * @return boolean
+   */
+  public function getOnlyVisibleWhenFacetSourceIsVisible();
 }

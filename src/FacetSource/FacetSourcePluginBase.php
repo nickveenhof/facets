@@ -64,4 +64,11 @@ abstract class FacetSourcePluginBase extends PluginBase implements FacetSourceIn
     return new static($configuration, $plugin_id, $plugin_definition, $query_type_plugin_manager);
 
   }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function isRenderedInCurrentRequest() {
+    return FALSE;
+  }
 }
