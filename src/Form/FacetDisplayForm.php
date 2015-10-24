@@ -11,8 +11,8 @@ use Drupal\Component\Utility\Html;
 use Drupal\Core\Entity\EntityForm;
 use Drupal\Core\Entity\EntityManagerInterface;
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\search_api\Processor\ProcessorInterface;
-use Drupal\search_api\Processor\ProcessorPluginManager;
+use Drupal\facetapi\Processor\ProcessorInterface;
+use Drupal\facetapi\Processor\ProcessorPluginManager;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
