@@ -164,7 +164,7 @@ class SearchApiViewsPage extends FacetSourcePluginBase {
    * {@inheritdoc}
    */
   public function getQueryTypesForFacet(FacetInterface $facet) {
-    // @todo call the mappings hook here. All possible modules are allowed
+    // @todo call the mappings function here. All possible modules are allowed
     // to alter this.
     // 1. Get data_type from the facet
     // 2. Call a hook to find out the query_type plugin for this data type.
