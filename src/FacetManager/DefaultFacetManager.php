@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains Drupal\facetapi\Plugin\FacetManager\FacetManagerBase.
+ * Contains Drupal\facetapi\FacetManager\DefaultFacetManager.
  */
 
 namespace Drupal\facetapi\FacetManager;
@@ -10,10 +10,10 @@ namespace Drupal\facetapi\FacetManager;
 use Drupal\Core\Entity\EntityManager;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
-use Drupal\Core\Plugin\PluginBase;
 use Drupal\facetapi\EmptyBehavior\EmptyBehaviorPluginManager;
 use Drupal\facetapi\FacetApiException;
 use Drupal\facetapi\FacetInterface;
+use Drupal\facetapi\FacetSource\FacetSourceInterface;
 use Drupal\facetapi\FacetSource\FacetSourcePluginManager;
 use Drupal\facetapi\Processor\BuildProcessorInterface;
 use Drupal\facetapi\Processor\PreQueryProcessorInterface;
@@ -21,7 +21,6 @@ use Drupal\facetapi\Processor\ProcessorInterface;
 use Drupal\facetapi\Processor\ProcessorPluginManager;
 use Drupal\facetapi\Processor\UrlProcessorInterface;
 use Drupal\facetapi\QueryType\QueryTypePluginManager;
-use Drupal\facetapi\Result\Result;
 use Drupal\facetapi\Widget\WidgetPluginManager;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use \Drupal\facetapi\Entity\Facet;
@@ -37,7 +36,7 @@ use \Drupal\facetapi\Entity\Facet;
  * enabled facets or passing the appropriate query type plugin to the backend
  * so that it can execute the actual facet query.
  */
-abstract class FacetManagerPluginBase extends PluginBase implements FacetManagerInterface, ContainerFactoryPluginInterface {
+class DefaultFacetManager {
 
   /**
    * The plugin manager.
@@ -141,30 +140,6 @@ abstract class FacetManagerPluginBase extends PluginBase implements FacetManager
     // TODO: Implement getSearchPath() method.
   }
 
-  public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
-    // Insert the module handler.
-    /** @var \Drupal\Core\Extension\ModuleHandlerInterface $module_handler */
-    $module_handler = $container->get('module_handler');
-
-    // Insert the plugin manager for query types.
-    /** @var \Drupal\facetapi\QueryType\QueryTypePluginManager $query_type_plugin_manager */
-    $query_type_plugin_manager = $container->get('plugin.manager.facetapi.query_type');
-
-    /** @var \Drupal\facetapi\Widget\WidgetPluginManager $widget_plugin_manager */
-    $widget_plugin_manager = $container->get('plugin.manager.facetapi.widget');
-
-    /** @var \Drupal\facetapi\FacetSource\FacetSourcePluginManager $facet_source_plugin_manager */
-    $facet_source_plugin_manager = $container->get('plugin.manager.facetapi.facet_source');
-
-    /** @var \Drupal\facetapi\Processor\ProcessorPluginManager $processor_plugin_manager */
-    $processor_plugin_manager = $container->get('plugin.manager.facetapi.processor');
-
-    /** @var \Drupal\facetapi\EmptyBehavior\EmptyBehaviorPluginManager $empty_behavior_plugin_manager */
-    $empty_behavior_plugin_manager = $container->get('plugin.manager.facetapi.empty_behavior');
-
-    return new static($configuration, $plugin_id, $plugin_definition, $module_handler, $query_type_plugin_manager, $widget_plugin_manager, $facet_source_plugin_manager, $processor_plugin_manager, $empty_behavior_plugin_manager);
-  }
-
   /**
    * Set the search id.
    *
@@ -183,21 +158,8 @@ abstract class FacetManagerPluginBase extends PluginBase implements FacetManager
    * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
    * @param \Drupal\facetapi\QueryType\QueryTypePluginManager $query_type_plugin_manager
    */
-  public function __construct(
-    array $configuration,
-    $plugin_id,
-    $plugin_definition,
-    ModuleHandlerInterface $module_handler,
-    QueryTypePluginManager $query_type_plugin_manager,
-    WidgetPluginManager $widget_plugin_manager,
-    FacetSourcePluginManager $facet_source_manager,
-    ProcessorPluginManager $processor_plugin_manager,
-    EmptyBehaviorPluginManager $empty_behavior_plugin_manager,
-    EntityManager $entityManager
-  ) {
+  public function __construct(QueryTypePluginManager $query_type_plugin_manager, WidgetPluginManager $widget_plugin_manager, FacetSourcePluginManager $facet_source_manager, ProcessorPluginManager $processor_plugin_manager, EmptyBehaviorPluginManager $empty_behavior_plugin_manager, EntityManager $entityManager) {
 
-    parent::__construct($configuration, $plugin_id, $plugin_definition);
-    $this->module_handler = $module_handler;
     $this->query_type_plugin_manager = $query_type_plugin_manager;
     $this->widget_plugin_manager = $widget_plugin_manager;
     $this->facet_source_manager = $facet_source_manager;
@@ -205,9 +167,8 @@ abstract class FacetManagerPluginBase extends PluginBase implements FacetManager
     $this->empty_behavior_plugin_manager = $empty_behavior_plugin_manager;
     $this->facet_storage = $entityManager->getStorage('facetapi_facet');
 
-    // Immediately initialize the facets.
-    // This can be done directly because the only thing needed is
-    // the url.
+    // Immediately initialize the facets. This can be done directly because the
+    // only thing needed is the url.
     $this->initFacets();
   }
 
@@ -452,5 +413,16 @@ abstract class FacetManagerPluginBase extends PluginBase implements FacetManager
     return $widget->build($facet);
   }
 
-  abstract public function updateResults();
+  /**
+   * Process the facets in this facet_manager in this facet_manager for a test only. This
+   * method should disappear later when facetapi does it.
+   */
+  public function updateResults() {
+    // Get an instance of the facet source.
+    /** @var FacetSourceInterface $facet_source_plugin */
+    $facet_source_plugin = $this->facet_source_manager->createInstance($this->searcher_id);
+
+    $facet_source_plugin->addResults($this->facets);
+
+  }
 }

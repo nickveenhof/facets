@@ -30,18 +30,11 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 class FacetBlock extends BlockBase implements ContainerFactoryPluginInterface {
 
   /**
-   * Drupal\facetapi\FacetManager definition.
-   *
-   * @var \Drupal\facetapi\FacetManager\FacetManagerInterface
-   */
-  protected $facetapiFacetManager;
-
-  /**
    * The facet_manager plugin manager.
    *
-   * @var \Drupal\facetapi\FacetManager\FacetManagerPluginManagerInterface
+   * @var \Drupal\facetapi\FacetManager\DefaultFacetManager
    */
-  protected $pluginManager;
+  protected $facetManager;
 
   /**
    * Construct.
@@ -52,10 +45,10 @@ class FacetBlock extends BlockBase implements ContainerFactoryPluginInterface {
    *   The plugin_id for the plugin instance.
    * @param string $plugin_definition
    *   The plugin implementation definition.
-   * @param \Drupal\facetapi\FacetManager\FacetManagerPluginManagerInterface pluginManager
+   * @param \Drupal\facetapi\FacetManager\DefaultFacetManager $facetManager
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, \Drupal\facetapi\FacetManager\FacetManagerPluginManagerInterface $plugin_manager) {
-    $this->pluginManager = $plugin_manager;
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, \Drupal\facetapi\FacetManager\DefaultFacetManager $facetManager) {
+    $this->facetManager = $facetManager;
     parent::__construct($configuration, $plugin_id, $plugin_definition);
   }
 
@@ -64,14 +57,14 @@ class FacetBlock extends BlockBase implements ContainerFactoryPluginInterface {
    */
   public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
 
-    /** @var \Drupal\facetapi\FacetManager\FacetManagerPluginManager $plugin_manager */
-    $plugin_manager = $container->get('plugin.manager.facetapi.manager');
+    /** @var \Drupal\facetapi\FacetManager\DefaultFacetManager $facetManager */
+    $facetManager = $container->get('facetapi.manager');
 
     return new static(
       $configuration,
       $plugin_id,
       $plugin_definition,
-      $plugin_manager
+      $facetManager
     );
   }
 
@@ -82,17 +75,8 @@ class FacetBlock extends BlockBase implements ContainerFactoryPluginInterface {
     /** @var Facet $facet */
     $facet = $this->getContextValue('facet');
 
-    // This should be changeable when we support more than just search API.
-    $plugin_id = 'facetapi_default';
-
-    /** @var \Drupal\facetapi\FacetManager\FacetManagerInterface $manager */
-    $manager = $this->pluginManager->getMyOwnChangeLaterInstance(
-      $plugin_id,
-      $facet->getFacetSourceId()
-    );
-
     // Let the facet_manager build the facets.
-    $build = $manager->build($facet);
+    $build = $this->facetManager->build($facet);
 
     // Add contextual links only when we have results.
     if (!empty($build)) {

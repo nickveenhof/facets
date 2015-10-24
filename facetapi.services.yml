@@ -1,7 +1,4 @@
 services:
-  plugin.manager.facetapi.manager:
-    class: Drupal\facetapi\FacetManager\FacetManagerPluginManager
-    parent: default_plugin_manager
   plugin.manager.facetapi.query_type:
     class: Drupal\facetapi\QueryType\QueryTypePluginManager
     parent: default_plugin_manager
@@ -21,6 +18,16 @@ services:
     class: \Drupal\facetapi\GetFacets
     arguments:
       - '@entity.manager'
+  facetapi.manager:
+    class: Drupal\facetapi\FacetManager\DefaultFacetManager
+    arguments:
+      - '@plugin.manager.facetapi.query_type'
+      - '@plugin.manager.facetapi.widget'
+      - '@plugin.manager.facetapi.facet_source'
+      - '@plugin.manager.facetapi.processor'
+      - '@plugin.manager.facetapi.empty_behavior'
+      - '@entity.manager'
+
   facetapi.feed_context:
     class: Drupal\facetapi\ContextProvider\FacetContextProvider
     arguments: ['@entity.manager']
