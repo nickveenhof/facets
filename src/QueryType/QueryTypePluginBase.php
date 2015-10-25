@@ -7,55 +7,47 @@ namespace Drupal\facetapi\QueryType;
 
 use Drupal\Component\Plugin\ConfigurablePluginInterface;
 use Drupal\Core\Entity\DependencyTrait;
-use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\Plugin\PluginBase;
-use Drupal\Core\Utility\LinkGeneratorInterface;
-use Drupal\facetapi\FacetInterface;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 
 abstract class QueryTypePluginBase extends PluginBase implements QueryTypeInterface, ConfigurablePluginInterface {
 
   use DependencyTrait;
 
-  public function __construct(array $configuration,
-    $plugin_id,
-    $plugin_definition) {
-    parent::__construct(
-      $configuration,
-      $plugin_id,
-      $plugin_definition
-    );
+  /**
+   * {@inheritdoc}
+   */
+  public function __construct(array $configuration, $plugin_id, $plugin_definition) {
+    parent::__construct($configuration, $plugin_id, $plugin_definition);
     $this->query = $this->configuration['query'];
     $this->facet = $this->configuration['facet'];
     $this->results = ! empty($this->configuration['results']) ? $this->configuration['results'] : array();
   }
 
-
   /**
    * Holds the backend native query object.
    *
-   * @var
+   * @var \Drupal\search_api\Query\Query $query
    */
   protected $query;
 
   /**
-   * Holds the facet.
+   * The facet that needs the query type.
    *
-   * @var FacetInterface
+   * @var \Drupal\facetapi\FacetInterface
    */
   protected $facet;
 
   /**
    * Holds the results for the facet.
    *
-   * @var array
+   * @var \Drupal\facetapi\Result\ResultInterface[]
    */
   protected $results;
 
   /**
    * The injected link generator.
    *
-   * @var LinkGeneratorInterface
+   * @var \Drupal\Core\Utility\LinkGeneratorInterface
    */
   protected $link_generator;
 
@@ -63,7 +55,7 @@ abstract class QueryTypePluginBase extends PluginBase implements QueryTypeInterf
    * {@inheritdoc}
    */
   public function defaultConfiguration() {
-    return array();
+    return [];
   }
 
   /**

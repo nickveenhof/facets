@@ -6,8 +6,6 @@
 
 namespace Drupal\facetapi\QueryType;
 
-use Drupal\facetapi\FacetManager\FacetManagerInterface;
-
 interface QueryTypeInterface {
 
   /**
