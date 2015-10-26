@@ -92,16 +92,12 @@ class SearchApiViewsPage extends FacetSourcePluginBase {
       $view->setDisplay($plugin_definition['view_display']);
       $query = $view->getQuery();
 
-      // Early return when the view is not based on a search API query.
+      // Only add the index if the $query is a Search API Query.
       if ($query instanceof SearchApiQuery) {
         // Set the Search Api Index
         $this->index = $query->getIndex();
       }
-
-
     }
-
-
   }
 
   public static function create(
@@ -207,8 +203,8 @@ class SearchApiViewsPage extends FacetSourcePluginBase {
    * {@inheritdoc}
    */
   public function getQueryTypesForFacet(FacetInterface $facet) {
-    // Get our FacetApi Field Identifier, which is equal to the
-    // Search API Field identifier.
+    // Get our FacetApi Field Identifier, which is equal to the Search API Field
+    // identifier.
     $field_id = $facet->getFieldIdentifier();
     // Get the Search API Server.
     $server = $this->index->getServer();

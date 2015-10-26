@@ -60,7 +60,13 @@ interface FacetSourceInterface {
   public function isRenderedInCurrentRequest();
 
   /**
-   * @return mixed
+   *
+   * Returns an array of fields that are defined on the datasource.
+   *
+   * This returns an array of fields that are defined on the source. This array
+   * is keyed by the field's machine name and has values of the field's label.
+   *
+   * @return array
    */
   public function getFields();
 

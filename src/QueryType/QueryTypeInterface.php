@@ -16,8 +16,7 @@ interface QueryTypeInterface {
   public function execute();
 
   /**
-   * Build the facet information,
-   * so it can be rendered.
+   * Build the facet information, so it can be rendered.
    */
   public function build();
 
