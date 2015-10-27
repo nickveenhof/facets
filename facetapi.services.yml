@@ -14,10 +14,6 @@ services:
   plugin.manager.facetapi.empty_behavior:
     class: Drupal\facetapi\EmptyBehavior\EmptyBehaviorPluginManager
     parent: default_plugin_manager
-  search_api_facets.get_facets:
-    class: \Drupal\facetapi\GetFacets
-    arguments:
-      - '@entity.manager'
   facetapi.manager:
     class: Drupal\facetapi\FacetManager\DefaultFacetManager
     arguments:
@@ -28,7 +24,7 @@ services:
       - '@plugin.manager.facetapi.empty_behavior'
       - '@entity.manager'
 
-  facetapi.feed_context:
+  facetapi.facet_context:
     class: Drupal\facetapi\ContextProvider\FacetContextProvider
     arguments: ['@entity.manager']
     tags:
