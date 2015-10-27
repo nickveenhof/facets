@@ -9,7 +9,6 @@ namespace Drupal\facetapi\FacetSource;
 
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\facetapi\FacetInterface;
-use Drupal\facetapi\Exception;
 
 /**
  * Describes a source for facet items.
@@ -34,7 +33,7 @@ interface FacetSourceInterface {
   /**
    * Fill in facet data in to the configured facets.
    *
-   * @param FacetInterface[] $facets
+   * @param \Drupal\facetapi\FacetInterface[] $facets
    * @return mixed
    */
   public function fillFacetsWithResults($facets);
@@ -42,9 +41,10 @@ interface FacetSourceInterface {
   /**
    * Get the allowed query types for a given facet for the facet source.
    *
-   * @param FacetInterface $facet
+   * @param \Drupal\facetapi\FacetInterface $facet
    * @return array of allowed query types
-   * @throws Exception
+   *
+   * @throws \Drupal\facetapi\Exception\Exception
    */
   public function getQueryTypesForFacet(FacetInterface $facet);
 

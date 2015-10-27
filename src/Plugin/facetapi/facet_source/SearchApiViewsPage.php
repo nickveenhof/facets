@@ -10,10 +10,10 @@ namespace Drupal\facetapi\Plugin\facetapi\facet_source;
 use Drupal\Core\DependencyInjection\DependencySerializationTrait;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
+use Drupal\facetapi\Exception\InvalidQueryTypeException;
 use Drupal\facetapi\FacetInterface;
 use Drupal\facetapi\FacetSource\FacetSourceInterface;
 use Drupal\facetapi\FacetSource\FacetSourcePluginBase;
-use Drupal\facetapi\Exception;
 use Drupal\search_api\FacetApiQueryTypeMappingInterface;
 use Drupal\search_api\Plugin\views\query\SearchApiQuery;
 use Drupal\search_api\Query\ResultSetInterface;
@@ -219,7 +219,7 @@ class SearchApiViewsPage extends FacetSourcePluginBase {
         }
       }
     }
-    throw new Exception($this->t("No available query types were found for facet @facet", ['@facet' => $facet->getName()]));
+    throw new InvalidQueryTypeException($this->t("No available query types were found for facet @facet", ['@facet' => $facet->getName()]));
   }
 
   /**
