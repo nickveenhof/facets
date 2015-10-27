@@ -103,11 +103,11 @@ before_script:
   - drupal-ti before_script
 
 script:
-  - drush dl search_api-8.x-1.x -y --destination=$TRAVIS_BUILD_DIR/../drupal-8/drupal/modules
+  - cd $TRAVIS_BUILD_DIR/../drupal-8/drupal/modules/
+  - git clone --branch 8.x-1.x http://git.drupal.org/project/search_api.git
+  - cd search_api
   # Apply patch to Search API module for getting the default query types for a backend.
   - wget -q https://www.drupal.org/files/issues/add_support_for_facet-2600442-13.patch
-  - mv add_support_for_facet-2600442-13.patch $TRAVIS_BUILD_DIR/../drupal-8/drupal/modules/search_api/add_support_for_facet-2600442-13.patch
-  - cd $TRAVIS_BUILD_DIR/../drupal-8/drupal/modules/search_api
   - git apply add_support_for_facet-2600442-13.patch
   - cd -
   - drupal-ti script
