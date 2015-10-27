@@ -8,9 +8,11 @@
 namespace Drupal\facetapi\Tests;
 
 use Drupal\Core\StringTranslation\StringTranslationTrait;
+use Drupal\search_api\Tests\ExampleContentTrait;
 use Drupal\search_api\Entity\Index;
 use Drupal\search_api\Entity\Server;
 use Drupal\simpletest\WebTestBase as SimpletestWebTestBase;
+use Drupal\search_api\Utility;
 
 /**
  * Provides the base class for web tests for Search API.
@@ -18,13 +20,23 @@ use Drupal\simpletest\WebTestBase as SimpletestWebTestBase;
 abstract class WebTestBase extends SimpletestWebTestBase {
 
   use StringTranslationTrait;
+  use ExampleContentTrait;
+
+  /**
+   * Exempt from strict schema checking.
+   *
+   * @see \Drupal\Core\Config\Testing\ConfigSchemaChecker
+   *
+   * @var bool
+   */
+  protected $strictConfigSchema = FALSE;
 
   /**
    * Modules to enable for this test.
    *
    * @var string[]
    */
-  public static $modules = ['views', 'node', 'search_api', 'search_api_test_backend', 'facetapi', 'search_api_test_views'];
+  public static $modules = ['views', 'node', 'search_api', 'search_api_test_backend', 'facetapi', 'search_api_test_views', 'block'];
 
   /**
    * An admin user used for this test.
@@ -55,24 +67,47 @@ abstract class WebTestBase extends SimpletestWebTestBase {
   protected $urlGenerator;
 
   /**
+   * A search index ID.
+   *
+   * @var string
+   */
+  protected $indexId = 'database_search_index';
+
+  /**
    * {@inheritdoc}
    */
   public function setUp() {
     parent::setUp();
 
     // Create the users used for the tests.
-    $this->adminUser = $this->drupalCreateUser(['administer search_api', 'administer facetapi', 'access administration pages']);
+    $this->adminUser = $this->drupalCreateUser([
+      'administer search_api',
+      'administer facetapi',
+      'access administration pages',
+      'administer nodes',
+      'access content overview',
+      'administer content types',
+      'administer blocks',
+    ]);
+
     $this->unauthorizedUser = $this->drupalCreateUser(['access administration pages']);
     $this->anonymousUser = $this->drupalCreateUser();
 
     // Get the URL generator.
     $this->urlGenerator = $this->container->get('url_generator');
 
+    // @TODO do we need to create article CT?
     // Create a node article type.
-    $this->drupalCreateContentType(['type' => 'article', 'name' => 'Article']);
+    //$this->drupalCreateContentType(['type' => 'article', 'name' => 'Article']);
 
+    // @TODO do we need to create Page CT?
     // Create a node page type.
-    $this->drupalCreateContentType(['type' => 'page', 'name' => 'Page']);
+    //$this->drupalCreateContentType(['type' => 'page', 'name' => 'Page']);
+
+    $this->setUpExampleStructure();
+
+    Utility::getIndexTaskManager()->addItemsAll(Index::load($this->indexId));
+
   }
 
   /**
@@ -151,6 +186,23 @@ abstract class WebTestBase extends SimpletestWebTestBase {
     }
 
     return $index;
+  }
+
+  /**
+   * Retrieves the search index used by this test.
+   *
+   * @return \Drupal\search_api\IndexInterface
+   *   The search index.
+   */
+  protected function getIndex() {
+    return Index::load($this->indexId);
+  }
+
+  /**
+   * Clears the test index.
+   */
+  protected function clearIndex() {
+    $this->getIndex()->clear();
   }
 
 }
