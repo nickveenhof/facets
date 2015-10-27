@@ -108,8 +108,8 @@ class IntegrationTest extends FacetWebTestBase {
 
     // Verify that the facet results are correct.
     $this->drupalGet('search-api-test-fulltext');
-    $this->assertRaw('<a href="/search-api-test-fulltext?f%5B0%5D=entity_entity_test_type%3A%22item%22">item (3)</a>');
-    $this->assertRaw('<a href="/search-api-test-fulltext?f%5B0%5D=entity_entity_test_type%3A%22article%22">article (2)</a>');
+    $this->assertText('item (3)');
+    $this->assertText('article (2)');
     foreach ($this->blocks as $block) {
       $this->assertBlockAppears($block);
     }
