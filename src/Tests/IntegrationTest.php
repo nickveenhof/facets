@@ -95,7 +95,7 @@ class IntegrationTest extends FacetWebTestBase {
           'region' => 'footer',
           'id' => 'test-facet-name',
           'context_mapping' => [
-            'facet' => '@facetapi.feed_context:' . $facet->uuid()
+            'facet' => '@facetapi.facet_context:' . $facet->uuid()
           ]
         ],
         'test_weight' => '0',
