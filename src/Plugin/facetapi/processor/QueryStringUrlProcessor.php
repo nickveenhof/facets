@@ -58,8 +58,6 @@ class QueryStringUrlProcessor extends UrlProcessorPluginBase {
       return [];
     }
 
-    $return_results = [];
-
     /** @var Result $result */
     foreach ($results as &$result) {
       $filter_string = $facet->getFieldAlias() . ':' . $result->getRawValue();
@@ -101,7 +99,7 @@ class QueryStringUrlProcessor extends UrlProcessorPluginBase {
     // Get the filterkey of the facet.
     if (isset($this->active_filters[$facet->getFieldAlias()])) {
       foreach ($this->active_filters[$facet->getFieldAlias()] as $value) {
-        $facet->setActiveItem($value);
+        $facet->setActiveItem(trim($value, '"'));
       }
     }
   }
@@ -123,9 +121,7 @@ class QueryStringUrlProcessor extends UrlProcessorPluginBase {
     foreach ($active_params as $param) {
       list($key, $value) = explode(self::SEPARATOR, $param);
       if (!isset($this->active_filters[$key])) {
-        $this->active_filters[$key] = array(
-          $value
-        );
+        $this->active_filters[$key] = [$value];
       }
       else {
         $this->active_filters[$key][] = $value;
