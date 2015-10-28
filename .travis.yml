@@ -108,7 +108,7 @@ script:
   - cd search_api
   # Apply patch to Search API module for getting the default query types for a backend.
   - wget -q https://www.drupal.org/files/issues/2600442-15--facetapi_support.patch
-  - git apply add_support_for_facet-2600442-13.patch
+  - git apply 2600442-15--facetapi_support.patch
   - cd -
   - drupal-ti script
 
