@@ -9,10 +9,11 @@ namespace Drupal\facetapi\Form;
 
 use Drupal\Component\Utility\Html;
 use Drupal\Core\Entity\EntityForm;
-use Drupal\Core\Entity\EntityManagerInterface;
+use Drupal\Core\Entity\EntityTypeManager;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\facetapi\Processor\ProcessorInterface;
 use Drupal\facetapi\Processor\ProcessorPluginManager;
+use Drupal\search_api\Form\SubFormState;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -30,9 +31,9 @@ class FacetDisplayForm extends EntityForm {
   /**
    * The entity manager.
    *
-   * @var \Drupal\Core\Entity\EntityManagerInterface
+   * @var \Drupal\Core\Entity\EntityTypeManager
    */
-  protected $entityManager;
+  protected $entityTypeManager;
 
   /**
    * The datasource manager.
@@ -44,13 +45,13 @@ class FacetDisplayForm extends EntityForm {
   /**
    * Constructs an IndexProcessorsForm object.
    *
-   * @param \Drupal\Core\Entity\EntityManagerInterface $entity_manager
+   * @param \Drupal\Core\Entity\EntityTypeManager $entity_type_manager
    *   The entity manager.
    * @param \Drupal\facetapi\Processor\ProcessorPluginManager $processor_plugin_manager
    *   The processor plugin manager.
    */
-  public function __construct(EntityManagerInterface $entity_manager, ProcessorPluginManager $processor_plugin_manager) {
-    $this->entityManager = $entity_manager;
+  public function __construct(EntityTypeManager $entity_type_manager, ProcessorPluginManager $processor_plugin_manager) {
+    $this->entityTypeManager = $entity_type_manager;
     $this->processorPluginManager = $processor_plugin_manager;
   }
 
@@ -58,11 +59,11 @@ class FacetDisplayForm extends EntityForm {
    * {@inheritdoc}
    */
   public static function create(ContainerInterface $container) {
-    /** @var \Drupal\Core\Entity\EntityManagerInterface $entity_manager */
-    $entity_manager = $container->get('entity.manager');
+    /** @var \Drupal\Core\Entity\EntityTypeManager $entity_type_manager */
+    $entity_type_manager = $container->get('entity_type.manager');
     /** @var \Drupal\facetapi\Processor\ProcessorPluginManager $processor_plugin_manager */
     $processor_plugin_manager = $container->get('plugin.manager.facetapi.processor');
-    return new static($entity_manager, $processor_plugin_manager);
+    return new static($entity_type_manager, $processor_plugin_manager);
   }
 
   /**

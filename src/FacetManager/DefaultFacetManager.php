@@ -8,7 +8,7 @@
 namespace Drupal\facetapi\FacetManager;
 
 use Drupal\Component\Render\FormattableMarkup;
-use Drupal\Core\Entity\EntityManager;
+use Drupal\Core\Entity\EntityTypeManager;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\facetapi\EmptyBehavior\EmptyBehaviorPluginManager;
 use Drupal\facetapi\Exception\InvalidProcessorException;
@@ -132,16 +132,16 @@ class DefaultFacetManager {
    * @param \Drupal\facetapi\FacetSource\FacetSourcePluginManager $facet_source_manager
    * @param \Drupal\facetapi\Processor\ProcessorPluginManager $processor_plugin_manager
    * @param \Drupal\facetapi\EmptyBehavior\EmptyBehaviorPluginManager $empty_behavior_plugin_manager
-   * @param \Drupal\Core\Entity\EntityManager $entityManager
+   * @param \Drupal\Core\Entity\EntityTypeManager $entity_type_manager
    */
-  public function __construct(QueryTypePluginManager $query_type_plugin_manager, WidgetPluginManager $widget_plugin_manager, FacetSourcePluginManager $facet_source_manager, ProcessorPluginManager $processor_plugin_manager, EmptyBehaviorPluginManager $empty_behavior_plugin_manager, EntityManager $entityManager) {
+  public function __construct(QueryTypePluginManager $query_type_plugin_manager, WidgetPluginManager $widget_plugin_manager, FacetSourcePluginManager $facet_source_manager, ProcessorPluginManager $processor_plugin_manager, EmptyBehaviorPluginManager $empty_behavior_plugin_manager, EntityTypeManager $entity_type_manager) {
 
     $this->query_type_plugin_manager = $query_type_plugin_manager;
     $this->widget_plugin_manager = $widget_plugin_manager;
     $this->facet_source_manager = $facet_source_manager;
     $this->processor_plugin_manager = $processor_plugin_manager;
     $this->empty_behavior_plugin_manager = $empty_behavior_plugin_manager;
-    $this->facet_storage = $entityManager->getStorage('facetapi_facet');
+    $this->facet_storage = $entity_type_manager->getStorage('facetapi_facet');
 
     // Immediately initialize the facets. This can be done directly because the
     // only thing needed is the url.

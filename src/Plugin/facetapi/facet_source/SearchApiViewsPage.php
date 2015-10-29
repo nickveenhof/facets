@@ -38,9 +38,9 @@ class SearchApiViewsPage extends FacetSourcePluginBase {
   /**
    * The entity manager.
    *
-   * @var \Drupal\Core\Entity\EntityManagerInterface|null
+   * @var \Drupal\Core\Entity\EntityTypeManager|null
    */
-  protected $entityManager;
+  protected $entityTypeManager;
 
   /**
    * The typed data manager.

@@ -7,7 +7,7 @@
 
 namespace Drupal\facetapi\ContextProvider;
 
-use Drupal\Core\Entity\EntityManagerInterface;
+use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Plugin\Context\Context;
 use Drupal\Core\Plugin\Context\ContextDefinition;
 use Drupal\Core\Plugin\Context\ContextProviderInterface;
@@ -19,8 +19,13 @@ class FacetContextProvider implements ContextProviderInterface {
 
   protected $facetStorage;
 
-  public function __construct(EntityManagerInterface $entityManager) {
-    $this->facetStorage = $entityManager->getStorage('facetapi_facet');
+  /**
+   * Create a new instance of the context provider.
+   *
+   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
+   */
+  public function __construct(EntityTypeManagerInterface $entity_type_manager) {
+    $this->facetStorage = $entity_type_manager->getStorage('facetapi_facet');
   }
 
   /**

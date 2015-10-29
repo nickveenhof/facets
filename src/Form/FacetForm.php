@@ -9,7 +9,7 @@ namespace Drupal\facetapi\Form;
 
 use Drupal\Core\Config\Config;
 use Drupal\Core\Entity\EntityForm;
-use Drupal\Core\Entity\EntityManagerInterface;
+use Drupal\Core\Entity\EntityTypeManager;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\facetapi\EmptyBehavior\EmptyBehaviorPluginManager;
 use Drupal\facetapi\FacetInterface;
@@ -69,7 +69,7 @@ class FacetForm extends EntityForm {
   /**
    * Constructs a FacetForm object.
    *
-   * @param \Drupal\Core\Entity\EntityManagerInterface $entity_manager
+   * @param \Drupal\Core\Entity\EntityTypeManager $entity_type_manager
    *   The entity manager.
    * @param \Drupal\facetapi\Widget\WidgetPluginManager $widgetPluginManager
    *   The plugin manager for widgets.
@@ -80,8 +80,8 @@ class FacetForm extends EntityForm {
    * @param \Drupal\facetapi\EmptyBehavior\EmptyBehaviorPluginManager $emptyBehaviorPluginManager
    *   The plugin manager for empty behaviors.
    */
-  public function __construct(EntityManagerInterface $entity_manager, WidgetPluginManager $widgetPluginManager, FacetSourcePluginManager $facetSourcePluginManager, ProcessorPluginManager $processorPluginManager, EmptyBehaviorPluginManager $emptyBehaviorPluginManager) {
-    $this->facetStorage = $entity_manager->getStorage('facetapi_facet');
+  public function __construct(EntityTypeManager $entity_type_manager, WidgetPluginManager $widgetPluginManager, FacetSourcePluginManager $facetSourcePluginManager, ProcessorPluginManager $processorPluginManager, EmptyBehaviorPluginManager $emptyBehaviorPluginManager) {
+    $this->facetStorage = $entity_type_manager->getStorage('facetapi_facet');
     $this->widgetPluginManager = $widgetPluginManager;
     $this->facetSourcePluginManager = $facetSourcePluginManager;
     $this->processorPluginManager = $processorPluginManager;
@@ -92,8 +92,8 @@ class FacetForm extends EntityForm {
    * {@inheritdoc}
    */
   public static function create(ContainerInterface $container) {
-    /** @var \Drupal\Core\Entity\EntityManagerInterface $entity_manager */
-    $entity_manager = $container->get('entity.manager');
+    /** @var \Drupal\Core\Entity\EntityTypeManager $entity_type_manager */
+    $entity_manager = $container->get('entity_type.manager');
 
     /** @var \Drupal\facetapi\Widget\WidgetPluginManager $widget_plugin_manager */
     $widget_plugin_manager = $container->get('plugin.manager.facetapi.widget');

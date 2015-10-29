@@ -8,8 +8,7 @@
 namespace Drupal\facetapi\Plugin\facetapi\facet_source;
 
 use Drupal\Component\Plugin\PluginBase;
-use Drupal\Core\Entity\ContentEntityType;
-use Drupal\Core\Entity\EntityManagerInterface;
+use Drupal\Core\Entity\EntityTypeManager;
 use Drupal\Core\Plugin\Discovery\ContainerDeriverInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -33,7 +32,7 @@ class SearchApiViewsPageDeriver implements ContainerDeriverInterface {
   /**
    * The entity manager.
    *
-   * @var \Drupal\Core\Entity\EntityManagerInterface
+   * @var \Drupal\Core\Entity\EntityTypeManager
    */
   protected $entityManager;
 
@@ -43,9 +42,9 @@ class SearchApiViewsPageDeriver implements ContainerDeriverInterface {
   public static function create(ContainerInterface $container, $base_plugin_id) {
     $deriver = new static();
 
-    /** @var $entity_manager \Drupal\Core\Entity\EntityManagerInterface */
-    $entity_manager = $container->get('entity.manager');
-    $deriver->setEntityManager($entity_manager);
+    /** @var \Drupal\Core\Entity\EntityTypeManager $entity_type_manager */
+    $entity_type_manager = $container->get('entity_type.manager');
+    $deriver->setEntityManager($entity_type_manager);
 
     /** @var \Drupal\Core\StringTranslation\TranslationInterface $translation */
     $translation = $container->get('string_translation');
@@ -57,23 +56,23 @@ class SearchApiViewsPageDeriver implements ContainerDeriverInterface {
   /**
    * Retrieves the entity manager.
    *
-   * @return \Drupal\Core\Entity\EntityManagerInterface
+   * @return \Drupal\Core\Entity\EntityTypeManager
    *   The entity manager.
    */
   public function getEntityManager() {
-    return $this->entityManager ?: \Drupal::entityManager();
+    return $this->entityManager ?: \Drupal::service('entity_type.manager');
   }
 
   /**
    * Sets the entity manager.
    *
-   * @param \Drupal\Core\Entity\EntityManagerInterface $entity_manager
+   * @param \Drupal\Core\Entity\EntityTypeManager $entity_type_manager
    *   The entity manager.
    *
    * @return $this
    */
-  public function setEntityManager(EntityManagerInterface $entity_manager) {
-    $this->entityManager = $entity_manager;
+  public function setEntityManager(EntityTypeManager $entity_type_manager) {
+    $this->entityManager = $entity_type_manager;
     return $this;
   }
 
