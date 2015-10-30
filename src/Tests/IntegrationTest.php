@@ -30,6 +30,7 @@ class IntegrationTest extends FacetWebTestBase {
    */
   protected $blocks;
 
+
   /**
    * Tests the facet api permissions.
    */
@@ -58,16 +59,6 @@ class IntegrationTest extends FacetWebTestBase {
     // Make sure we're logged in with a user that has sufficient permissions.
     $this->drupalLogin($this->adminUser);
 
-    // Create search api test server & index and add fields to the index.
-    // @TODO remove this config because we are not using this server or index?
-    // By default search_api_test_backend module creates a server and index and
-    // we are currently using it.
-    /*$this->getTestServer();
-    $this->getTestIndex();
-    $this->addFieldsToIndex();*/
-
-    // @TODO create content and index it.
-
     // Check if the overview is empty.
     $this->checkEmptyOverview();
 
@@ -83,9 +74,66 @@ class IntegrationTest extends FacetWebTestBase {
     // By default, the view should show all entities.
     $this->assertText('Displaying 5 search results', 'The search view displays the correct number of results.');
 
+    // Create and place a block for "Test Facet name" facet.
+    $this->createFacetBlock('test_facet_name');
+
+    // Verify that the facet results are correct.
+    $this->drupalGet('search-api-test-fulltext');
+    $this->assertText('item (3)');
+    $this->assertText('article (2)');
+
+    // Verify that facet blocks appear as expected.
+    $this->assertFacetBlocksAppear();
+
+    // Do not show the block on empty behaviors.
+    // Remove data from index.
+    $this->clearIndex();
+    $this->drupalGet('search-api-test-fulltext');
+
+    // Verify that no facet blocks appear. Empty behavior "None" is selected by
+    // default.
+    $this->assertNoFacetBlocksAppear();
+
+    // Verify that the "empty_text" appears as expected.
+    $this->setEmptyBehaviorFacetText("Test Facet name");
+    $this->drupalGet('search-api-test-fulltext');
+    $this->assertRaw('block-test-facet-name');
+    $this->assertRaw('No results found for this block!');
+
+    // Verify that we cannot delete a facet used in a block.
+    $this->deleteUsedFacet("Test Facet name");
+
+    // Delete the block.
+    $this->deleteBlock('test_facet_name');
+
+    // Delete the facet and make sure the overview is empty again.
+    $this->deleteUnusedFacet("Test Facet name");
+    $this->checkEmptyOverview();
+  }
+
+  protected function deleteBlock($id) {
+    $this->drupalGet('admin/structure/block/manage/' . $this->blocks[$id]->id(), array('query' => array('destination' => 'admin')));
+    $this->clickLink(t('Delete'));
+    $this->drupalPostForm(NULL, array(), t('Delete'));
+    $this->assertRaw(t('The block %name has been deleted.', array('%name' => $this->blocks[$id]->label())));
+  }
+
+  protected function assertNoFacetBlocksAppear() {
+    foreach ($this->blocks as $block) {
+      $this->assertNoBlockAppears($block);
+    }
+  }
+
+  protected function assertFacetBlocksAppear() {
+    foreach ($this->blocks as $block) {
+      $this->assertBlockAppears($block);
+    }
+  }
+
+  protected function createFacetBlock($id) {
     // Create a block. Load the entity to obtain the uuid when creating the
     // block.
-    $facet = \Drupal::entityManager()->getStorage('facetapi_facet')->load('test_facet_name');
+    $facet = \Drupal::entityManager()->getStorage('facetapi_facet')->load($id);
     $this->blockValues = [
       [
         'label' => 'Facet Block',
@@ -93,7 +141,7 @@ class IntegrationTest extends FacetWebTestBase {
         'plugin_id' => 'facet_block',
         'settings' => [
           'region' => 'footer',
-          'id' => 'test-facet-name',
+          'id' => str_replace('_', '-', $id),
           'context_mapping' => [
             'facet' => '@facetapi.facet_context:' . $facet->uuid()
           ]
@@ -101,46 +149,9 @@ class IntegrationTest extends FacetWebTestBase {
         'test_weight' => '0',
       ],
     ];
-    $this->blocks = [];
     foreach ($this->blockValues as $values) {
-      $this->blocks[] = $this->drupalPlaceBlock($values['plugin_id'], $values['settings']);
+      $this->blocks[$id] = $this->drupalPlaceBlock($values['plugin_id'], $values['settings']);
     }
-
-    // Verify that the facet results are correct.
-    $this->drupalGet('search-api-test-fulltext');
-    $this->assertText('item (3)');
-    $this->assertText('article (2)');
-    foreach ($this->blocks as $block) {
-      $this->assertBlockAppears($block);
-    }
-
-    // Do not show the block on empty behaviors.
-    // Remove data from index.
-    $this->clearIndex();
-    $this->drupalGet('search-api-test-fulltext');
-    foreach ($this->blocks as $block) {
-      $this->assertNoBlockAppears($block);
-    }
-
-    // Verify that the "empty_text" appears as expected.
-    $this->setEmptyBehaviorFacetText("Test Facet name");
-    $this->drupalGet('search-api-test-fulltext');
-    $this->assertRaw('block-test-facet-name');
-    $this->assertRaw('No results found fo this block!');
-
-    // @TODO verify that we cannot remove a facet if used by a block before
-    // deleteUnusedFacet().
-    // Delete the block.
-    foreach ($this->blocks as $block) {
-      $this->drupalGet('admin/structure/block/manage/' . $block->id(), array('query' => array('destination' => 'admin')));
-      $this->clickLink(t('Delete'));
-      $this->drupalPostForm(NULL, array(), t('Delete'));
-      $this->assertRaw(t('The block %name has been deleted.', array('%name' => $block->label())));
-    }
-
-    // Delete the facet and make sure the overview is empty again.
-    $this->deleteUnusedFacet("Test Facet name");
-    $this->checkEmptyOverview();
   }
 
   /**
@@ -160,7 +171,7 @@ class IntegrationTest extends FacetWebTestBase {
 
     // Configure the text for empty results behavior.
     $this->drupalPostForm(NULL, ['empty_behavior' => 'text'], $this->t('Configure empty behavior'));
-    $this->drupalPostForm(NULL, ['empty_behavior_configs[empty_text][value]' => 'No results found fo this block!'], $this->t('Configure empty behavior'));
+    $this->drupalPostForm(NULL, ['empty_behavior_configs[empty_text][value]' => 'No results found for this block!'], $this->t('Configure empty behavior'));
 
     $this->drupalPostForm(NULL, NULL, $this->t('Save'));
 
@@ -280,6 +291,26 @@ class IntegrationTest extends FacetWebTestBase {
 
   /**
    * This deletes an unused facet through the UI.
+   *
+   * @param string $facet_name
+   */
+  protected function deleteUsedFacet($facet_name) {
+    $facet_id = $this->convertNameToMachineName($facet_name);
+
+    $facet_delete_page = $this->urlGenerator->generateFromRoute('entity.facetapi_facet.delete_form', ['facetapi_facet' => $facet_id], ['absolute' => TRUE]);
+
+    // Go to the facet delete page and make the warning is shown.
+    $this->drupalGet($facet_delete_page);
+    $this->assertResponse(200);
+
+    // Check that the facet by testing for the message and the absence of the
+    // facet name on the overview.
+    $this->assertRaw($this->t('The facet is currently used in a block and thus can\'t be removed. Remove the block first.'));
+
+  }
+
+  /**
+   * This deletes a facet through the UI.
    *
    * @param string $facet_name
    */
