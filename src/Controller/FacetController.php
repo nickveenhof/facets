@@ -7,10 +7,9 @@
 
 namespace Drupal\facetapi\Controller;
 
-use Drupal\Component\Utility\SafeMarkup;
+use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\facetapi\FacetInterface;
-use Drupal\search_api\IndexInterface;
 
 /**
  * Provides route responses for facets.
@@ -77,7 +76,7 @@ class FacetController extends ControllerBase {
    *   The page title.
    */
   public function pageTitle(FacetInterface $facet) {
-    return SafeMarkup::format('@title', array('@title' => $facet->label()));
+    return new FormattableMarkup('@title', array('@title' => $facet->label()));
   }
 
 }
