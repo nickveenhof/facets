@@ -34,7 +34,7 @@ class SearchApiViewsPageDeriver implements ContainerDeriverInterface {
    *
    * @var \Drupal\Core\Entity\EntityTypeManager
    */
-  protected $entityManager;
+  protected $entityTypeManager;
 
   /**
    * {@inheritdoc}
@@ -44,7 +44,7 @@ class SearchApiViewsPageDeriver implements ContainerDeriverInterface {
 
     /** @var \Drupal\Core\Entity\EntityTypeManager $entity_type_manager */
     $entity_type_manager = $container->get('entity_type.manager');
-    $deriver->setEntityManager($entity_type_manager);
+    $deriver->setEntityTypeManager($entity_type_manager);
 
     /** @var \Drupal\Core\StringTranslation\TranslationInterface $translation */
     $translation = $container->get('string_translation');
@@ -59,8 +59,8 @@ class SearchApiViewsPageDeriver implements ContainerDeriverInterface {
    * @return \Drupal\Core\Entity\EntityTypeManager
    *   The entity manager.
    */
-  public function getEntityManager() {
-    return $this->entityManager ?: \Drupal::service('entity_type.manager');
+  public function getEntityTypeManager() {
+    return $this->entityTypeManager ?: \Drupal::service('entity_type.manager');
   }
 
   /**
@@ -71,8 +71,8 @@ class SearchApiViewsPageDeriver implements ContainerDeriverInterface {
    *
    * @return $this
    */
-  public function setEntityManager(EntityTypeManager $entity_type_manager) {
-    $this->entityManager = $entity_type_manager;
+  public function setEntityTypeManager(EntityTypeManager $entity_type_manager) {
+    $this->entityTypeManager = $entity_type_manager;
     return $this;
   }
 
@@ -93,7 +93,7 @@ class SearchApiViewsPageDeriver implements ContainerDeriverInterface {
     if (!isset($this->derivatives[$base_plugin_id])) {
       $plugin_derivatives = array();
       /** @var \Drupal\Core\Entity\EntityStorageInterface $views_storage */
-      $views_storage = $this->entityManager->getStorage('view');
+      $views_storage = $this->entityTypeManager->getStorage('view');
       $all_views = $views_storage->loadMultiple();
 
       /** @var \Drupal\views\Entity\View $view */

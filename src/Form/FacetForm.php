@@ -93,7 +93,7 @@ class FacetForm extends EntityForm {
    */
   public static function create(ContainerInterface $container) {
     /** @var \Drupal\Core\Entity\EntityTypeManager $entity_type_manager */
-    $entity_manager = $container->get('entity_type.manager');
+    $entity_type_manager = $container->get('entity_type.manager');
 
     /** @var \Drupal\facetapi\Widget\WidgetPluginManager $widget_plugin_manager */
     $widget_plugin_manager = $container->get('plugin.manager.facetapi.widget');
@@ -107,7 +107,7 @@ class FacetForm extends EntityForm {
     /** @var \Drupal\facetapi\EmptyBehavior\EmptyBehaviorPluginManager $empty_behavior_plugin_manager */
     $empty_behavior_plugin_manager = $container->get('plugin.manager.facetapi.empty_behavior');
 
-    return new static($entity_manager, $widget_plugin_manager, $facet_source_plugin_manager, $processor_plugin_manager, $empty_behavior_plugin_manager);
+    return new static($entity_type_manager, $widget_plugin_manager, $facet_source_plugin_manager, $processor_plugin_manager, $empty_behavior_plugin_manager);
   }
 
   /**
@@ -117,7 +117,7 @@ class FacetForm extends EntityForm {
    *   The facet storage controller.
    */
   protected function getFacetStorage() {
-    return $this->facetStorage ?: \Drupal::service('entity.manager')->getStorage('facetapi_facet');
+    return $this->facetStorage ?: \Drupal::service('entity_type.manager')->getStorage('facetapi_facet');
   }
 
   /**

@@ -47,7 +47,7 @@ class FacetController extends ControllerBase {
    *   The facet add form.
    */
   public function addForm() {
-    $facet = $this->entityManager()->getStorage('facetapi_facet')->create();
+    $facet = \Drupal::service('entity_type.manager')->getStorage('facetapi_facet')->create();
     return $this->entityFormBuilder()->getForm($facet, 'default');
   }
 
@@ -63,7 +63,7 @@ class FacetController extends ControllerBase {
    *   The facet edit form.
    */
   public function editForm(FacetInterface $facetapi_facet) {
-    $facet = $this->entityManager()->getStorage('facetapi_facet')->load($facetapi_facet->id());
+    $facet = \Drupal::service('entity_type.manager')->getStorage('facetapi_facet')->load($facetapi_facet->id());
     return $this->entityFormBuilder()->getForm($facet, 'default');
   }
 

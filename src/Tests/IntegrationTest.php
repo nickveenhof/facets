@@ -133,7 +133,7 @@ class IntegrationTest extends FacetWebTestBase {
   protected function createFacetBlock($id) {
     // Create a block. Load the entity to obtain the uuid when creating the
     // block.
-    $facet = \Drupal::entityManager()->getStorage('facetapi_facet')->load($id);
+    $facet = \Drupal::service('entity_type.manager')->getStorage('facetapi_facet')->load($id);
     $this->blockValues = [
       [
         'label' => 'Facet Block',
