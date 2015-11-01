@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\node\ContextProvider\NodeRouteContext.
+ * Contains \Drupal\facetapi\ContextProvider\FacetContextProvider.
  */
 
 namespace Drupal\facetapi\ContextProvider;
@@ -49,6 +49,8 @@ class FacetContextProvider implements ContextProviderInterface {
   public function getAvailableContexts() {
     $facets = $this->facetStorage->loadMultiple();
     $contexts = [];
+
+    /** @var \Drupal\facetapi\FacetInterface $facet */
     foreach ($facets as $facet) {
       $context = new Context(
         new ContextDefinition('entity:facetapi_facet', $facet->label()),

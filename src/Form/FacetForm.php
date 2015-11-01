@@ -514,6 +514,7 @@ class FacetForm extends EntityForm {
 
     /** @var \Drupal\facetapi\FacetInterface $facet */
     $facet = $this->getEntity();
+    $is_new = $facet->isNew();
 
     // Make sure the field identifier is copied from within the facet source
     // config to the facet object and saved there.
@@ -532,6 +533,13 @@ class FacetForm extends EntityForm {
     $display = &$view->storage->getDisplay($display);
     $display['display_options']['cache']['type'] = 'none';
     $view->storage->save();
+
+    if ($is_new) {
+      if (\Drupal::moduleHandler()->moduleExists('block')) {
+        $message = $this->t('A new context for blocks is automatically created. Go to the <a href=":block_overview">Block overview page</a> and add a new "Facet block". If this is your first and only facet, just adding that block make it link to this facet, if you have addded more facets already, please make sure to select the correct Facet to render.', [':block_overview' => \Drupal::urlGenerator()->generateFromRoute('block.admin_display')]);
+        drupal_set_message($message);
+      }
+    }
 
     return $facet;
   }
