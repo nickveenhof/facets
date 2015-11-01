@@ -31,6 +31,17 @@ facetapi.processor.plugin.raw_value_widget_order:
       type: string
       label: sort order
 
+facetapi.processor.plugin.active_widget_order:
+  type: mapping
+  label: 'Active widget order'
+  mapping:
+    enabled:
+      type: boolean
+      label: 'Is the widget enabled?'
+    sort:
+      type: string
+      label: sort order
+
 facetapi.processor.plugin.minimum_count:
   type: mapping
   label: 'Minimum count widget'
