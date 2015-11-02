@@ -2,9 +2,6 @@ facetapi.processor.plugin.count_widget_order:
   type: mapping
   label: 'Count widget order'
   mapping:
-    enabled:
-      type: boolean
-      label: 'Is the widget enabled?'
     sort:
       type: string
       label: sort order
@@ -13,9 +10,6 @@ facetapi.processor.plugin.display_value_widget_order:
   type: mapping
   label: 'Display value widget order'
   mapping:
-    enabled:
-      type: boolean
-      label: 'Is the widget enabled?'
     sort:
       type: string
       label: sort order
@@ -24,9 +18,6 @@ facetapi.processor.plugin.raw_value_widget_order:
   type: mapping
   label: 'Raw value widget order'
   mapping:
-    enabled:
-      type: boolean
-      label: 'Is the widget enabled?'
     sort:
       type: string
       label: sort order
@@ -35,9 +26,6 @@ facetapi.processor.plugin.active_widget_order:
   type: mapping
   label: 'Active widget order'
   mapping:
-    enabled:
-      type: boolean
-      label: 'Is the widget enabled?'
     sort:
       type: string
       label: sort order

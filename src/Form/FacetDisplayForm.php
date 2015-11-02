@@ -11,6 +11,7 @@ use Drupal\Component\Utility\Html;
 use Drupal\Core\Entity\EntityForm;
 use Drupal\Core\Entity\EntityTypeManager;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\facetapi\FacetInterface;
 use Drupal\facetapi\Processor\ProcessorInterface;
 use Drupal\facetapi\Processor\ProcessorPluginManager;
 use Drupal\search_api\Form\SubFormState;
@@ -79,9 +80,12 @@ class FacetDisplayForm extends EntityForm {
   public function form(array $form, FormStateInterface $form_state) {
     $form['#attached']['library'][] = 'facetapi/drupal.facetapi.admin_css';
 
+    /** @var \Drupal\facetapi\FacetInterface $facet */
+    $facet = $this->entity;
+
     // Retrieve lists of all processors, and the stages and weights they have.
     if (!$form_state->has('processors')) {
-      $all_processors = $this->entity->getProcessors(FALSE);
+      $all_processors = $facet->getProcessors(FALSE);
       $sort_processors = function (ProcessorInterface $a, ProcessorInterface $b) {
         return strnatcasecmp((string) $a->getPluginDefinition()['label'], (string) $b->getPluginDefinition()['label']);
       };
@@ -90,17 +94,18 @@ class FacetDisplayForm extends EntityForm {
     else {
       $all_processors = $form_state->get('processors');
     }
+
     $stages = $this->processorPluginManager->getProcessingStages();
     $processors_by_stage = array();
     foreach ($stages as $stage => $definition) {
-      $processors_by_stage[$stage] = $this->entity->getProcessorsByStage($stage, FALSE);
+      $processors_by_stage[$stage] = $facet->getProcessorsByStage($stage, FALSE);
     }
 
-    $processor_settings = $this->entity->getOption('processors');
+    $processor_settings = $facet->getOption('processors');
 
     $form['#tree'] = TRUE;
     $form['#attached']['library'][] = 'search_api/drupal.search_api.index-active-formatters';
-    $form['#title'] = $this->t('Manage processors for search index %label', array('%label' => $this->entity->label()));
+    $form['#title'] = $this->t('Manage processors for search index %label', array('%label' => $facet->label()));
     $form['description']['#markup'] = '<p>' . $this->t('Configure processors which will pre- and post-process data at index and search time.') . '</p>';
 
     // Add the list of processors with checkboxes to enable/disable them.
@@ -133,7 +138,9 @@ class FacetDisplayForm extends EntityForm {
       '#type' => 'fieldset',
       '#title' => t('Processor order'),
     );
-    // Order enabled processors per stage.
+
+    // Order enabled processors per stage, create all the containers for the
+    // different stages.
     foreach ($stages as $stage => $description) {
       $form['weights'][$stage] = array (
         '#type' => 'fieldset',
@@ -152,6 +159,9 @@ class FacetDisplayForm extends EntityForm {
         'group' => 'search-api-processor-weight-' . Html::cleanCssIdentifier($stage),
       );
     }
+
+    // Fill in the containers previously created with the processors that are
+    // enabled on the facet.
     foreach ($processors_by_stage as $stage => $processors) {
       /** @var \Drupal\facetapi\Processor\ProcessorInterface $processor */
       foreach ($processors as $processor_id => $processor) {
@@ -199,9 +209,12 @@ class FacetDisplayForm extends EntityForm {
   public function validateForm(array &$form, FormStateInterface $form_state) {
     parent::validateForm($form, $form_state);
 
+    /** @var \Drupal\facetapi\FacetInterface $facet */
+    $facet = $this->entity;
+
     $values = $form_state->getValues();
     /** @var \Drupal\search_api\Processor\ProcessorInterface[] $processors */
-    $processors = $this->entity->getProcessors(FALSE);
+    $processors = $facet->getProcessors(FALSE);
 
     // Iterate over all processors that have a form and are enabled.
     foreach ($form['settings'] as $processor_id => $processor_form) {
@@ -222,8 +235,12 @@ class FacetDisplayForm extends EntityForm {
     // Store processor settings.
     // @todo Go through all available processors, enable/disable with method on
     //   processor plugin to allow reaction.
-    /** @var \Drupal\search_api\Processor\ProcessorInterface $processor */
-    $processors = $this->entity->getProcessors(FALSE);
+
+    /** @var \Drupal\facetapi\FacetInterface $facet */
+    $facet = $this->entity;
+
+    /** @var \Drupal\facetapi\Processor\ProcessorInterface $processor */
+    $processors = $facet->getProcessors(FALSE);
     foreach ($processors as $processor_id => $processor) {
       if (empty($values['status'][$processor_id])) {
         continue;

@@ -14,11 +14,6 @@ abstract class WidgetOrderPluginBase extends ProcessorPluginBase implements Widg
     $processor_configs = $facet->getProcessorConfigs();
     $config = $processor_configs[$this->getPluginId()];
 
-    $build['enabled'] = [
-      '#type' => 'checkbox',
-      '#title' => $this->t('Enable processor'),
-      '#default_value' => $config['settings']['enabled']
-    ];
     $build['sort'] = [
       '#type' => 'radios',
       '#title' => $this->t('Sort order'),
