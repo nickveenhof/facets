@@ -526,13 +526,21 @@ class FacetForm extends EntityForm {
 
     // Ensure that the caching of the view display is disabled, so the search
     // correctly returns the facets. This is a temporary fix, until the cache
-    // metadata is correctly stored on the facet block.
-    list(, $view_id, $display) = explode(':', $facet_source);
-    $view = Views::getView($view_id);
+    // metadata is correctly stored on the facet block. Only apply this when the
+    // facet source type is actually something this is related to views.
+    list($type,) = explode(':', $facet_source);
 
-    $display = &$view->storage->getDisplay($display);
-    $display['display_options']['cache']['type'] = 'none';
-    $view->storage->save();
+    if ($type === 'search_api_views') {
+      list(, $view_id, $display) = explode(':', $facet_source);
+    }
+
+    if (isset($view_id)) {
+      $view = Views::getView($view_id);
+
+      $display = &$view->storage->getDisplay($display);
+      $display['display_options']['cache']['type'] = 'none';
+      $view->storage->save();
+    }
 
     if ($is_new) {
       if (\Drupal::moduleHandler()->moduleExists('block')) {
