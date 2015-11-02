@@ -111,6 +111,12 @@ class IntegrationTest extends FacetWebTestBase {
     $this->checkEmptyOverview();
   }
 
+  /**
+   * Deletes a facet block by id.
+   *
+   * @param string $id
+   *   The id of the block.
+   */
   protected function deleteBlock($id) {
     $this->drupalGet('admin/structure/block/manage/' . $this->blocks[$id]->id(), array('query' => array('destination' => 'admin')));
     $this->clickLink(t('Delete'));
@@ -118,18 +124,30 @@ class IntegrationTest extends FacetWebTestBase {
     $this->assertRaw(t('The block %name has been deleted.', array('%name' => $this->blocks[$id]->label())));
   }
 
+  /**
+   * Helper function: asserts that a facet block does not appear.
+   */
   protected function assertNoFacetBlocksAppear() {
     foreach ($this->blocks as $block) {
       $this->assertNoBlockAppears($block);
     }
   }
 
+  /**
+   * Helper function: asserts that a facet block appears.
+   */
   protected function assertFacetBlocksAppear() {
     foreach ($this->blocks as $block) {
       $this->assertBlockAppears($block);
     }
   }
 
+  /**
+   * Creates a facet block by id.
+   *
+   * @param string $id
+   *   The id of the block.
+   */
   protected function createFacetBlock($id) {
     // Create a block. Load the entity to obtain the uuid when creating the
     // block.
