@@ -222,10 +222,7 @@ class IntegrationTest extends FacetWebTestBase {
     $this->assertResponse(200);
     $this->assertRaw($this->t('Edit facet @facet', ['@facet' => $facet_name]));
 
-    // Configure the text for empty results behavior.
-    $this->drupalPostForm(NULL, ['only_visible_when_facet_source_is_visible' => 1], $this->t('Configure empty behavior'));
-
-    $this->drupalPostForm(NULL, NULL, $this->t('Save'));
+    $this->drupalPostForm(NULL, ['only_visible_when_facet_source_is_visible' => 1], $this->t('Save'));
   }
 
   /**
