@@ -230,10 +230,10 @@ class SearchApiViewsPage extends FacetSourcePluginBase {
     if ($request->attributes->get('_controller') === 'Drupal\views\Routing\ViewPageController::handle') {
       list(, $search_api_view_id, $search_api_view_display) = explode(':', $this->getPluginId());
 
-      if ($request->attributes->get('view_id') != $search_api_view_id || $request->attributes->get('display_id') != $search_api_view_display) {
-        return FALSE;
+      if ($request->attributes->get('view_id') == $search_api_view_id || $request->attributes->get('display_id') == $search_api_view_display) {
+        return TRUE;
       }
     }
-    return TRUE;
+    return FALSE;
   }
 }

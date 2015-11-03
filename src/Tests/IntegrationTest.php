@@ -85,6 +85,18 @@ class IntegrationTest extends FacetWebTestBase {
     // Verify that facet blocks appear as expected.
     $this->assertFacetBlocksAppear();
 
+    // Verify that the facet is visible when removing a facet for example.
+    $this->goToDeleteFacetPage("Test Facet Name");
+    $this->assertText('item (3)');
+    $this->assertText('article (2)');
+
+    // Show the facet only when the facet source is visible.
+    // @TODO Only for SearchApiViewsPage for the moment.
+    $this->setOptionShowOnlyWhenFacetSourceVisible("Test Facet name");
+    $this->goToDeleteFacetPage("Test Facet Name");
+    $this->assertNoText('item (3)');
+    $this->assertNoText('article (2)');
+
     // Do not show the block on empty behaviors.
     // Remove data from index.
     $this->clearIndex();
@@ -193,6 +205,27 @@ class IntegrationTest extends FacetWebTestBase {
 
     $this->drupalPostForm(NULL, NULL, $this->t('Save'));
 
+  }
+
+  /**
+   * Configures a facet to only be visible when accessing to the facet source.
+   *
+   * @param string $facet_name
+   */
+  protected function setOptionShowOnlyWhenFacetSourceVisible($facet_name) {
+    $facet_id = $this->convertNameToMachineName($facet_name);
+
+    $facet_edit_page = $this->urlGenerator->generateFromRoute('entity.facetapi_facet.edit_form', ['facetapi_facet' => $facet_id], ['absolute' => TRUE]);
+
+    // Go to the facet edit page and make sure "edit facet %facet" is present.
+    $this->drupalGet($facet_edit_page);
+    $this->assertResponse(200);
+    $this->assertRaw($this->t('Edit facet @facet', ['@facet' => $facet_name]));
+
+    // Configure the text for empty results behavior.
+    $this->drupalPostForm(NULL, ['only_visible_when_facet_source_is_visible' => 1], $this->t('Configure empty behavior'));
+
+    $this->drupalPostForm(NULL, NULL, $this->t('Save'));
   }
 
   /**
@@ -384,6 +417,21 @@ class IntegrationTest extends FacetWebTestBase {
    */
   protected function convertNameToMachineName($facet_name) {
     return preg_replace('@[^a-zA-Z0-9_]+@', '_', strtolower($facet_name));
+  }
+
+  /**
+   * Go to the Delete Facet Page using the facet name.
+   *
+   * @param string $facet_name
+   */
+  protected function goToDeleteFacetPage($facet_name) {
+    $facet_id = $this->convertNameToMachineName($facet_name);
+
+    $facet_delete_page = $this->urlGenerator->generateFromRoute('entity.facetapi_facet.delete_form', ['facetapi_facet' => $facet_id], ['absolute' => TRUE]);
+
+    // Go to the facet delete page and make the warning is shown.
+    $this->drupalGet($facet_delete_page);
+    $this->assertResponse(200);
   }
 
 }
