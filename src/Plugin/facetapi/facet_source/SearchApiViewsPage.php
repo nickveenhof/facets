@@ -143,6 +143,17 @@ class SearchApiViewsPage extends FacetSourcePluginBase {
   /**
    * {@inheritdoc}
    */
+  public function getPath() {
+    $view = Views::getView($this->pluginDefinition['view_id']);
+    $view->setDisplay($this->pluginDefinition['view_display']);
+    $view->execute();
+
+    return $view->getDisplay()->getOption('path');
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function fillFacetsWithResults($facets) {
     // Check if there are results in the static cache.
     $results = $this->searchApiResultsCache->getResults($this->pluginId);
@@ -153,14 +164,6 @@ class SearchApiViewsPage extends FacetSourcePluginBase {
       $view = Views::getView($this->pluginDefinition['view_id']);
       $view->setDisplay($this->pluginDefinition['view_display']);
       $view->execute();
-      // Set the path of all facets.
-      // @todo Does that need to happen here?
-      $path = $view->getDisplay()->getOption('path');
-      if ($path) {
-        foreach ($facets as $facet) {
-          $facet->setPath($path);
-        }
-      }
       $results = $this->searchApiResultsCache->getResults($this->pluginId);
     }
 

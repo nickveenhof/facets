@@ -284,8 +284,6 @@ class DefaultFacetManager {
    *
    * @return array
    *   Facet render arrays.
-   *
-   * @throws \Drupal\facetapi\Exception\Exception
    */
   public function build(FacetInterface $facet) {
     // It might be that the facet received here,
@@ -373,5 +371,8 @@ class DefaultFacetManager {
 
     $facet_source_plugin->fillFacetsWithResults($this->facets);
 
+    foreach ($this->facets as $facet) {
+      $facet->setPath($facet_source_plugin->getPath());
+    }
   }
 }

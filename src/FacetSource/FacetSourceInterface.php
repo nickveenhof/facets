@@ -39,6 +39,13 @@ interface FacetSourceInterface {
   public function fillFacetsWithResults($facets);
 
   /**
+   * Returns the path where a facet should link to.
+   *
+   * @return string
+   */
+  public function getPath();
+
+  /**
    * Get the allowed query types for a given facet for the facet source.
    *
    * @param \Drupal\facetapi\FacetInterface $facet
