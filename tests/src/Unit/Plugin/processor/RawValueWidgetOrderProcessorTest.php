@@ -8,7 +8,6 @@
 namespace Drupal\Tests\facetapi\Unit\Plugin\Processor;
 
 use Drupal\facetapi\Plugin\facetapi\processor\RawValueWidgetOrderProcessor;
-use Drupal\facetapi\Processor\WidgetOrderProcessorInterface;
 use Drupal\facetapi\Result\Result;
 use Drupal\Tests\UnitTestCase;
 
@@ -20,7 +19,7 @@ class RawValueWidgetOrderProcessorTest extends UnitTestCase {
   /**
    * The processor to be tested.
    *
-   * @var WidgetOrderProcessorInterface
+   * @var \Drupal\facetapi\processor\WidgetOrderProcessorInterface
    */
   protected $processor;
 
@@ -55,7 +54,7 @@ class RawValueWidgetOrderProcessorTest extends UnitTestCase {
    */
   public function testAscending() {
     $sorted_results = $this->processor->sortResults($this->original_results, 'ASC');
-    $expected_values = array('Tom', 'xenu', 'thetans', 'Hubbard', 'FALSE', '2', '1977');
+    $expected_values = ['Tom', 'xenu', 'thetans', 'Hubbard', 'FALSE', '2', '1977'];
     foreach ($expected_values as $index => $value) {
       $this->assertEquals($value, $sorted_results[$index]->getDisplayValue());
     }
@@ -66,7 +65,7 @@ class RawValueWidgetOrderProcessorTest extends UnitTestCase {
    */
   public function testDescending() {
     $sorted_results = $this->processor->sortResults($this->original_results, 'DESC');
-    $expected_values = array_reverse(array('Tom', 'xenu', 'thetans', 'Hubbard', 'FALSE', '2', '1977'));
+    $expected_values = array_reverse(['Tom', 'xenu', 'thetans', 'Hubbard', 'FALSE', '2', '1977']);
     foreach ($expected_values as $index => $value) {
       $this->assertEquals($value, $sorted_results[$index]->getDisplayValue());
     }

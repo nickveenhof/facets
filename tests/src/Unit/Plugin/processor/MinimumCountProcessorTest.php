@@ -9,7 +9,6 @@ namespace Drupal\Tests\facetapi\Unit\Plugin\Processor;
 
 use Drupal\facetapi\Entity\Facet;
 use Drupal\facetapi\Plugin\facetapi\processor\MinimumCountProcessor;
-use Drupal\facetapi\Processor\BuildProcessorInterface;
 use Drupal\facetapi\Result\Result;
 use Drupal\Tests\UnitTestCase;
 
@@ -21,7 +20,7 @@ class MinimumCountProcessorTest extends UnitTestCase {
   /**
    * The processor to be tested.
    *
-   * @var BuildProcessorInterface
+   * @var \Drupal\facetapi\processor\BuildProcessorInterface
    */
   protected $processor;
 
@@ -64,9 +63,7 @@ class MinimumCountProcessorTest extends UnitTestCase {
 
     $this->assertCount(2, $sorted_results);
 
-    $this->assertEquals(10, $sorted_results[0]->getCount());
     $this->assertEquals('llama', $sorted_results[0]->getDisplayValue());
-    $this->assertEquals(15, $sorted_results[2]->getCount());
     $this->assertEquals('duck', $sorted_results[2]->getDisplayValue());
   }
 

@@ -9,7 +9,6 @@ namespace Drupal\Tests\facetapi\Unit\Plugin\Processor;
 
 use Drupal\facetapi\Entity\Facet;
 use Drupal\facetapi\Plugin\facetapi\processor\HideNonNarrowingResultProcessor;
-use Drupal\facetapi\Processor\WidgetOrderProcessorInterface;
 use Drupal\facetapi\Result\Result;
 use Drupal\Tests\UnitTestCase;
 
@@ -21,7 +20,7 @@ class HideNonNarrowingResultProcessorTest extends UnitTestCase {
   /**
    * The processor to be tested.
    *
-   * @var WidgetOrderProcessorInterface
+   * @var \Drupal\facetapi\processor\WidgetOrderProcessorInterface
    */
   protected $processor;
 
@@ -83,7 +82,7 @@ class HideNonNarrowingResultProcessorTest extends UnitTestCase {
 
     $this->assertCount(2, $filtered_results);
 
-    // Llama is shown because it does filtering.
+    // Llama is shown because it narrows results.
     $this->assertEquals(10, $filtered_results[0]->getCount());
     $this->assertEquals('llama', $filtered_results[0]->getDisplayValue());
 

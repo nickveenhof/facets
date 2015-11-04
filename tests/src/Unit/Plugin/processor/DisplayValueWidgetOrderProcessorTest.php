@@ -8,7 +8,6 @@
 namespace Drupal\Tests\facetapi\Unit\Plugin\Processor;
 
 use Drupal\facetapi\Plugin\facetapi\processor\DisplayValueWidgetOrderProcessor;
-use Drupal\facetapi\Processor\WidgetOrderProcessorInterface;
 use Drupal\facetapi\Result\Result;
 use Drupal\Tests\UnitTestCase;
 
@@ -20,7 +19,7 @@ class DisplayValueWidgetOrderProcessorTest extends UnitTestCase {
   /**
    * The processor to be tested.
    *
-   * @var WidgetOrderProcessorInterface
+   * @var \Drupal\facetapi\processor\WidgetOrderProcessorInterface
    */
   protected $processor;
 
@@ -55,7 +54,7 @@ class DisplayValueWidgetOrderProcessorTest extends UnitTestCase {
    */
   public function testAscending() {
     $sorted_results = $this->processor->sortResults($this->original_results, 'ASC');
-    $expected_values = array('2', '1977', 'FALSE', 'Hubbard', 'thetans', 'Tom', 'xenu');
+    $expected_values = ['2', '1977', 'FALSE', 'Hubbard', 'thetans', 'Tom', 'xenu'];
     foreach ($expected_values as $index => $value) {
       $this->assertEquals($value, $sorted_results[$index]->getDisplayValue());
     }
@@ -66,12 +65,15 @@ class DisplayValueWidgetOrderProcessorTest extends UnitTestCase {
    */
   public function testDescending() {
     $sorted_results = $this->processor->sortResults($this->original_results, 'DESC');
-    $expected_values = array_reverse(array('2', '1977', 'FALSE', 'Hubbard', 'thetans', 'Tom', 'xenu'));
+    $expected_values = array_reverse(['2', '1977', 'FALSE', 'Hubbard', 'thetans', 'Tom', 'xenu']);
     foreach ($expected_values as $index => $value) {
       $this->assertEquals($value, $sorted_results[$index]->getDisplayValue());
     }
   }
 
+  /**
+   * Test that sorting uses the display value.
+   */
   public function testUseActualDisplayValue() {
     $original = [
       new Result('bb_test', 'Test AA', 10),
@@ -82,7 +84,6 @@ class DisplayValueWidgetOrderProcessorTest extends UnitTestCase {
 
     $this->assertEquals('Test BB', $sorted_results[0]->getDisplayValue());
     $this->assertEquals('Test AA', $sorted_results[1]->getDisplayValue());
-
   }
 
 }

@@ -8,7 +8,6 @@
 namespace Drupal\Tests\facetapi\Unit\Plugin\Processor;
 
 use Drupal\facetapi\Plugin\facetapi\processor\CountWidgetOrderProcessor;
-use Drupal\facetapi\Processor\WidgetOrderProcessorInterface;
 use Drupal\facetapi\Result\Result;
 use Drupal\Tests\UnitTestCase;
 
@@ -20,7 +19,7 @@ class CountWidgetOrderProcessorTest extends UnitTestCase {
   /**
    * The processor to be tested.
    *
-   * @var WidgetOrderProcessorInterface
+   * @var \Drupal\facetapi\processor\WidgetOrderProcessorInterface
    */
   protected $processor;
 
