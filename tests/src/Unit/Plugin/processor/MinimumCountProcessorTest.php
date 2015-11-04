@@ -47,6 +47,50 @@ class MinimumCountProcessorTest extends UnitTestCase {
   }
 
   /**
+   * Test no filtering happens
+   */
+  public function testNoFilter() {
+
+    $facet = new Facet([], 'facet');
+    $facet->setResults($this->original_results);
+    $facet->setProcessorConfigs([
+      'minimum_count' => [
+        'settings' => ['minimum_items' => 4]
+      ]
+    ]);
+
+    $sorted_results = $this->processor->build($facet, $this->original_results);
+
+    $this->assertCount(3, $sorted_results);
+
+    $this->assertEquals('llama', $sorted_results[0]->getDisplayValue());
+    $this->assertEquals('badger', $sorted_results[1]->getDisplayValue());
+    $this->assertEquals('duck', $sorted_results[2]->getDisplayValue());
+  }
+
+  /**
+   * Test no filtering happens
+   */
+  public function testMinEqualsValue() {
+
+    $facet = new Facet([], 'facet');
+    $facet->setResults($this->original_results);
+    $facet->setProcessorConfigs([
+      'minimum_count' => [
+        'settings' => ['minimum_items' => 5]
+      ]
+    ]);
+
+    $sorted_results = $this->processor->build($facet, $this->original_results);
+
+    $this->assertCount(3, $sorted_results);
+
+    $this->assertEquals('llama', $sorted_results[0]->getDisplayValue());
+    $this->assertEquals('badger', $sorted_results[1]->getDisplayValue());
+    $this->assertEquals('duck', $sorted_results[2]->getDisplayValue());
+  }
+
+  /**
    * Test filtering of results
    */
   public function testFilterResults() {
@@ -55,7 +99,7 @@ class MinimumCountProcessorTest extends UnitTestCase {
     $facet->setResults($this->original_results);
     $facet->setProcessorConfigs([
       'minimum_count' => [
-        'settings' => ['minimum_items' => 6]
+        'settings' => ['minimum_items' => 8]
       ]
     ]);
 
