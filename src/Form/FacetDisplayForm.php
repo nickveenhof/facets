@@ -264,8 +264,6 @@ class FacetDisplayForm extends EntityForm {
     // Sort the processors so we won't have unnecessary changes.
     ksort($new_settings);
     if (!$this->entity->getOption('processors', array()) !== $new_settings) {
-      dpm($new_settings);
-      dpm($this->entity);
       $this->entity->setOption('processors', $new_settings);
       $this->entity->save();
       drupal_set_message($this->t('The indexing workflow was successfully edited. All content was scheduled for reindexing so the new settings can take effect.'));
