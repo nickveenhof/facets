@@ -18,7 +18,7 @@ use Drupal\search_api\Form\SubFormState;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
- * Provides a form for configuring the processors of a search index.
+ * Provides a form for configuring the processors of a facet.
  */
 class FacetDisplayForm extends EntityForm {
 
@@ -105,8 +105,8 @@ class FacetDisplayForm extends EntityForm {
 
     $form['#tree'] = TRUE;
     $form['#attached']['library'][] = 'search_api/drupal.search_api.index-active-formatters';
-    $form['#title'] = $this->t('Manage processors for search index %label', array('%label' => $facet->label()));
-    $form['description']['#markup'] = '<p>' . $this->t('Configure processors which will pre- and post-process data at index and search time.') . '</p>';
+    $form['#title'] = $this->t('Manage processors for facet %label', array('%label' => $facet->label()));
+    $form['description']['#markup'] = '<p>' . $this->t('Configure processors which will pre- and post-process data.') . '</p>';
 
     // Add the list of processors with checkboxes to enable/disable them.
     $form['status'] = array(
@@ -213,16 +213,16 @@ class FacetDisplayForm extends EntityForm {
     $facet = $this->entity;
 
     $values = $form_state->getValues();
-    /** @var \Drupal\search_api\Processor\ProcessorInterface[] $processors */
+    /** @var \Drupal\facetapi\Processor\ProcessorInterface[] $processors */
     $processors = $facet->getProcessors(FALSE);
 
-    // Iterate over all processors that have a form and are enabled.
-    foreach ($form['settings'] as $processor_id => $processor_form) {
-      if (!empty($values['status'][$processor_id])) {
-        $processor_form_state = new SubFormState($form_state, array('processors', $processor_id, 'settings'));
-        $processors[$processor_id]->validateConfigurationForm($form['settings'][$processor_id], $processor_form_state);
-      }
-    }
+    // Iterate over all processors that have a form and are enabled. TODO: no settings atm
+//    foreach ($form['settings'] as $processor_id => $processor_form) {
+//      if (!empty($values['status'][$processor_id])) {
+//        $processor_form_state = new SubFormState($form_state, array('processors', $processor_id, 'settings'));
+//        $processors[$processor_id]->validateConfigurationForm($form['settings'][$processor_id], $processor_form_state);
+//      }
+//    }
   }
 
   /**
@@ -264,9 +264,10 @@ class FacetDisplayForm extends EntityForm {
     // Sort the processors so we won't have unnecessary changes.
     ksort($new_settings);
     if (!$this->entity->getOption('processors', array()) !== $new_settings) {
+      dpm($new_settings);
+      dpm($this->entity);
       $this->entity->setOption('processors', $new_settings);
       $this->entity->save();
-      $this->entity->reindex();
       drupal_set_message($this->t('The indexing workflow was successfully edited. All content was scheduled for reindexing so the new settings can take effect.'));
     }
     else {
