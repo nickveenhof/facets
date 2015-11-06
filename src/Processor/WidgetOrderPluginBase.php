@@ -11,8 +11,8 @@ abstract class WidgetOrderPluginBase extends ProcessorPluginBase implements Widg
    * {@inheritdoc}
    */
   public function buildConfigurationForm(array $form, FormStateInterface $form_state, FacetInterface $facet) {
-    $processor_configs = $facet->getProcessorConfigs();
-    $config = $processor_configs[$this->getPluginId()];
+    $processors = $facet->getProcessors();
+    $config = $processors[$this->getPluginId()];
 
     $build['sort'] = [
       '#type' => 'radios',
@@ -21,7 +21,7 @@ abstract class WidgetOrderPluginBase extends ProcessorPluginBase implements Widg
         'ASC' => $this->t('Ascending'),
         'DESC' => $this->t('Descending')
       ],
-      '#default_value' => $config['settings']['sort'],
+      '#default_value' => isset($config) ? $config->getConfiguration()['sort'] : $this->defaultConfiguration()['sort'],
     ];
 
 
@@ -32,11 +32,18 @@ abstract class WidgetOrderPluginBase extends ProcessorPluginBase implements Widg
    * {@inheritdoc}
    */
   public function build(FacetInterface $facet, array $results) {
-    $processor_configs = $facet->getProcessorConfigs();
-    $config = $processor_configs[$this->getPluginId()];
+    $processors = $facet->getProcessors();
+    $config = $processors[$this->getPluginId()];
 
     // This should load the facet's config to find the ordering direction.
-    return $this->sortResults($results, $config['settings']['sort']);
+    return $this->sortResults($results, $config->getConfiguration()['sort']);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function defaultConfiguration() {
+    return ['sort' => 'ASC'];
   }
 
 }

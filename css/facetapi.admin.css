@@ -27,3 +27,12 @@
 #facetapi-groups-list tr.facet .facetapi-type {
   padding-left: 3em;
 }
+
+
+/*
+ * Facet API Display page
+ */
+#edit-processors .facetapi-processor-settings {
+    margin-left: 20px;
+    margin-bottom: 25px;
+}

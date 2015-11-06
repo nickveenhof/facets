@@ -43,7 +43,7 @@ use Drupal\facetapi\Result\Result;
  *     "facet_source_id",
  *     "widget",
  *     "widget_configs",
- *     "processor_configs",
+ *     "options",
  *     "empty_behavior",
  *     "empty_behavior_configs",
  *     "only_visible_when_facet_source_is_visible",
@@ -159,13 +159,6 @@ class Facet extends ConfigEntityBase implements FacetInterface {
    * @var array
    */
   protected $facetSourcePlugins;
-
-  /**
-   * An array containing all processors and their configuration.
-   *
-   * @var array
-   */
-  protected $processor_configs;
 
   /**
    * Cached information about the processors available for this facet.
@@ -491,19 +484,6 @@ class Facet extends ConfigEntityBase implements FacetInterface {
 
   public function getPath() {
     return $this->path;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function getProcessorConfigs() {
-    return $this->processor_configs;
-  }
-  /**
-   * {@inheritdoc}
-   */
-  public function setProcessorConfigs($processor_config = []) {
-    $this->processor_configs = $processor_config;
   }
 
   /**

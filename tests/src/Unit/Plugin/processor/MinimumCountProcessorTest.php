@@ -53,12 +53,11 @@ class MinimumCountProcessorTest extends UnitTestCase {
 
     $facet = new Facet([], 'facet');
     $facet->setResults($this->original_results);
-    $facet->setProcessorConfigs([
+    $facet->setOption('processors', [
       'minimum_count' => [
         'settings' => ['minimum_items' => 4]
       ]
     ]);
-
     $sorted_results = $this->processor->build($facet, $this->original_results);
 
     $this->assertCount(3, $sorted_results);
@@ -75,7 +74,7 @@ class MinimumCountProcessorTest extends UnitTestCase {
 
     $facet = new Facet([], 'facet');
     $facet->setResults($this->original_results);
-    $facet->setProcessorConfigs([
+    $facet->setOption('processors', [
       'minimum_count' => [
         'settings' => ['minimum_items' => 5]
       ]
@@ -97,7 +96,7 @@ class MinimumCountProcessorTest extends UnitTestCase {
 
     $facet = new Facet([], 'facet');
     $facet->setResults($this->original_results);
-    $facet->setProcessorConfigs([
+    $facet->setOption('processors', [
       'minimum_count' => [
         'settings' => ['minimum_items' => 8]
       ]

@@ -9,11 +9,12 @@ namespace Drupal\facetapi\Processor;
 
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\facetapi\FacetInterface;
+use Drupal\Component\Plugin\ConfigurablePluginInterface;
 
 /**
  * Describes a processor
  */
-interface ProcessorInterface {
+interface ProcessorInterface extends ConfigurablePluginInterface {
 
   /**
    * Processing stage: pre_query.
@@ -38,6 +39,15 @@ interface ProcessorInterface {
    * @param \Drupal\facetapi\FacetInterface $facet
    */
   public function buildConfigurationForm(array $form, FormStateInterface $form_state, FacetInterface $facet);
+
+  /**
+   * Validates a configuration form for this processor
+   *
+   * @param array $form
+   * @param \Drupal\Core\Form\FormStateInterface $form_state
+   * @param \Drupal\facetapi\FacetInterface $facet
+   */
+  public function validateConfigurationForm(array $form, FormStateInterface $form_state, FacetInterface $facet);
 
   /**
    * Checks whether this processor implements a particular stage.

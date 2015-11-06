@@ -327,33 +327,6 @@ class FacetForm extends EntityForm {
 
     $this->buildEmptyBehaviorConfigForm($form, $form_state);
 
-    $form['processor_configs'] = [
-      '#type' => 'details',
-      '#title' => $this->t('Processors'),
-      '#tree' => TRUE,
-      '#open' => TRUE,
-    ];
-    foreach ($this->getProcessorPluginManager()->getDefinitions() as $id => $definition) {
-      $form['processor_configs'][$id] = [
-        '#type' => 'details',
-        '#title' => $this->t('Processor: %id', ['%id' => $id]),
-        '#open' => TRUE,
-      ];
-      $form['processor_configs'][$id]['processor_id'] = [
-        '#title' => 'id',
-        '#type' => 'hidden',
-        '#value' => $id
-      ];
-
-      $form['processor_configs'][$id]['settings'] = [
-        '#type' => 'container'
-      ];
-
-      /** @var ProcessorInterface $build_processor */
-      $build_processor = $this->getProcessorPluginManager()->createInstance($id);
-      $form['processor_configs'][$id]['settings'] = $build_processor->buildConfigurationForm($form, $form_state, $facet);
-    }
-
     $form['only_visible_when_facet_source_is_visible'] = [
       '#type' => 'checkbox',
       '#title' => $this->t('Show the facet only when the facet source is also visible.'),

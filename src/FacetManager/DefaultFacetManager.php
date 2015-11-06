@@ -252,11 +252,11 @@ class DefaultFacetManager {
       $this->facets = $this->getEnabledFacets();
       foreach ($this->facets as $facet) {
 
-        foreach ($facet->getProcessorConfigs() as $processor_configuration) {
-          $processor_definition = $this->processor_plugin_manager->getDefinition($processor_configuration['processor_id']);
+        foreach ($facet->getProcessors() as $processor) {
+          $processor_definition = $processor->getPluginDefinition();
           if (is_array($processor_definition['stages']) && array_key_exists(ProcessorInterface::STAGE_PRE_QUERY, $processor_definition['stages'])) {
             /** @var PreQueryProcessorInterface $pre_query_processor */
-            $pre_query_processor = $this->processor_plugin_manager->createInstance($processor_configuration['processor_id']);
+            $pre_query_processor = $this->processor_plugin_manager->createInstance($processor->getPluginDefinition()['id']);
             if (!$pre_query_processor instanceof PreQueryProcessorInterface) {
               throw new InvalidProcessorException(new FormattableMarkup("The processor @processor has a pre_query definition but doesn't implement the required PreQueryProcessorInterface interface", ['@processor' => $processor_configuration['processor_id']]));
             }
@@ -326,11 +326,11 @@ class DefaultFacetManager {
     // @see \Drupal\facetapi\Processor\WidgetOrderProcessorInterface
     $results = $facet->getResults();
 
-    foreach ($facet->getProcessorConfigs() as $processor_configuration) {
-      $processor_definition = $this->processor_plugin_manager->getDefinition($processor_configuration['processor_id']);
+    foreach ($facet->getProcessors() as $processor) {
+      $processor_definition = $this->processor_plugin_manager->getDefinition($processor->getPluginDefinition()['id']);
       if (is_array($processor_definition['stages']) && array_key_exists(ProcessorInterface::STAGE_BUILD, $processor_definition['stages'])) {
         /** @var BuildProcessorInterface $build_processor */
-        $build_processor = $this->processor_plugin_manager->createInstance($processor_configuration['processor_id']);
+        $build_processor = $this->processor_plugin_manager->createInstance($processor->getPluginDefinition()['id']);
         if (!$build_processor instanceof BuildProcessorInterface) {
           throw new InvalidProcessorException(new FormattableMarkup("The processor @processor has a build definition but doesn't implement the required BuildProcessorInterface interface", ['@processor' => $processor_configuration['processor_id']]));
         }

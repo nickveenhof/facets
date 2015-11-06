@@ -109,7 +109,7 @@ class FacetDisplayForm extends EntityForm {
     $form['description']['#markup'] = '<p>' . $this->t('Configure processors which will pre- and post-process data.') . '</p>';
 
     // Add the list of processors with checkboxes to enable/disable them.
-    $form['status'] = array(
+    $form['processors'] = array(
       '#type' => 'fieldset',
       '#title' => $this->t('Enabled'),
       '#attributes' => array('class' => array(
@@ -117,8 +117,9 @@ class FacetDisplayForm extends EntityForm {
       )),
     );
     foreach ($all_processors as $processor_id => $processor) {
+
       $clean_css_id = Html::cleanCssIdentifier($processor_id);
-      $form['status'][$processor_id] = array(
+      $form['processors'][$processor_id]['status'] = array(
         '#type' => 'checkbox',
         '#title' => (string) $processor->getPluginDefinition()['label'],
         '#default_value' => $processor->isLocked() || !empty($processor_settings[$processor_id]),
@@ -132,12 +133,35 @@ class FacetDisplayForm extends EntityForm {
         '#disabled' => $processor->isLocked(),
         '#access' => !$processor->isHidden(),
       );
+
+      $processor_form_state = new SubFormState($form_state, array('processors', $processor_id, 'settings'));
+      $processor_form = $processor->buildConfigurationForm($form, $processor_form_state, $facet);
+      if ($processor_form) {
+        $form['processors'][$processor_id]['settings'] = array(
+          '#type' => 'fieldset',
+          '#title' => (string) $processor->getPluginDefinition()['label'] . ' settings',
+          '#attributes' => array('class' => array(
+            'facetapi-processor-settings-' . Html::cleanCssIdentifier($processor_id),
+            'facetapi-processor-settings'
+          ),),
+          '#states' => array(
+            'visible' => array(
+              ':input[name="processors[' . $processor_id . '][status]"]' => array('checked' => TRUE),
+            ),
+          ),
+        );
+        $form['processors'][$processor_id]['settings'] += $processor_form;
+      }
     }
 
     $form['weights'] = array(
-      '#type' => 'fieldset',
-      '#title' => t('Processor order'),
+      '#type' => 'details',
+      '#title' => t('Advanced settings'),
+      '#collapsible' => TRUE,
+      '#collapsed' => TRUE,
     );
+
+    $form['weights']['order'] = ['#markup' => "<h3>" . t('Processor order') . "</h3>"];
 
     // Order enabled processors per stage, create all the containers for the
     // different stages.
@@ -217,12 +241,12 @@ class FacetDisplayForm extends EntityForm {
     $processors = $facet->getProcessors(FALSE);
 
     // Iterate over all processors that have a form and are enabled. TODO: no settings atm
-//    foreach ($form['settings'] as $processor_id => $processor_form) {
-//      if (!empty($values['status'][$processor_id])) {
-//        $processor_form_state = new SubFormState($form_state, array('processors', $processor_id, 'settings'));
-//        $processors[$processor_id]->validateConfigurationForm($form['settings'][$processor_id], $processor_form_state);
-//      }
-//    }
+    foreach ($form['settings'] as $processor_id => $processor_form) {
+      if (!empty($values['status'][$processor_id])) {
+        $processor_form_state = new SubFormState($form_state, array('processors', $processor_id, 'settings'));
+        $processors[$processor_id]->validateConfigurationForm($form['settings'][$processor_id], $processor_form_state);
+      }
+    }
   }
 
   /**
@@ -242,7 +266,7 @@ class FacetDisplayForm extends EntityForm {
     /** @var \Drupal\facetapi\Processor\ProcessorInterface $processor */
     $processors = $facet->getProcessors(FALSE);
     foreach ($processors as $processor_id => $processor) {
-      if (empty($values['status'][$processor_id])) {
+      if (empty($values['processors'][$processor_id]['status'])) {
         continue;
       }
       $new_settings[$processor_id] = array(
@@ -254,19 +278,20 @@ class FacetDisplayForm extends EntityForm {
       if (!empty($processor_values['weights'])) {
         $new_settings[$processor_id]['weights'] = $processor_values['weights'];
       }
-      if (isset($form['settings'][$processor_id])) {
+      if (isset($form['processors'][$processor_id]['settings'])) {
         $processor_form_state = new SubFormState($form_state, array('processors', $processor_id, 'settings'));
         $processor->submitConfigurationForm($form['settings'][$processor_id], $processor_form_state);
         $new_settings[$processor_id]['settings'] = $processor->getConfiguration();
       }
     }
 
+
     // Sort the processors so we won't have unnecessary changes.
     ksort($new_settings);
-    if (!$this->entity->getOption('processors', array()) !== $new_settings) {
+    if ($this->entity->getOption('processors', array()) !== $new_settings) {
       $this->entity->setOption('processors', $new_settings);
       $this->entity->save();
-      drupal_set_message($this->t('The indexing workflow was successfully edited. All content was scheduled for reindexing so the new settings can take effect.'));
+      drupal_set_message($this->t('The facet was updated with the new settings.'));
     }
     else {
       drupal_set_message($this->t('No values were changed.'));

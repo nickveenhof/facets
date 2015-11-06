@@ -225,24 +225,10 @@ interface FacetInterface extends ConfigEntityInterface {
   /**
    * Returns an array of processors with their configuration.
    *
-   * @return array
-   */
-  public function getProcessorConfigs();
-
-  /**
-   * Returns an array of processors with their configuration.
-   *
    * @param bool|TRUE $only_enabled
    * @return \Drupal\facetapi\Processor\ProcessorInterface[]
    */
   public function getProcessors($only_enabled = TRUE);
-
-  /**
-   * Sets the processors with their config.
-   *
-   * @param array $processor_config
-   */
-  public function setProcessorConfigs($processor_config = []);
 
   /**
    * Loads this facets processors for a specific stage.

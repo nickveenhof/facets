@@ -30,12 +30,12 @@ class MinimumCountProcessor extends ProcessorPluginBase implements BuildProcesso
    * {@inheritdoc}
    */
   public function build(FacetInterface $facet, array $results) {
-    $processor_configs = $facet->getProcessorConfigs();
-    $config = $processor_configs[$this->getPluginId()];
+    $processors = $facet->getProcessors();
+    $config = $processors[$this->getPluginId()];
 
     /** @var Result $result */
     foreach ($results as $id => $result) {
-      if ($result->getCount() < $config['settings']['minimum_items']) {
+      if ($result->getCount() < $config->getConfiguration()['minimum_items']) {
         unset($results[$id]);
       }
     }
@@ -47,18 +47,25 @@ class MinimumCountProcessor extends ProcessorPluginBase implements BuildProcesso
    * {@inheritdoc}
    */
   public function buildConfigurationForm(array $form, FormStateInterface $form_state, FacetInterface $facet) {
-    $processor_configs = $facet->getProcessorConfigs();
-    $config = $processor_configs[$this->getPluginId()];
+    $processors = $facet->getProcessors();
+    $config = $processors[$this->getPluginId()];
 
     $build['minimum_items'] = array(
       '#title' => 'Minimum items',
       '#type' => 'number',
       '#min' => 1,
-      '#default_value' => $config['settings']['minimum_items'],
+      '#default_value' => isset($config) ? $config->getConfiguration()['minimum_items'] : $this->defaultConfiguration()['minimum_items'],
       '#description' => 'Hide block if the facet contains less than this number of results',
     );
 
     return $build;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function defaultConfiguration() {
+    return array('minimum_items' => 1);
   }
 
 }
