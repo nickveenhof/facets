@@ -30,7 +30,7 @@ class Result implements ResultInterface {
   /**
    * The Url object.
    *
-   * @var Url
+   * @var \Drupal\Core\Url
    */
   protected $url;
 
