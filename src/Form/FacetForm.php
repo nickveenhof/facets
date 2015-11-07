@@ -488,6 +488,17 @@ class FacetForm extends EntityForm {
     $facet = $this->getEntity();
     $is_new = $facet->isNew();
 
+    // TODO: quickfix, enable query string processor on facet creation.
+    // TODO: create new setting (similar to locked) on processor to enabled
+    // TODO: certain processors by default
+    if($is_new){
+      $facet->setOption('processors', [
+        'query_string' => [
+          'settings' => [],
+        ],
+      ]);
+    }
+
     // Make sure the field identifier is copied from within the facet source
     // config to the facet object and saved there.
     $facet_source = $form_state->getValue('facet_source_id');

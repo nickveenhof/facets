@@ -20,7 +20,8 @@ use Symfony\Component\HttpFoundation\Request;
  *   stages = {
  *     "pre_query" = 50,
  *     "build" = 15,
- *   }
+ *   },
+ *   locked = true
  * )
  */
 class QueryStringUrlProcessor extends UrlProcessorPluginBase {
