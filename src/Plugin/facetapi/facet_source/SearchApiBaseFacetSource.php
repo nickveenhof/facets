@@ -161,9 +161,12 @@ abstract class SearchApiBaseFacetSource extends FacetSourcePluginBase {
       // value, but will be appended.
       $query_types = array_merge($query_types, $backend->getQueryTypesForDataType($data_type_plugin_id));
     }
+    // Add it to a variable so we can pass it by reference. Alter hook complains
+    // due to the property of the backend object is not passable by reference.
+    $backend_plugin_id = $backend->getPluginId();
 
     // Let modules alter this mapping.
-    \Drupal::moduleHandler()->alter('facetapi_search_api_query_type_mapping', $backend->getPluginId(), $query_types);
+    \Drupal::moduleHandler()->alter('facetapi_search_api_query_type_mapping', $backend_plugin_id, $query_types);
 
     return $query_types;
   }
