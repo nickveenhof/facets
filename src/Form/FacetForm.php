@@ -488,15 +488,27 @@ class FacetForm extends EntityForm {
     $facet = $this->getEntity();
     $is_new = $facet->isNew();
 
-    // TODO: quickfix, enable query string processor on facet creation.
-    // TODO: create new setting (similar to locked) on processor to enabled
-    // TODO: certain processors by default
     if($is_new){
-      $facet->setOption('processors', [
-        'query_string' => [
-          'settings' => [],
-        ],
-      ]);
+      // On facet creation, enable all locked processors by default, using their
+      // default settings.
+      $initial_settings = [];
+      $stages = $this->processorPluginManager->getProcessingStages();
+      foreach($facet->getProcessors() as $processor_id => $processor){
+        if($processor->isLocked()){
+          $weights = [];
+          foreach($stages as $stage_id => $stage){
+            if($processor->supportsStage($stage_id)){
+              $weights[$stage_id] = $processor->getDefaultWeight($stage_id);
+            }
+          }
+          $initial_settings[$processor_id] = array(
+            'processor_id' => $processor_id,
+            'weights' => $weights,
+            'settings' => $processor->defaultConfiguration(),
+          );
+        }
+      }
+      $facet->setOption('processors', $initial_settings);
     }
 
     // Make sure the field identifier is copied from within the facet source
