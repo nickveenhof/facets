@@ -21,14 +21,14 @@ use Drupal\Component\Annotation\Plugin;
 class FacetApiProcessor extends Plugin {
 
   /**
-   * The processor plugin id
+   * The processor plugin id.
    *
    * @var string
    */
   public $id;
 
   /**
-   * The human-readable name of the processor plugin
+   * The human-readable name of the processor plugin.
    *
    * @ingroup plugin_translatable
    *

@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\facetapi\Plugin\facetapi\empty_behavior\EmptyBehaviorText
+ * Contains \Drupal\facetapi\Plugin\facetapi\empty_behavior\EmptyBehaviorText.
  */
 
 namespace Drupal\facetapi\Plugin\facetapi\empty_behavior;
@@ -50,4 +50,5 @@ class EmptyBehaviorText extends EmptyBehaviorPluginBase {
 
     return $form;
   }
+
 }

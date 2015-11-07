@@ -1,11 +1,13 @@
 <?php
 /**
  * @file
- * Contains Drupal\facetapi\QueryType\QueryType
+ * Contains Drupal\facetapi\QueryType\QueryType.
  */
 
 namespace Drupal\facetapi\QueryType;
-
+/**
+ *
+ */
 interface QueryTypeInterface {
 
   /**

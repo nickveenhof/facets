@@ -1,5 +1,9 @@
 <?php
 
+/**
+ * @file
+ */
+
 namespace Drupal\facetapi\Plugin\facetapi\processor;
 
 
@@ -33,6 +37,9 @@ class CountWidgetOrderProcessor extends WidgetOrderPluginBase implements WidgetO
     return $results;
   }
 
+  /**
+   *
+   */
   protected static function sortCountAsc(Result $a, Result $b) {
     if ($a->getCount() == $b->getCount()) {
       return 0;
@@ -40,6 +47,9 @@ class CountWidgetOrderProcessor extends WidgetOrderPluginBase implements WidgetO
     return ($a->getCount() < $b->getCount()) ? -1 : 1;
   }
 
+  /**
+   *
+   */
   protected static function sortCountDesc(Result $a, Result $b) {
     if ($a->getCount() == $b->getCount()) {
       return 0;

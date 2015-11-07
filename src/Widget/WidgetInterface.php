@@ -1,13 +1,15 @@
 <?php
 /**
  * @file
- * Contains Drupal\facetapi\Widget\WidgetInterface
+ * Contains Drupal\facetapi\Widget\WidgetInterface.
  */
 
 namespace Drupal\facetapi\Widget;
 
 use Drupal\facetapi\FacetInterface;
-
+/**
+ *
+ */
 interface WidgetInterface {
 
   /**
@@ -18,7 +20,7 @@ interface WidgetInterface {
   public function execute();
 
   /**
-   * Builds the widget for rendering
+   * Builds the widget for rendering.
    */
   public function build(FacetInterface $facet);
 
@@ -28,6 +30,7 @@ interface WidgetInterface {
    *
    * @param $query_types
    *   An array keyed with query type name and it's plugin class to load.
+   *
    * @return mixed
    */
   public function getQueryType($query_types);

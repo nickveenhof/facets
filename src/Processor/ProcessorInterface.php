@@ -12,14 +12,14 @@ use Drupal\facetapi\FacetInterface;
 use Drupal\Component\Plugin\ConfigurablePluginInterface;
 
 /**
- * Describes a processor
+ * Describes a processor.
  */
 interface ProcessorInterface extends ConfigurablePluginInterface {
 
   /**
    * Processing stage: pre_query.
    */
-  const STAGE_PRE_QUERY= 'pre_query';
+  const STAGE_PRE_QUERY = 'pre_query';
 
   /**
    * Processing stage: post_query.
@@ -32,7 +32,7 @@ interface ProcessorInterface extends ConfigurablePluginInterface {
   const STAGE_BUILD = 'build';
 
   /**
-   * Adds a configuration form for this processor
+   * Adds a configuration form for this processor.
    *
    * @param array $form
    * @param \Drupal\Core\Form\FormStateInterface $form_state
@@ -41,7 +41,7 @@ interface ProcessorInterface extends ConfigurablePluginInterface {
   public function buildConfigurationForm(array $form, FormStateInterface $form_state, FacetInterface $facet);
 
   /**
-   * Validates a configuration form for this processor
+   * Validates a configuration form for this processor.
    *
    * @param array $form
    * @param \Drupal\Core\Form\FormStateInterface $form_state

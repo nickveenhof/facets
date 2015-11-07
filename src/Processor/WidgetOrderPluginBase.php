@@ -1,10 +1,16 @@
 <?php
 
+/**
+ * @file
+ */
+
 namespace Drupal\facetapi\Processor;
 
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\facetapi\FacetInterface;
-
+/**
+ *
+ */
 abstract class WidgetOrderPluginBase extends ProcessorPluginBase implements WidgetOrderProcessorInterface {
 
   /**
@@ -19,11 +25,10 @@ abstract class WidgetOrderPluginBase extends ProcessorPluginBase implements Widg
       '#title' => $this->t('Sort order'),
       '#options' => [
         'ASC' => $this->t('Ascending'),
-        'DESC' => $this->t('Descending')
+        'DESC' => $this->t('Descending'),
       ],
       '#default_value' => isset($config) ? $config->getConfiguration()['sort'] : $this->defaultConfiguration()['sort'],
     ];
-
 
     return $build;
   }

@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains Drupal\facetapi\Plugin\facetapi\url_processor\UrlProcessorQueryString
+ * Contains Drupal\facetapi\Plugin\facetapi\url_processor\UrlProcessorQueryString.
  */
 
 namespace Drupal\facetapi\Plugin\facetapi\processor;
@@ -10,7 +10,6 @@ namespace Drupal\facetapi\Plugin\facetapi\processor;
 use Drupal\Core\Url;
 use Drupal\facetapi\FacetInterface;
 use Drupal\facetapi\Processor\UrlProcessorPluginBase;
-use Drupal\facetapi\Result\Result;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
@@ -27,7 +26,7 @@ use Symfony\Component\HttpFoundation\Request;
 class QueryStringUrlProcessor extends UrlProcessorPluginBase {
 
   /**
-   * A string that separates the filters in the query string
+   * A string that separates the filters in the query string.
    */
   const SEPARATOR = ':';
 
@@ -85,7 +84,6 @@ class QueryStringUrlProcessor extends UrlProcessorPluginBase {
       $url = Url::createFromRequest($request);
       $url->setOption('query', $result_get_params->all());
 
-
       $result->setUrl($url);
     }
 
@@ -128,4 +126,5 @@ class QueryStringUrlProcessor extends UrlProcessorPluginBase {
       }
     }
   }
+
 }

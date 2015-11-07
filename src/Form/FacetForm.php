@@ -15,7 +15,6 @@ use Drupal\facetapi\EmptyBehavior\EmptyBehaviorPluginManager;
 use Drupal\facetapi\FacetInterface;
 use Drupal\facetapi\Exception\Exception;
 use Drupal\facetapi\FacetSource\FacetSourcePluginManager;
-use Drupal\facetapi\Processor\ProcessorInterface;
 use Drupal\facetapi\Processor\ProcessorPluginManager;
 use Drupal\facetapi\Widget\WidgetPluginManager;
 use Drupal\views\Views;
@@ -370,7 +369,7 @@ class FacetForm extends EntityForm {
       // @todo Create, use and save SubFormState already here, not only in
       //   validate(). Also, use proper subset of $form for first parameter?
       $config = $this->config('facetapi.facet.' . $facet->id());
-      if ($config_form = $widget_instance->buildConfigurationForm([], $form_state, ($config instanceof Config) ? $config : null )) {
+      if ($config_form = $widget_instance->buildConfigurationForm([], $form_state, ($config instanceof Config) ? $config : NULL)) {
         $form['widget_configs']['#type'] = 'details';
         $form['widget_configs']['#title'] = $this->t('Configure the %widget widget', ['%widget' => $this->getWidgetPluginManager()->getDefinition($widget)['label']]);
         $form['widget_configs']['#open'] = $facet->isNew();
@@ -379,7 +378,7 @@ class FacetForm extends EntityForm {
       }
       else {
         $form['widget_configs']['#type'] = 'container';
-        $form['widget_configs']['#open'] = true;
+        $form['widget_configs']['#open'] = TRUE;
         $form['widget_configs']['widget_information_dummy'] = [
           '#type' => 'hidden',
           '#value' => '1',
@@ -411,7 +410,7 @@ class FacetForm extends EntityForm {
       }
       else {
         $form['empty_behavior_configs']['#type'] = 'container';
-        $form['empty_behavior_configs']['#open'] = true;
+        $form['empty_behavior_configs']['#open'] = TRUE;
         $form['empty_behavior_configs']['empty_behavior_information_dummy'] = [
           '#type' => 'hidden',
           '#value' => [],

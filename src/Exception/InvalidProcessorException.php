@@ -10,4 +10,4 @@ namespace Drupal\facetapi\Exception;
 /**
  * Represents an exception that occurred when calling an invalid processor.
  */
-class InvalidProcessorException extends \Exception { }
+class InvalidProcessorException extends \Exception {}

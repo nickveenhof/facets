@@ -47,7 +47,7 @@ class MinimumCountProcessorTest extends UnitTestCase {
   }
 
   /**
-   * Test no filtering happens
+   * Test no filtering happens.
    */
   public function testNoFilter() {
 
@@ -55,8 +55,8 @@ class MinimumCountProcessorTest extends UnitTestCase {
     $facet->setResults($this->original_results);
     $facet->setOption('processors', [
       'minimum_count' => [
-        'settings' => ['minimum_items' => 4]
-      ]
+        'settings' => ['minimum_items' => 4],
+      ],
     ]);
     $sorted_results = $this->processor->build($facet, $this->original_results);
 
@@ -68,7 +68,7 @@ class MinimumCountProcessorTest extends UnitTestCase {
   }
 
   /**
-   * Test no filtering happens
+   * Test no filtering happens.
    */
   public function testMinEqualsValue() {
 
@@ -76,8 +76,8 @@ class MinimumCountProcessorTest extends UnitTestCase {
     $facet->setResults($this->original_results);
     $facet->setOption('processors', [
       'minimum_count' => [
-        'settings' => ['minimum_items' => 5]
-      ]
+        'settings' => ['minimum_items' => 5],
+      ],
     ]);
 
     $sorted_results = $this->processor->build($facet, $this->original_results);
@@ -90,7 +90,7 @@ class MinimumCountProcessorTest extends UnitTestCase {
   }
 
   /**
-   * Test filtering of results
+   * Test filtering of results.
    */
   public function testFilterResults() {
 
@@ -98,8 +98,8 @@ class MinimumCountProcessorTest extends UnitTestCase {
     $facet->setResults($this->original_results);
     $facet->setOption('processors', [
       'minimum_count' => [
-        'settings' => ['minimum_items' => 8]
-      ]
+        'settings' => ['minimum_items' => 8],
+      ],
     ]);
 
     $sorted_results = $this->processor->build($facet, $this->original_results);

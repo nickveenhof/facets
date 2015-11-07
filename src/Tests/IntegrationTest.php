@@ -173,8 +173,8 @@ class IntegrationTest extends FacetWebTestBase {
           'region' => 'footer',
           'id' => str_replace('_', '-', $id),
           'context_mapping' => [
-            'facet' => '@facetapi.facet_context:' . $facet->uuid()
-          ]
+            'facet' => '@facetapi.facet_context:' . $facet->uuid(),
+          ],
         ],
         'test_weight' => '0',
       ],
@@ -247,7 +247,7 @@ class IntegrationTest extends FacetWebTestBase {
   protected function addFacet($facet_name) {
     $facet_id = $this->convertNameToMachineName($facet_name);
 
-    // Go to the Add facet page and make sure that returns a 200
+    // Go to the Add facet page and make sure that returns a 200.
     $facet_add_page = $this->urlGenerator->generateFromRoute('entity.facetapi_facet.add_form', [], ['absolute' => TRUE]);
     $this->drupalGet($facet_add_page);
     $this->assertResponse(200);
@@ -371,8 +371,7 @@ class IntegrationTest extends FacetWebTestBase {
     $this->drupalGet($facet_delete_page);
     $this->assertResponse(200);
     // @TODO Missing this text on local test. Not sure why.
-    //$this->assertText($this->t('Are you sure you want to delete the facet'));
-
+    // $this->assertText($this->t('Are you sure you want to delete the facet'));
     // Actually submit the confirmation form.
     $this->drupalPostForm(NULL, [], $this->t('Delete'));
 
@@ -410,6 +409,7 @@ class IntegrationTest extends FacetWebTestBase {
    * Covert facet name to machine name.
    *
    * @param $facet_name
+   *
    * @return string
    */
   protected function convertNameToMachineName($facet_name) {

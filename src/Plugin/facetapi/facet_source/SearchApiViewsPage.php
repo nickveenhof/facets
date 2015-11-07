@@ -2,7 +2,7 @@
 
 /**
  * @file
- *   Contains \Drupal\facetapi\Plugin\facet_api\facet_source\SearchApiViewsPage
+ * Contains \Drupal\facetapi\Plugin\facet_api\facet_source\SearchApiViewsPage.
  */
 
 namespace Drupal\facetapi\Plugin\facetapi\facet_source;
@@ -63,7 +63,7 @@ class SearchApiViewsPage extends SearchApiBaseFacetSource {
 
       // Only add the index if the $query is a Search API Query.
       if ($query instanceof SearchApiQuery) {
-        // Set the Search Api Index
+        // Set the Search Api Index.
         $this->index = $query->getIndex();
       }
     }
@@ -103,7 +103,7 @@ class SearchApiViewsPage extends SearchApiBaseFacetSource {
       $facet_results = $results->getExtraData('search_api_facets');
 
       // Loop over each facet and execute the build method from the given
-      // query type
+      // query type.
       foreach ($facets as $facet) {
         $configuration = array(
           'query' => NULL,
@@ -133,4 +133,5 @@ class SearchApiViewsPage extends SearchApiBaseFacetSource {
     }
     return FALSE;
   }
+
 }

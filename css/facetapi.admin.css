@@ -14,10 +14,10 @@
 }
 
 #facetapi-groups-list tr.facet-source {
-  border-top: 1px solid #E6E4DF;
+  border-top: 1px solid #e6e4df;
 }
 #facetapi-groups-list tr.facet:last-of-type {
-  border-bottom: 1px solid #E6E4DF;
+  border-bottom: 1px solid #e6e4df;
 }
 
 #facetapi-groups-list tr.facet-source .facetapi-type,
@@ -33,6 +33,6 @@
  * Facet API Display page
  */
 #edit-processors .facetapi-processor-settings {
-    margin-left: 20px;
-    margin-bottom: 25px;
+  margin-left: 20px;
+  margin-bottom: 25px;
 }

@@ -1,13 +1,13 @@
 <?php
 /**
  * @file
- * Contains Drupal\facetapi\Processor\UrlProcessorInterface
+ * Contains Drupal\facetapi\Processor\UrlProcessorInterface.
  */
 
 namespace Drupal\facetapi\Processor;
 
 /**
- * Interface UrlProcessorInterface
+ * Interface UrlProcessorInterface.
  *
  * The url processor takes care of retrieving facet information
  * from the url, and also handles the generation of facet links.

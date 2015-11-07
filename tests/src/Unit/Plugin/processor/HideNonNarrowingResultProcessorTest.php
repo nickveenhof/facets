@@ -48,7 +48,7 @@ class HideNonNarrowingResultProcessorTest extends UnitTestCase {
 
 
   /**
-   * Test filtering of results
+   * Test filtering of results.
    */
   public function testNoFilterResults() {
 
@@ -68,12 +68,12 @@ class HideNonNarrowingResultProcessorTest extends UnitTestCase {
   }
 
   /**
-   * Test filtering of results
+   * Test filtering of results.
    */
   public function testFilterResults() {
 
     $results = $this->original_results;
-    $results[2]->setActiveState(true);
+    $results[2]->setActiveState(TRUE);
 
     $facet = new Facet([], 'facet');
     $facet->setResults($results);

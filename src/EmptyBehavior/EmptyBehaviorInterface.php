@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains Drupal\facetap\EmptyBehavior\EmptyBehaviorInterface
+ * Contains Drupal\facetap\EmptyBehavior\EmptyBehaviorInterface.
  */
 
 namespace Drupal\facetapi\EmptyBehavior;

@@ -13,7 +13,6 @@ use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\facetapi\EmptyBehavior\EmptyBehaviorPluginManager;
 use Drupal\facetapi\Exception\InvalidProcessorException;
 use Drupal\facetapi\FacetInterface;
-use Drupal\facetapi\FacetSource\FacetSourceInterface;
 use Drupal\facetapi\FacetSource\FacetSourcePluginManager;
 use Drupal\facetapi\Processor\BuildProcessorInterface;
 use Drupal\facetapi\Processor\PreQueryProcessorInterface;
@@ -21,7 +20,6 @@ use Drupal\facetapi\Processor\ProcessorInterface;
 use Drupal\facetapi\Processor\ProcessorPluginManager;
 use Drupal\facetapi\QueryType\QueryTypePluginManager;
 use Drupal\facetapi\Widget\WidgetPluginManager;
-use \Drupal\facetapi\Entity\Facet;
 
 /**
  * Base class for Facet API FacetManagers.
@@ -303,7 +301,7 @@ class DefaultFacetManager {
       // enough to halt all further processing. This should probably go in an
       // earlier step of the facet building process but here's fine for now.
       $facet_source = $facet->getFacetSource();
-      if(!$facet_source->isRenderedInCurrentRequest()){
+      if (!$facet_source->isRenderedInCurrentRequest()) {
         return [];
       }
     }
@@ -321,9 +319,8 @@ class DefaultFacetManager {
 
     // Get the current results from the facets and let all processors that
     // trigger on the build step do their build processing.
-
-    // @see \Drupal\facetapi\Processor\BuildProcessorInterface
-    // @see \Drupal\facetapi\Processor\WidgetOrderProcessorInterface
+    // @see \Drupal\facetapi\Processor\BuildProcessorInterface.
+    // @see \Drupal\facetapi\Processor\WidgetOrderProcessorInterface.
     $results = $facet->getResults();
 
     foreach ($facet->getProcessors() as $processor) {
@@ -338,7 +335,6 @@ class DefaultFacetManager {
       }
     }
     $facet->setResults($results);
-
 
     // Returns the render array, this render array contains the empty behaviour
     // if no results are found. If there are results we're going to initialize
@@ -375,4 +371,5 @@ class DefaultFacetManager {
       $facet->setPath($facet_source_plugin->getPath());
     }
   }
+
 }

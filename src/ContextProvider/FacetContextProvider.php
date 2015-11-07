@@ -12,7 +12,9 @@ use Drupal\Core\Plugin\Context\Context;
 use Drupal\Core\Plugin\Context\ContextDefinition;
 use Drupal\Core\Plugin\Context\ContextProviderInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
-
+/**
+ *
+ */
 class FacetContextProvider implements ContextProviderInterface {
 
   use StringTranslationTrait;
@@ -61,6 +63,5 @@ class FacetContextProvider implements ContextProviderInterface {
 
     return $contexts;
   }
-
 
 }

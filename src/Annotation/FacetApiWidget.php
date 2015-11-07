@@ -22,14 +22,14 @@ use Drupal\Component\Annotation\Plugin;
 class FacetApiWidget extends Plugin {
 
   /**
-   * The widget plugin id
+   * The widget plugin id.
    *
    * @var string
    */
   public $id;
 
   /**
-   * The human-readable name of the widget plugin
+   * The human-readable name of the widget plugin.
    *
    * @ingroup plugin_translatable
    *

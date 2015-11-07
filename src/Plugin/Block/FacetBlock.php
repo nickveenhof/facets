@@ -12,7 +12,6 @@ namespace Drupal\facetapi\Plugin\Block;
 use Drupal\Core\Block\BlockBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
-use Drupal\facetapi\Entity\Facet;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -25,7 +24,6 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  *    "facet" = @ContextDefinition("entity:facetapi_facet", label=@Translation("Facet"))
  *  }
  * )
- *
  */
 class FacetBlock extends BlockBase implements ContainerFactoryPluginInterface {
 

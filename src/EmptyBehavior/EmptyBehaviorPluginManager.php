@@ -1,7 +1,8 @@
 <?php
 
 /**
- * Contains \Drupal\facetapi\EmptyBehavior\EmptyBehaviorPluginManager
+ * @file
+ * Contains \Drupal\facetapi\EmptyBehavior\EmptyBehaviorPluginManager.
  */
 
 namespace Drupal\facetapi\EmptyBehavior;
@@ -17,7 +18,11 @@ use Drupal\Core\Plugin\DefaultPluginManager;
  * @see \Drupal\facetapi\EmptyBehavior\EmptyBehaviorInterface
  */
 class EmptyBehaviorPluginManager extends DefaultPluginManager {
+  /**
+   *
+   */
   public function __construct(\Traversable $namespaces, CacheBackendInterface $cache_backend, ModuleHandlerInterface $module_handler) {
     parent::__construct('Plugin/facetapi/empty_behavior', $namespaces, $module_handler, 'Drupal\facetapi\EmptyBehavior\EmptyBehaviorInterface', 'Drupal\facetapi\Annotation\FacetApiEmptyBehavior');
   }
+
 }

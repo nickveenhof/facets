@@ -1,11 +1,14 @@
 <?php
 
+/**
+ * @file
+ */
+
 namespace Drupal\facetapi\Plugin\facetapi\Widget;
 
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\facetapi\FacetInterface;
-use Drupal\facetapi\Result\Result;
 use Drupal\facetapi\Widget\WidgetInterface;
 
 /**

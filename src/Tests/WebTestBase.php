@@ -98,12 +98,10 @@ abstract class WebTestBase extends SimpletestWebTestBase {
 
     // @TODO do we need to create article CT?
     // Create a node article type.
-    //$this->drupalCreateContentType(['type' => 'article', 'name' => 'Article']);
-
+    // $this->drupalCreateContentType(['type' => 'article', 'name' => 'Article']);
     // @TODO do we need to create Page CT?
     // Create a node page type.
-    //$this->drupalCreateContentType(['type' => 'page', 'name' => 'Page']);
-
+    // $this->drupalCreateContentType(['type' => 'page', 'name' => 'Page']);
     $this->setUpExampleStructure();
 
     Utility::getIndexTaskManager()->addItemsAll(Index::load($this->indexId));

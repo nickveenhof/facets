@@ -78,7 +78,7 @@ class FacetDeleteConfirmForm extends EntityConfirmFormBase {
    */
   protected function isFacetUsedBlock() {
 
-    // if the block module is not installed, we should automatically return
+    // If the block module is not installed, we should automatically return
     // false and go ahead with deletion.
     if (!\Drupal::moduleHandler()->moduleExists('block')) {
       return FALSE;

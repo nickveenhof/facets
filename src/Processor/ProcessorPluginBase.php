@@ -1,12 +1,18 @@
 <?php
 
+/**
+ * @file
+ */
+
 namespace Drupal\facetapi\Processor;
 
 
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Plugin\PluginBase;
 use Drupal\facetapi\FacetInterface;
-
+/**
+ *
+ */
 class ProcessorPluginBase extends PluginBase implements ProcessorInterface {
 
   /**
@@ -80,7 +86,8 @@ class ProcessorPluginBase extends PluginBase implements ProcessorInterface {
    * {@inheritdoc}
    */
   public function getConfiguration() {
-    unset($this->configuration['facet']); // TODO: Do we need this here anyway?
+    unset($this->configuration['facet']);
+    // TODO: Do we need this here anyway?
     return $this->configuration + $this->defaultConfiguration();
   }
 

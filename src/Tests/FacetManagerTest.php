@@ -1,5 +1,6 @@
 <?php
 /**
+ * @file
  * Tests Facet API's FacetManager implementation.
  */
 
@@ -28,8 +29,7 @@ class FacetManagerTest extends WebTestBase {
    *
    * @var \Drupal\Core\Routing\UrlGeneratorInterface
    */
-  //protected $urlGenerator;
-
+  // Protected $urlGenerator;.
   /**
    * {@inheritdoc}
    */
@@ -37,9 +37,11 @@ class FacetManagerTest extends WebTestBase {
     parent::setUp();
   }
 
+  /**
+   *
+   */
   public function testMock() {
     $this->verbose("We need to have at least one test method in a test or otherwise all tests fail.");
   }
-
 
 }

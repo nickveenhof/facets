@@ -10,7 +10,6 @@ use Drupal\Core\Form\FormStateInterface;
 use Drupal\facetapi\FacetInterface;
 use Drupal\facetapi\Processor\BuildProcessorInterface;
 use Drupal\facetapi\Processor\ProcessorPluginBase;
-use Drupal\facetapi\Result\Result;
 
 /**
  * Provides a minimum count processor..

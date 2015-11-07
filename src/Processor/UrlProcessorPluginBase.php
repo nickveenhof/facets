@@ -1,7 +1,7 @@
 <?php
 /**
  * @file
- * Contains Drupal\facetapi\Processor\UrlProcessorPluginBase
+ * Contains Drupal\facetapi\Processor\UrlProcessorPluginBase.
  */
 
 namespace Drupal\facetapi\Processor;
@@ -9,7 +9,9 @@ namespace Drupal\facetapi\Processor;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
-
+/**
+ *
+ */
 abstract class UrlProcessorPluginBase extends ProcessorPluginBase implements UrlProcessorInterface, ContainerFactoryPluginInterface {
 
   /**
@@ -52,4 +54,5 @@ abstract class UrlProcessorPluginBase extends ProcessorPluginBase implements Url
     $request = $container->get('request_stack')->getCurrentRequest();
     return new static($configuration, $plugin_id, $plugin_definition, $request);
   }
+
 }

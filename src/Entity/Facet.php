@@ -9,7 +9,6 @@ namespace Drupal\facetapi\Entity;
 
 use Drupal\Core\Config\Entity\ConfigEntityBase;
 use Drupal\facetapi\FacetInterface;
-use Drupal\facetapi\Result\Result;
 
 /**
  * Defines the search index configuration entity.
@@ -178,7 +177,7 @@ class Facet extends ConfigEntityBase implements FacetInterface {
   protected $only_visible_when_facet_source_is_visible;
 
   /**
-   * Widget Plugin Manager
+   * Widget Plugin Manager.
    *
    * @var object
    */
@@ -306,33 +305,54 @@ class Facet extends ConfigEntityBase implements FacetInterface {
     return $this;
   }
 
+  /**
+   *
+   */
   public function getFieldIdentifier() {
     return $this->field_identifier;
   }
 
+  /**
+   *
+   */
   public function setFieldIdentifier($field_identifier) {
     $this->field_identifier = $field_identifier;
     return $this;
   }
 
+  /**
+   *
+   */
   public function getQueryTypes() {
     return $this->query_type_name;
   }
 
+  /**
+   *
+   */
   public function setFieldEmptyBehavior($behavior_id) {
     $this->empty_behavior = $behavior_id;
     return $this;
   }
 
+  /**
+   *
+   */
   public function getFieldEmptyBehavior() {
     return $this->empty_behavior;
   }
 
+  /**
+   *
+   */
   public function getUrlProcessorName() {
     // @Todo: for now if the url processor is not set, defualt to query_string.
     return isset($this->url_processor_name) ? $this->url_processor_name : 'query_string';
   }
 
+  /**
+   *
+   */
   public function getName() {
     return $this->name;
   }
@@ -402,6 +422,9 @@ class Facet extends ConfigEntityBase implements FacetInterface {
     return $parameters;
   }
 
+  /**
+   *
+   */
   public function getResults() {
     return $this->results;
   }
@@ -448,7 +471,7 @@ class Facet extends ConfigEntityBase implements FacetInterface {
   /**
    * {@inheritdoc}
    */
-  public function getFacetSources($only_enabled = false) {
+  public function getFacetSources($only_enabled = FALSE) {
     if (!isset($this->facetSourcePlugins)) {
       $this->facetSourcePlugins = [];
 
@@ -478,10 +501,16 @@ class Facet extends ConfigEntityBase implements FacetInterface {
     return array_intersect_key($this->facetSourcePlugins, array_flip($this->facetSourcePlugins));
   }
 
+  /**
+   *
+   */
   public function setPath($path) {
     $this->path = $path;
   }
 
+  /**
+   *
+   */
   public function getPath() {
     return $this->path;
   }

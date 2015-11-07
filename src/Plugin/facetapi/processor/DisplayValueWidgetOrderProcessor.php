@@ -1,5 +1,9 @@
 <?php
 
+/**
+ * @file
+ */
+
 namespace Drupal\facetapi\Plugin\facetapi\processor;
 
 use Drupal\facetapi\Processor\WidgetOrderPluginBase;
@@ -32,10 +36,16 @@ class DisplayValueWidgetOrderProcessor extends WidgetOrderPluginBase implements 
     return $results;
   }
 
+  /**
+   *
+   */
   protected static function sortDisplayValueAsc(Result $a, Result $b) {
     return strnatcasecmp($a->getDisplayValue(), $b->getDisplayValue());
   }
 
+  /**
+   *
+   */
   protected static function sortDisplayValueDesc(Result $a, Result $b) {
     return strnatcasecmp($b->getDisplayValue(), $a->getDisplayValue());
   }

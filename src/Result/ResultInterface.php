@@ -1,14 +1,16 @@
 <?php
 /**
  * @file
- * Contains  Drupal\facetapi\Result\ResultInterface
+ * Contains  Drupal\facetapi\Result\ResultInterface.
  */
 
 namespace Drupal\facetapi\Result;
 
 
 use Drupal\Core\Url;
-
+/**
+ *
+ */
 interface ResultInterface {
 
   /**
@@ -40,7 +42,7 @@ interface ResultInterface {
   public function getUrl();
 
   /**
-   * Set the url
+   * Set the url.
    *
    * @param Url $url
    */

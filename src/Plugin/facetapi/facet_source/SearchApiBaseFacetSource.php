@@ -1,7 +1,7 @@
 <?php
 /**
  * @file
- *   Contains \Drupal\facetapi\Plugin\facet_api\facet_source\SearchApiBaseFacetSource
+ * Contains \Drupal\facetapi\Plugin\facet_api\facet_source\SearchApiBaseFacetSource.
  */
 
 namespace Drupal\facetapi\Plugin\facetapi\facet_source;
@@ -15,7 +15,9 @@ use Drupal\facetapi\FacetSource\FacetSourceInterface;
 use Drupal\facetapi\FacetSource\FacetSourcePluginBase;
 use Drupal\search_api\FacetApiQueryTypeMappingInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
-
+/**
+ *
+ */
 abstract class SearchApiBaseFacetSource extends FacetSourcePluginBase {
 
   use StringTranslationTrait;
@@ -71,7 +73,7 @@ abstract class SearchApiBaseFacetSource extends FacetSourcePluginBase {
       '#title' => $this->t('Facet field'),
       '#description' => $this->t('Choose the indexed field.'),
       '#required' => TRUE,
-      '#default_value' => $facet->getFieldIdentifier()
+      '#default_value' => $facet->getFieldIdentifier(),
     ];
 
     return $form;
@@ -82,7 +84,7 @@ abstract class SearchApiBaseFacetSource extends FacetSourcePluginBase {
    */
   public function getFields() {
     $indexed_fields = [];
-    $fields = $this->index->getFields(true);
+    $fields = $this->index->getFields(TRUE);
     foreach ($fields as $field) {
       $indexed_fields[$field->getFieldIdentifier()] = $field->getLabel();
     }
@@ -101,7 +103,7 @@ abstract class SearchApiBaseFacetSource extends FacetSourcePluginBase {
     // Get the Search API Backend.
     $backend = $server->getBackend();
 
-    $fields = $this->index->getFields(true);
+    $fields = $this->index->getFields(TRUE);
     foreach ($fields as $field) {
       if ($field->getFieldIdentifier() == $field_id) {
         return $this->getQueryTypesForDataType($backend, $field->getType());
@@ -132,7 +134,7 @@ abstract class SearchApiBaseFacetSource extends FacetSourcePluginBase {
   public function getQueryTypesForDataType(BackendInterface $backend, $data_type_plugin_id) {
     $query_types = [];
     // @todo Make this flexible for each data type in Search API.
-    switch($data_type_plugin_id) {
+    switch ($data_type_plugin_id) {
       case 'boolean':
       case 'date':
       case 'decimal':
@@ -144,7 +146,7 @@ abstract class SearchApiBaseFacetSource extends FacetSourcePluginBase {
     }
 
     // Find out if the backend implemented the Interface to retrieve specific
-    // query types for the supported data_types
+    // query types for the supported data_types.
     if ($backend instanceof FacetApiQueryTypeMappingInterface) {
       // If the input arrays have the same string keys, then the later value
       // for that key will overwrite the previous one. If, however, the arrays

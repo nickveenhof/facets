@@ -21,14 +21,14 @@ use Drupal\Component\Annotation\Plugin;
 class FacetApiUrlProcessor extends Plugin {
 
   /**
-   * The facet_manager plugin id
+   * The facet_manager plugin id.
    *
    * @var string
    */
   public $id;
 
   /**
-   * The human-readable name of the url processor plugin
+   * The human-readable name of the url processor plugin.
    *
    * @ingroup plugin_translatable
    *

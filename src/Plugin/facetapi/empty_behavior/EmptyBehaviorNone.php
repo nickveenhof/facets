@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\facetapi\Plugin\facetapi\empty_behavior\EmptyBehaviorNone
+ * Contains \Drupal\facetapi\Plugin\facetapi\empty_behavior\EmptyBehaviorNone.
  */
 
 namespace Drupal\facetapi\Plugin\facetapi\empty_behavior;

@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\facetapi\Plugin\facetapi\query_type\SearchApiString
+ * Contains \Drupal\facetapi\Plugin\facetapi\query_type\SearchApiString.
  */
 
 namespace Drupal\facetapi\Plugin\facetapi\query_type;
@@ -70,7 +70,7 @@ class SearchApiString extends QueryTypePluginBase {
    * {@inheritdoc}
    */
   public function build() {
-    if (!empty ($this->results)) {
+    if (!empty($this->results)) {
       $facet_results = array();
       foreach ($this->results as $result) {
         if ($result['count']) {

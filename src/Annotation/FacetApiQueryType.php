@@ -22,14 +22,14 @@ use Drupal\Component\Annotation\Plugin;
 class FacetApiQueryType extends Plugin {
 
   /**
-   * The query type plugin id
+   * The query type plugin id.
    *
    * @var string
    */
   public $id;
 
   /**
-   * The human-readable name of the query type plugin
+   * The human-readable name of the query type plugin.
    *
    * @ingroup plugin_translatable
    *

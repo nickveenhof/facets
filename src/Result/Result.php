@@ -1,22 +1,24 @@
 <?php
 /**
  * @file
- * Contains Drupal\facetapi\Result\Result
+ * Contains Drupal\facetapi\Result\Result.
  */
 
 namespace Drupal\facetapi\Result;
 
 use Drupal\Core\Url;
-
+/**
+ *
+ */
 class Result implements ResultInterface {
 
   /**
-   * The facet value
+   * The facet value.
    */
   protected $display_value;
 
   /**
-   * The raw facet value
+   * The raw facet value.
    */
   protected $raw_value;
 

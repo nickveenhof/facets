@@ -16,6 +16,7 @@ use Drupal\facetapi\FacetInterface;
  * A facet source is used to abstract the data source where facets can be added
  * to. A good example of this is a search api view. There are other possible
  * facet data sources, these all implement the FacetSourceInterface.
+ *
  * @see plugin_api
  */
 interface FacetSourceInterface {
@@ -34,6 +35,7 @@ interface FacetSourceInterface {
    * Fill in facet data in to the configured facets.
    *
    * @param \Drupal\facetapi\FacetInterface[] $facets
+   *
    * @return mixed
    */
   public function fillFacetsWithResults($facets);
@@ -49,6 +51,7 @@ interface FacetSourceInterface {
    * Get the allowed query types for a given facet for the facet source.
    *
    * @param \Drupal\facetapi\FacetInterface $facet
+   *
    * @return array of allowed query types
    *
    * @throws \Drupal\facetapi\Exception\Exception
@@ -67,7 +70,6 @@ interface FacetSourceInterface {
   public function isRenderedInCurrentRequest();
 
   /**
-   *
    * Returns an array of fields that are defined on the datasource.
    *
    * This returns an array of fields that are defined on the source. This array

@@ -45,9 +45,9 @@ class ActiveWidgetOrderProcessorTest extends UnitTestCase {
       new Result('Clover', 'Clover', 50),
     ];
 
-    $original_results[1]->setActiveState(true);
-    $original_results[2]->setActiveState(true);
-    $original_results[3]->setActiveState(true);
+    $original_results[1]->setActiveState(TRUE);
+    $original_results[2]->setActiveState(TRUE);
+    $original_results[3]->setActiveState(TRUE);
 
     $this->original_results = $original_results;
 
@@ -59,7 +59,7 @@ class ActiveWidgetOrderProcessorTest extends UnitTestCase {
    */
   public function testAscending() {
     $sorted_results = $this->processor->sortResults($this->original_results, 'ASC');
-    $expected_values = [true, true, true, false, false];
+    $expected_values = [TRUE, TRUE, TRUE, FALSE, FALSE];
     foreach ($expected_values as $index => $value) {
       $this->assertEquals($value, $sorted_results[$index]->isActive());
     }
@@ -70,7 +70,7 @@ class ActiveWidgetOrderProcessorTest extends UnitTestCase {
    */
   public function testDescending() {
     $sorted_results = $this->processor->sortResults($this->original_results, 'DESC');
-    $expected_values = array_reverse([true, true, true, false, false]);
+    $expected_values = array_reverse([TRUE, TRUE, TRUE, FALSE, FALSE]);
     foreach ($expected_values as $index => $value) {
       $this->assertEquals($value, $sorted_results[$index]->isActive());
     }

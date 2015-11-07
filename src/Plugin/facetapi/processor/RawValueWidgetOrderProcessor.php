@@ -1,5 +1,9 @@
 <?php
 
+/**
+ * @file
+ */
+
 namespace Drupal\facetapi\Plugin\facetapi\processor;
 
 use Drupal\facetapi\Processor\WidgetOrderPluginBase;
@@ -32,10 +36,16 @@ class RawValueWidgetOrderProcessor extends WidgetOrderPluginBase implements Widg
     return $results;
   }
 
+  /**
+   *
+   */
   protected static function sortRawValueAsc(Result $a, Result $b) {
     return strnatcasecmp($a->getRawValue(), $b->getRawValue());
   }
 
+  /**
+   *
+   */
   protected static function sortRawValueDesc(Result $a, Result $b) {
     return strnatcasecmp($b->getRawValue(), $a->getRawValue());
   }

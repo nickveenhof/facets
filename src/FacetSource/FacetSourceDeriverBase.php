@@ -12,8 +12,10 @@ use Drupal\Core\Entity\EntityTypeManager;
 use Drupal\Core\Plugin\Discovery\ContainerDeriverInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Symfony\Component\DependencyInjection\ContainerInterface;
-
-abstract class FacetSourceDeriverBase  implements ContainerDeriverInterface {
+/**
+ *
+ */
+abstract class FacetSourceDeriverBase implements ContainerDeriverInterface {
 
   use StringTranslationTrait;
 
@@ -96,4 +98,5 @@ abstract class FacetSourceDeriverBase  implements ContainerDeriverInterface {
   public function compareDerivatives(array $a, array $b) {
     return strnatcasecmp($a['label'], $b['label']);
   }
+
 }

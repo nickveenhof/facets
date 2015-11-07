@@ -1,21 +1,22 @@
 <?php
 /**
  * @file
- * Contains  Drupal\facetapi\FacetInterface
+ * Contains  Drupal\facetapi\FacetInterface.
  */
 
 namespace Drupal\facetapi;
 
 use Drupal\Core\Config\Entity\ConfigEntityInterface;
-use Drupal\facetapi\FacetSource\FacetSourceInterface;
-use Drupal\facetapi\Result\ResultInterface;
-
+/**
+ *
+ */
 interface FacetInterface extends ConfigEntityInterface {
 
   /**
    * Sets the facet's widget plugin id.
    *
-   * @param string  $widget
+   * @param string $widget
+   *
    * @return $this
    */
   public function setWidget($widget);
@@ -51,7 +52,7 @@ interface FacetInterface extends ConfigEntityInterface {
    */
   public function getFieldEmptyBehavior();
 
-    /**
+  /**
    * Set field identifier.
    *
    * @return mixed
@@ -91,6 +92,7 @@ interface FacetInterface extends ConfigEntityInterface {
    * Check if a value is active.
    *
    * @param string $value
+   *
    * @return bool
    */
   public function isActiveValue($value);
@@ -171,7 +173,8 @@ interface FacetInterface extends ConfigEntityInterface {
 
 
   /**
-   * Gets the facet manager plugin id
+   * Gets the facet manager plugin id.
+   *
    * @return string
    */
   public function getManagerPluginId();
@@ -182,12 +185,14 @@ interface FacetInterface extends ConfigEntityInterface {
    * This is usually the name of the Search-api view.
    *
    * @param string $facet_source_id
+   *
    * @return $this
    */
   public function setFacetSourceId($facet_source_id);
 
   /**
    * Returns the Facet source id.
+   *
    * @return string
    */
   public function getFacetSourceId();
@@ -204,6 +209,7 @@ interface FacetInterface extends ConfigEntityInterface {
    * Load the facet sources for this facet.
    *
    * @param bool|TRUE $only_enabled
+   *
    * @return FacetSourceInterface[]
    */
   public function getFacetSources($only_enabled = TRUE);
@@ -226,6 +232,7 @@ interface FacetInterface extends ConfigEntityInterface {
    * Returns an array of processors with their configuration.
    *
    * @param bool|TRUE $only_enabled
+   *
    * @return \Drupal\facetapi\Processor\ProcessorInterface[]
    */
   public function getProcessors($only_enabled = TRUE);
@@ -250,7 +257,7 @@ interface FacetInterface extends ConfigEntityInterface {
   /**
    * Sets the "only visible when facet source is visible" boolean flag.
    *
-   * @param boolean $only_visible_when_facet_source_is_visible
+   * @param bool $only_visible_when_facet_source_is_visible
    *   A boolean flag indicating if the facet should be hidden on a page that
    *   does not show the facet source.
    *
@@ -264,4 +271,5 @@ interface FacetInterface extends ConfigEntityInterface {
    * @return boolean
    */
   public function getOnlyVisibleWhenFacetSourceIsVisible();
+
 }

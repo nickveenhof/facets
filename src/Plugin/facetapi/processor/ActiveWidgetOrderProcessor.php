@@ -1,5 +1,9 @@
 <?php
 
+/**
+ * @file
+ */
+
 namespace Drupal\facetapi\Plugin\facetapi\processor;
 
 
@@ -33,6 +37,9 @@ class ActiveWidgetOrderProcessor extends WidgetOrderPluginBase implements Widget
     return $results;
   }
 
+  /**
+   *
+   */
   protected static function sortActiveAsc(Result $a, Result $b) {
     if ($a->isActive() == $b->isActive()) {
       return 0;
@@ -40,6 +47,9 @@ class ActiveWidgetOrderProcessor extends WidgetOrderPluginBase implements Widget
     return ($a->isActive()) ? -1 : 1;
   }
 
+  /**
+   *
+   */
   protected static function sortActiveDesc(Result $a, Result $b) {
     if ($a->isActive() == $b->isActive()) {
       return 0;

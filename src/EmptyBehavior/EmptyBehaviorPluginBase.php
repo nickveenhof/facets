@@ -1,7 +1,8 @@
 <?php
 
 /**
- * Contains \Drupal\facetapi\EmptyBehavior\EmptyBehaviorPluginBase
+ * @file
+ * Contains \Drupal\facetapi\EmptyBehavior\EmptyBehaviorPluginBase.
  */
 
 namespace Drupal\facetapi\EmptyBehavior;
@@ -65,7 +66,7 @@ abstract class EmptyBehaviorPluginBase extends PluginBase implements EmptyBehavi
    * {@inheritdoc}
    */
   public function buildConfigurationForm(array $form, FormStateInterface $form_state) {
-    return false;
+    return FALSE;
   }
 
   /**
@@ -77,4 +78,5 @@ abstract class EmptyBehaviorPluginBase extends PluginBase implements EmptyBehavi
    * {@inheritdoc}
    */
   public function submitConfigurationForm(array &$form, FormStateInterface $form_state) {}
+
 }
