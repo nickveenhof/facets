@@ -280,7 +280,7 @@ class FacetDisplayForm extends EntityForm {
       }
       if (isset($form['processors'][$processor_id]['settings'])) {
         $processor_form_state = new SubFormState($form_state, array('processors', $processor_id, 'settings'));
-        $processor->submitConfigurationForm($form['processors'][$processor_id]['settings'], $processor_form_state);
+        $processor->submitConfigurationForm($form['processors'][$processor_id]['settings'], $processor_form_state, $facet);
         $new_settings[$processor_id]['settings'] = $processor->getConfiguration();
       }
     }
