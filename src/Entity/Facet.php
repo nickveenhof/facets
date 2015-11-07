@@ -51,6 +51,7 @@ use Drupal\facetapi\FacetInterface;
  *     "canonical" = "/admin/config/search/facet-api",
  *     "add-form" = "/admin/config/search/facet-api/add-facet",
  *     "edit-form" = "/admin/config/search/facet-api/{facetapi_facet}/edit",
+ *     "display-form" = "/admin/config/search/facet-api/{facetapi_facet}/display",
  *     "delete-form" = "/admin/config/search/facet-api/{facetapi_facet}/delete",
  *   }
  * )
