@@ -10,7 +10,7 @@ use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\facetapi\Exception\InvalidQueryTypeException;
 use Drupal\facetapi\FacetInterface;
-use \Drupal\search_api\Backend\BackendInterface;
+use Drupal\search_api\Backend\BackendInterface;
 use Drupal\facetapi\FacetSource\FacetSourceInterface;
 use Drupal\facetapi\FacetSource\FacetSourcePluginBase;
 use Drupal\search_api\FacetApiQueryTypeMappingInterface;

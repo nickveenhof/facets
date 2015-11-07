@@ -18,7 +18,7 @@
  * @param array $query_types
  *   The Search API backend info array, keyed by backend ID.
  *
- * @see \Drupal\search_api\Backend\BackendPluginBase
+ * @see \Drupal\facetapi\Plugin\facetapi\facet_source\SearchApiBaseFacetSource
  */
 function hook_facetapi_search_api_query_type_mapping_alter($backend_plugin_id, array &$query_types) {
   if ($backend_plugin_id == 'search_api_solr') {
