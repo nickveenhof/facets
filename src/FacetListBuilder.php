@@ -139,6 +139,19 @@ class FacetListBuilder extends ConfigEntityListBuilder {
    */
   public function render() {
     $groups = $this->loadGroups();
+
+    // When no facet sources are found, we should show a message that you can't
+    // add facets yet.
+    if (empty($groups['facet_source_groups'])) {
+      return [
+        '#markup' => $this->t(
+          'You currently have no facet sources defined. You should start by adding a facet source before creating facets.<br />
+           An example of a facet source is a view based on Search API or a Search API page.
+           Other modules can also implement a facet source by providing a plugin that implements the FacetSourceInterface.'
+        )
+      ];
+    }
+
     $list['#attached']['library'][] = 'facetapi/drupal.facetapi.admin_css';
 
     $list['#type'] = 'container';
@@ -191,7 +204,6 @@ class FacetListBuilder extends ConfigEntityListBuilder {
     $facet_sources = $facet_source_plugin_manager->getDefinitions();
 
     $this->sortByStatusThenAlphabetically($facets);
-//    $this->sortByStatusThenAlphabetically($facet_sources);
 
     $facet_source_groups = array();
     foreach ($facet_sources as $facet_source) {
@@ -211,10 +223,10 @@ class FacetListBuilder extends ConfigEntityListBuilder {
       }
     }
 
-    return array(
+    return [
       'facet_source_groups' => $facet_source_groups,
       'lone_facets' => $facets,
-    );
+    ];
   }
 
   /**
