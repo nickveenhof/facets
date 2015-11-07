@@ -10,6 +10,7 @@ use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\facetapi\Exception\InvalidQueryTypeException;
 use Drupal\facetapi\FacetInterface;
+use \Drupal\search_api\Backend\BackendInterface;
 use Drupal\facetapi\FacetSource\FacetSourceInterface;
 use Drupal\facetapi\FacetSource\FacetSourcePluginBase;
 use Drupal\search_api\FacetApiQueryTypeMappingInterface;
@@ -100,15 +101,71 @@ abstract class SearchApiBaseFacetSource extends FacetSourcePluginBase {
     // Get the Search API Backend.
     $backend = $server->getBackend();
 
-    if ($backend instanceof FacetApiQueryTypeMappingInterface) {
-      $fields = $this->index->getFields(true);
-      foreach ($fields as $field) {
-        if ($field->getFieldIdentifier() == $field_id) {
-          return $backend->getQueryTypesForDataType($field->getType());
-        }
+    $fields = $this->index->getFields(true);
+    foreach ($fields as $field) {
+      if ($field->getFieldIdentifier() == $field_id) {
+        return $this->getQueryTypesForDataType($backend, $field->getType());
       }
     }
     throw new InvalidQueryTypeException($this->t("No available query types were found for facet @facet", ['@facet' => $facet->getName()]));
+  }
+
+  /**
+   *
+   *
+   * @param
+   * @param string $data_type
+   *
+   * @return array $query_types
+   */
+
+  /**
+   * Retrieves the query types for a specified data type.
+   *
+   * Backend plugins can use this method to override the default query types
+   * provided by the Search API with backend-specific ones that better use
+   * features of that backend.
+   *
+   * @param \Drupal\search_api\Backend\BackendInterface $backend
+   *   The backend that we want to get the query types for.
+   *
+   * @param string $data_type_plugin_id
+   *   The identifier of the data type.
+   *
+   * @return string[]
+   *   An associative array with the plugin IDs of allowed query types, keyed by
+   *   the generic name of the query_type.
+   *
+   * @see hook_facetapi_search_api_query_type_mapping_alter()
+   */
+  public function getQueryTypesForDataType(BackendInterface $backend, $data_type_plugin_id) {
+    $query_types = [];
+    // @todo Make this flexible for each data type in Search API.
+    switch($data_type_plugin_id) {
+      case 'boolean':
+      case 'date':
+      case 'decimal':
+      case 'integer':
+      case 'string':
+      case 'text':
+        $query_types['string'] = 'search_api_string';
+        break;
+    }
+
+    // Find out if the backend implemented the Interface to retrieve specific
+    // query types for the supported data_types
+    if ($backend instanceof FacetApiQueryTypeMappingInterface) {
+      // If the input arrays have the same string keys, then the later value
+      // for that key will overwrite the previous one. If, however, the arrays
+      // contain numeric keys, the later value will not overwrite the original
+      // value, but will be appended.
+      $query_types = array_merge($query_types, $backend->getQueryTypesForDataType($data_type_plugin_id));
+    }
+
+    // Let modules alter this mapping.
+    \Drupal::moduleHandler()->alter('facetapi_search_api_query_type_mapping', $backend->getPluginId(), $query_types);
+
+    return $query_types;
   }
 
 }
