@@ -2,12 +2,12 @@
 
 /**
  * @file
- * Contains \Drupal\search_api\Plugin\facetapi\query_type\SearchApiString
+ * Contains \Drupal\facetapi\Plugin\facetapi\query_type\SearchApiString
  */
 
-namespace Drupal\search_api\Plugin\facetapi\query_type;
+namespace Drupal\facetapi\Plugin\facetapi\query_type;
 
-use \Drupal\facetapi\QueryType\QueryTypePluginBase;
+use Drupal\facetapi\QueryType\QueryTypePluginBase;
 use Drupal\facetapi\Result\Result;
 
 
