@@ -23,6 +23,11 @@ class CheckboxWidget implements WidgetInterface {
   use StringTranslationTrait;
 
   /**
+   * @var \Drupal\Core\Utility\LinkGeneratorInterface $linkGenerator
+   */
+  protected $linkGenerator;
+
+  /**
    * {@inheritdoc}
    */
   public function execute() {
@@ -33,7 +38,7 @@ class CheckboxWidget implements WidgetInterface {
    * {@inheritdoc}
    */
   public function build(FacetInterface $facet) {
-    /** @var Result[] $results */
+    /** @var \Drupal\facetapi\Result\Result[] $results */
     $results = $facet->getResults();
     $items = [];
     foreach ($results as $result) {
@@ -43,8 +48,7 @@ class CheckboxWidget implements WidgetInterface {
         if ($result->isActive()) {
           $text = '(-) ' . $text;
         }
-        $link_generator = \Drupal::linkGenerator();
-        $link = $link_generator->generate($text, $result->getUrl());
+        $link = $this->linkGenerator()->generate($text, $result->getUrl());
         $items[] = $link;
       }
     }
@@ -91,4 +95,15 @@ class CheckboxWidget implements WidgetInterface {
     return $query_types['string'];
   }
 
+  /**
+   * Gets the link generator.
+   *
+   * @return \Drupal\Core\Utility\LinkGeneratorInterface
+   */
+  protected function linkGenerator() {
+    if (!isset($this->linkGenerator)) {
+      $this->linkGenerator = \Drupal::linkGenerator();
+    }
+    return $this->linkGenerator;
+  }
 }

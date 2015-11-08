@@ -22,6 +22,11 @@ use Drupal\facetapi\Widget\WidgetInterface;
 class LinksWidget implements WidgetInterface {
 
   /**
+   * @var \Drupal\Core\Utility\LinkGeneratorInterface $linkGenerator
+   */
+  protected $linkGenerator;
+
+  /**
    * {@inheritdoc}
    */
   public function execute() {
@@ -32,7 +37,7 @@ class LinksWidget implements WidgetInterface {
    * {@inheritdoc}
    */
   public function build(FacetInterface $facet) {
-    /** @var Result[] $results */
+    /** @var \Drupal\facetapi\Result\Result[] $results */
     $results = $facet->getResults();
     $items = [];
     foreach ($results as $result) {
@@ -44,15 +49,14 @@ class LinksWidget implements WidgetInterface {
         }
 
         if (is_null($result->getUrl())) {
-          $link = $text;
+          $items[] = $text;
         }
         else {
-          $link_generator = \Drupal::linkGenerator();
-          $link = $link_generator->generate($text, $result->getUrl());
+          $items[] = $this->linkGenerator()->generate($text, $result->getUrl());
         }
-        $items[] = $link;
       }
     }
+
     $build = [
       '#theme' => 'item_list',
       '#items' => $items,
@@ -72,6 +76,18 @@ class LinksWidget implements WidgetInterface {
    */
   public function getQueryType($query_types) {
     return $query_types['string'];
+  }
+
+  /**
+   * Gets the link generator.
+   *
+   * @return \Drupal\Core\Utility\LinkGeneratorInterface
+   */
+  protected function linkGenerator() {
+    if (!isset($this->linkGenerator)) {
+      $this->linkGenerator = \Drupal::linkGenerator();
+    }
+    return $this->linkGenerator;
   }
 
 }
