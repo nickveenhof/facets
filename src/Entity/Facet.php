@@ -394,12 +394,12 @@ class Facet extends ConfigEntityBase implements FacetInterface {
     if (!isset($this->processors)) {
       /** @var $processor_plugin_manager \Drupal\facetapi\Processor\ProcessorPluginManager */
       $processor_plugin_manager = \Drupal::service('plugin.manager.facetapi.processor');
-      $processor_settings = $this->getOption('processors', array());
+      $processor_settings = $this->getOption('processors', []);
 
       foreach ($processor_plugin_manager->getDefinitions() as $name => $processor_definition) {
         if (class_exists($processor_definition['class']) && empty($this->processors[$name])) {
           // Create our settings for this processor.
-          $settings = empty($processor_settings[$name]['settings']) ? array() : $processor_settings[$name]['settings'];
+          $settings = empty($processor_settings[$name]['settings']) ? [] : $processor_settings[$name]['settings'];
           $settings['facet'] = $this;
 
           /** @var $processor \Drupal\facetapi\Processor\ProcessorInterface */

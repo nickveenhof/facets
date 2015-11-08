@@ -32,7 +32,7 @@ class MinimumCountProcessor extends ProcessorPluginBase implements BuildProcesso
     $processors = $facet->getProcessors();
     $config = $processors[$this->getPluginId()];
 
-    /** @var Result $result */
+    /** @var \Drupal\facetapi\Result\Result $result */
     foreach ($results as $id => $result) {
       if ($result->getCount() < $config->getConfiguration()['minimum_items']) {
         unset($results[$id]);
