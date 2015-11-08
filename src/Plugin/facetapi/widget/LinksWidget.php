@@ -4,7 +4,7 @@
  * @file
  */
 
-namespace Drupal\facetapi\Plugin\facetapi\Widget;
+namespace Drupal\facetapi\Plugin\facetapi\widget;
 
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\facetapi\FacetInterface;

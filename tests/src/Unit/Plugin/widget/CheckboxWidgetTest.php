@@ -8,7 +8,7 @@
 namespace Drupal\Tests\facetapi\Unit\Plugin\widget;
 
 use Drupal\facetapi\Entity\Facet;
-use Drupal\facetapi\Plugin\facetapi\Widget\CheckboxWidget;
+use Drupal\facetapi\Plugin\facetapi\widget\CheckboxWidget;
 use Drupal\facetapi\Result\Result;
 use Drupal\Tests\UnitTestCase;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
