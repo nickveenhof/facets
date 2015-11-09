@@ -41,12 +41,13 @@ class ExcludeSpecifiedItemsProcessorTest extends UnitTestCase {
       new Result('llama', 'llama', 10),
       new Result('badger', 'badger', 5),
       new Result('duck', 'duck', 15),
+      new Result('snbke', 'snbke', 10),
       new Result('snake', 'snake', 10),
       new Result('snaake', 'snaake', 10),
       new Result('snaaake', 'snaaake', 10),
       new Result('snaaaake', 'snaaaake', 10),
       new Result('snaaaaake', 'snaaaaake', 10),
-      new Result('snbke', 'snbke', 10),
+      new Result('snaaaaaake', 'snaaaaaake', 10),
     ];
 
     $processor_id = 'exclude_specified_items';
@@ -155,15 +156,15 @@ class ExcludeSpecifiedItemsProcessorTest extends UnitTestCase {
     return [
       [
         'test',
-        ['llama', 'duck', 'badger', 'snake', 'snaake', 'snaaake', 'snaaaake', 'snaaaaake', 'snbke']
+        ['llama', 'duck', 'badger', 'snake', 'snaake', 'snaaake', 'snaaaake', 'snaaaaake', 'snaaaaaake', 'snbke']
       ],
       [
         'llama',
-        ['badger', 'duck', 'snake', 'snaake', 'snaaake', 'snaaaake', 'snaaaaake', 'snbke']
+        ['badger', 'duck', 'snake', 'snaake', 'snaaake', 'snaaaake', 'snaaaaake', 'snaaaaaake', 'snbke']
       ],
       [
         'duck',
-        ['llama', 'badger', 'snake', 'snaake', 'snaaake', 'snaaaake', 'snaaaaake', 'snbke']
+        ['llama', 'badger', 'snake', 'snaake', 'snaaake', 'snaaaake', 'snaaaaake', 'snaaaaaake', 'snbke']
       ],
       [
         'sn(.*)ke',
@@ -172,6 +173,14 @@ class ExcludeSpecifiedItemsProcessorTest extends UnitTestCase {
       [
         'sn(a*)ke',
         ['llama', 'duck', 'badger', 'snbke']
+      ],
+      [
+        'sn(a+)ke',
+        ['llama', 'duck', 'badger', 'snbke']
+      ],
+      [
+        'sn(a{3,5})ke',
+        ['llama', 'duck', 'badger', 'snake', 'snaake', 'snaaaaaake', 'snbke']
       ],
     ];
   }
