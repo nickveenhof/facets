@@ -119,10 +119,15 @@ class ExcludeSpecifiedItemsProcessorTest extends UnitTestCase {
     $filtered_results = $this->processor->build($facet, $this->original_results);
 
     $this->assertCount((count($this->original_results) -1), $filtered_results);
+
+    foreach ($filtered_results as $result) {
+      $this->assertNotEquals('llama', $result->getDisplayValue());
+    }
   }
 
   /**
-   * Test filtering happens for string filter
+   * Test filtering happens for regex filter
+   *
    * @dataProvider provideRegexTests
    */
   public function testRegexFilter($regex, $expectedResults) {
