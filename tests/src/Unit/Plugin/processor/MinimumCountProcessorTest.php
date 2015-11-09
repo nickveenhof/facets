@@ -11,6 +11,7 @@ use Drupal\facetapi\Entity\Facet;
 use Drupal\facetapi\Plugin\facetapi\processor\MinimumCountProcessor;
 use Drupal\facetapi\Result\Result;
 use Drupal\Tests\UnitTestCase;
+use Symfony\Component\DependencyInjection\ContainerBuilder;
 
 /**
  * @group facetapi
@@ -43,7 +44,30 @@ class MinimumCountProcessorTest extends UnitTestCase {
       new Result('duck', 'duck', 15),
     ];
 
-    $this->processor = new MinimumCountProcessor([], 'minimum_count', []);
+    $processor_id = 'minimum_count';
+    $this->processor = new MinimumCountProcessor([], $processor_id, []);
+
+    $processorDefinitions = [
+      $processor_id => [
+        'id' => $processor_id,
+        'class' => 'Drupal\facetapi\Plugin\facetapi\processor\MinimumCountProcessor',
+      ],
+    ];
+
+    $manager = $this->getMockBuilder('Drupal\facetapi\Processor\ProcessorPluginManager')
+      ->disableOriginalConstructor()
+      ->getMock();
+    $manager->expects($this->once())
+      ->method('getDefinitions')
+      ->willReturn($processorDefinitions);
+    $manager->expects($this->once())
+      ->method('createInstance')
+      ->willReturn($this->processor);
+
+    $container_builder = new ContainerBuilder();
+    $container_builder->set('plugin.manager.facetapi.processor', $manager);
+    \Drupal::setContainer($container_builder);
+
   }
 
   /**
@@ -58,6 +82,7 @@ class MinimumCountProcessorTest extends UnitTestCase {
         'settings' => ['minimum_items' => 4],
       ],
     ]);
+    $this->processor->setConfiguration(['minimum_items' => 4]);
     $sorted_results = $this->processor->build($facet, $this->original_results);
 
     $this->assertCount(3, $sorted_results);
@@ -79,6 +104,7 @@ class MinimumCountProcessorTest extends UnitTestCase {
         'settings' => ['minimum_items' => 5],
       ],
     ]);
+    $this->processor->setConfiguration(['minimum_items' => 5]);
 
     $sorted_results = $this->processor->build($facet, $this->original_results);
 
@@ -101,6 +127,7 @@ class MinimumCountProcessorTest extends UnitTestCase {
         'settings' => ['minimum_items' => 8],
       ],
     ]);
+    $this->processor->setConfiguration(['minimum_items' => 8]);
 
     $sorted_results = $this->processor->build($facet, $this->original_results);
 
