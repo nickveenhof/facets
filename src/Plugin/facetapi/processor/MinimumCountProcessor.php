@@ -50,11 +50,11 @@ class MinimumCountProcessor extends ProcessorPluginBase implements BuildProcesso
     $config = $processors[$this->getPluginId()];
 
     $build['minimum_items'] = array(
-      '#title' => 'Minimum items',
+      '#title' => $this->t('Minimum items'),
       '#type' => 'number',
       '#min' => 1,
       '#default_value' => isset($config) ? $config->getConfiguration()['minimum_items'] : $this->defaultConfiguration()['minimum_items'],
-      '#description' => 'Hide block if the facet contains less than this number of results',
+      '#description' => $this->t('Hide block if the facet contains less than this number of results'),
     );
 
     return $build;
