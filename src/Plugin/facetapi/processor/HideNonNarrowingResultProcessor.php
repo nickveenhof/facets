@@ -36,7 +36,7 @@ class HideNonNarrowingResultProcessor extends ProcessorPluginBase implements Bui
       }
     }
 
-    /** @var Result $result */
+    /** @var \Drupal\facetapi\Result\ResultInterface $result */
     foreach ($results as $id => $result) {
       if ($result->getCount() == $resultCount && !$result->isActive()) {
         unset($results[$id]);

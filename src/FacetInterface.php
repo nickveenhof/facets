@@ -100,14 +100,14 @@ interface FacetInterface extends ConfigEntityInterface {
   /**
    * Get the result for the facet.
    *
-   * @return ResultInterface[] $results
+   * @return \Drupal\facetapi\Result\ResultInterface[] $results
    */
   public function getResults();
 
   /**
    * Sets the reuslts for the facet.
    *
-   * @param ResultInterface[] $results
+   * @param \Drupal\facetapi\Result\ResultInterface[] $results
    */
   public function setResults(array $results);
 
