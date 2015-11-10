@@ -105,11 +105,6 @@ before_script:
 script:
   - cd $TRAVIS_BUILD_DIR/../drupal-8/drupal/modules/
   - git clone --branch 8.x-1.x http://git.drupal.org/project/search_api.git
-  - cd search_api
-  # Apply patch to Search API module for getting the default query types for a backend.
-  - wget -q https://www.drupal.org/files/issues/2600442-21.patch
-  - git apply 2600442-21.patch
-  - cd -
   - drupal-ti script
 
 after_script:
