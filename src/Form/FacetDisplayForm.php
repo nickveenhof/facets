@@ -14,7 +14,7 @@ use Drupal\Core\Form\FormStateInterface;
 use Drupal\facetapi\FacetInterface;
 use Drupal\facetapi\Processor\ProcessorInterface;
 use Drupal\facetapi\Processor\ProcessorPluginManager;
-use Drupal\search_api\Form\SubFormState;
+use Drupal\facetapi\Form\SubFormState;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
