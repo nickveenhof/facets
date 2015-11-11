@@ -2,10 +2,10 @@
 
 /**
  * @file
- *   Contains \Drupal\facetapi\Plugin\facet_api\facet_source\CoreSearchFacetSource
+ *   Contains \Drupal\core_search_facetapi\Plugin\facet_api\facet_source\CoreSearchFacetSource
  */
 
-namespace Drupal\facetapi\Plugin\facetapi\facet_source;
+namespace Drupal\core_search_facetapi\Plugin\facetapi\facet_source;
 
 use Drupal\Core\DependencyInjection\DependencySerializationTrait;
 use Drupal\Core\Form\FormStateInterface;

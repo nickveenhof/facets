@@ -2,14 +2,13 @@
 
 /**
  * @file
- * Contains \Drupal\facetapi\Plugin\facetapi\query_type\CoreSearchString.
+ * Contains \Drupal\core_search_facetapi\Plugin\facetapi\query_type\CoreSearchString.
  */
 
-namespace Drupal\facetapi\Plugin\facetapi\query_type;
+namespace Drupal\core_search_facetapi\Plugin\facetapi\query_type;
 
 use Drupal\facetapi\QueryType\QueryTypePluginBase;
 use Drupal\facetapi\Result\Result;
-
 
 /**
  *
@@ -89,7 +88,7 @@ class CoreSearchString extends QueryTypePluginBase {
     return $build;
     */
 
-    $facet_query = $facet_manager = \Drupal::service('facetapi.core_manager')->getFacetQueryExtender();
+    $facet_query = $facet_manager = \Drupal::service('core_search_facetapi.core_manager')->getFacetQueryExtender();
     $facet_query->addFacetField([
       'fields' => [
         'n.' . 'type' => [

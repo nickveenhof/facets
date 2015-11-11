@@ -1,0 +1,10 @@
+services:
+  core_search_facetapi.core_manager:
+    class: Drupal\core_search_facetapi\FacetManager\CoreSearchFacetManager
+    arguments:
+      - '@plugin.manager.facetapi.query_type'
+      - '@plugin.manager.facetapi.widget'
+      - '@plugin.manager.facetapi.facet_source'
+      - '@plugin.manager.facetapi.processor'
+      - '@plugin.manager.facetapi.empty_behavior'
+      - '@entity_type.manager'

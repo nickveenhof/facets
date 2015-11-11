@@ -17,7 +17,7 @@ function core_search_facetapi_query_search_node_search_alter(AlterableInterface 
   $request = \Drupal::requestStack()->getMasterRequest();
   $search_page = $request->attributes->get('entity');
   /** @var \Drupal\facetapi\FacetManager\DefaultFacetManager $facet_manager */
-  $facet_manager = \Drupal::service('facetapi.core_manager');
+  $facet_manager = \Drupal::service('core_search_facetapi.core_manager');
   $search_id = 'core_search:' . $search_page->id();
 
   // Sets search keys and adds active filters.

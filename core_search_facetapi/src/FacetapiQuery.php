@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\facetapi;
+namespace Drupal\core_search_facetapi;
 
 use Drupal\search\SearchQuery;
 

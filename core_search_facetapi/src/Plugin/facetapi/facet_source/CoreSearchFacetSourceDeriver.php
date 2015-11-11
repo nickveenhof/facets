@@ -2,10 +2,10 @@
 
 /**
  * @file
- * Contains \Drupal\facetapi\Plugin\facet_api\facet_source\CoreSearchFacetSourceDeriver.
+ * Contains \Drupal\core_search_facetapi\Plugin\facet_api\facet_source\CoreSearchFacetSourceDeriver.
  */
 
-namespace Drupal\facetapi\Plugin\facetapi\facet_source;
+namespace Drupal\core_search_facetapi\Plugin\facetapi\facet_source;
 
 use Drupal\Component\Plugin\PluginBase;
 use Drupal\facetapi\FacetSource\FacetSourceDeriverBase;
