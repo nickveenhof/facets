@@ -2,11 +2,12 @@
 
 /**
  * @file
- * Contains Drupal\facetapi\FacetManager\CoreSearchFacetManager.
+ * Contains Drupal\core_search_facetapi\FacetManager\CoreSearchFacetManager.
  */
 
-namespace Drupal\facetapi\FacetManager;
+namespace Drupal\core_search_facetapi\FacetManager;
 
+use Drupal\facetapi\FacetManager\DefaultFacetManager;
 
 class CoreSearchFacetManager extends DefaultFacetManager {
 
