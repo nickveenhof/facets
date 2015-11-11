@@ -28,7 +28,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  *
  * @FacetApiFacetSource(
  *   id = "core_search",
- *   deriver = "Drupal\facetapi\Plugin\facetapi\facet_source\CoreSearchFacetSourceDeriver"
+ *   deriver = "Drupal\core_search_facetapi\Plugin\facetapi\facet_source\CoreSearchFacetSourceDeriver"
  * )
  */
 class CoreSearchFacetSource extends FacetSourcePluginBase {
