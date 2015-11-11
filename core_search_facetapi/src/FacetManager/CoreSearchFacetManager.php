@@ -28,7 +28,7 @@ class CoreSearchFacetManager extends DefaultFacetManager {
       //$this->searchQuery->searchExpression($input, $this->searchType);
       //$this->searchQuery->publicParseSearchExpression();
 
-      $this->facetQueryExtender = db_select('search_index', 'i', array('target' => 'replica'))->extend('Drupal\facetapi\FacetapiQuery');
+      $this->facetQueryExtender = db_select('search_index', 'i', array('target' => 'replica'))->extend('Drupal\core_search_facetapi\FacetapiQuery');
       $this->facetQueryExtender->join('node', 'n', 'n.nid = i.sid');
       $this->facetQueryExtender
         //->condition('n.status', 1)
