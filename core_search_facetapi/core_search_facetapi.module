@@ -12,7 +12,7 @@ use Drupal\Core\Database\Query\AlterableInterface;
  *
  * @param \Drupal\Core\Database\Query\AlterableInterface $query
  */
-function facetapi_query_search_node_search_alter(AlterableInterface $query) {
+function core_search_facetapi_query_search_node_search_alter(AlterableInterface $query) {
   // Obtain the Facet Source id for the current search.
   $request = \Drupal::requestStack()->getMasterRequest();
   $search_page = $request->attributes->get('entity');
