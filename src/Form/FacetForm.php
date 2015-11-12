@@ -262,6 +262,12 @@ class FacetForm extends EntityForm {
         'effect' => 'fade',
       ],
     ];
+    $form['widget_count'] = [
+      '#type' => 'checkbox',
+      '#title' => $this->t('Display count'),
+      '#description' => $this->t('If checked, the number of matching items will be output in brackets.'),
+      '#default_value' => $facet->getWidget() ? $facet->getWidget() : (isset($widget_options['count']) ? 'count' : FALSE),
+    ];
     $form['widget_configs'] = [
       '#type' => 'container',
       '#attributes' => [
