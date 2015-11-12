@@ -355,7 +355,7 @@ class FacetForm extends EntityForm {
    * Handles changes to the selected widgets.
    */
   public function buildAjaxWidgetConfigForm(array $form, FormStateInterface $form_state) {
-    return $form['widget_configs'];
+    return $form['widget_wrapper']['widget_configs'];
   }
 
   /**
@@ -380,16 +380,16 @@ class FacetForm extends EntityForm {
       //   validate(). Also, use proper subset of $form for first parameter?
       $config = $this->config('facetapi.facet.' . $facet->id());
       if ($config_form = $widget_instance->buildConfigurationForm([], $form_state, ($config instanceof Config) ? $config : NULL)) {
-        $form['widget_configs']['#type'] = 'details';
-        $form['widget_configs']['#title'] = $this->t('Configure the %widget widget', ['%widget' => $this->getWidgetPluginManager()->getDefinition($widget)['label']]);
-        $form['widget_configs']['#open'] = $facet->isNew();
+        $form['widget_wrapper']['widget_configs']['#type'] = 'details';
+        $form['widget_wrapper']['widget_configs']['#title'] = $this->t('Configure the %widget widget', ['%widget' => $this->getWidgetPluginManager()->getDefinition($widget)['label']]);
+        $form['widget_wrapper']['widget_configs']['#open'] = $facet->isNew();
 
-        $form['widget_configs'] += $config_form;
+        $form['widget_wrapper']['widget_configs'] += $config_form;
       }
       else {
-        $form['widget_configs']['#type'] = 'container';
-        $form['widget_configs']['#open'] = TRUE;
-        $form['widget_configs']['widget_information_dummy'] = [
+        $form['widget_wrapper']['widget_configs']['#type'] = 'container';
+        $form['widget_wrapper']['widget_configs']['#open'] = TRUE;
+        $form['widget_wrapper']['widget_configs']['widget_information_dummy'] = [
           '#type' => 'hidden',
           '#value' => '1',
           '#default_value' => '1',
