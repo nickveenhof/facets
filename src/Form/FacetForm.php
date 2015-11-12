@@ -247,7 +247,11 @@ class FacetForm extends EntityForm {
     foreach ($this->getWidgetPluginManager()->getDefinitions() as $widget_id => $definition) {
       $widget_options[$widget_id] = !empty($definition['label']) ? $definition['label'] : $widget_id;
     }
-    $form['widget'] = [
+    $form['widget_wrapper'] = [
+      '#type' => 'fieldset',
+      '#title' => $this->t('Widget settings'),
+    ];
+    $form['widget_wrapper']['widget'] = [
       '#type' => 'select',
       '#title' => $this->t('Widget'),
       '#description' => $this->t('Select the widget used for displaying this facet.'),
@@ -262,20 +266,20 @@ class FacetForm extends EntityForm {
         'effect' => 'fade',
       ],
     ];
-    $form['widget_count'] = [
-      '#type' => 'checkbox',
-      '#title' => $this->t('Display count'),
-      '#description' => $this->t('If checked, the number of matching items will be output in brackets.'),
-      '#default_value' => $facet->getWidget() ? $facet->getWidget() : (isset($widget_options['count']) ? 'count' : FALSE),
-    ];
-    $form['widget_configs'] = [
+    $form['widget_wrapper']['widget_configs'] = [
       '#type' => 'container',
       '#attributes' => [
         'id' => 'facet-api-widget-config-form',
       ],
       '#tree' => TRUE,
     ];
-    $form['widget_configure_button'] = [
+    $form['widget_wrapper']['widget_count'] = [
+      '#type' => 'checkbox',
+      '#title' => $this->t('Display count'),
+      '#description' => $this->t('If checked, the number of matching items will be output in brackets.'),
+      '#default_value' => $facet->getWidget() ? $facet->getWidget() : (isset($widget_options['count']) ? 'count' : FALSE),
+    ];
+    $form['widget_wrapper']['widget_configure_button'] = [
       '#type' => 'submit',
       '#name' => 'widget_configure',
       '#value' => $this->t('Configure widget'),
