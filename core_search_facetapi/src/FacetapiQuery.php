@@ -1,5 +1,10 @@
 <?php
 
+/**
+ * @file
+ * Contains \Drupal\core_search_facetapi\FacetapiQuery.
+ */
+
 namespace Drupal\core_search_facetapi;
 
 use Drupal\search\SearchQuery;
@@ -102,6 +107,16 @@ class FacetapiQuery extends SearchQuery {
 
     // Executes the subquery.
     return $subquery->execute();
+  }
+
+  /**
+   * Returns the search expression.
+   *
+   * @return string
+   *   The search expression.
+   */
+  public function getSearchExpression() {
+    return $this->searchExpression;
   }
 }
 

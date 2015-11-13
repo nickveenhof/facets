@@ -88,7 +88,16 @@ class CoreSearchString extends QueryTypePluginBase {
     return $build;
     */
 
-    $facet_query = $facet_manager = \Drupal::service('core_search_facetapi.core_manager')->getFacetQueryExtender();
+    /** @var \Drupal\facetapi\FacetManager\DefaultFacetManager $facet_manager */
+    $facet_manager = \Drupal::service('core_search_facetapi.core_manager');
+    // Sets search keys and adds active filters.
+
+
+    // @TODO avoid use \DRupal here
+    /** @var \Drupal\core_search_facetapi\FacetapiQuery $facet_query */
+    $facet_query = \Drupal::service('core_search_facetapi.core_manager')->getFacetQueryExtender();
+    $facet_manager->setSearchKeys($facet_query->getSearchExpression());
+    // @TODO hardcoded for the moment.
     $facet_query->addFacetField([
       'fields' => [
         'n.' . 'type' => [
@@ -98,18 +107,19 @@ class CoreSearchString extends QueryTypePluginBase {
       ],
     ]);
 
-    // Executes query, iterates over results.
-    $results = $facet_query->execute();
-
-    if (!empty($results)) {
-      $facet_results = [];
-      foreach ($results as $result) {
-        //$facet_results[] = new Result(trim($result['filter'], '"'), trim($result['filter'], '"'), $result['count']);
-        $facet_results[] = new Result('test', $result->value, $result->count);
+    // Only build results if a search is executed.
+    if ($facet_query->getSearchExpression()) {
+      // Executes query, iterates over results.
+      $results = $facet_query->execute();
+      if (!empty($results)) {
+        $facet_results = [];
+        foreach ($results as $result) {
+          //$facet_results[] = new Result(trim($result['filter'], '"'), trim($result['filter'], '"'), $result['count']);
+          $facet_results[] = new Result('test', $result->value, $result->count);
+        }
+        $this->facet->setResults($facet_results);
       }
-      $this->facet->setResults($facet_results);
     }
-
     return $this->facet;
   }
 
