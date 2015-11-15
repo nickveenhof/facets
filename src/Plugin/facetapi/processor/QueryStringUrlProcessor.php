@@ -54,11 +54,11 @@ class QueryStringUrlProcessor extends UrlProcessorPluginBase {
     $get_params = $this->request->query;
 
     // No results are found for this facet, so don't try to create urls.
-    if (is_null($results)) {
+    if (empty($results)) {
       return [];
     }
 
-    /** @var Result $result */
+    /** @var \Drupal\facetapi\Result\ResultInterface $result */
     foreach ($results as &$result) {
       $filter_string = $facet->getFieldAlias() . ':' . $result->getRawValue();
       $result_get_params = clone $get_params;
@@ -95,7 +95,7 @@ class QueryStringUrlProcessor extends UrlProcessorPluginBase {
    * {@inheritdoc}
    */
   public function preQuery(FacetInterface $facet) {
-    // Get the filterkey of the facet.
+    // Get the filter key of the facet.
     if (isset($this->active_filters[$facet->getFieldAlias()])) {
       foreach ($this->active_filters[$facet->getFieldAlias()] as $value) {
         $facet->setActiveItem(trim($value, '"'));
