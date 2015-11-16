@@ -155,7 +155,6 @@ class FacetForm extends EntityForm {
     return $this->facetSourcePluginManager ?: \Drupal::service('plugin.manager.facetapi.facet_source');
   }
 
-
   /**
    * Returns the processor plugin manager.
    *
@@ -164,6 +163,16 @@ class FacetForm extends EntityForm {
    */
   protected function getProcessorPluginManager() {
     return $this->processorPluginManager ?: \Drupal::service('plugin.manager.facetapi.processor');
+  }
+
+  /**
+   * Returns the empty behavior plugin manager.
+   *
+   * @return \Drupal\facetapi\EmptyBehavior\EmptyBehaviorPluginManager
+   *   The processor plugin manager.
+   */
+  protected function getEmptyBehaviorPluginManager() {
+    return $this->emptyBehaviorPluginManager ?: \Drupal::service('plugin.manager.facetapi.empty_behavior');
   }
 
   /**
@@ -302,7 +311,7 @@ class FacetForm extends EntityForm {
     // Behavior for empty facets.
     $behavior_options = [];
     $empty_behavior = $facet->getFieldEmptyBehavior();
-    foreach ($this->emptyBehaviorPluginManager->getDefinitions() as $behavior_id => $definition) {
+    foreach ($this->getEmptyBehaviorPluginManager()->getDefinitions() as $behavior_id => $definition) {
       $behavior_options[$behavior_id] = !empty($definition['label']) ? $definition['label'] : $behavior_id;
     }
     $form['empty_behavior'] = [
@@ -417,7 +426,7 @@ class FacetForm extends EntityForm {
     $behavior_id = $this->getEntity()->getFieldEmptyBehavior();
 
     if (!is_null($behavior_id) && $behavior_id !== '') {
-      $empty_behavior_instance = $this->emptyBehaviorPluginManager->createInstance($behavior_id);
+      $empty_behavior_instance = $this->getEmptyBehaviorPluginManager()->createInstance($behavior_id);
       if ($config_form = $empty_behavior_instance->buildConfigurationForm([], $form_state)) {
         $form['empty_behavior_configs']['#type'] = 'details';
         $form['empty_behavior_configs']['#title'] = $this->t('Configure the %behavior empty behavior', ['%behavior' => $this->emptyBehaviorPluginManager->getDefinition($behavior_id)['label']]);
