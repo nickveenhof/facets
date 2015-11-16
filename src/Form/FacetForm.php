@@ -12,8 +12,8 @@ use Drupal\Core\Entity\EntityForm;
 use Drupal\Core\Entity\EntityTypeManager;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\facetapi\EmptyBehavior\EmptyBehaviorPluginManager;
-use Drupal\facetapi\FacetInterface;
 use Drupal\facetapi\Exception\Exception;
+use Drupal\facetapi\FacetInterface;
 use Drupal\facetapi\FacetSource\FacetSourcePluginManager;
 use Drupal\facetapi\Processor\ProcessorPluginManager;
 use Drupal\facetapi\Widget\WidgetPluginManager;
@@ -110,6 +110,22 @@ class FacetForm extends EntityForm {
   }
 
   /**
+   * Gets the form entity.
+   *
+   * The form entity which has been used for populating form element defaults.
+   * This method is defined on the \Drupal\Core\Entity\EntityFormInterface and
+   * has the same contents there, we only extend to add the correct return type,
+   * this makes IDE's smarter about the other places where we use
+   * $this->getEntity().
+   *
+   * @return \Drupal\facetapi\FacetInterface
+   *   The current form facet entity.
+   */
+  public function getEntity() {
+    return $this->entity;
+  }
+
+  /**
    * Retrieves the facet storage controller.
    *
    * @return \Drupal\Core\Entity\EntityStorageInterface
@@ -162,19 +178,16 @@ class FacetForm extends EntityForm {
 
     $form = parent::form($form, $form_state);
 
-    /** @var \Drupal\facetapi\FacetInterface $facet */
-    $facet = $this->getEntity();
-
     // Set the page title according to whether we are creating or editing the
     // facet.
-    if ($facet->isNew()) {
+    if ($this->getEntity()->isNew()) {
       $form['#title'] = $this->t('Add facet');
     }
     else {
-      $form['#title'] = $this->t('Edit facet %label', ['%label' => $facet->label()]);
+      $form['#title'] = $this->t('Edit facet %label', ['%label' => $this->getEntity()->label()]);
     }
 
-    $this->buildEntityForm($form, $form_state, $facet);
+    $this->buildEntityForm($form, $form_state, $this->getEntity());
 
     return $form;
   }
@@ -183,7 +196,7 @@ class FacetForm extends EntityForm {
    * Builds the form for editing and creating a facet.
    *
    * @param \Drupal\facetapi\FacetInterface $facet
-   *   The server that is being created or edited.
+   *   The facetapi facet entity that is being created or edited.
    */
   public function buildEntityForm(array &$form, FormStateInterface $form_state, FacetInterface $facet) {
 
@@ -206,7 +219,10 @@ class FacetForm extends EntityForm {
       ],
     ];
 
-    $facet_sources = $this->getFacetSources();
+    $facet_sources = [];
+    foreach ($this->getFacetSourcePluginManager()->getDefinitions() as $facet_source_id => $definition) {
+      $facet_sources[$definition['id']] = !empty($definition['label']) ? $definition['label'] : $facet_source_id;
+    }
     $form['facet_source_id'] = [
       '#type' => 'select',
       '#title' => $this->t('Facet source'),
@@ -241,7 +257,7 @@ class FacetForm extends EntityForm {
       ],
       '#attributes' => ['class' => ['js-hide']],
     ];
-    $this->buildFacetSourceConfigForm($form, $form_state, $facet);
+    $this->buildFacetSourceConfigForm($form, $form_state);
 
     $widget_options = [];
     foreach ($this->getWidgetPluginManager()->getDefinitions() as $widget_id => $definition) {
@@ -281,7 +297,7 @@ class FacetForm extends EntityForm {
       ],
       '#attributes' => ['class' => ['js-hide']],
     ];
-    $this->buildWidgetConfigForm($form, $form_state, $facet);
+    $this->buildWidgetConfigForm($form, $form_state);
 
     // Behavior for empty facets.
     $behavior_options = [];
@@ -323,7 +339,6 @@ class FacetForm extends EntityForm {
       ],
       '#attributes' => ['class' => ['js-hide']],
     ];
-
     $this->buildEmptyBehaviorConfigForm($form, $form_state);
 
     $form['only_visible_when_facet_source_is_visible'] = [
@@ -358,21 +373,23 @@ class FacetForm extends EntityForm {
   /**
    * Builds the configuration forms for all selected widgets.
    *
-   * @param \Drupal\facetapi\FacetInterface $facet
-   *   The facet begin created or edited.
+   * @param array $form
+   *   An associative array containing the initial structure of the plugin form.
+   * @param \Drupal\Core\Form\FormStateInterface $form_state
+   *   The current state of the complete form.
    */
-  public function buildWidgetConfigForm(array &$form, FormStateInterface $form_state, FacetInterface $facet) {
-    $widget = $facet->getWidget();
+  public function buildWidgetConfigForm(array &$form, FormStateInterface $form_state) {
+    $widget = $this->getEntity()->getWidget();
 
     if (!is_null($widget) && $widget !== '') {
       $widget_instance = $this->getWidgetPluginManager()->createInstance($widget);
       // @todo Create, use and save SubFormState already here, not only in
       //   validate(). Also, use proper subset of $form for first parameter?
-      $config = $this->config('facetapi.facet.' . $facet->id());
+      $config = $this->config('facetapi.facet.' . $this->getEntity()->id());
       if ($config_form = $widget_instance->buildConfigurationForm([], $form_state, ($config instanceof Config) ? $config : NULL)) {
         $form['widget_configs']['#type'] = 'details';
         $form['widget_configs']['#title'] = $this->t('Configure the %widget widget', ['%widget' => $this->getWidgetPluginManager()->getDefinition($widget)['label']]);
-        $form['widget_configs']['#open'] = $facet->isNew();
+        $form['widget_configs']['#open'] = $this->getEntity()->isNew();
 
         $form['widget_configs'] += $config_form;
       }
@@ -423,17 +440,19 @@ class FacetForm extends EntityForm {
   /**
    * Builds the configuration forms for all possible facet sources.
    *
-   * @param \Drupal\facetapi\FacetInterface $facet
-   *   The facet being updated or created.
+   * @param array $form
+   *   An associative array containing the initial structure of the plugin form.
+   * @param \Drupal\Core\Form\FormStateInterface $form_state
+   *   The current state of the complete form.
    */
-  public function buildFacetSourceConfigForm(array &$form, FormStateInterface $form_state, FacetInterface $facet) {
-    $facet_source_id = $facet->getFacetSourceId();
+  public function buildFacetSourceConfigForm(array &$form, FormStateInterface $form_state) {
+    $facet_source_id = $this->getEntity()->getFacetSourceId();
 
     if (!is_null($facet_source_id) && $facet_source_id !== '') {
       /** @var \Drupal\facetapi\FacetSource\FacetSourceInterface $facet_source */
       $facet_source = $this->getFacetSourcePluginManager()->createInstance($facet_source_id);
 
-      if ($config_form = $facet_source->buildConfigurationForm([], $form_state, $facet, $facet_source)) {
+      if ($config_form = $facet_source->buildConfigurationForm([], $form_state, $this->getEntity(), $facet_source)) {
         $form['facet_source_configs'][$facet_source_id]['#type'] = 'details';
         $form['facet_source_configs'][$facet_source_id]['#title'] = $this->t('Configure %plugin facet source', ['%plugin' => $facet_source->getPluginDefinition()['label']]);
         $form['facet_source_configs'][$facet_source_id]['#open'] = TRUE;
@@ -572,22 +591,6 @@ class FacetForm extends EntityForm {
    */
   public function delete(array $form, FormStateInterface $form_state) {
     $form_state->setRedirect('entity.facetapi_facet.delete_form', ['facetapi_facet' => $this->getEntity()->id()]);
-  }
-
-  /**
-   * Gets the possible sources for faceted searches.
-   *
-   * @return array
-   */
-  protected function getFacetSources() {
-    $sources = [];
-    $facet_definitions = $this->facetSourcePluginManager->getDefinitions();
-
-    foreach ($facet_definitions as $definition) {
-      $sources[$definition['id']] = $definition['label'];
-    }
-
-    return $sources;
   }
 
 }
