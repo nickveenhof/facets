@@ -277,7 +277,7 @@ class FacetForm extends EntityForm {
       '#title' => $this->t('Widget'),
       '#description' => $this->t('Select the widget used for displaying this facet.'),
       '#options' => $widget_options,
-      '#default_value' => $facet->getWidget() ? $facet->getWidget() : (isset($widget_options['links']) ? 'links' : ''),
+      '#default_value' => $facet->getWidget(),
       '#required' => TRUE,
       '#ajax' => [
         'trigger_as' => ['name' => 'widget_configure'],
