@@ -37,26 +37,16 @@ class CoreSearchString extends QueryTypePluginBase {
    * {@inheritdoc}
    */
   public function build() {
-    // @TODO for the moment obtain the keys from the request here.
-    $request = \Drupal::requestStack()->getMasterRequest();
-    // @TODO avoid use \DRupal here
+
+    // @TODO avoid \Drupal here.
     /** @var \Drupal\core_search_facetapi\FacetManager\CoreSearchFacetManager $facet_manager */
     $facet_manager = \Drupal::service('core_search_facetapi.core_manager');
-    $facet_manager->setSearchKeys($request->query->get('keys'));
 
-    // @TODO avoid use \DRupal here
+    $query_info = $facet_manager->getQueryInfo($this->facet);
+
     /** @var \Drupal\core_search_facetapi\FacetapiQuery $facet_query */
     $facet_query = $facet_manager->getFacetQueryExtender();
-    //$facet_manager->setSearchKeys($facet_query->getSearchExpression());
-    // @TODO hardcoded for the moment.
-    $facet_query->addFacetField([
-      'fields' => [
-        'n.' . 'type' => [
-          'table_alias' => 'n',
-          'field' => 'type',
-        ],
-      ],
-    ]);
+    $facet_query->addFacetField($query_info);
 
     // Only build results if a search is executed.
     if ($facet_query->getSearchExpression()) {
@@ -65,13 +55,16 @@ class CoreSearchString extends QueryTypePluginBase {
       if (!empty($results)) {
         $facet_results = [];
         foreach ($results as $result) {
+          // @TODO replace 'test' here. Testing.
           //$facet_results[] = new Result(trim($result['filter'], '"'), trim($result['filter'], '"'), $result['count']);
           $facet_results[] = new Result('test', $result->value, $result->count);
         }
         $this->facet->setResults($facet_results);
       }
     }
+
     return $this->facet;
+
   }
 
 }

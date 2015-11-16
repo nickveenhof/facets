@@ -9,17 +9,11 @@ namespace Drupal\core_search_facetapi\Plugin\facetapi\facet_source;
 
 use Drupal\Core\DependencyInjection\DependencySerializationTrait;
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
-use Drupal\facetapi\Exception\InvalidQueryTypeException;
 use Drupal\facetapi\FacetInterface;
 use Drupal\facetapi\FacetSource\FacetSourceInterface;
 use Drupal\facetapi\FacetSource\FacetSourcePluginBase;
-use Drupal\search\Entity\SearchPage;
 use Drupal\search\SearchPageInterface;
-use Drupal\search_api\Plugin\views\query\SearchApiQuery;
-use Drupal\search_api\Query\ResultSetInterface;
-use Drupal\views\Views;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 
@@ -127,7 +121,8 @@ class CoreSearchFacetSource extends FacetSourcePluginBase {
   public function getQueryTypesForDataType($field_id) {
     $query_types = [];
     switch ($field_id) {
-      case 'bundle':
+      case 'type':
+      case 'uid':
         $query_types['string'] = 'core_search_string';
         break;
     }
@@ -177,7 +172,8 @@ class CoreSearchFacetSource extends FacetSourcePluginBase {
     // Default options. @TODO is this best way?
     // see facetapi_facetapi_facet_info() - D7.
     $default_fields = [
-      'bundle' => $this->t('Content Type'),
+      'type' => $this->t('Content Type'),
+      'uid' => $this->t('Author'),
     ];
 
     return $default_fields;

@@ -1,0 +1,30 @@
+<?php
+
+/**
+ * @file
+ * Contains core_search_facetapi.module
+ */
+
+use Drupal\Core\Database\Query\AlterableInterface;
+
+/**
+ * Implements hook_query_TAG_alter(): tag search_$type with $type node_search.
+ *
+ * @param \Drupal\Core\Database\Query\AlterableInterface $query
+ */
+function core_search_facetapi_query_search_node_search_alter(AlterableInterface $query) {
+  // Obtain the Facet Source id for the current search.
+  $request = \Drupal::requestStack()->getMasterRequest();
+  $search_page = $request->attributes->get('entity');
+
+  /** @var \Drupal\core_search_facetapi\FacetManager\CoreSearchFacetManager $facet_manager */
+  $facet_manager = \Drupal::service('core_search_facetapi.core_manager');
+  $search_id = 'core_search:' . $search_page->id();
+
+  // Add the active filters.
+  $facet_manager->setFacetSourceId($search_id);
+  // @TODO Missing execute() code for the query type.
+  $facet_manager->alterQuery($query);
+
+}
+
