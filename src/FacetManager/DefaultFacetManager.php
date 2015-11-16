@@ -20,6 +20,7 @@ use Drupal\facetapi\Processor\ProcessorInterface;
 use Drupal\facetapi\Processor\ProcessorPluginManager;
 use Drupal\facetapi\QueryType\QueryTypePluginManager;
 use Drupal\facetapi\Widget\WidgetPluginManager;
+use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
  * Base class for Facet API FacetManagers.
@@ -132,7 +133,7 @@ class DefaultFacetManager {
    * @param \Drupal\facetapi\EmptyBehavior\EmptyBehaviorPluginManager $empty_behavior_plugin_manager
    * @param \Drupal\Core\Entity\EntityTypeManager $entity_type_manager
    */
-  public function __construct(QueryTypePluginManager $query_type_plugin_manager, WidgetPluginManager $widget_plugin_manager, FacetSourcePluginManager $facet_source_manager, ProcessorPluginManager $processor_plugin_manager, EmptyBehaviorPluginManager $empty_behavior_plugin_manager, EntityTypeManager $entity_type_manager) {
+  public function __construct(QueryTypePluginManager $query_type_plugin_manager, WidgetPluginManager $widget_plugin_manager, FacetSourcePluginManager $facet_source_manager, ProcessorPluginManager $processor_plugin_manager, EmptyBehaviorPluginManager $empty_behavior_plugin_manager, EntityTypeManager $entity_type_manager, RequestStack $request_stack) {
 
     $this->query_type_plugin_manager = $query_type_plugin_manager;
     $this->widget_plugin_manager = $widget_plugin_manager;
@@ -140,6 +141,10 @@ class DefaultFacetManager {
     $this->processor_plugin_manager = $processor_plugin_manager;
     $this->empty_behavior_plugin_manager = $empty_behavior_plugin_manager;
     $this->facet_storage = $entity_type_manager->getStorage('facetapi_facet');
+
+    $this->requestStack = $request_stack;
+    // @TODO not sure if this is the best place to set the keys.
+    $this->setSearchKeys($request_stack->getMasterRequest()->query->get('keys'));
 
     // Immediately initialize the facets. This can be done directly because the
     // only thing needed is the url.

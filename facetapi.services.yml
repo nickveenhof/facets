@@ -23,6 +23,7 @@ services:
       - '@plugin.manager.facetapi.processor'
       - '@plugin.manager.facetapi.empty_behavior'
       - '@entity_type.manager'
+      - '@request_stack'
 
   facetapi.facet_context:
     class: Drupal\facetapi\ContextProvider\FacetContextProvider
