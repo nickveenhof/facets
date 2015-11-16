@@ -258,7 +258,7 @@ class FacetForm extends EntityForm {
       '#type' => 'submit',
       '#name' => 'facet_source_configure',
       '#value' => $this->t('Configure facet source'),
-      '#limit_validation_errors' => [['facet_source']],
+      '#limit_validation_errors' => [['facet_source_id']],
       '#submit' => ['::submitAjaxFacetSourceConfigForm'],
       '#ajax' => [
         'callback' => '::buildAjaxFacetSourceConfigForm',
