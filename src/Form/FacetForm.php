@@ -507,13 +507,13 @@ class FacetForm extends EntityForm {
     $facet = $this->getEntity();
     $is_new = $facet->isNew();
 
-    if($is_new){
+    if ($is_new) {
       // On facet creation, enable all locked processors by default, using their
       // default settings.
       $initial_settings = [];
       $stages = $this->processorPluginManager->getProcessingStages();
-      foreach($facet->getProcessors() as $processor_id => $processor){
-        if($processor->isLocked()){
+      foreach ($facet->getProcessors() as $processor_id => $processor) {
+        if ($processor->isLocked()) {
           $weights = [];
           foreach($stages as $stage_id => $stage){
             if($processor->supportsStage($stage_id)){
