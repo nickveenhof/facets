@@ -54,11 +54,6 @@ class FacetForm extends EntityForm {
   protected $processorPluginManager;
 
   /**
-   * @var array
-   */
-  protected $facetSourcePlugins;
-
-  /**
    * The plugin manager for facet sources.
    *
    * @var \Drupal\facetapi\EmptyBehavior\EmptyBehaviorPluginManager
@@ -366,6 +361,34 @@ class FacetForm extends EntityForm {
   }
 
   /**
+   * Form submission handler for the facet source subform.
+   */
+  public function submitAjaxFacetSourceConfigForm($form, FormStateInterface $form_state) {
+    $form_state->setRebuild();
+  }
+
+  /**
+   * Form submission handler for the empty behavior subform.
+   */
+  public function submitAjaxEmptyBehaviorConfigForm($form, FormStateInterface $form_state) {
+    $form_state->setRebuild();
+  }
+
+  /**
+   * Form submission handler for the widget subform.
+   */
+  public function submitAjaxWidgetConfigForm($form, FormStateInterface $form_state) {
+    $form_state->setRebuild();
+  }
+
+  /**
+   * Handles changes to the selected facet sources.
+   */
+  public function buildAjaxFacetSourceConfigForm(array $form, FormStateInterface $form_state) {
+    return $form['facet_source_configs'];
+  }
+
+  /**
    * Handles changes to the selected widgets.
    */
   public function buildAjaxWidgetConfigForm(array $form, FormStateInterface $form_state) {
@@ -377,6 +400,31 @@ class FacetForm extends EntityForm {
    */
   public function buildAjaxEmptyBehaviorConfigForm(array $form, FormStateInterface $form_state) {
     return $form['empty_behavior_configs'];
+  }
+
+  /**
+   * Builds the configuration forms for all possible facet sources.
+   *
+   * @param array $form
+   *   An associative array containing the initial structure of the plugin form.
+   * @param \Drupal\Core\Form\FormStateInterface $form_state
+   *   The current state of the complete form.
+   */
+  public function buildFacetSourceConfigForm(array &$form, FormStateInterface $form_state) {
+    $facet_source_id = $this->getEntity()->getFacetSourceId();
+
+    if (!is_null($facet_source_id) && $facet_source_id !== '') {
+      /** @var \Drupal\facetapi\FacetSource\FacetSourceInterface $facet_source */
+      $facet_source = $this->getFacetSourcePluginManager()->createInstance($facet_source_id);
+
+      if ($config_form = $facet_source->buildConfigurationForm([], $form_state, $this->getEntity(), $facet_source)) {
+        $form['facet_source_configs'][$facet_source_id]['#type'] = 'details';
+        $form['facet_source_configs'][$facet_source_id]['#title'] = $this->t('Configure %plugin facet source', ['%plugin' => $facet_source->getPluginDefinition()['label']]);
+        $form['facet_source_configs'][$facet_source_id]['#open'] = TRUE;
+
+        $form['facet_source_configs'][$facet_source_id] += $config_form;
+      }
+    }
   }
 
   /**
@@ -447,59 +495,6 @@ class FacetForm extends EntityForm {
   }
 
   /**
-   * Builds the configuration forms for all possible facet sources.
-   *
-   * @param array $form
-   *   An associative array containing the initial structure of the plugin form.
-   * @param \Drupal\Core\Form\FormStateInterface $form_state
-   *   The current state of the complete form.
-   */
-  public function buildFacetSourceConfigForm(array &$form, FormStateInterface $form_state) {
-    $facet_source_id = $this->getEntity()->getFacetSourceId();
-
-    if (!is_null($facet_source_id) && $facet_source_id !== '') {
-      /** @var \Drupal\facetapi\FacetSource\FacetSourceInterface $facet_source */
-      $facet_source = $this->getFacetSourcePluginManager()->createInstance($facet_source_id);
-
-      if ($config_form = $facet_source->buildConfigurationForm([], $form_state, $this->getEntity(), $facet_source)) {
-        $form['facet_source_configs'][$facet_source_id]['#type'] = 'details';
-        $form['facet_source_configs'][$facet_source_id]['#title'] = $this->t('Configure %plugin facet source', ['%plugin' => $facet_source->getPluginDefinition()['label']]);
-        $form['facet_source_configs'][$facet_source_id]['#open'] = TRUE;
-
-        $form['facet_source_configs'][$facet_source_id] += $config_form;
-      }
-    }
-  }
-
-  /**
-   * Form submission handler for the facet source subform.
-   */
-  public function submitAjaxFacetSourceConfigForm($form, FormStateInterface $form_state) {
-    $form_state->setRebuild();
-  }
-
-  /**
-   * Handles changes to the selected facet sources.
-   */
-  public function buildAjaxFacetSourceConfigForm(array $form, FormStateInterface $form_state) {
-    return $form['facet_source_configs'];
-  }
-
-  /**
-   * Form submission handler for the empty behavior subform.
-   */
-  public function submitAjaxEmptyBehaviorConfigForm($form, FormStateInterface $form_state) {
-    $form_state->setRebuild();
-  }
-
-  /**
-   * Form submission handler for the widget subform.
-   */
-  public function submitAjaxWidgetConfigForm($form, FormStateInterface $form_state) {
-    $form_state->setRebuild();
-  }
-
-  /**
    * {@inheritdoc}
    */
   public function validateForm(array &$form, FormStateInterface $form_state) {
@@ -520,7 +515,7 @@ class FacetForm extends EntityForm {
       // On facet creation, enable all locked processors by default, using their
       // default settings.
       $initial_settings = [];
-      $stages = $this->processorPluginManager->getProcessingStages();
+      $stages = $this->getProcessorPluginManager()->getProcessingStages();
       foreach ($facet->getProcessors() as $processor_id => $processor) {
         if ($processor->isLocked()) {
           $weights = [];
