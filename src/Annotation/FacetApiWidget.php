@@ -10,7 +10,7 @@ namespace Drupal\facetapi\Annotation;
 use Drupal\Component\Annotation\Plugin;
 
 /**
- * Defines a Facet API Widget annotation object.
+ * Defines a Facet API Widget annotation.
  *
  * @see \Drupal\facetapi\Widget\WidgetPluginManager
  * @see plugin_api

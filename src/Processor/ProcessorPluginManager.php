@@ -16,9 +16,9 @@ use Drupal\Core\StringTranslation\TranslationInterface;
 /**
  * Manages processor plugins.
  *
- * @see \Drupal\search_api\Annotation\SearchApiProcessor
- * @see \Drupal\search_api\Processor\ProcessorInterface
- * @see \Drupal\search_api\Processor\ProcessorPluginBase
+ * @see \Drupal\facetapi\Annotation\FacetApiProcessor
+ * @see \Drupal\facetapi\Processor\ProcessorInterface
+ * @see \Drupal\facetapi\Processor\ProcessorPluginBase
  * @see plugin_api
  */
 class ProcessorPluginManager extends DefaultPluginManager {
@@ -26,17 +26,7 @@ class ProcessorPluginManager extends DefaultPluginManager {
   use StringTranslationTrait;
 
   /**
-   * Constructs a ProcessorPluginManager object.
-   *
-   * @param \Traversable $namespaces
-   *   An object that implements \Traversable which contains the root paths
-   *   keyed by the corresponding namespace to look for plugin implementations.
-   * @param \Drupal\Core\Cache\CacheBackendInterface $cache_backend
-   *   Cache backend instance to use.
-   * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
-   *   The module handler.
-   * @param \Drupal\Core\StringTranslation\TranslationInterface $translation
-   *   The string translation manager.
+   * {@inheritdoc}
    */
   public function __construct(\Traversable $namespaces, CacheBackendInterface $cache_backend, ModuleHandlerInterface $module_handler, TranslationInterface $translation) {
     parent::__construct('Plugin/facetapi/processor', $namespaces, $module_handler, 'Drupal\facetapi\Processor\ProcessorInterface', 'Drupal\facetapi\Annotation\FacetApiProcessor');

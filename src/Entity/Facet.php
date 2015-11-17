@@ -147,7 +147,7 @@ class Facet extends ConfigEntityBase implements FacetInterface {
   /**
    * The results.
    *
-   * @var Result[]
+   * @var \Drupal\facetapi\Result\ResultInterface[]
    */
   protected $results = [];
 
@@ -178,7 +178,7 @@ class Facet extends ConfigEntityBase implements FacetInterface {
   protected $only_visible_when_facet_source_is_visible;
 
   /**
-   * Widget Plugin Manager.
+   * The widget plugin manager.
    *
    * @var object
    */
@@ -228,7 +228,6 @@ class Facet extends ConfigEntityBase implements FacetInterface {
   public function getWidget() {
     return $this->widget;
   }
-
 
   /**
    * {@inheritdoc}
@@ -307,14 +306,14 @@ class Facet extends ConfigEntityBase implements FacetInterface {
   }
 
   /**
-   *
+   * {@inheritdoc}
    */
   public function getFieldIdentifier() {
     return $this->field_identifier;
   }
 
   /**
-   *
+   * {@inheritdoc}
    */
   public function setFieldIdentifier($field_identifier) {
     $this->field_identifier = $field_identifier;
@@ -322,14 +321,14 @@ class Facet extends ConfigEntityBase implements FacetInterface {
   }
 
   /**
-   *
+   * {@inheritdoc}
    */
   public function getQueryTypes() {
     return $this->query_type_name;
   }
 
   /**
-   *
+   * {@inheritdoc}
    */
   public function setFieldEmptyBehavior($behavior_id) {
     $this->empty_behavior = $behavior_id;
@@ -337,14 +336,14 @@ class Facet extends ConfigEntityBase implements FacetInterface {
   }
 
   /**
-   *
+   * {@inheritdoc}
    */
   public function getFieldEmptyBehavior() {
     return $this->empty_behavior;
   }
 
   /**
-   *
+   * {@inheritdoc}
    */
   public function getUrlProcessorName() {
     // @Todo: for now if the url processor is not set, defualt to query_string.
@@ -352,7 +351,7 @@ class Facet extends ConfigEntityBase implements FacetInterface {
   }
 
   /**
-   *
+   * {@inheritdoc}
    */
   public function getName() {
     return $this->name;
@@ -370,7 +369,6 @@ class Facet extends ConfigEntityBase implements FacetInterface {
    * {@inheritdoc}
    */
   public function getFacetSource() {
-
     /** @var $facet_source_plugin_manager \Drupal\facetapi\FacetSource\FacetSourcePluginManager */
     $facet_source_plugin_manager = \Drupal::service('plugin.manager.facetapi.facet_source');
 
@@ -424,7 +422,7 @@ class Facet extends ConfigEntityBase implements FacetInterface {
   }
 
   /**
-   *
+   * {@inheritdoc}
    */
   public function getResults() {
     return $this->results;
@@ -503,14 +501,14 @@ class Facet extends ConfigEntityBase implements FacetInterface {
   }
 
   /**
-   *
+   * {@inheritdoc}
    */
   public function setPath($path) {
     $this->path = $path;
   }
 
   /**
-   *
+   * {@inheritdoc}
    */
   public function getPath() {
     return $this->path;

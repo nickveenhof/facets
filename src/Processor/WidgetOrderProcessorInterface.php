@@ -22,7 +22,7 @@ interface WidgetOrderProcessorInterface extends BuildProcessorInterface {
    *   'DESC'
    *
    * @return \Drupal\facetapi\Result\Result[]
-   *   The same array that was passed in, ordered by  $order
+   *   The same array that was passed in, ordered by $order
    */
   public function sortResults(array $results, $order = 'ASC');
 

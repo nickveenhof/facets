@@ -23,7 +23,7 @@ use Drupal\facetapi\Widget\WidgetPluginManager;
 use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
- * Base class for Facet API FacetManagers.
+ * The facet manager.
  *
  * @TODO: rewrite D7 comment block:
  * FacetManagers are responsible for abstracting interactions with the Search backend
@@ -193,7 +193,7 @@ class DefaultFacetManager {
    * @see FacetapiFacetManager::initActiveFilters()
    */
   public function alterQuery(&$query) {
-    /** @var Facet[] $facets */
+    /** @var \Drupal\facetapi\FacetInterface[] $facets */
     foreach ($this->facets as $facet) {
       // Only if the facet is for this query, alter the query.
       if ($facet->getFacetSourceId() == $this->facetsource_id) {
@@ -208,7 +208,7 @@ class DefaultFacetManager {
   /**
    * Returns enabled facets for the searcher associated with this FacetManager.
    *
-   * @return Facet[]
+   * @return \Drupal\facetapi\FacetInterface[]
    *   An array of enabled facets.
    */
   public function getEnabledFacets() {
@@ -231,8 +231,6 @@ class DefaultFacetManager {
    * in. The FacetapiFacetManager::processed semaphore is set when this method
    * is called ensuring that facets are built only once regardless of how many
    * times this method is called.
-   *
-   * @todo For clarity, should this method be named buildFacets()?
    */
   public function processFacets() {
     if (!$this->processed) {
@@ -269,8 +267,6 @@ class DefaultFacetManager {
       }
     }
   }
-
-
 
   /**
    * Build a facet and returns it's render array.
@@ -362,12 +358,11 @@ class DefaultFacetManager {
   }
 
   /**
-   * Process the facets in this facet_manager in this facet_manager for a test only. This
-   * method should disappear later when facetapi does it.
+   * Updates the facet with the results.
    */
   public function updateResults() {
     // Get an instance of the facet source.
-    /** @var FacetSourceInterface $facet_source_plugin */
+    /** @var \drupal\facetapi\FacetSource\FacetSourceInterface $facet_source_plugin */
     $facet_source_plugin = $this->facet_source_manager->createInstance($this->facetsource_id);
 
     $facet_source_plugin->fillFacetsWithResults($this->facets);

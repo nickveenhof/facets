@@ -9,8 +9,9 @@ namespace Drupal\facetapi\Processor;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
+
 /**
- *
+ * A base class for plugins that implements most of the boilerplate.
  */
 abstract class UrlProcessorPluginBase extends ProcessorPluginBase implements UrlProcessorInterface, ContainerFactoryPluginInterface {
 

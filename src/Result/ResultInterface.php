@@ -8,8 +8,9 @@ namespace Drupal\facetapi\Result;
 
 
 use Drupal\Core\Url;
+
 /**
- *
+ * The interface defining what a facet result should look like.
  */
 interface ResultInterface {
 

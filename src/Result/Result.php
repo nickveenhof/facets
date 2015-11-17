@@ -7,8 +7,9 @@
 namespace Drupal\facetapi\Result;
 
 use Drupal\Core\Url;
+
 /**
- *
+ * The default implementation of the result interfaces.
  */
 class Result implements ResultInterface {
 
@@ -92,14 +93,14 @@ class Result implements ResultInterface {
   }
 
   /**
-   * @inheritdoc
+   * {@inheritdoc}
    */
   public function setActiveState($active) {
     $this->active = $active;
   }
 
   /**
-   * @inheritdoc
+   * {@inheritdoc}
    */
   public function isActive() {
     return $this->active;

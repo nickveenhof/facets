@@ -12,8 +12,12 @@ use Drupal\Core\Plugin\Context\Context;
 use Drupal\Core\Plugin\Context\ContextDefinition;
 use Drupal\Core\Plugin\Context\ContextProviderInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
+
 /**
+ * A provider for the core context system for facets.
  *
+ * This provider is a provider for core's context system, it makes integration
+ * with blocks, panels and other layout systems easy.
  */
 class FacetContextProvider implements ContextProviderInterface {
 

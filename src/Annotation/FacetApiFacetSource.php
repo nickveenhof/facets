@@ -10,7 +10,7 @@ namespace Drupal\facetapi\Annotation;
 use Drupal\Component\Annotation\Plugin;
 
 /**
- * Defines a Facet API backend annotation object.
+ * Defines a Facet API facet source annotation.
  *
  * @see \Drupal\facetapi\FacetSource\FacetSourcePluginManager
  * @see \Drupal\facetapi\FacetSource\FacetSourceInterface

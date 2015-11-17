@@ -9,7 +9,7 @@ namespace Drupal\facetapi\Annotation;
 use Drupal\Component\Annotation\Plugin;
 
 /**
- * Defines a Facet API Processor annotation object.
+ * Defines a Facet API Processor annotation.
  *
  * @see \Drupal\facetapi\Processor\ProcessorPluginManager
  * @see plugin_api

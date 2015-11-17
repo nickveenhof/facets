@@ -10,7 +10,7 @@ namespace Drupal\facetapi\Annotation;
 use Drupal\Component\Annotation\Plugin;
 
 /**
- * Defines a Facet API EmptyBehavior annotation object.
+ * Defines a Facet API EmptyBehavior annotation.
  *
  * @see \Drupal\facetapi\EmptyBehavior\EmptyBehaviorPluginManager
  * @see plugin_api

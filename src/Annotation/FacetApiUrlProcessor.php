@@ -9,7 +9,7 @@ namespace Drupal\facetapi\Annotation;
 use Drupal\Component\Annotation\Plugin;
 
 /**
- * Defines a Facet API UrlProcessor annotation object.
+ * Defines a Facet API UrlProcessor annotation.
  *
  * @see \Drupal\facetapi\UrlProcessor\UrlProcessorPluginManager
  * @see plugin_api

@@ -9,8 +9,9 @@ namespace Drupal\facetapi\QueryType;
 use Drupal\Component\Plugin\ConfigurablePluginInterface;
 use Drupal\Core\Entity\DependencyTrait;
 use Drupal\Core\Plugin\PluginBase;
+
 /**
- *
+ * A base class for query type plugins that implements most of the boilerplate.
  */
 abstract class QueryTypePluginBase extends PluginBase implements QueryTypeInterface, ConfigurablePluginInterface {
 

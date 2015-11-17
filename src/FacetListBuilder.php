@@ -81,7 +81,7 @@ class FacetListBuilder extends ConfigEntityListBuilder {
    * {@inheritdoc}
    */
   public function buildRow(EntityInterface $entity) {
-    /** @var \Drupal\Core\Config\Entity\ConfigEntityInterface $entity */
+    /** @var \Drupal\facetapi\FacetInterface $entity */
     $row = parent::buildRow($entity);
 
     $status_label = $entity->status() ? $this->t('Enabled') : $this->t('Disabled');
@@ -220,7 +220,7 @@ class FacetListBuilder extends ConfigEntityListBuilder {
       ];
 
       foreach ($facets as $facet) {
-        /** @var \Drupal\Core\Config\Entity\ConfigEntityInterface $facet */
+        /** @var \Drupal\facetapi\FacetInterface $facet */
         if ($facet->getFacetSourceId() == $facet_source['id']) {
           $facet_source_groups[$facet_source['id']]['facets'][$facet->id()] = $facet;
           // Remove this facet from $facet so it will finally only contain those

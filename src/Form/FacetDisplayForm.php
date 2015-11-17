@@ -37,14 +37,14 @@ class FacetDisplayForm extends EntityForm {
   protected $entityTypeManager;
 
   /**
-   * The datasource manager.
+   * The processor manager.
    *
    * @var \Drupal\facetapi\Processor\ProcessorPluginManager
    */
   protected $processorPluginManager;
 
   /**
-   * Constructs an IndexProcessorsForm object.
+   * Constructs an FacetDisplayForm object.
    *
    * @param \Drupal\Core\Entity\EntityTypeManager $entity_type_manager
    *   The entity manager.
@@ -64,6 +64,7 @@ class FacetDisplayForm extends EntityForm {
     $entity_type_manager = $container->get('entity_type.manager');
     /** @var \Drupal\facetapi\Processor\ProcessorPluginManager $processor_plugin_manager */
     $processor_plugin_manager = $container->get('plugin.manager.facetapi.processor');
+
     return new static($entity_type_manager, $processor_plugin_manager);
   }
 

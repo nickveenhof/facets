@@ -10,8 +10,9 @@ namespace Drupal\facetapi\Processor;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Plugin\PluginBase;
 use Drupal\facetapi\FacetInterface;
+
 /**
- *
+ * A base class for plugins that implements most of the boilerplate.
  */
 class ProcessorPluginBase extends PluginBase implements ProcessorInterface {
 

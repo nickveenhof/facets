@@ -9,10 +9,12 @@ namespace Drupal\facetapi\Processor;
 /**
  * Interface UrlProcessorInterface.
  *
- * The url processor takes care of retrieving facet information
- * from the url, and also handles the generation of facet links.
+ * The url processor takes care of retrieving facet information from the url.
+ * It also handles the generation of facet links. This extends the pre query and
+ * build processor interfaces, those methods are where the bulk of the work
+ * should be done.
  *
- * A facetapi facet_manager has one url processor.
+ * The facet manager has one url processor.
  *
  * @package Drupal\facetapi\UrlProcessor
  */

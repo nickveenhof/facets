@@ -8,8 +8,9 @@ namespace Drupal\facetapi\Processor;
 
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\facetapi\FacetInterface;
+
 /**
- *
+ * A base class for plugins that implements most of the boilerplate.
  */
 abstract class WidgetOrderPluginBase extends ProcessorPluginBase implements WidgetOrderProcessorInterface {
 

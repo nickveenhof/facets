@@ -5,8 +5,9 @@
  */
 
 namespace Drupal\facetapi\QueryType;
+
 /**
- *
+ * The interface defining the required methods for a query type.
  */
 interface QueryTypeInterface {
 
