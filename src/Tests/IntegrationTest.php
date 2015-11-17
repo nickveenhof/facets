@@ -79,23 +79,24 @@ class IntegrationTest extends FacetWebTestBase {
 
     // Verify that the facet results are correct.
     $this->drupalGet('search-api-test-fulltext');
-    $this->assertText('item (3)');
-    $this->assertText('article (2)');
+    $this->assertText('item');
+    $this->assertText('article');
 
     // Verify that facet blocks appear as expected.
     $this->assertFacetBlocksAppear();
 
     // Verify that the facet is visible when removing a facet for example.
     $this->goToDeleteFacetPage("Test Facet Name");
-    $this->assertText('item (3)');
-    $this->assertText('article (2)');
+    $this->assertText('item');
+    $this->assertText('article');
+
 
     // Show the facet only when the facet source is visible.
     // @TODO Only for SearchApiViewsPage for the moment.
     $this->setOptionShowOnlyWhenFacetSourceVisible("Test Facet name");
     $this->goToDeleteFacetPage("Test Facet Name");
-    $this->assertNoText('item (3)');
-    $this->assertNoText('article (2)');
+    $this->assertNoText('item');
+    $this->assertNoText('article');
 
     // Do not show the block on empty behaviors.
     // Remove data from index.

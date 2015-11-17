@@ -7,6 +7,7 @@
 namespace Drupal\facetapi\Plugin\facetapi\widget;
 
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\facetapi\FacetInterface;
 use Drupal\facetapi\Widget\WidgetInterface;
 
@@ -20,6 +21,8 @@ use Drupal\facetapi\Widget\WidgetInterface;
  * Class LinksWidget
  */
 class LinksWidget implements WidgetInterface {
+
+  use StringTranslationTrait;
 
   /**
    * @var \Drupal\Core\Utility\LinkGeneratorInterface $linkGenerator
@@ -40,10 +43,17 @@ class LinksWidget implements WidgetInterface {
     /** @var \Drupal\facetapi\Result\Result[] $results */
     $results = $facet->getResults();
     $items = [];
+
+    $configuration = $facet->get('widget_configs');
+    $show_numbers = (bool) $configuration['show_numbers'];
+
     foreach ($results as $result) {
       if ($result->getCount()) {
         // Get the link.
-        $text = $result->getDisplayValue() . ' (' . $result->getCount() . ')';
+        $text = $result->getDisplayValue();
+        if ($show_numbers) {
+          $text .= ' (' . $result->getCount() . ')';
+        }
         if ($result->isActive()) {
           $text = '(-) ' . $text;
         }
@@ -64,12 +74,27 @@ class LinksWidget implements WidgetInterface {
     return $build;
   }
 
+
   /**
    * {@inheritdoc}
    */
-  public function buildConfigurationForm(array $form, FormStateInterface $form_state) {
-    return FALSE;
+  public function buildConfigurationForm(array $form, FormStateInterface $form_state, $config) {
+
+    $form['show_numbers'] = [
+      '#type' => 'checkbox',
+      '#title' => $this->t('Show the amount of results'),
+    ];
+
+    if (!is_null($config)) {
+      $widget_configs = $config->get('widget_configs');
+      if (isset($widget_configs['show_numbers'])) {
+        $form['show_numbers']['#default_value'] = $widget_configs['show_numbers'];
+      }
+    }
+
+    return $form;
   }
+
 
   /**
    * {@inheritdoc}

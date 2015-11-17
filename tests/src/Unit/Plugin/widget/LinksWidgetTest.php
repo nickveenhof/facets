@@ -71,6 +71,7 @@ class LinksWidgetTest extends UnitTestCase {
   public function testNoFilterResults() {
     $facet = new Facet([], 'facet');
     $facet->setResults($this->original_results);
+    $facet->set('widget_configs', ['show_numbers' => 1]);
 
     $output = $this->widget->build($facet);
 
@@ -92,6 +93,7 @@ class LinksWidgetTest extends UnitTestCase {
 
     $facet = new Facet([], 'facet');
     $facet->setResults($original_results);
+    $facet->set('widget_configs', ['show_numbers' => 1]);
 
     $output = $this->widget->build($facet);
 
@@ -114,6 +116,7 @@ class LinksWidgetTest extends UnitTestCase {
 
     $facet = new Facet([], 'facet');
     $facet->setResults($original_results);
+    $facet->set('widget_configs', ['show_numbers' => 1]);
 
     $output = $this->widget->build($facet);
 
@@ -121,6 +124,42 @@ class LinksWidgetTest extends UnitTestCase {
     $this->assertCount(4, $output['#items']);
 
     $expected_links = ['(-) Llama (10)', 'Badger (20)', 'Duck (15)', '(-) Alpaca (9)'];
+    foreach ($expected_links as $index => $value) {
+      $this->assertEquals($value, $output['#items'][$index]);
+    }
+  }
+
+  /**
+   * Test widget, make sure hiding and showing numbers works.
+   */
+  public function testHideNumbers() {
+    $original_results = $this->original_results;
+    $original_results[1]->setActiveState(TRUE);
+
+    $facet = new Facet([], 'facet');
+    $facet->setResults($original_results);
+    $facet->set('widget_configs', ['show_numbers' => 0]);
+
+    $output = $this->widget->build($facet);
+
+    $this->assertInternalType('array', $output);
+    $this->assertCount(4, $output['#items']);
+
+    $expected_links = ['Llama', '(-) Badger', 'Duck', 'Alpaca'];
+    foreach ($expected_links as $index => $value) {
+      $this->assertEquals($value, $output['#items'][$index]);
+    }
+
+    // Enable the 'show_numbers' setting again to make sure that the switch
+    // between those settings works.
+    $facet->set('widget_configs', ['show_numbers' => 1]);
+
+    $output = $this->widget->build($facet);
+
+    $this->assertInternalType('array', $output);
+    $this->assertCount(4, $output['#items']);
+
+    $expected_links = ['Llama (10)', '(-) Badger (20)', 'Duck (15)', 'Alpaca (9)'];
     foreach ($expected_links as $index => $value) {
       $this->assertEquals($value, $output['#items'][$index]);
     }
