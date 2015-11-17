@@ -142,7 +142,6 @@ class DefaultFacetManager {
     $this->empty_behavior_plugin_manager = $empty_behavior_plugin_manager;
     $this->facet_storage = $entity_type_manager->getStorage('facetapi_facet');
 
-    $this->requestStack = $request_stack;
     // @TODO not sure if this is the best place to set the keys. From query alter
     // will be executed 2 times. For the main search and for the facet block.
     $this->setSearchKeys($request_stack->getMasterRequest()->query->get('keys'));
