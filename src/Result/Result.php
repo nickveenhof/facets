@@ -106,4 +106,11 @@ class Result implements ResultInterface {
     return $this->active;
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  public function setDisplayValue($display_value) {
+    $this->display_value = $display_value;
+  }
+
 }

@@ -63,4 +63,12 @@ interface ResultInterface {
    */
   public function isActive();
 
+  /**
+   * Override the display value of a result.
+   *
+   * @param string $display_value
+   *   Override display value
+   */
+  public function setDisplayValue($display_value);
+
 }
