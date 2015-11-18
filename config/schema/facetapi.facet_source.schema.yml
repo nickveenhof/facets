@@ -1,0 +1,7 @@
+facetapi.facet_source:
+  type: mapping
+  label : 'Facet'
+  mapping:
+    filter_key:
+      type: string
+      label: 'Filter key'
