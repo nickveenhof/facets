@@ -10,7 +10,7 @@ namespace Drupal\facetapi;
 use Drupal\Core\Config\Entity\ConfigEntityInterface;
 use Drupal\Core\Config\Entity\ConfigEntityListBuilder;
 use Drupal\Core\Entity\EntityInterface;
-use Drupal\facetapi\FacetSource\FacetSourceInterface;
+use Drupal\Core\Link;
 
 /**
  * Builds a listing of facet entities.
@@ -135,7 +135,9 @@ class FacetListBuilder extends ConfigEntityListBuilder {
         'status' => array(
           'data' => '',
         ),
-        'operations' => array(),
+        'operations' => array(
+          'data' => Link::createFromRoute('Configure', 'facetapi_facet.facetsource.config_form', ['source_id' => $facet_source['id']])->toRenderable()
+        ),
       ),
       'class' => array('facet-source'),
     );

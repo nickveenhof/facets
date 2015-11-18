@@ -43,3 +43,11 @@ entity.facetapi_facet.display_form:
     _entity_form: 'facetapi_facet.display'
   requirements:
     _entity_access: 'facetapi_facet.edit'
+
+facetapi_facet.facetsource.config_form:
+  path: '/admin/config/search/facet-api/facet-source/{source_id}/edit'
+  defaults:
+    _controller: '\Drupal\facetapi\Controller\FacetSourceConfigController::facetSourceConfigForm'
+    _title: 'Edit facet source configuration'
+  requirements:
+    _entity_create_access: 'facetapi_facet'
