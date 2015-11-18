@@ -1,5 +1,5 @@
 facetapi.facet_source:
-  type: mapping
+  type: config_object
   label : 'Facet'
   mapping:
     filter_key:
