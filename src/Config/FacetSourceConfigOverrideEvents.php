@@ -8,7 +8,7 @@
 namespace Drupal\facetapi\Config;
 
 /**
- * Defines events for language configuration overrides.
+ * Defines events for facet source configuration overrides.
  *
  * @see \Drupal\Core\Config\ConfigCrudEvent
  */
