@@ -7,6 +7,7 @@
 
 namespace Drupal\facetapi\Plugin\facetapi\processor;
 
+use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Url;
 use Drupal\facetapi\FacetInterface;
 use Drupal\facetapi\Processor\UrlProcessorPluginBase;
@@ -40,8 +41,8 @@ class QueryStringUrlProcessor extends UrlProcessorPluginBase {
   /**
    * {@inheritdoc}
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, Request $request) {
-    parent::__construct($configuration, $plugin_id, $plugin_definition, $request);
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, Request $request, ConfigFactoryInterface $config_factory) {
+    parent::__construct($configuration, $plugin_id, $plugin_definition, $request, $config_factory);
     $this->initializeActiveFilters();
   }
 

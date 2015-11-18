@@ -6,6 +6,7 @@
 
 namespace Drupal\facetapi\Processor;
 
+use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -41,10 +42,14 @@ abstract class UrlProcessorPluginBase extends ProcessorPluginBase implements Url
    * @param string $plugin_id
    * @param mixed $plugin_definition
    * @param \Symfony\Component\HttpFoundation\Request $request
+   * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
+   *   An instance of the config factory
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, Request $request) {
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, Request $request, ConfigFactoryInterface $config_factory) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
     $this->request = $request;
+    $this->filter_key = $config_factory->get('facetapi.facet_source')
+      ->get('filter_key');
   }
 
   /**
@@ -53,7 +58,11 @@ abstract class UrlProcessorPluginBase extends ProcessorPluginBase implements Url
   public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
     /** @var Request $request */
     $request = $container->get('request_stack')->getCurrentRequest();
-    return new static($configuration, $plugin_id, $plugin_definition, $request);
+
+    /** @var \Drupal\Core\Config\ConfigFactory $configFactory */
+    $configFactory = $container->get('config.factory');
+
+    return new static($configuration, $plugin_id, $plugin_definition, $request, $configFactory);
   }
 
 }

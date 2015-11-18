@@ -35,6 +35,11 @@ class QueryStringUrlProcessorTest extends UnitTestCase {
   protected $original_results;
 
   /**
+   * A mocked config storage stub.
+   */
+  protected $config;
+
+  /**
    * Creates a new processor object for use in the tests.
    */
   protected function setUp() {
@@ -47,6 +52,8 @@ class QueryStringUrlProcessorTest extends UnitTestCase {
       new Result('duck', 'Duck', 15),
       new Result('alpaca', 'Alpaca', 25),
     ];
+
+    $this->config = $this->getConfigFactoryStub(['facetapi.facet_source' => ['filter_key' => 'f']]);
   }
 
   public function testSetSingleActiveItem() {
@@ -57,7 +64,7 @@ class QueryStringUrlProcessorTest extends UnitTestCase {
     $request = new Request;
     $request->query->set('f', ['test:badger']);
 
-    $this->processor = new QueryStringUrlProcessor([], 'query_string', [], $request);
+    $this->processor = new QueryStringUrlProcessor([], 'query_string', [], $request, $this->config);
     $this->processor->preQuery($facet);
 
     $this->assertEquals(['badger'], $facet->getActiveItems());
@@ -71,9 +78,38 @@ class QueryStringUrlProcessorTest extends UnitTestCase {
     $request = new Request;
     $request->query->set('f', ['test:badger', 'test:mushroom', 'donkey:kong']);
 
-    $this->processor = new QueryStringUrlProcessor([], 'query_string', [], $request);
+    $this->processor = new QueryStringUrlProcessor([], 'query_string', [], $request, $this->config);
     $this->processor->preQuery($facet);
 
+    $this->assertEquals(['badger', 'mushroom'], $facet->getActiveItems());
+  }
+
+  public function testSetActiveWithConfigOverride() {
+    $facet = new Facet([], 'facet');
+    $facet->setResults($this->original_results);
+    $facet->setFieldIdentifier('test');
+
+    $config = $this->getConfigFactoryStub(['facetapi.facet_source' => ['filter_key' => 'g']]);
+
+    $request = new Request;
+    $request->query->set('f', ['test:badger', 'test:mushroom', 'donkey:kong']);
+
+    $this->processor = new QueryStringUrlProcessor([], 'query_string', [], $request, $config);
+    $this->processor->preQuery($facet);
+
+
+    // Configuration was overridden but the request was still using the old 'f'
+    // parameter. This means there are no active items found in the request.
+    $this->assertEquals([], $facet->getActiveItems());
+
+    $request = new Request;
+    $request->query->set('g', ['test:badger', 'test:mushroom', 'donkey:kong']);
+
+    $this->processor = new QueryStringUrlProcessor([], 'query_string', [], $request, $config);
+    $this->processor->preQuery($facet);
+
+    // Now that the request also uses 'g' as query parameter, we expect the same
+    // response as ::testSetMultipleActiveItems expects.
     $this->assertEquals(['badger', 'mushroom'], $facet->getActiveItems());
   }
 
@@ -83,7 +119,7 @@ class QueryStringUrlProcessorTest extends UnitTestCase {
     $request = new Request;
     $request->query->set('f', []);
 
-    $this->processor = new QueryStringUrlProcessor([], 'query_string', [], $request);
+    $this->processor = new QueryStringUrlProcessor([], 'query_string', [], $request, $this->config);
     $results = $this->processor->build($facet, []);
     $this->assertEmpty($results);
   }
@@ -97,7 +133,7 @@ class QueryStringUrlProcessorTest extends UnitTestCase {
 
     $this->setRouter();
 
-    $this->processor = new QueryStringUrlProcessor([], 'query_string', [], $request);
+    $this->processor = new QueryStringUrlProcessor([], 'query_string', [], $request, $this->config);
     $results = $this->processor->build($facet, $this->original_results);
 
     /** @var \Drupal\facetapi\Result\ResultInterface $r */
@@ -119,7 +155,7 @@ class QueryStringUrlProcessorTest extends UnitTestCase {
 
     $this->setRouter();
 
-    $this->processor = new QueryStringUrlProcessor([], 'query_string', [], $request);
+    $this->processor = new QueryStringUrlProcessor([], 'query_string', [], $request, $this->config);
     $results = $this->processor->build($facet, $original_results);
 
     /** @var \Drupal\facetapi\Result\ResultInterface $r */
