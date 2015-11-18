@@ -19,7 +19,7 @@ abstract class WidgetOrderPluginBase extends ProcessorPluginBase implements Widg
    */
   public function buildConfigurationForm(array $form, FormStateInterface $form_state, FacetInterface $facet) {
     $processors = $facet->getProcessors();
-    $config = $processors[$this->getPluginId()];
+    $config = isset($processors[$this->getPluginId()]) ? $processors[$this->getPluginId()] : null;
 
     $build['sort'] = [
       '#type' => 'radios',
@@ -28,7 +28,7 @@ abstract class WidgetOrderPluginBase extends ProcessorPluginBase implements Widg
         'ASC' => $this->t('Ascending'),
         'DESC' => $this->t('Descending'),
       ],
-      '#default_value' => isset($config) ? $config->getConfiguration()['sort'] : $this->defaultConfiguration()['sort'],
+      '#default_value' => !is_null($config) ? $config->getConfiguration()['sort'] : $this->defaultConfiguration()['sort'],
     ];
 
     return $build;

@@ -47,13 +47,13 @@ class MinimumCountProcessor extends ProcessorPluginBase implements BuildProcesso
    */
   public function buildConfigurationForm(array $form, FormStateInterface $form_state, FacetInterface $facet) {
     $processors = $facet->getProcessors();
-    $config = $processors[$this->getPluginId()];
+    $config = isset($processors[$this->getPluginId()]) ? $processors[$this->getPluginId()] : null;
 
     $build['minimum_items'] = array(
       '#title' => $this->t('Minimum items'),
       '#type' => 'number',
       '#min' => 1,
-      '#default_value' => isset($config) ? $config->getConfiguration()['minimum_items'] : $this->defaultConfiguration()['minimum_items'],
+      '#default_value' => !is_null($config) ? $config->getConfiguration()['minimum_items'] : $this->defaultConfiguration()['minimum_items'],
       '#description' => $this->t('Hide block if the facet contains less than this number of results'),
     );
 

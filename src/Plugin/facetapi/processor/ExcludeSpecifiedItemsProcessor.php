@@ -56,18 +56,18 @@ class ExcludeSpecifiedItemsProcessor extends ProcessorPluginBase implements Buil
    */
   public function buildConfigurationForm(array $form, FormStateInterface $form_state, FacetInterface $facet) {
     $processors = $facet->getProcessors();
-    $config = $processors[$this->getPluginId()];
+    $config = isset($processors[$this->getPluginId()]) ? $processors[$this->getPluginId()] : null;
 
     $build['exclude'] = [
       '#title' => $this->t('Exclude items'),
       '#type' => 'textfield',
-      '#default_value' => isset($config) ? $config->getConfiguration()['exclude'] : $this->defaultConfiguration()['exclude'],
+      '#default_value' => !is_null($config) ? $config->getConfiguration()['exclude'] : $this->defaultConfiguration()['exclude'],
       '#description' => $this->t("Comma separated list of titles or values that should be excluded, matching either an item's title or value."),
     ];
     $build['regex'] = [
       '#title' => $this->t('Regular expressions used'),
       '#type' => 'checkbox',
-      '#default_value' => isset($config) ? $config->getConfiguration()['regex'] : $this->defaultConfiguration()['regex'],
+      '#default_value' => !is_null($config) ? $config->getConfiguration()['regex'] : $this->defaultConfiguration()['regex'],
       '#description' => $this->t('Interpret each exclude list item as a regular expression pattern.<br /><small>(Slashes are escaped automatically, patterns using a comma can be wrapped in "double quotes", and if such a pattern uses double quotes itself, just make them double-double-quotes (""))</small>.'),
     ];
 
