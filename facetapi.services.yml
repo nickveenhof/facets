@@ -30,3 +30,9 @@ services:
     arguments: ['@entity_type.manager']
     tags:
       - { name: context_provider }
+  facetapi.config_factory_override:
+    class: Drupal\facetapi\Config\FacetSourceConfigFactoryOverride
+    arguments: ['@config.storage', '@event_dispatcher', '@config.typed', '@plugin.manager.facetapi.facet_source']
+    tags:
+      - { name: config.factory.override, priority: -200 }
+      - { name: event_subscriber }
