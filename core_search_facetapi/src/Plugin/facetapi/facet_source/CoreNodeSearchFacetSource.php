@@ -2,7 +2,7 @@
 
 /**
  * @file
- *   Contains \Drupal\core_search_facetapi\Plugin\facet_api\facet_source\CoreSearchFacetSource
+ *   Contains \Drupal\core_search_facetapi\Plugin\facet_api\facet_source\CoreNodeSearchFacetSource
  */
 
 namespace Drupal\core_search_facetapi\Plugin\facetapi\facet_source;
@@ -21,11 +21,11 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * Represents a facet source which represents the search api views.
  *
  * @FacetApiFacetSource(
- *   id = "core_search",
- *   deriver = "Drupal\core_search_facetapi\Plugin\facetapi\facet_source\CoreSearchFacetSourceDeriver"
+ *   id = "core_node_search",
+ *   deriver = "Drupal\core_search_facetapi\Plugin\facetapi\facet_source\CoreNodeSearchFacetSourceDeriver"
  * )
  */
-class CoreSearchFacetSource extends FacetSourcePluginBase {
+class CoreNodeSearchFacetSource extends FacetSourcePluginBase {
 
   use DependencySerializationTrait;
   use StringTranslationTrait;
@@ -123,7 +123,7 @@ class CoreSearchFacetSource extends FacetSourcePluginBase {
     switch ($field_id) {
       case 'type':
       case 'uid':
-        $query_types['string'] = 'core_search_string';
+        $query_types['string'] = 'core_node_search_string';
         break;
     }
 

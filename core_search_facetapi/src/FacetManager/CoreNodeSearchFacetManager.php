@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains Drupal\core_search_facetapi\FacetManager\CoreSearchFacetManager.
+ * Contains Drupal\core_search_facetapi\FacetManager\CoreNodeSearchFacetManager.
  */
 
 namespace Drupal\core_search_facetapi\FacetManager;
@@ -10,7 +10,7 @@ namespace Drupal\core_search_facetapi\FacetManager;
 use Drupal\facetapi\FacetInterface;
 use Drupal\facetapi\FacetManager\DefaultFacetManager;
 
-class CoreSearchFacetManager extends DefaultFacetManager {
+class CoreNodeSearchFacetManager extends DefaultFacetManager {
 
   /**
    * The facet query being executed.

@@ -1,6 +1,6 @@
 services:
   core_search_facetapi.core_manager:
-    class: Drupal\core_search_facetapi\FacetManager\CoreSearchFacetManager
+    class: Drupal\core_search_facetapi\FacetManager\CoreNodeSearchFacetManager
     arguments:
       - '@plugin.manager.facetapi.query_type'
       - '@plugin.manager.facetapi.widget'

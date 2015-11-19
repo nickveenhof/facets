@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\core_search_facetapi\Plugin\facet_api\facet_source\CoreSearchFacetSourceDeriver.
+ * Contains \Drupal\core_search_facetapi\Plugin\facet_api\facet_source\CoreNodeSearchFacetSourceDeriver.
  */
 
 namespace Drupal\core_search_facetapi\Plugin\facetapi\facet_source;
@@ -16,7 +16,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  *
  * @see \Drupal\facetapi\Plugin\facetapi\facet_source\SearchApiViewsPage
  */
-class CoreSearchFacetSourceDeriver extends FacetSourceDeriverBase {
+class CoreNodeSearchFacetSourceDeriver extends FacetSourceDeriverBase {
 
   protected $searchManager;
 
@@ -47,17 +47,19 @@ class CoreSearchFacetSourceDeriver extends FacetSourceDeriverBase {
       $pages = \Drupal::entityManager()->getListBuilder('search_page')->load();
 
       foreach($pages as $machine_name => $page) {
-        // Detect if the plugin has "faceted" definition.
-        /** @var \Drupal\search\Entity\SearchPage $page **/
-        $plugin_derivatives[$machine_name] = [
-            'id' => $base_plugin_id . PluginBase::DERIVATIVE_SEPARATOR . $machine_name,
-            'label' => $this->t('Core Search Page: %page_name', ['%page_name' => $page->get('label')]),
-            'description' => $this->t('Provides a facet source.'),
-          ] + $base_plugin_definition;
-      }
-      uasort($plugin_derivatives, array($this, 'compareDerivatives'));
+        /** @var \Drupal\search\Entity\SearchPage $page * */
+        if ($page->get('plugin') == 'node_search') {
+          // Detect if the plugin has "faceted" definition.
+          $plugin_derivatives[$machine_name] = [
+              'id' => $base_plugin_id . PluginBase::DERIVATIVE_SEPARATOR . $machine_name,
+              'label' => $this->t('Core Search Page: %page_name', ['%page_name' => $page->get('label')]),
+              'description' => $this->t('Provides a facet source.'),
+            ] + $base_plugin_definition;
+        }
+        uasort($plugin_derivatives, array($this, 'compareDerivatives'));
 
-      $this->derivatives[$base_plugin_id] = $plugin_derivatives;
+        $this->derivatives[$base_plugin_id] = $plugin_derivatives;
+      }
     }
     return $this->derivatives[$base_plugin_id];
   }

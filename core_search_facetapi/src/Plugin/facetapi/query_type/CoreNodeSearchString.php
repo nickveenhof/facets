@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\core_search_facetapi\Plugin\facetapi\query_type\CoreSearchString.
+ * Contains \Drupal\core_search_facetapi\Plugin\facetapi\query_type\CoreNodeSearchString.
  */
 
 namespace Drupal\core_search_facetapi\Plugin\facetapi\query_type;
@@ -13,11 +13,11 @@ use Drupal\facetapi\Result\Result;
 /**
  *
  * @FacetApiQueryType(
- *   id = "core_search_string",
+ *   id = "core_node_search_string",
  *   label = @Translation("String"),
  * )
  */
-class CoreSearchString extends QueryTypePluginBase {
+class CoreNodeSearchString extends QueryTypePluginBase {
 
   /**
    * Holds the backend's native query object.
