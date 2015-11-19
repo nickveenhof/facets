@@ -138,7 +138,7 @@ class CoreNodeSearchFacetSource extends FacetSourcePluginBase {
     $request = \Drupal::requestStack()->getMasterRequest();
     $search_page = $request->attributes->get('entity');
     if ($search_page instanceof SearchPageInterface) {
-      $facet_source_id = 'core_search:' . $search_page->id();
+      $facet_source_id = 'core_node_search:' . $search_page->id();
       if ($facet_source_id == $this->getPluginId()) {
         return TRUE;
       }
