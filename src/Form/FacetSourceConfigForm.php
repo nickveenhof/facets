@@ -36,10 +36,10 @@ class FacetSourceConfigForm extends ConfigFormBase {
     $config = $this->config('facetapi.facet_source');
 
     $form['description'] = [
-      '#markup' => $this->t('Saving this form will create a configuration override for this specific facet source. Not doing so will make sure that facet api uses the default settings. This is an advanced feature and unless you are fully aware of why you\'re creating this configuration, you shouldn\'t have to change this.')
+      '#markup' => $this->t('Saving this form will create a configuration override for this specific facet source. Not doing so will make sure that Facet API uses the default settings. This is an advanced feature and unless you are fully aware of why you\'re creating this configuration. With a default configuration of Facet API you can leave the default configuration.')
     ];
 
-    // Global aggregator settings.
+    // Filter key setting.
     $form['filter_key'] = [
       '#type' => 'textfield',
       '#title' => $this->t('Filter key'),
@@ -49,6 +49,7 @@ class FacetSourceConfigForm extends ConfigFormBase {
       '#description' => $this->t('They key used for filtering in the URL, defaults to f. You should change this to something else if you expect to have multiple facet sources on one page.'),
     ];
 
+    // The parent's form build method will add a save button.
     return parent::buildForm($form, $form_state);
   }
 
@@ -56,11 +57,11 @@ class FacetSourceConfigForm extends ConfigFormBase {
    * {@inheritdoc}
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
+    // The parent's submitForm adds a message.
     parent::submitForm($form, $form_state);
+
     $config = $this->config('facetapi.facet_source');
-
     $config->set('filter_key', $form_state->getValue('filter_key'));
-
     $config->save();
   }
 }

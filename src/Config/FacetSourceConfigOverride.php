@@ -34,7 +34,6 @@ class FacetSourceConfigOverride extends StorableConfigBase  {
     $this->eventDispatcher = $event_dispatcher;
   }
 
-
   /**
    * {@inheritdoc}
    */

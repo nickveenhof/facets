@@ -16,11 +16,10 @@ use Drupal\Core\Controller\ControllerBase;
 class FacetSourceConfigController extends ControllerBase {
 
   /**
-   * Configuration for the facet source if needed.
+   * Configuration for the facet source.
    *
-   * This method will create a facet source config override if needed.
-   *
-   * @param $source_id
+   * @param string $source_id
+   *   The plugin id.
    *
    * @return array
    *   A renderable array containing the form
@@ -28,6 +27,7 @@ class FacetSourceConfigController extends ControllerBase {
   public function facetSourceConfigForm($source_id) {
     /** @var \Drupal\facetapi\FacetSource\FacetSourcePluginManager $facet_source_plugin_manager */
     $facet_source_plugin_manager = \Drupal::service('plugin.manager.facetapi.facet_source');
+
     try {
       $facet_source_plugin_manager->createInstance($source_id);
     } catch (PluginNotFoundException $e) {
@@ -35,6 +35,7 @@ class FacetSourceConfigController extends ControllerBase {
       return ['#markup' => 'Plugin not found.', '#cache' => ['max-age' => 5]];
     }
 
+    // Returns the render array of the FacetSourceConfigForm.
     return $this->formBuilder()->getForm('\Drupal\facetapi\Form\FacetSourceConfigForm');
   }
 
