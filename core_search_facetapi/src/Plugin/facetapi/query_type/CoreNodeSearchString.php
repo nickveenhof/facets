@@ -37,15 +37,13 @@ class CoreNodeSearchString extends QueryTypePluginBase {
    * {@inheritdoc}
    */
   public function build() {
+    /** @var \Drupal\core_search_facetapi\FacetSource\CoreSearchFacetSourceInterface $facetSource */
+    $facetSource = $this->facet->getFacetSource();
 
-    // @TODO avoid \Drupal here.
-    /** @var \Drupal\core_search_facetapi\FacetManager\CoreNodeSearchFacetManager $facet_manager */
-    $facet_manager = \Drupal::service('core_search_facetapi.core_node_search_manager');
-
-    $query_info = $facet_manager->getQueryInfo($this->facet);
+    $query_info = $facetSource->getQueryInfo($this->facet);
 
     /** @var \Drupal\core_search_facetapi\FacetapiQuery $facet_query */
-    $facet_query = $facet_manager->getFacetQueryExtender();
+    $facet_query = $facetSource->getFacetQueryExtender();
     $facet_query->addFacetField($query_info);
 
     // Only build results if a search is executed.
