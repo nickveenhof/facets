@@ -34,12 +34,13 @@ class FacetSourceConfigForm extends ConfigFormBase {
    */
   public function buildForm(array $form, FormStateInterface $form_state) {
     $config = $this->config('facetapi.facet_source');
+    $facet_source_id = $this->getRequest()->get('source_id');
+    $overridden_filter_key_config = $config->get('overrides.' . $facet_source_id . '.filter_key');
 
     $form['description'] = [
       '#markup' => $this->t('Saving this form will create a configuration override for this specific facet source. Not doing so will make sure that Facet API uses the default settings. This is an advanced feature and unless you are fully aware of why you\'re creating this configuration. With a default configuration of Facet API you can leave the default configuration.')
     ];
 
-    $facet_source_id = $this->getRequest()->get('source_id');
     $form['facet_source_id'] = [
       '#type' => 'hidden',
       '#value' => $facet_source_id,
@@ -51,7 +52,7 @@ class FacetSourceConfigForm extends ConfigFormBase {
       '#title' => $this->t('Filter key'),
       '#size' => 20,
       '#maxlength' => 255,
-      '#default_value' => (!is_null($config->get('overrides.' . $facet_source_id . '.filter_key')) ? $config->get('overrides.' . $facet_source_id . '.filter_key') : $config->get('filter_key')),
+      '#default_value' => (!is_null($overridden_filter_key_config) ? $overridden_filter_key_config : $config->get('filter_key')),
       '#description' => $this->t('They key used for filtering in the URL, defaults to f. You should change this to something else if you expect to have multiple facet sources on one page.'),
     ];
 
@@ -68,6 +69,9 @@ class FacetSourceConfigForm extends ConfigFormBase {
 
     $configKey = 'overrides.' . $form_state->getValue('facet_source_id') . '.';
 
+    // When saving the config, make sure it's saved in the
+    // 'overrides.facetsourceid.*' config name, so we can make sure that config
+    // is possible to be overridden per facet source.
     $config = $this->config('facetapi.facet_source');
     $config->set($configKey. 'filter_key', $form_state->getValue('filter_key'));
     $config->save();

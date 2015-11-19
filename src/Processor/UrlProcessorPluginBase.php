@@ -49,7 +49,6 @@ abstract class UrlProcessorPluginBase extends ProcessorPluginBase implements Url
     parent::__construct($configuration, $plugin_id, $plugin_definition);
     $this->request = $request;
 
-    /** @var \Drupal\facetapi\FacetInterface[] $configuration */
     $facetSourceId = $configuration['facet']->getFacetSourceId();
 
     $facetSourceConfig = $config_factory->get('facetapi.facet_source');
