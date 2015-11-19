@@ -37,9 +37,8 @@ class CoreNodeSearchString extends QueryTypePluginBase {
    * {@inheritdoc}
    */
   public function build() {
-    /** @var \Drupal\core_search_facetapi\FacetSource\CoreSearchFacetSourceInterface $facetSource */
+    /** @var \Drupal\core_search_facetapi\Plugin\CoreSearchFacetSourceInterface $facetSource */
     $facetSource = $this->facet->getFacetSource();
-
     $query_info = $facetSource->getQueryInfo($this->facet);
 
     /** @var \Drupal\core_search_facetapi\FacetapiQuery $facet_query */
@@ -53,9 +52,7 @@ class CoreNodeSearchString extends QueryTypePluginBase {
       if (!empty($results)) {
         $facet_results = [];
         foreach ($results as $result) {
-          // @TODO replace 'test' here. Testing.
-          //$facet_results[] = new Result(trim($result['filter'], '"'), trim($result['filter'], '"'), $result['count']);
-          $facet_results[] = new Result('test', $result->value, $result->count);
+          $facet_results[] = new Result($result->value, $result->value, $result->count);
         }
         $this->facet->setResults($facet_results);
       }
