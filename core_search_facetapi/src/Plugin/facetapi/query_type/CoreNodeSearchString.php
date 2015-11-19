@@ -39,8 +39,8 @@ class CoreNodeSearchString extends QueryTypePluginBase {
   public function build() {
 
     // @TODO avoid \Drupal here.
-    /** @var \Drupal\core_search_facetapi\FacetManager\CoreSearchFacetManager $facet_manager */
-    $facet_manager = \Drupal::service('core_search_facetapi.core_manager');
+    /** @var \Drupal\core_search_facetapi\FacetManager\CoreNodeSearchFacetManager $facet_manager */
+    $facet_manager = \Drupal::service('core_search_facetapi.core_node_search_manager');
 
     $query_info = $facet_manager->getQueryInfo($this->facet);
 

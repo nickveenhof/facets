@@ -1,5 +1,5 @@
 services:
-  core_search_facetapi.core_manager:
+  core_search_facetapi.core_node_search_manager:
     class: Drupal\core_search_facetapi\FacetManager\CoreNodeSearchFacetManager
     arguments:
       - '@plugin.manager.facetapi.query_type'
