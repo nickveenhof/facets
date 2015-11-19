@@ -48,8 +48,21 @@ abstract class UrlProcessorPluginBase extends ProcessorPluginBase implements Url
   public function __construct(array $configuration, $plugin_id, $plugin_definition, Request $request, ConfigFactoryInterface $config_factory) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
     $this->request = $request;
-    $this->filter_key = $config_factory->get('facetapi.facet_source')
-      ->get('filter_key');
+
+    /** @var \Drupal\facetapi\FacetInterface[] $configuration */
+    $facetSourceId = $configuration['facet']->getFacetSourceId();
+
+    $facetSourceConfig = $config_factory->get('facetapi.facet_source');
+
+    // Set the filter key from the global config.
+    $this->filter_key = $facetSourceConfig->get('filter_key');
+
+    // Check if the filter key has been overridden in facet source specific
+    // config.
+    $override = $facetSourceConfig->get('overrides.' . $facetSourceId . '.filter_key');
+    if (!is_null($override)) {
+      $this->filter_key = $override;
+    }
   }
 
   /**

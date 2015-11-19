@@ -5,3 +5,13 @@ facetapi.facet_source:
     filter_key:
       type: string
       label: 'Filter key'
+    overrides:
+      type: sequence
+      label: 'Overrides'
+      sequence:
+        type: mapping
+        label: 'Override'
+        mapping:
+          filter_key:
+            type: string
+            label: 'Filter key'
