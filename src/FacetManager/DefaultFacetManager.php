@@ -64,13 +64,6 @@ class DefaultFacetManager {
   protected $empty_behavior_plugin_manager;
 
   /**
-   * The search keys, or query text, submitted by the user.
-   *
-   * @var string
-   */
-  protected $keys;
-
-  /**
    * An array of FacetInterface objects for facets being rendered.
    *
    * @var FacetInterface[]
@@ -133,7 +126,7 @@ class DefaultFacetManager {
    * @param \Drupal\facetapi\EmptyBehavior\EmptyBehaviorPluginManager $empty_behavior_plugin_manager
    * @param \Drupal\Core\Entity\EntityTypeManager $entity_type_manager
    */
-  public function __construct(QueryTypePluginManager $query_type_plugin_manager, WidgetPluginManager $widget_plugin_manager, FacetSourcePluginManager $facet_source_manager, ProcessorPluginManager $processor_plugin_manager, EmptyBehaviorPluginManager $empty_behavior_plugin_manager, EntityTypeManager $entity_type_manager, RequestStack $request_stack) {
+  public function __construct(QueryTypePluginManager $query_type_plugin_manager, WidgetPluginManager $widget_plugin_manager, FacetSourcePluginManager $facet_source_manager, ProcessorPluginManager $processor_plugin_manager, EmptyBehaviorPluginManager $empty_behavior_plugin_manager, EntityTypeManager $entity_type_manager) {
 
     $this->query_type_plugin_manager = $query_type_plugin_manager;
     $this->widget_plugin_manager = $widget_plugin_manager;
@@ -142,37 +135,9 @@ class DefaultFacetManager {
     $this->empty_behavior_plugin_manager = $empty_behavior_plugin_manager;
     $this->facet_storage = $entity_type_manager->getStorage('facetapi_facet');
 
-    // @TODO not sure if this is the best place to set the keys. From query alter
-    // will be executed 2 times. For the main search and for the facet block.
-    $this->setSearchKeys($request_stack->getMasterRequest()->query->get('keys'));
-
     // Immediately initialize the facets. This can be done directly because the
     // only thing needed is the url.
     $this->initFacets();
-  }
-
-  /**
-   * Sets the search keys, or query text, submitted by the user.
-   *
-   * @param string $keys
-   *   The search keys, or query text, submitted by the user.
-   *
-   * @return self
-   *   An instance of this class.
-   */
-  public function setSearchKeys($keys) {
-    $this->keys = $keys;
-    return $this;
-  }
-
-  /**
-   * Gets the search keys, or query text, submitted by the user.
-   *
-   * @return string
-   *   The search keys, or query text, submitted by the user.
-   */
-  public function getSearchKeys() {
-    return $this->keys;
   }
 
   /**

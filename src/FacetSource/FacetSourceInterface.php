@@ -79,4 +79,23 @@ interface FacetSourceInterface {
    */
   public function getFields();
 
+  /**
+   * Sets the search keys, or query text, submitted by the user.
+   *
+   * @param string $keys
+   *   The search keys, or query text, submitted by the user.
+   *
+   * @return self
+   *   An instance of this class.
+   */
+  public function setSearchKeys($keys);
+
+  /**
+   * Gets the search keys, or query text, submitted by the user.
+   *
+   * @return string
+   *   The search keys, or query text, submitted by the user.
+   */
+  public function getSearchKeys();
+
 }

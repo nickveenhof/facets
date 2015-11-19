@@ -36,6 +36,13 @@ abstract class FacetSourcePluginBase extends PluginBase implements FacetSourceIn
   protected $queryTypePluginManager;
 
   /**
+   * The search keys, or query text, submitted by the user.
+   *
+   * @var string
+   */
+  protected $keys;
+
+  /**
    * {@inheritdoc}
    */
   public function __construct(
@@ -78,5 +85,20 @@ abstract class FacetSourcePluginBase extends PluginBase implements FacetSourceIn
    */
   public function isRenderedInCurrentRequest() {
     return FALSE;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setSearchKeys($keys) {
+    $this->keys = $keys;
+    return $this;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getSearchKeys() {
+    return $this->keys;
   }
 }
