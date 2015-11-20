@@ -31,6 +31,39 @@ class CoreNodeSearchString extends QueryTypePluginBase {
    */
   public function execute() {
 
+    /** @var \Drupal\core_search_facetapi\Plugin\CoreSearchFacetSourceInterface $facetSource */
+    $facetSource = $this->facet->getFacetSource();
+    $query_info = $facetSource->getQueryInfo($this->facet);
+    /** @var \Drupal\core_search_facetapi\FacetapiQuery $facet_query */
+    $facet_query = $facetSource->getFacetQueryExtender();
+    $tables_joined = [];
+
+    // @TODO add advanced search here.
+
+    // Add the filter to the query if there are active values.
+    $active_items = $this->facet->getActiveItems();
+
+    foreach ($active_items as $item) {
+      foreach ($query_info['fields'] as $field_info) {
+
+        // Adds join to the facet query.
+        /*$facet_query->addFacetJoin($query_info, $field_info['table_alias']);
+
+        // Adds adds join to search query, makes sure it is only added once.
+        if (isset($query_info['joins'][$field_info['table_alias']])) {
+          if (!isset($tables_joined[$field_info['table_alias']])) {
+            $tables_joined[$field_info['table_alias']] = TRUE;
+            $join_info = $query_info['joins'][$field_info['table_alias']];
+            $this->query->join($join_info['table'], $join_info['alias'], $join_info['condition']);
+          }
+        }*/
+
+        // Adds facet conditions to the queries.
+        $field = $field_info['table_alias'] . '.' . $field_info['field'];
+        $this->query->condition($field, $item);
+        $facet_query->condition($field, $item);
+      }
+    }
   }
 
   /**
@@ -43,6 +76,7 @@ class CoreNodeSearchString extends QueryTypePluginBase {
 
     /** @var \Drupal\core_search_facetapi\FacetapiQuery $facet_query */
     $facet_query = $facetSource->getFacetQueryExtender();
+
     $facet_query->addFacetField($query_info);
 
     // Only build results if a search is executed.
@@ -57,9 +91,9 @@ class CoreNodeSearchString extends QueryTypePluginBase {
         $this->facet->setResults($facet_results);
       }
     }
-
     return $this->facet;
 
   }
 
 }
+
