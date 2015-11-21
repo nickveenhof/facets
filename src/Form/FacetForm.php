@@ -516,18 +516,20 @@ class FacetForm extends EntityForm {
       // default settings.
       $initial_settings = [];
       $stages = $this->getProcessorPluginManager()->getProcessingStages();
-      foreach ($facet->getProcessors() as $processor_id => $processor) {
-        if ($processor->isLocked()) {
+      $processors_definitions = $this->getProcessorPluginManager()->getDefinitions();
+
+      foreach ($processors_definitions as $processor_id => $processor) {
+        if (isset($processor['locked']) && $processor['locked'] == TRUE) {
           $weights = [];
-          foreach($stages as $stage_id => $stage){
-            if($processor->supportsStage($stage_id)){
-              $weights[$stage_id] = $processor->getDefaultWeight($stage_id);
+          foreach($stages as $stage_id => $stage) {
+            if(isset($processor['stages'][$stage_id])) {
+              $weights[$stage_id] = $processor['stages'][$stage_id];
             }
           }
           $initial_settings[$processor_id] = array(
             'processor_id' => $processor_id,
             'weights' => $weights,
-            'settings' => $processor->defaultConfiguration(),
+            'settings' => [],
           );
         }
       }
