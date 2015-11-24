@@ -38,8 +38,6 @@ class CoreNodeSearchString extends QueryTypePluginBase {
     $facet_query = $facetSource->getFacetQueryExtender();
     $tables_joined = [];
 
-    // @TODO add advanced search here.
-
     // Add the filter to the query if there are active values.
     $active_items = $this->facet->getActiveItems();
 

@@ -257,4 +257,18 @@ class CoreNodeSearchFacetSource extends FacetSourcePluginBase implements CoreSea
     ];
   }
 
+  /**
+   * @TODO move to the Base class???
+   */
+  public function hasFacets() {
+    $manager = \Drupal::service('entity_type.manager')->getStorage('facetapi_facet');
+    $facets = $manager->loadMultiple();
+    foreach($facets as $facet) {
+      if ($facet->getFacetSourceId() == $this->getPluginId()) {
+        return TRUE;
+      }
+    }
+    return FALSE;
+  }
+
 }
