@@ -20,25 +20,20 @@ use Drupal\facetapi\Processor\ProcessorInterface;
 use Drupal\facetapi\Processor\ProcessorPluginManager;
 use Drupal\facetapi\QueryType\QueryTypePluginManager;
 use Drupal\facetapi\Widget\WidgetPluginManager;
-use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
  * The facet manager.
  *
- * @TODO: rewrite D7 comment block:
- * FacetManagers are responsible for abstracting interactions with the Search backend
- * that are necessary for faceted search. The FacetManager is also responsible for
- * retrieving facet information passed by the user via the a processor plugin
- * taking the appropriate action, whether it is checking dependencies for all
- * enabled facets or passing the appropriate query type plugin to the backend
- * so that it can execute the actual facet query.
+ * The manager is responsible for interactions with the Search backend, such as
+ * altering the query, it is also responsible for executing and building the
+ * facet. It is also responsible for running the processors.
  */
 class DefaultFacetManager {
 
   use StringTranslationTrait;
 
   /**
-   * The plugin manager.
+   * The query type plugin manager.
    */
   protected $query_type_plugin_manager;
 
@@ -64,19 +59,20 @@ class DefaultFacetManager {
   protected $empty_behavior_plugin_manager;
 
   /**
-   * An array of FacetInterface objects for facets being rendered.
+   * An array of facets that are being rendered.
    *
-   * @var FacetInterface[]
+   * @var \Drupal\facetapi\FacetInterface[]
    *
-   * @see FacetapiFacet
+   * @see \Drupal\facetapi\FacetInterface
+   * @see \Drupal\facetapi\Entity\Facet
    */
   protected $facets = [];
 
   /**
    * A boolean flagging whether the facets have been processed, or built.
    *
-   * This variable acts as a per-FacetManager semaphore that ensures facet data is
-   * processed only once.
+   * This variable acts as a semaphore that ensures facet data is processed
+   * only once.
    *
    * @var boolean
    *
@@ -101,16 +97,18 @@ class DefaultFacetManager {
   protected $settings = [];
 
   /**
-   * Searcher id.
+   * The id of the facet source.
    *
    * @var string
+   * @see \Drupal\facetapi\FacetSource\FacetSourceInterface
    */
   protected $facetsource_id;
 
   /**
    * Set the search id.
    *
-   * @return mixed
+   * @param string
+   *   The id of the facet source.
    */
   public function setFacetSourceId($facetsource_id) {
     $this->facetsource_id = $facetsource_id;
@@ -144,27 +142,19 @@ class DefaultFacetManager {
    * Allows the backend to add facet queries to its native query object.
    *
    * This method is called by the implementing module to initialize the facet
-   * display process. The following actions are taken:
-   * - FacetapiFacetManager::initActiveFilters() hook is invoked.
-   * - Dependency plugins are instantiated and executed.
-   * - Query type plugins are executed.
+   * display process.
    *
    * @param mixed $query
    *   The backend's native query object.
-   *
-   * @todo Should this method be deprecated in favor of one name init()? This
-   *   might make the code more readable in implementing modules.
-   *
-   * @see FacetapiFacetManager::initActiveFilters()
    */
   public function alterQuery(&$query) {
     /** @var \Drupal\facetapi\FacetInterface[] $facets */
     foreach ($this->facets as $facet) {
-      // Only if the facet is for this query, alter the query.
+
+      // Make sure we don't alter queries for facets with a different source.
       if ($facet->getFacetSourceId() == $this->facetsource_id) {
-        // Create the query type plugin.
+        /** @var \Drupal\facetapi\QueryType\QueryTypeInterface $query_type_plugin */
         $query_type_plugin = $this->query_type_plugin_manager->createInstance($facet->getQueryType(), ['query' => $query, 'facet' => $facet]);
-        // Let the query type alter the query.
         $query_type_plugin->execute();
       }
     }
@@ -180,8 +170,9 @@ class DefaultFacetManager {
     return $this->facet_storage->loadMultiple();
   }
 
-
   /**
+   * Get the ID of the facet source.
+   *
    * @return string
    */
   public function getFacetsourceId() {
@@ -192,17 +183,15 @@ class DefaultFacetManager {
    * Initializes facet builds, sets the breadcrumb trail.
    *
    * Facets are built via FacetapiFacetProcessor objects. Facets only need to be
-   * processed, or built, once regardless of how many realms they are rendered
-   * in. The FacetapiFacetManager::processed semaphore is set when this method
-   * is called ensuring that facets are built only once regardless of how many
-   * times this method is called.
+   * processed, or built, once The FacetapiFacetManager::processed semaphore is
+   * set when this method is called ensuring that facets are built only once
+   * regardless of how many times this method is called.
    */
   public function processFacets() {
     if (!$this->processed) {
       // First add the results to the facets.
       $this->updateResults();
 
-      // Set the facets to be processed.
       $this->processed = TRUE;
     }
   }
@@ -244,28 +233,25 @@ class DefaultFacetManager {
    * Before doing any rendering, the processors that implement the
    * BuildProcessorInterface enabled on this facet will run.
    *
-   * @param FacetInterface $facet
+   * @param \Drupal\facetapi\FacetInterface $facet
    *
    * @return array
    *   Facet render arrays.
    */
   public function build(FacetInterface $facet) {
-    // It might be that the facet received here,
-    // is not the same as the already loaded facets in the FacetManager.
-    // For that reason, get the facet from the already loaded facets
-    // in the FacetManager.
-    // If this is omitted, building will fail.
+    // It might be that the facet received here, is not the same as the already
+    // loaded facets in the FacetManager.
+    // For that reason, get the facet from the already loaded facets in the
+    // FacetManager.
     $facet = $this->facets[$facet->id()];
 
-    // Process the facets.
     // @TODO: inject the searcher id on create of the FacetManager.
     $this->facetsource_id = $facet->getFacetSourceId();
 
     if ($facet->getOnlyVisibleWhenFacetSourceIsVisible()) {
       // Block rendering and processing should be stopped when the facet source
-      // is not available on the page. Returning an empty array here should be
-      // enough to halt all further processing. This should probably go in an
-      // earlier step of the facet building process but here's fine for now.
+      // is not available on the page. Returning an empty array here is enough
+      // to halt all further processing.
       $facet_source = $facet->getFacetSource();
       if (!$facet_source->isRenderedInCurrentRequest()) {
         return [];
@@ -276,11 +262,6 @@ class DefaultFacetManager {
     // The first facet therefor will trigger the processing. Note that
     // processing is done only once, so repeatedly calling this method will not
     // trigger the processing more than once.
-    // Furthermore: don't add any processing after this method call! All
-    // processing should be done in the processFacets method.
-    //
-    // After the processFacets is finished, all information for rendering
-    // is added to the facet.
     $this->processFacets();
 
     // Get the current results from the facets and let all processors that
@@ -295,7 +276,7 @@ class DefaultFacetManager {
         /** @var BuildProcessorInterface $build_processor */
         $build_processor = $this->processor_plugin_manager->createInstance($processor->getPluginDefinition()['id']);
         if (!$build_processor instanceof BuildProcessorInterface) {
-          throw new InvalidProcessorException(new FormattableMarkup("The processor @processor has a build definition but doesn't implement the required BuildProcessorInterface interface", ['@processor' => $processor_configuration['processor_id']]));
+          throw new InvalidProcessorException(new FormattableMarkup("The processor @processor has a build definition but doesn't implement the required BuildProcessorInterface interface", ['@processor' => $processor['processor_id']]));
         }
         $results = $build_processor->build($facet, $results);
       }
