@@ -193,12 +193,11 @@ class IntegrationTest extends FacetWebTestBase {
   protected function setEmptyBehaviorFacetText($facet_name) {
     $facet_id = $this->convertNameToMachineName($facet_name);
 
-    $facet_edit_page = $this->urlGenerator->generateFromRoute('entity.facetapi_facet.edit_form', ['facetapi_facet' => $facet_id], ['absolute' => TRUE]);
+    $facet_display_page = $this->urlGenerator->generateFromRoute('entity.facetapi_facet.display_form', ['facetapi_facet' => $facet_id], ['absolute' => TRUE]);
 
     // Go to the facet edit page and make sure "edit facet %facet" is present.
-    $this->drupalGet($facet_edit_page);
+    $this->drupalGet($facet_display_page);
     $this->assertResponse(200);
-    $this->assertRaw($this->t('Edit facet @facet', ['@facet' => $facet_name]));
 
     // Configure the text for empty results behavior.
     $this->drupalPostForm(NULL, ['empty_behavior' => 'text'], $this->t('Configure empty behavior'));
@@ -216,14 +215,17 @@ class IntegrationTest extends FacetWebTestBase {
   protected function setOptionShowOnlyWhenFacetSourceVisible($facet_name) {
     $facet_id = $this->convertNameToMachineName($facet_name);
 
-    $facet_edit_page = $this->urlGenerator->generateFromRoute('entity.facetapi_facet.edit_form', ['facetapi_facet' => $facet_id], ['absolute' => TRUE]);
-
-    // Go to the facet edit page and make sure "edit facet %facet" is present.
-    $this->drupalGet($facet_edit_page);
+    $facet_display_page = $this->urlGenerator->generateFromRoute('entity.facetapi_facet.display_form', ['facetapi_facet' => $facet_id], ['absolute' => TRUE]);
+    $this->drupalGet($facet_display_page);
     $this->assertResponse(200);
-    $this->assertRaw($this->t('Edit facet @facet', ['@facet' => $facet_name]));
 
-    $this->drupalPostForm(NULL, ['only_visible_when_facet_source_is_visible' => 1], $this->t('Save'));
+    $edit = [
+      'only_visible_when_facet_source_is_visible' => 1,
+      'widget' => 'links',
+      'widget_configs[show_numbers]' => '0',
+//      'processors[query_string][status]' => '1',
+    ];
+    $this->drupalPostForm(NULL, $edit, $this->t('Save'));
   }
 
   /**
@@ -288,7 +290,7 @@ class IntegrationTest extends FacetWebTestBase {
 
     // Make sure that the redirection back to the overview was successful and
     // the newly added facet is shown on the overview page.
-    $this->assertRaw(t('Facet %name has been created.', ['%name' => $facet_name]));
+    $this->assertRaw(t('Facet %name has been updated.', ['%name' => $facet_name]));
   }
 
 

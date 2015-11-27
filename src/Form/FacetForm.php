@@ -10,7 +10,6 @@ namespace Drupal\facetapi\Form;
 use Drupal\Core\Entity\EntityForm;
 use Drupal\Core\Entity\EntityTypeManager;
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\facetapi\EmptyBehavior\EmptyBehaviorPluginManager;
 use Drupal\facetapi\Exception\Exception;
 use Drupal\facetapi\FacetInterface;
 use Drupal\facetapi\FacetSource\FacetSourcePluginManager;
@@ -45,13 +44,6 @@ class FacetForm extends EntityForm {
   protected $processorPluginManager;
 
   /**
-   * The plugin manager for facet sources.
-   *
-   * @var \Drupal\facetapi\EmptyBehavior\EmptyBehaviorPluginManager
-   */
-  protected $emptyBehaviorPluginManager;
-
-  /**
    * Constructs a FacetForm object.
    *
    * @param \Drupal\Core\Entity\EntityTypeManager $entity_type_manager
@@ -60,14 +52,11 @@ class FacetForm extends EntityForm {
    *   The plugin manager for facet sources.
    * @param \Drupal\facetapi\Processor\ProcessorPluginManager $processorPluginManager
    *   The plugin manager for processors.
-   * @param \Drupal\facetapi\EmptyBehavior\EmptyBehaviorPluginManager $emptyBehaviorPluginManager
-   *   The plugin manager for empty behaviors.
    */
-  public function __construct(EntityTypeManager $entity_type_manager, FacetSourcePluginManager $facetSourcePluginManager, ProcessorPluginManager $processorPluginManager, EmptyBehaviorPluginManager $emptyBehaviorPluginManager) {
+  public function __construct(EntityTypeManager $entity_type_manager, FacetSourcePluginManager $facetSourcePluginManager, ProcessorPluginManager $processorPluginManager) {
     $this->facetStorage = $entity_type_manager->getStorage('facetapi_facet');
     $this->facetSourcePluginManager = $facetSourcePluginManager;
     $this->processorPluginManager = $processorPluginManager;
-    $this->emptyBehaviorPluginManager = $emptyBehaviorPluginManager;
   }
 
   /**
@@ -83,10 +72,7 @@ class FacetForm extends EntityForm {
     /** @var \Drupal\facetapi\Processor\ProcessorPluginManager $processor_plugin_manager */
     $processor_plugin_manager = $container->get('plugin.manager.facetapi.processor');
 
-    /** @var \Drupal\facetapi\EmptyBehavior\EmptyBehaviorPluginManager $empty_behavior_plugin_manager */
-    $empty_behavior_plugin_manager = $container->get('plugin.manager.facetapi.empty_behavior');
-
-    return new static($entity_type_manager, $facet_source_plugin_manager, $processor_plugin_manager, $empty_behavior_plugin_manager);
+    return new static($entity_type_manager, $facet_source_plugin_manager, $processor_plugin_manager);
   }
 
   /**
@@ -133,16 +119,6 @@ class FacetForm extends EntityForm {
    */
   protected function getProcessorPluginManager() {
     return $this->processorPluginManager ?: \Drupal::service('plugin.manager.facetapi.processor');
-  }
-
-  /**
-   * Returns the empty behavior plugin manager.
-   *
-   * @return \Drupal\facetapi\EmptyBehavior\EmptyBehaviorPluginManager
-   *   The processor plugin manager.
-   */
-  protected function getEmptyBehaviorPluginManager() {
-    return $this->emptyBehaviorPluginManager ?: \Drupal::service('plugin.manager.facetapi.empty_behavior');
   }
 
   /**
@@ -238,54 +214,7 @@ class FacetForm extends EntityForm {
     ];
     $this->buildFacetSourceConfigForm($form, $form_state);
 
-    // Behavior for empty facets.
-    $behavior_options = [];
-    $empty_behavior = $facet->getFieldEmptyBehavior();
-    foreach ($this->getEmptyBehaviorPluginManager()->getDefinitions() as $behavior_id => $definition) {
-      $behavior_options[$behavior_id] = !empty($definition['label']) ? $definition['label'] : $behavior_id;
-    }
-    $form['empty_behavior'] = [
-      '#type' => 'select',
-      '#title' => t('Empty facet behavior'),
-      '#default_value' => $empty_behavior ? $empty_behavior : 'none',
-      '#options' => $behavior_options,
-      '#description' => $this->t('The action to take when a facet has no items.'),
-      '#required' => TRUE,
-      '#ajax' => [
-        'trigger_as' => ['name' => 'empty_behavior_configure'],
-        'callback' => '::buildAjaxEmptyBehaviorConfigForm',
-        'wrapper' => 'facet-api-empty-behavior-config-form',
-        'method' => 'replace',
-        'effect' => 'fade',
-      ],
-    ];
-    $form['empty_behavior_configs'] = [
-      '#type' => 'container',
-      '#attributes' => [
-        'id' => 'facet-api-empty-behavior-config-form',
-      ],
-      '#tree' => TRUE,
-    ];
-    $form['empty_behavior_configure_button'] = [
-      '#type' => 'submit',
-      '#name' => 'empty_behavior_configure',
-      '#value' => $this->t('Configure empty behavior'),
-      '#limit_validation_errors' => [['empty_behavior']],
-      '#submit' => ['::submitAjaxEmptyBehaviorConfigForm'],
-      '#ajax' => [
-        'callback' => '::buildAjaxEmptyBehaviorConfigForm',
-        'wrapper' => 'facet-api-empty-behavior-config-form',
-      ],
-      '#attributes' => ['class' => ['js-hide']],
-    ];
-    $this->buildEmptyBehaviorConfigForm($form, $form_state);
 
-    $form['only_visible_when_facet_source_is_visible'] = [
-      '#type' => 'checkbox',
-      '#title' => $this->t('Show the facet only when the facet source is also visible.'),
-      '#description' => $this->t('If checked, the facet will only be rendered on pages where the facet source is being rendered too.  If not checked, the facet can be shown on every page.'),
-      '#default_value' => $facet->getOnlyVisibleWhenFacetSourceIsVisible(),
-    ];
 
     $form['status'] = [
       '#type' => 'checkbox',
@@ -303,26 +232,10 @@ class FacetForm extends EntityForm {
   }
 
   /**
-   * Form submission handler for the empty behavior subform.
-   */
-  public function submitAjaxEmptyBehaviorConfigForm($form, FormStateInterface $form_state) {
-    $form_state->setRebuild();
-  }
-
-
-  /**
    * Handles changes to the selected facet sources.
    */
   public function buildAjaxFacetSourceConfigForm(array $form, FormStateInterface $form_state) {
     return $form['facet_source_configs'];
-  }
-
-
-  /**
-   * Handles changes to the selected empty behavior.
-   */
-  public function buildAjaxEmptyBehaviorConfigForm(array $form, FormStateInterface $form_state) {
-    return $form['empty_behavior_configs'];
   }
 
   /**
@@ -349,38 +262,6 @@ class FacetForm extends EntityForm {
   }
 
   /**
-   * Builds the configuration forms for all the empty behaviors.
-   *
-   * @param array $form
-   *   An associative array containing the initial structure of the plugin form.
-   * @param \Drupal\Core\Form\FormStateInterface $form_state
-   *   The current state of the complete form.
-   */
-  public function buildEmptyBehaviorConfigForm(array &$form, FormStateInterface $form_state) {
-    $behavior_id = $this->getEntity()->getFieldEmptyBehavior();
-
-    if (!is_null($behavior_id) && $behavior_id !== '') {
-      $empty_behavior_instance = $this->getEmptyBehaviorPluginManager()->createInstance($behavior_id);
-      if ($config_form = $empty_behavior_instance->buildConfigurationForm([], $form_state)) {
-        $form['empty_behavior_configs']['#type'] = 'details';
-        $form['empty_behavior_configs']['#title'] = $this->t('Configure the %behavior empty behavior', ['%behavior' => $this->emptyBehaviorPluginManager->getDefinition($behavior_id)['label']]);
-        $form['empty_behavior_configs']['#open'] = $this->getEntity()->isNew();
-
-        $form['empty_behavior_configs'] += $config_form;
-      }
-      else {
-        $form['empty_behavior_configs']['#type'] = 'container';
-        $form['empty_behavior_configs']['#open'] = TRUE;
-        $form['empty_behavior_configs']['empty_behavior_information_dummy'] = [
-          '#type' => 'hidden',
-          '#value' => [],
-          '#default_value' => '1',
-        ];
-      }
-    }
-  }
-
-  /**
    * {@inheritdoc}
    */
   public function validateForm(array &$form, FormStateInterface $form_state) {
@@ -396,7 +277,6 @@ class FacetForm extends EntityForm {
     /** @var \Drupal\facetapi\FacetInterface $facet */
     $facet = $this->getEntity();
     $is_new = $facet->isNew();
-
     if ($is_new) {
       // On facet creation, enable all locked processors by default, using their
       // default settings.
@@ -420,6 +300,12 @@ class FacetForm extends EntityForm {
         }
       }
       $facet->setOption('processors', $initial_settings);
+
+      // Set a default widget for new facets.
+      $facet->setWidget('links');
+
+      // Set default empty behaviour
+      $facet->set('empty_behavior', 'none');
     }
 
     // Make sure the field identifier is copied from within the facet source
@@ -450,7 +336,7 @@ class FacetForm extends EntityForm {
 
     if ($is_new) {
       if (\Drupal::moduleHandler()->moduleExists('block')) {
-        $message = $this->t('A new context for blocks is automatically created. Go to the <a href=":block_overview">Block overview page</a> and add a new "Facet block". If this is your first and only facet, just adding that block make it link to this facet, if you have addded more facets already, please make sure to select the correct Facet to render.', [':block_overview' => \Drupal::urlGenerator()->generateFromRoute('block.admin_display')]);
+        $message = $this->t('Go to the <a href=":block_overview">Block overview page</a> and add a new "Facet block". If this is your first and only facet, just adding that block make it link to this facet, if you have addded more facets already, please make sure to select the correct Facet to render.', [':block_overview' => \Drupal::urlGenerator()->generateFromRoute('block.admin_display')]);
         drupal_set_message($message);
       }
     }
@@ -469,7 +355,6 @@ class FacetForm extends EntityForm {
 
         // Check if this is a new facet, if so, ensure it has a widget.
         if(!$facet->getWidget()){
-          $facet->setWidget('links');
           $facet->save();
           drupal_set_message(t('Facet %name has been created.', ['%name' => $facet->getName()]));
         }else{
