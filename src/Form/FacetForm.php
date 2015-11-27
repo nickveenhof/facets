@@ -341,10 +341,8 @@ class FacetForm extends EntityForm {
       $facet_source = $this->getFacetSourcePluginManager()->createInstance($facet_source_id);
 
       if ($config_form = $facet_source->buildConfigurationForm([], $form_state, $this->getEntity(), $facet_source)) {
-        $form['facet_source_configs'][$facet_source_id]['#type'] = 'details';
-        $form['facet_source_configs'][$facet_source_id]['#title'] = $this->t('Configure %plugin facet source', ['%plugin' => $facet_source->getPluginDefinition()['label']]);
-        $form['facet_source_configs'][$facet_source_id]['#open'] = TRUE;
-
+        $form['facet_source_configs'][$facet_source_id]['#type'] = 'fieldset';
+        $form['facet_source_configs'][$facet_source_id]['#title'] = $this->t('%plugin settings', ['%plugin' => $facet_source->getPluginDefinition()['label']]);
         $form['facet_source_configs'][$facet_source_id] += $config_form;
       }
     }
@@ -469,8 +467,7 @@ class FacetForm extends EntityForm {
       try {
         $facet = $this->getEntity();
 
-        // Ensure the new facet has a widget (when creating a new facet)
-        // TODO: move this to the not-yet-existing add facet form, TBD: possibly fetch first widget available from widgetmanager instead of hardcoded (and store default widgetconfig in that case too).
+        // Check if this is a new facet, if so, ensure it has a widget.
         if(!$facet->getWidget()){
           $facet->setWidget('links');
           $facet->save();

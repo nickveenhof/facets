@@ -9,8 +9,7 @@ facetapi.overview:
 entity.facetapi_facet.add_form:
   path: '/admin/config/search/facet-api/add-facet'
   defaults:
-    _controller: '\Drupal\facetapi\Controller\FacetController::addForm'
-    _title: 'Add facet'
+    _entity_form: 'facetapi_facet.default'
   requirements:
     _entity_create_access: 'facetapi_facet'
 
@@ -25,8 +24,7 @@ entity.facetapi_facet.canonical:
 entity.facetapi_facet.edit_form:
   path: '/admin/config/search/facet-api/{facetapi_facet}/edit'
   defaults:
-    _controller: '\Drupal\facetapi\Controller\FacetController::editForm'
-    _title: 'Add facet'
+    _entity_form: 'facetapi_facet.edit'
   requirements:
     _entity_access: 'facetapi_facet.edit'
 
