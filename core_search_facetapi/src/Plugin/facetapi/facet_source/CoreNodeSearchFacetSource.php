@@ -134,6 +134,7 @@ class CoreNodeSearchFacetSource extends FacetSourcePluginBase implements CoreSea
     switch ($field_id) {
       case 'type':
       case 'uid':
+      case 'langcode':
         $query_types['string'] = 'core_node_search_string';
         break;
     }
@@ -180,11 +181,10 @@ class CoreNodeSearchFacetSource extends FacetSourcePluginBase implements CoreSea
    * {@inheritdoc}
    */
   public function getFields() {
-    // Default options. @TODO is this best way?
-    // see facetapi_facetapi_facet_info() - D7.
     $default_fields = [
       'type' => $this->t('Content Type'),
       'uid' => $this->t('Author'),
+      'langcode' => $this->t('Language'),
     ];
 
     return $default_fields;
