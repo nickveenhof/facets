@@ -7,7 +7,6 @@
 
 namespace Drupal\facetapi\Form;
 
-use Drupal\Core\Config\Config;
 use Drupal\Core\Entity\EntityForm;
 use Drupal\Core\Entity\EntityTypeManager;
 use Drupal\Core\Form\FormStateInterface;
@@ -16,7 +15,6 @@ use Drupal\facetapi\Exception\Exception;
 use Drupal\facetapi\FacetInterface;
 use Drupal\facetapi\FacetSource\FacetSourcePluginManager;
 use Drupal\facetapi\Processor\ProcessorPluginManager;
-use Drupal\facetapi\Widget\WidgetPluginManager;
 use Drupal\views\Views;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -31,13 +29,6 @@ class FacetForm extends EntityForm {
    * @var \Drupal\Core\Entity\EntityStorageInterface
    */
   protected $facetStorage;
-
-  /**
-   * The plugin manager for widgets.
-   *
-   * @var \Drupal\facetapi\Widget\WidgetPluginManager
-   */
-  protected $widgetPluginManager;
 
   /**
    * The plugin manager for facet sources.
@@ -65,8 +56,6 @@ class FacetForm extends EntityForm {
    *
    * @param \Drupal\Core\Entity\EntityTypeManager $entity_type_manager
    *   The entity manager.
-   * @param \Drupal\facetapi\Widget\WidgetPluginManager $widgetPluginManager
-   *   The plugin manager for widgets.
    * @param \Drupal\facetapi\FacetSource\FacetSourcePluginManager $facetSourcePluginManager
    *   The plugin manager for facet sources.
    * @param \Drupal\facetapi\Processor\ProcessorPluginManager $processorPluginManager
@@ -74,9 +63,8 @@ class FacetForm extends EntityForm {
    * @param \Drupal\facetapi\EmptyBehavior\EmptyBehaviorPluginManager $emptyBehaviorPluginManager
    *   The plugin manager for empty behaviors.
    */
-  public function __construct(EntityTypeManager $entity_type_manager, WidgetPluginManager $widgetPluginManager, FacetSourcePluginManager $facetSourcePluginManager, ProcessorPluginManager $processorPluginManager, EmptyBehaviorPluginManager $emptyBehaviorPluginManager) {
+  public function __construct(EntityTypeManager $entity_type_manager, FacetSourcePluginManager $facetSourcePluginManager, ProcessorPluginManager $processorPluginManager, EmptyBehaviorPluginManager $emptyBehaviorPluginManager) {
     $this->facetStorage = $entity_type_manager->getStorage('facetapi_facet');
-    $this->widgetPluginManager = $widgetPluginManager;
     $this->facetSourcePluginManager = $facetSourcePluginManager;
     $this->processorPluginManager = $processorPluginManager;
     $this->emptyBehaviorPluginManager = $emptyBehaviorPluginManager;
@@ -89,9 +77,6 @@ class FacetForm extends EntityForm {
     /** @var \Drupal\Core\Entity\EntityTypeManager $entity_type_manager */
     $entity_type_manager = $container->get('entity_type.manager');
 
-    /** @var \Drupal\facetapi\Widget\WidgetPluginManager $widget_plugin_manager */
-    $widget_plugin_manager = $container->get('plugin.manager.facetapi.widget');
-
     /** @var \Drupal\facetapi\FacetSource\FacetSourcePluginManager $facet_source_plugin_manager */
     $facet_source_plugin_manager = $container->get('plugin.manager.facetapi.facet_source');
 
@@ -101,7 +86,7 @@ class FacetForm extends EntityForm {
     /** @var \Drupal\facetapi\EmptyBehavior\EmptyBehaviorPluginManager $empty_behavior_plugin_manager */
     $empty_behavior_plugin_manager = $container->get('plugin.manager.facetapi.empty_behavior');
 
-    return new static($entity_type_manager, $widget_plugin_manager, $facet_source_plugin_manager, $processor_plugin_manager, $empty_behavior_plugin_manager);
+    return new static($entity_type_manager, $facet_source_plugin_manager, $processor_plugin_manager, $empty_behavior_plugin_manager);
   }
 
   /**
@@ -128,16 +113,6 @@ class FacetForm extends EntityForm {
    */
   protected function getFacetStorage() {
     return $this->facetStorage ?: \Drupal::service('entity_type.manager')->getStorage('facetapi_facet');
-  }
-
-  /**
-   * Returns the widget plugin manager.
-   *
-   * @return \Drupal\facetapi\Widget\WidgetPluginManager
-   *   The widget plugin manager.
-   */
-  protected function getWidgetPluginManager() {
-    return $this->widgetPluginManager ?: \Drupal::service('plugin.manager.facetapi.widget');
   }
 
   /**
@@ -263,46 +238,6 @@ class FacetForm extends EntityForm {
     ];
     $this->buildFacetSourceConfigForm($form, $form_state);
 
-    $widget_options = [];
-    foreach ($this->getWidgetPluginManager()->getDefinitions() as $widget_id => $definition) {
-      $widget_options[$widget_id] = !empty($definition['label']) ? $definition['label'] : $widget_id;
-    }
-    $form['widget'] = [
-      '#type' => 'select',
-      '#title' => $this->t('Widget'),
-      '#description' => $this->t('Select the widget used for displaying this facet.'),
-      '#options' => $widget_options,
-      '#default_value' => $facet->getWidget(),
-      '#required' => TRUE,
-      '#ajax' => [
-        'trigger_as' => ['name' => 'widget_configure'],
-        'callback' => '::buildAjaxWidgetConfigForm',
-        'wrapper' => 'facet-api-widget-config-form',
-        'method' => 'replace',
-        'effect' => 'fade',
-      ],
-    ];
-    $form['widget_configs'] = [
-      '#type' => 'container',
-      '#attributes' => [
-        'id' => 'facet-api-widget-config-form',
-      ],
-      '#tree' => TRUE,
-    ];
-    $form['widget_configure_button'] = [
-      '#type' => 'submit',
-      '#name' => 'widget_configure',
-      '#value' => $this->t('Configure widget'),
-      '#limit_validation_errors' => [['widget']],
-      '#submit' => ['::submitAjaxWidgetConfigForm'],
-      '#ajax' => [
-        'callback' => '::buildAjaxWidgetConfigForm',
-        'wrapper' => 'facet-api-widget-config-form',
-      ],
-      '#attributes' => ['class' => ['js-hide']],
-    ];
-    $this->buildWidgetConfigForm($form, $form_state);
-
     // Behavior for empty facets.
     $behavior_options = [];
     $empty_behavior = $facet->getFieldEmptyBehavior();
@@ -374,12 +309,6 @@ class FacetForm extends EntityForm {
     $form_state->setRebuild();
   }
 
-  /**
-   * Form submission handler for the widget subform.
-   */
-  public function submitAjaxWidgetConfigForm($form, FormStateInterface $form_state) {
-    $form_state->setRebuild();
-  }
 
   /**
    * Handles changes to the selected facet sources.
@@ -388,12 +317,6 @@ class FacetForm extends EntityForm {
     return $form['facet_source_configs'];
   }
 
-  /**
-   * Handles changes to the selected widgets.
-   */
-  public function buildAjaxWidgetConfigForm(array $form, FormStateInterface $form_state) {
-    return $form['widget_configs'];
-  }
 
   /**
    * Handles changes to the selected empty behavior.
@@ -423,41 +346,6 @@ class FacetForm extends EntityForm {
         $form['facet_source_configs'][$facet_source_id]['#open'] = TRUE;
 
         $form['facet_source_configs'][$facet_source_id] += $config_form;
-      }
-    }
-  }
-
-  /**
-   * Builds the configuration forms for all selected widgets.
-   *
-   * @param array $form
-   *   An associative array containing the initial structure of the plugin form.
-   * @param \Drupal\Core\Form\FormStateInterface $form_state
-   *   The current state of the complete form.
-   */
-  public function buildWidgetConfigForm(array &$form, FormStateInterface $form_state) {
-    $widget = $this->getEntity()->getWidget();
-
-    if (!is_null($widget) && $widget !== '') {
-      $widget_instance = $this->getWidgetPluginManager()->createInstance($widget);
-      // @todo Create, use and save SubFormState already here, not only in
-      //   validate(). Also, use proper subset of $form for first parameter?
-      $config = $this->config('facetapi.facet.' . $this->getEntity()->id());
-      if ($config_form = $widget_instance->buildConfigurationForm([], $form_state, ($config instanceof Config) ? $config : NULL)) {
-        $form['widget_configs']['#type'] = 'details';
-        $form['widget_configs']['#title'] = $this->t('Configure the %widget widget', ['%widget' => $this->getWidgetPluginManager()->getDefinition($widget)['label']]);
-        $form['widget_configs']['#open'] = $this->getEntity()->isNew();
-
-        $form['widget_configs'] += $config_form;
-      }
-      else {
-        $form['widget_configs']['#type'] = 'container';
-        $form['widget_configs']['#open'] = TRUE;
-        $form['widget_configs']['widget_information_dummy'] = [
-          '#type' => 'hidden',
-          '#value' => '1',
-          '#default_value' => '1',
-        ];
       }
     }
   }
@@ -580,9 +468,18 @@ class FacetForm extends EntityForm {
     if (!$form_state->isRebuilding()) {
       try {
         $facet = $this->getEntity();
-        $facet->save();
-        drupal_set_message($this->t('The facet was successfully saved.'));
-        $form_state->setRedirect('facetapi.overview');
+
+        // Ensure the new facet has a widget (when creating a new facet)
+        // TODO: move this to the not-yet-existing add facet form, TBD: possibly fetch first widget available from widgetmanager instead of hardcoded (and store default widgetconfig in that case too).
+        if(!$facet->getWidget()){
+          $facet->setWidget('links');
+          $facet->save();
+          drupal_set_message(t('Facet %name has been created.', ['%name' => $facet->getName()]));
+        }else{
+          $facet->save();
+          drupal_set_message(t('Facet %name has been updated.', ['%name' => $facet->getName()]));
+        }
+
       }
       catch (Exception $e) {
         $form_state->setRebuild();

@@ -7,15 +7,15 @@
 
 namespace Drupal\facetapi\Form;
 
+use Drupal\Core\Config\Config;
 use Drupal\Component\Utility\Html;
 use Drupal\Core\Entity\EntityForm;
 use Drupal\Core\Entity\EntityTypeManager;
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\facetapi\FacetInterface;
 use Drupal\facetapi\Processor\ProcessorInterface;
 use Drupal\facetapi\Processor\ProcessorPluginManager;
-use Drupal\facetapi\Form\SubFormState;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Drupal\facetapi\Widget\WidgetPluginManager;
 
 /**
  * Provides a form for configuring the processors of a facet.
@@ -44,16 +44,26 @@ class FacetDisplayForm extends EntityForm {
   protected $processorPluginManager;
 
   /**
+   * The plugin manager for widgets.
+   *
+   * @var \Drupal\facetapi\Widget\WidgetPluginManager
+   */
+  protected $widgetPluginManager;
+
+  /**
    * Constructs an FacetDisplayForm object.
    *
    * @param \Drupal\Core\Entity\EntityTypeManager $entity_type_manager
    *   The entity manager.
    * @param \Drupal\facetapi\Processor\ProcessorPluginManager $processor_plugin_manager
    *   The processor plugin manager.
+   * @param \Drupal\facetapi\Widget\WidgetPluginManager $widgetPluginManager
+   *   The plugin manager for widgets.
    */
-  public function __construct(EntityTypeManager $entity_type_manager, ProcessorPluginManager $processor_plugin_manager) {
+  public function __construct(EntityTypeManager $entity_type_manager, ProcessorPluginManager $processor_plugin_manager, WidgetPluginManager $widgetPluginManager) {
     $this->entityTypeManager = $entity_type_manager;
     $this->processorPluginManager = $processor_plugin_manager;
+    $this->widgetPluginManager = $widgetPluginManager;
   }
 
   /**
@@ -65,7 +75,10 @@ class FacetDisplayForm extends EntityForm {
     /** @var \Drupal\facetapi\Processor\ProcessorPluginManager $processor_plugin_manager */
     $processor_plugin_manager = $container->get('plugin.manager.facetapi.processor');
 
-    return new static($entity_type_manager, $processor_plugin_manager);
+    /** @var \Drupal\facetapi\Widget\WidgetPluginManager $widget_plugin_manager */
+    $widget_plugin_manager = $container->get('plugin.manager.facetapi.widget');
+
+    return new static($entity_type_manager, $processor_plugin_manager, $widget_plugin_manager);
   }
 
   /**
@@ -76,6 +89,50 @@ class FacetDisplayForm extends EntityForm {
   }
 
   /**
+   * Returns the widget plugin manager.
+   *
+   * @return \Drupal\facetapi\Widget\WidgetPluginManager
+   *   The widget plugin manager.
+   */
+  protected function getWidgetPluginManager() {
+    return $this->widgetPluginManager ?: \Drupal::service('plugin.manager.facetapi.widget');
+  }
+
+  /**
+   * Builds the configuration forms for all selected widgets.
+   *
+   * @param array $form
+   *   An associative array containing the initial structure of the plugin form.
+   * @param \Drupal\Core\Form\FormStateInterface $form_state
+   *   The current state of the complete form.
+   */
+  public function buildWidgetConfigForm(array &$form, FormStateInterface $form_state) {
+    $widget = $form_state->getValue('widget') ?: $this->entity->getWidget();
+
+    if (!is_null($widget) && $widget !== '') {
+      $widget_instance = $this->getWidgetPluginManager()->createInstance($widget);
+      // @todo Create, use and save SubFormState already here, not only in
+      //   validate(). Also, use proper subset of $form for first parameter?
+      $config = $this->config('facetapi.facet.' . $this->entity->id());
+      if ($config_form = $widget_instance->buildConfigurationForm([], $form_state, ($config instanceof Config) ? $config : NULL)) {
+        $form['widget_configs']['#type'] = 'fieldset';
+        $form['widget_configs']['#title'] = $this->t('%widget settings', ['%widget' => $this->getWidgetPluginManager()->getDefinition($widget)['label']]);
+
+        $form['widget_configs'] += $config_form;
+      }
+      else {
+        $form['widget_configs']['#type'] = 'container';
+        $form['widget_configs']['#open'] = TRUE;
+        $form['widget_configs']['widget_information_dummy'] = [
+          '#type' => 'hidden',
+          '#value' => '1',
+          '#default_value' => '1',
+        ];
+      }
+    }
+  }
+
+  /**
    * {@inheritdoc}
    */
   public function form(array $form, FormStateInterface $form_state) {
@@ -83,6 +140,46 @@ class FacetDisplayForm extends EntityForm {
 
     /** @var \Drupal\facetapi\FacetInterface $facet */
     $facet = $this->entity;
+
+    $widget_options = [];
+    foreach ($this->getWidgetPluginManager()->getDefinitions() as $widget_id => $definition) {
+      $widget_options[$widget_id] = !empty($definition['label']) ? $definition['label'] : $widget_id;
+    }
+    $form['widget'] = [
+      '#type' => 'radios',
+      '#title' => $this->t('Widget'),
+      '#description' => $this->t('Select the widget used for displaying this facet.'),
+      '#options' => $widget_options,
+      '#default_value' => $facet->getWidget(),
+      '#required' => TRUE,
+      '#ajax' => [
+        'trigger_as' => ['name' => 'widget_configure'],
+        'callback' => '::buildAjaxWidgetConfigForm',
+        'wrapper' => 'facet-api-widget-config-form',
+        'method' => 'replace',
+        'effect' => 'fade',
+      ],
+    ];
+    $form['widget_configs'] = [
+      '#type' => 'container',
+      '#attributes' => [
+        'id' => 'facet-api-widget-config-form',
+      ],
+      '#tree' => TRUE,
+    ];
+    $form['widget_configure_button'] = [
+      '#type' => 'submit',
+      '#name' => 'widget_configure',
+      '#value' => $this->t('Configure widget'),
+      '#limit_validation_errors' => [['widget']],
+      '#submit' => ['::submitAjaxWidgetConfigForm'],
+      '#ajax' => [
+        'callback' => '::buildAjaxWidgetConfigForm',
+        'wrapper' => 'facet-api-widget-config-form',
+      ],
+      '#attributes' => ['class' => ['js-hide']],
+    ];
+    $this->buildWidgetConfigForm($form, $form_state);
 
     // Retrieve lists of all processors, and the stages and weights they have.
     if (!$form_state->has('processors')) {
@@ -107,12 +204,11 @@ class FacetDisplayForm extends EntityForm {
     $form['#tree'] = TRUE;
     $form['#attached']['library'][] = 'search_api/drupal.search_api.index-active-formatters';
     $form['#title'] = $this->t('Manage processors for facet %label', array('%label' => $facet->label()));
-    $form['description']['#markup'] = '<p>' . $this->t('Configure processors which will pre- and post-process data.') . '</p>';
 
     // Add the list of processors with checkboxes to enable/disable them.
     $form['processors'] = array(
       '#type' => 'fieldset',
-      '#title' => $this->t('Enabled'),
+      '#title' => $this->t('Other processors'),
       '#attributes' => array('class' => array(
         'search-api-status-wrapper',
       )),
@@ -140,7 +236,7 @@ class FacetDisplayForm extends EntityForm {
       if ($processor_form) {
         $form['processors'][$processor_id]['settings'] = array(
           '#type' => 'fieldset',
-          '#title' => (string) $processor->getPluginDefinition()['label'] . ' settings',
+          '#title' => $this->t('%processor settings', ['%processor' => (string) $processor->getPluginDefinition()['label']]),
           '#attributes' => array('class' => array(
             'facetapi-processor-settings-' . Html::cleanCssIdentifier($processor_id),
             'facetapi-processor-settings'
@@ -289,14 +385,26 @@ class FacetDisplayForm extends EntityForm {
 
     // Sort the processors so we won't have unnecessary changes.
     ksort($new_settings);
-    if ($this->entity->getOption('processors', array()) !== $new_settings) {
-      $this->entity->setOption('processors', $new_settings);
-      $this->entity->save();
-      drupal_set_message($this->t('The facet was updated with the new settings.'));
-    }
-    else {
-      drupal_set_message($this->t('No values were changed.'));
-    }
+    $facet->setOption('processors', $new_settings);
+    $facet->setWidget($form_state->getValue('widget'));
+    $facet->set('widget_configs', $form_state->getValue('widget_configs'));
+
+    $facet->save();
+    drupal_set_message(t('Facet %name has been updated.', ['%name' => $facet->getName()]));
+  }
+
+  /**
+   * Form submission handler for the widget subform.
+   */
+  public function submitAjaxWidgetConfigForm($form, FormStateInterface $form_state) {
+    $form_state->setRebuild();
+  }
+
+  /**
+   * Handles changes to the selected widgets.
+   */
+  public function buildAjaxWidgetConfigForm(array $form, FormStateInterface $form_state) {
+    return $form['widget_configs'];
   }
 
   /**

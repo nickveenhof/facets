@@ -234,9 +234,8 @@ class IntegrationTest extends FacetWebTestBase {
     $this->drupalGet($facet_overview);
     $this->assertResponse(200);
 
-    // The list overview has Field: field_name, Widget: widget_name as
-    // description. This tests on the absence of that.
-    $this->assertNoText('Widget:');
+    // The list overview has Field: field_name as description. This tests on the
+    // absence of that.
     $this->assertNoText('Field:');
   }
 
@@ -256,7 +255,6 @@ class IntegrationTest extends FacetWebTestBase {
     $form_values = [
       'name' => '',
       'id' => $facet_id,
-      'widget' => 'links',
       'status' => 1,
     ];
 
@@ -275,9 +273,6 @@ class IntegrationTest extends FacetWebTestBase {
     $this->drupalGet($facet_add_page);
     $this->drupalPostForm(NULL, ['facet_source_id' => 'search_api_views:search_api_test_views_fulltext:page_1'], $this->t('Configure facet source'));
 
-    // @todo TEMPORARY FIX FOR https://www.drupal.org/node/2593611
-    $this->drupalPostForm(NULL, ['widget' => 'links'], $this->t('Configure widget'));
-
     // The facet field is still required.
     $this->drupalPostForm(NULL, $form_values, $this->t('Save'));
     $this->assertText($this->t('Facet field field is required.'));
@@ -293,10 +288,9 @@ class IntegrationTest extends FacetWebTestBase {
 
     // Make sure that the redirection back to the overview was successful and
     // the newly added facet is shown on the overview page.
-    $this->assertText($this->t('The facet was successfully saved.'));
-    $this->assertUrl($this->urlGenerator->generateFromRoute('facetapi.overview'), [], 'Correct redirect to index page.');
-    $this->assertText($facet_name);
+    $this->assertRaw(t('Facet %name has been created.', ['%name' => $facet_name]));
   }
+
 
   /**
    * Tests editing of a facet through the UI.
@@ -319,9 +313,8 @@ class IntegrationTest extends FacetWebTestBase {
 
     // Make sure that the redirection back to the overview was successful and
     // the edited facet is shown on the overview page.
-    $this->assertText($this->t('The facet was successfully saved.'));
-    $this->assertUrl($this->urlGenerator->generateFromRoute('facetapi.overview'), [], 'Correct redirect to index page.');
-    $this->assertText($facet_name);
+    $this->assertRaw(t('Facet %name has been updated.', ['%name' => $facet_name . ' - 2']));
+
 
     // Make sure the "-2" suffix is still on the facet when editing a facet.
     $this->drupalGet($facet_edit_page);
@@ -333,9 +326,7 @@ class IntegrationTest extends FacetWebTestBase {
 
     // Make sure that the redirection back to the overview was successful and
     // the edited facet is shown on the overview page.
-    $this->assertText($this->t('The facet was successfully saved.'));
-    $this->assertUrl($this->urlGenerator->generateFromRoute('facetapi.overview'), [], 'Correct redirect to index page.');
-    $this->assertText($facet_name);
+    $this->assertRaw(t('Facet %name has been updated.', ['%name' => $facet_name]));
   }
 
   /**
