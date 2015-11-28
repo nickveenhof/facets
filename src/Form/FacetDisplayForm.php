@@ -16,7 +16,7 @@ use Drupal\facetapi\Processor\ProcessorInterface;
 use Drupal\facetapi\Processor\ProcessorPluginManager;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Drupal\facetapi\Widget\WidgetPluginManager;
-use Drupal\facetapi\EmptyBehavior\EmptyBehaviorPluginManager;
+use Drupal\facetapi\Processor\WidgetOrderProcessorInterface;
 
 /**
  * Provides a form for configuring the processors of a facet.
@@ -52,13 +52,6 @@ class FacetDisplayForm extends EntityForm {
   protected $widgetPluginManager;
 
   /**
-   * The plugin manager for facet sources.
-   *
-   * @var \Drupal\facetapi\EmptyBehavior\EmptyBehaviorPluginManager
-   */
-  protected $emptyBehaviorPluginManager;
-
-  /**
    * Constructs an FacetDisplayForm object.
    *
    * @param \Drupal\Core\Entity\EntityTypeManager $entity_type_manager
@@ -67,14 +60,11 @@ class FacetDisplayForm extends EntityForm {
    *   The processor plugin manager.
    * @param \Drupal\facetapi\Widget\WidgetPluginManager $widgetPluginManager
    *   The plugin manager for widgets.
-   * @param \Drupal\facetapi\EmptyBehavior\EmptyBehaviorPluginManager $emptyBehaviorPluginManager
-   *   The plugin manager for empty behaviors.
    */
-  public function __construct(EntityTypeManager $entity_type_manager, ProcessorPluginManager $processor_plugin_manager, WidgetPluginManager $widgetPluginManager, EmptyBehaviorPluginManager $emptyBehaviorPluginManager) {
+  public function __construct(EntityTypeManager $entity_type_manager, ProcessorPluginManager $processor_plugin_manager, WidgetPluginManager $widgetPluginManager) {
     $this->entityTypeManager = $entity_type_manager;
     $this->processorPluginManager = $processor_plugin_manager;
     $this->widgetPluginManager = $widgetPluginManager;
-    $this->emptyBehaviorPluginManager = $emptyBehaviorPluginManager;
   }
 
   /**
@@ -90,10 +80,7 @@ class FacetDisplayForm extends EntityForm {
     /** @var \Drupal\facetapi\Widget\WidgetPluginManager $widget_plugin_manager */
     $widget_plugin_manager = $container->get('plugin.manager.facetapi.widget');
 
-    /** @var \Drupal\facetapi\EmptyBehavior\EmptyBehaviorPluginManager $empty_behavior_plugin_manager */
-    $empty_behavior_plugin_manager = $container->get('plugin.manager.facetapi.empty_behavior');
-
-    return new static($entity_type_manager, $processor_plugin_manager, $widget_plugin_manager, $empty_behavior_plugin_manager);
+    return new static($entity_type_manager, $processor_plugin_manager, $widget_plugin_manager);
   }
 
   /**
@@ -111,31 +98,6 @@ class FacetDisplayForm extends EntityForm {
    */
   protected function getWidgetPluginManager() {
     return $this->widgetPluginManager ?: \Drupal::service('plugin.manager.facetapi.widget');
-  }
-
-  /**
-   * Returns the empty behavior plugin manager.
-   *
-   * @return \Drupal\facetapi\EmptyBehavior\EmptyBehaviorPluginManager
-   *   The processor plugin manager.
-   */
-  protected function getEmptyBehaviorPluginManager() {
-    return $this->emptyBehaviorPluginManager ?: \Drupal::service('plugin.manager.facetapi.empty_behavior');
-  }
-
-  /**
-   * Form submission handler for the empty behavior subform.
-   */
-  public function submitAjaxEmptyBehaviorConfigForm($form, FormStateInterface $form_state) {
-    $form_state->setRebuild();
-  }
-
-
-  /**
-   * Handles changes to the selected empty behavior.
-   */
-  public function buildAjaxEmptyBehaviorConfigForm(array $form, FormStateInterface $form_state) {
-    return $form['empty_behavior_configs'];
   }
 
   /**
@@ -188,7 +150,7 @@ class FacetDisplayForm extends EntityForm {
     $form['widget'] = [
       '#type' => 'radios',
       '#title' => $this->t('Widget'),
-      '#description' => $this->t('Select the widget used for displaying this facet.'),
+      '#description' => $this->t('The widget used for displaying this facet.'),
       '#options' => $widget_options,
       '#default_value' => $facet->getWidget(),
       '#required' => TRUE,
@@ -245,99 +207,132 @@ class FacetDisplayForm extends EntityForm {
     $form['#attached']['library'][] = 'search_api/drupal.search_api.index-active-formatters';
     $form['#title'] = $this->t('Manage processors for facet %label', array('%label' => $facet->label()));
 
-    // Add the list of processors with checkboxes to enable/disable them.
-    $form['processors'] = array(
+    // Add the list of all other processors with checkboxes to enable/disable them.
+    $form['facet_settings'] = array(
       '#type' => 'fieldset',
-      '#title' => $this->t('Other processors'),
+      '#title' => $this->t('Facet settings'),
       '#attributes' => array('class' => array(
         'search-api-status-wrapper',
       )),
     );
     foreach ($all_processors as $processor_id => $processor) {
-
-      $clean_css_id = Html::cleanCssIdentifier($processor_id);
-      $form['processors'][$processor_id]['status'] = array(
-        '#type' => 'checkbox',
-        '#title' => (string) $processor->getPluginDefinition()['label'],
-        '#default_value' => $processor->isLocked() || !empty($processor_settings[$processor_id]),
-        '#description' => $processor->getDescription(),
-        '#attributes' => array(
-          'class' => array(
-            'search-api-processor-status-' . $clean_css_id,
-          ),
-          'data-id' => $clean_css_id,
-        ),
-        '#disabled' => $processor->isLocked(),
-        '#access' => !$processor->isHidden(),
-      );
-
-      $processor_form_state = new SubFormState($form_state, array('processors', $processor_id, 'settings'));
-      $processor_form = $processor->buildConfigurationForm($form, $processor_form_state, $facet);
-      if ($processor_form) {
-        $form['processors'][$processor_id]['settings'] = array(
-          '#type' => 'fieldset',
-          '#title' => $this->t('%processor settings', ['%processor' => (string) $processor->getPluginDefinition()['label']]),
-          '#attributes' => array('class' => array(
-            'facetapi-processor-settings-' . Html::cleanCssIdentifier($processor_id),
-            'facetapi-processor-settings'
-          ),),
-          '#states' => array(
-            'visible' => array(
-              ':input[name="processors[' . $processor_id . '][status]"]' => array('checked' => TRUE),
+      if(!($processor instanceof WidgetOrderProcessorInterface)){
+        $clean_css_id = Html::cleanCssIdentifier($processor_id);
+        $form['facet_settings'][$processor_id]['status'] = array(
+          '#type' => 'checkbox',
+          '#title' => (string) $processor->getPluginDefinition()['label'],
+          '#default_value' => $processor->isLocked() || !empty($processor_settings[$processor_id]),
+          '#description' => $processor->getDescription(),
+          '#attributes' => array(
+            'class' => array(
+              'search-api-processor-status-' . $clean_css_id,
             ),
+            'data-id' => $clean_css_id,
           ),
+          '#disabled' => $processor->isLocked(),
+          '#access' => !$processor->isHidden(),
         );
-        $form['processors'][$processor_id]['settings'] += $processor_form;
+
+        $processor_form_state = new SubFormState($form_state, array('facet_settings', $processor_id, 'settings'));
+        $processor_form = $processor->buildConfigurationForm($form, $processor_form_state, $facet);
+        if ($processor_form) {
+          $form['facet_settings'][$processor_id]['settings'] = array(
+            '#type' => 'details',
+            '#title' => $this->t('%processor settings', ['%processor' => (string) $processor->getPluginDefinition()['label']]),
+            '#open' => true,
+            '#attributes' => array('class' => array(
+              'facetapi-processor-settings-' . Html::cleanCssIdentifier($processor_id),
+              'facetapi-processor-settings-facet',
+              'facetapi-processor-settings'
+            ),),
+            '#states' => array(
+              'visible' => array(
+                ':input[name="facet_settings[' . $processor_id . '][status]"]' => array('checked' => TRUE),
+              ),
+            ),
+          );
+          $form['facet_settings'][$processor_id]['settings'] += $processor_form;
+        }
+      }
+    }
+    // Add the list of widget sort processors with checkboxes to enable/disable them.
+    $form['facet_sorting'] = array(
+      '#type' => 'fieldset',
+      '#title' => $this->t('Facet sorting'),
+      '#attributes' => array('class' => array(
+        'search-api-status-wrapper',
+      )),
+    );
+    foreach ($all_processors as $processor_id => $processor) {
+      if($processor instanceof WidgetOrderProcessorInterface){
+        $clean_css_id = Html::cleanCssIdentifier($processor_id);
+        $form['facet_sorting'][$processor_id]['status'] = array(
+          '#type' => 'checkbox',
+          '#title' => (string) $processor->getPluginDefinition()['label'],
+          '#default_value' => $processor->isLocked() || !empty($processor_settings[$processor_id]),
+          '#description' => $processor->getDescription(),
+          '#attributes' => array(
+            'class' => array(
+              'search-api-processor-status-' . $clean_css_id,
+            ),
+            'data-id' => $clean_css_id,
+          ),
+          '#disabled' => $processor->isLocked(),
+          '#access' => !$processor->isHidden(),
+        );
+
+        $processor_form_state = new SubFormState($form_state, array('facet_sorting', $processor_id, 'settings'));
+        $processor_form = $processor->buildConfigurationForm($form, $processor_form_state, $facet);
+        if ($processor_form) {
+          $form['facet_sorting'][$processor_id]['settings'] = array(
+            '#type' => 'container',
+//            '#title' => $this->t('%processor settings', ['%processor' => (string) $processor->getPluginDefinition()['label']]),
+            '#open' => true,
+            '#attributes' => array('class' => array(
+              'facetapi-processor-settings-' . Html::cleanCssIdentifier($processor_id),
+              'facetapi-processor-settings-sorting',
+              'facetapi-processor-settings'
+            ),),
+            '#states' => array(
+              'visible' => array(
+                ':input[name="facet_sorting[' . $processor_id . '][status]"]' => array('checked' => TRUE),
+              ),
+            ),
+          );
+          $form['facet_sorting'][$processor_id]['settings'] += $processor_form;
+        }
       }
     }
 
+    $form['facet_settings']['only_visible_when_facet_source_is_visible'] = [
+      '#type' => 'checkbox',
+      '#title' => $this->t('Hide facet when facet source is not rendered'),
+      '#description' => $this->t('When checked, this facet will only be rendered when the facet source is rendered.  If you want to show facets on other pages too, you need to uncheck this setting.'),
+      '#default_value' => $facet->getOnlyVisibleWhenFacetSourceIsVisible(),
+    ];
+
     // Behavior for empty facets.
-    $behavior_options = [];
-    $empty_behavior = $facet->getFieldEmptyBehavior();
-    foreach ($this->getEmptyBehaviorPluginManager()->getDefinitions() as $behavior_id => $definition) {
-      $behavior_options[$behavior_id] = !empty($definition['label']) ? $definition['label'] : $behavior_id;
-    }
-    $form['empty_behavior'] = [
-      '#type' => 'select',
+    $empty_behavior_config = $facet->getOption('empty_behavior');
+    $form['facet_settings']['empty_behavior'] = [
+      '#type' => 'radios',
       '#title' => t('Empty facet behavior'),
-      '#default_value' => $empty_behavior ? $empty_behavior : 'none',
-      '#options' => $behavior_options,
+      '#default_value' => $empty_behavior_config['behavior'] ?: 'none',
+      '#options' => ['none' => t('Do not display facet'), 'text' => t('Display text')],
       '#description' => $this->t('The action to take when a facet has no items.'),
       '#required' => TRUE,
-      '#ajax' => [
-        'trigger_as' => ['name' => 'empty_behavior_configure'],
-        'callback' => '::buildAjaxEmptyBehaviorConfigForm',
-        'wrapper' => 'facet-api-empty-behavior-config-form',
-        'method' => 'replace',
-        'effect' => 'fade',
-      ],
     ];
-    $form['empty_behavior_configs'] = [
-      '#type' => 'container',
-      '#attributes' => [
-        'id' => 'facet-api-empty-behavior-config-form',
-      ],
-      '#tree' => TRUE,
-    ];
-    $form['empty_behavior_configure_button'] = [
-      '#type' => 'submit',
-      '#name' => 'empty_behavior_configure',
-      '#value' => $this->t('Configure empty behavior'),
-      '#limit_validation_errors' => [['empty_behavior']],
-      '#submit' => ['::submitAjaxEmptyBehaviorConfigForm'],
-      '#ajax' => [
-        'callback' => '::buildAjaxEmptyBehaviorConfigForm',
-        'wrapper' => 'facet-api-empty-behavior-config-form',
-      ],
-      '#attributes' => ['class' => ['js-hide']],
-    ];
-    $this->buildEmptyBehaviorConfigForm($form, $form_state);
-
-    $form['only_visible_when_facet_source_is_visible'] = [
-      '#type' => 'checkbox',
-      '#title' => $this->t('Show the facet only when the facet source is also visible.'),
-      '#description' => $this->t('If checked, the facet will only be rendered on pages where the facet source is being rendered too.  If not checked, the facet can be shown on every page.'),
-      '#default_value' => $facet->getOnlyVisibleWhenFacetSourceIsVisible(),
+    $form['facet_settings']['empty_behavior_text'] = [
+      '#type' => 'text_format',
+      '#title' => $this->t('Empty text'),
+      '#format' => isset($empty_behavior_config['text_format']) ? $empty_behavior_config['text_format'] : 'plain_text',
+      '#editor' => true,
+      '#default_value' => isset($empty_behavior_config['text_format']) ? $empty_behavior_config['text'] : '',
+      // TODO: Next code (ajax) needs work, editor has an issue where format is still shown, looks like core issue.
+//      '#states' => array(
+//        'visible' => array(
+//          ':input[name="facet_settings[empty_behavior]"]' => array('value' => 'text'),
+//        ),
+//      ),
     ];
 
     $form['weights'] = array(
@@ -427,10 +422,17 @@ class FacetDisplayForm extends EntityForm {
     $processors = $facet->getProcessors(FALSE);
 
     // Iterate over all processors that have a form and are enabled.
-    foreach ($form['processors'] as $processor_id => $processor_form) {
+    foreach ($form['facet_settings'] as $processor_id => $processor_form) {
       if (!empty($values['status'][$processor_id])) {
-        $processor_form_state = new SubFormState($form_state, array('processors', $processor_id, 'settings'));
-        $processors[$processor_id]->validateConfigurationForm($form['processors'][$processor_id], $processor_form_state);
+        $processor_form_state = new SubFormState($form_state, array('facet_settings', $processor_id, 'settings'));
+        $processors[$processor_id]->validateConfigurationForm($form['facet_settings'][$processor_id], $processor_form_state);
+      }
+    }
+    // Iterate over all sorting processors that have a form and are enabled.
+    foreach ($form['facet_sorting'] as $processor_id => $processor_form) {
+      if (!empty($values['status'][$processor_id])) {
+        $processor_form_state = new SubFormState($form_state, array('facet_sorting', $processor_id, 'settings'));
+        $processors[$processor_id]->validateConfigurationForm($form['facet_sorting'][$processor_id], $processor_form_state);
       }
     }
   }
@@ -452,7 +454,8 @@ class FacetDisplayForm extends EntityForm {
     /** @var \Drupal\facetapi\Processor\ProcessorInterface $processor */
     $processors = $facet->getProcessors(FALSE);
     foreach ($processors as $processor_id => $processor) {
-      if (empty($values['processors'][$processor_id]['status'])) {
+      $form_container_key = $processor instanceof WidgetOrderProcessorInterface ? 'facet_sorting' : 'facet_settings';
+      if (empty($values[$form_container_key][$processor_id]['status'])) {
         continue;
       }
       $new_settings[$processor_id] = array(
@@ -460,13 +463,13 @@ class FacetDisplayForm extends EntityForm {
         'weights' => array(),
         'settings' => array(),
       );
-      $processor_values = $values['processors'][$processor_id];
+      $processor_values = $values[$form_container_key][$processor_id];
       if (!empty($processor_values['weights'])) {
         $new_settings[$processor_id]['weights'] = $processor_values['weights'];
       }
-      if (isset($form['processors'][$processor_id]['settings'])) {
-        $processor_form_state = new SubFormState($form_state, array('processors', $processor_id, 'settings'));
-        $processor->submitConfigurationForm($form['processors'][$processor_id]['settings'], $processor_form_state, $facet);
+      if (isset($form[$form_container_key][$processor_id]['settings'])) {
+        $processor_form_state = new SubFormState($form_state, array($form_container_key, $processor_id, 'settings'));
+        $processor->submitConfigurationForm($form[$form_container_key][$processor_id]['settings'], $processor_form_state, $facet);
         $new_settings[$processor_id]['settings'] = $processor->getConfiguration();
       }
     }
@@ -477,9 +480,16 @@ class FacetDisplayForm extends EntityForm {
     $facet->setOption('processors', $new_settings);
     $facet->setWidget($form_state->getValue('widget'));
     $facet->set('widget_configs', $form_state->getValue('widget_configs'));
-    $facet->setFieldEmptyBehavior($form_state->getValue('empty_behavior'));
-    $facet->set('empty_behavior_configs', $form_state->getValue('empty_behavior_configs'));
-    $facet->set('only_visible_when_facet_source_is_visible', $form_state->getValue('only_visible_when_facet_source_is_visible'));
+    $facet->set('only_visible_when_facet_source_is_visible', $form_state->getValue(['facet_settings','only_visible_when_facet_source_is_visible']));
+
+    $empty_behavior_config = [];
+    $empty_behavior = $form_state->getValue(['facet_settings', 'empty_behavior']);
+    $empty_behavior_config['behavior'] = $empty_behavior;
+    if($empty_behavior == 'text'){
+      $empty_behavior_config['text_format'] = $form_state->getValue(['facet_settings', 'empty_behavior_text', 'format']);
+      $empty_behavior_config['text'] = $form_state->getValue(['facet_settings', 'empty_behavior_text', 'value']);
+    }
+    $facet->setOption('empty_behavior', $empty_behavior_config);
 
     $facet->save();
     drupal_set_message(t('Facet %name has been updated.', ['%name' => $facet->getName()]));
@@ -509,37 +519,6 @@ class FacetDisplayForm extends EntityForm {
     unset($actions['delete']);
 
     return $actions;
-  }
-
-  /**
-   * Builds the configuration forms for all the empty behaviors.
-   *
-   * @param array $form
-   *   An associative array containing the initial structure of the plugin form.
-   * @param \Drupal\Core\Form\FormStateInterface $form_state
-   *   The current state of the complete form.
-   */
-  public function buildEmptyBehaviorConfigForm(array &$form, FormStateInterface $form_state) {
-    $behavior_id = $form_state->getValue('empty_behavior') ?: $this->getEntity()->getFieldEmptyBehavior();
-
-    if (!is_null($behavior_id) && $behavior_id !== '') {
-      $empty_behavior_instance = $this->getEmptyBehaviorPluginManager()->createInstance($behavior_id);
-      if ($config_form = $empty_behavior_instance->buildConfigurationForm([], $form_state)) {
-        $form['empty_behavior_configs']['#type'] = 'fieldset';
-        $form['empty_behavior_configs']['#title'] = $this->t('Configure the %behavior empty behavior', ['%behavior' => $this->emptyBehaviorPluginManager->getDefinition($behavior_id)['label']]);
-
-        $form['empty_behavior_configs'] += $config_form;
-      }
-      else {
-        $form['empty_behavior_configs']['#type'] = 'container';
-        $form['empty_behavior_configs']['#open'] = TRUE;
-        $form['empty_behavior_configs']['empty_behavior_information_dummy'] = [
-          '#type' => 'hidden',
-          '#value' => [],
-          '#default_value' => '1',
-        ];
-      }
-    }
   }
 
 }

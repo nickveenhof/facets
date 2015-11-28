@@ -32,15 +32,6 @@ facetapi.facet.*:
       sequence:
         type: string
         label: 'Widget plugin configurations'
-    empty_behavior:
-      type: string
-      label: 'Empty Behavior'
-    empty_behavior_configs:
-      type: sequence
-      label: 'Empty Behavior plugin configurations'
-      sequence:
-        type: sequence
-        label: 'Empty Behavior plugin configurations'
     only_visible_when_facet_source_is_visible:
       type: boolean
       label: 'Show this facet only when the facet source is visible.'

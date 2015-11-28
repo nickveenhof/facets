@@ -254,7 +254,7 @@ class FacetForm extends EntityForm {
       $facet_source = $this->getFacetSourcePluginManager()->createInstance($facet_source_id);
 
       if ($config_form = $facet_source->buildConfigurationForm([], $form_state, $this->getEntity(), $facet_source)) {
-        $form['facet_source_configs'][$facet_source_id]['#type'] = 'fieldset';
+        $form['facet_source_configs'][$facet_source_id]['#type'] = 'container';
         $form['facet_source_configs'][$facet_source_id]['#title'] = $this->t('%plugin settings', ['%plugin' => $facet_source->getPluginDefinition()['label']]);
         $form['facet_source_configs'][$facet_source_id] += $config_form;
       }
@@ -305,7 +305,8 @@ class FacetForm extends EntityForm {
       $facet->setWidget('links');
 
       // Set default empty behaviour
-      $facet->set('empty_behavior', 'none');
+      $facet->setOption('empty_behavior', ['behavior' => 'none']);
+      $facet->setOnlyVisibleWhenFacetSourceIsVisible(TRUE);
     }
 
     // Make sure the field identifier is copied from within the facet source
@@ -336,39 +337,15 @@ class FacetForm extends EntityForm {
 
     if ($is_new) {
       if (\Drupal::moduleHandler()->moduleExists('block')) {
-        $message = $this->t('Go to the <a href=":block_overview">Block overview page</a> and add a new "Facet block". If this is your first and only facet, just adding that block make it link to this facet, if you have addded more facets already, please make sure to select the correct Facet to render.', [':block_overview' => \Drupal::urlGenerator()->generateFromRoute('block.admin_display')]);
+        $message = $this->t('Facet %name has been created. Go to the <a href=":block_overview">Block overview page</a> and add a new "Facet block". If this is your first and only facet, just adding that block make it link to this facet, if you have addded more facets already, please make sure to select the correct Facet to render.', ['%name' => $facet->getName(), ':block_overview' => \Drupal::urlGenerator()->generateFromRoute('block.admin_display')]);
         drupal_set_message($message);
+        $form_state->setRedirect('entity.facetapi_facet.display_form', ['facetapi_facet' => $facet->id()]);
       }
+    }else{
+      drupal_set_message(t('Facet %name has been updated.', ['%name' => $facet->getName()]));
     }
 
     return $facet;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function save(array $form, FormStateInterface $form_state) {
-    // Only save the facet if the form doesn't need to be rebuilt.
-    if (!$form_state->isRebuilding()) {
-      try {
-        $facet = $this->getEntity();
-
-        // Check if this is a new facet, if so, ensure it has a widget.
-        if(!$facet->getWidget()){
-          $facet->save();
-          drupal_set_message(t('Facet %name has been created.', ['%name' => $facet->getName()]));
-        }else{
-          $facet->save();
-          drupal_set_message(t('Facet %name has been updated.', ['%name' => $facet->getName()]));
-        }
-
-      }
-      catch (Exception $e) {
-        $form_state->setRebuild();
-        watchdog_exception('facetapi', $e);
-        drupal_set_message($this->t('The facet could not be saved.'), 'error');
-      }
-    }
   }
 
   /**

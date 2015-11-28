@@ -10,7 +10,6 @@ namespace Drupal\facetapi\FacetManager;
 use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Core\Entity\EntityTypeManager;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
-use Drupal\facetapi\EmptyBehavior\EmptyBehaviorPluginManager;
 use Drupal\facetapi\Exception\InvalidProcessorException;
 use Drupal\facetapi\FacetInterface;
 use Drupal\facetapi\FacetSource\FacetSourcePluginManager;
@@ -50,13 +49,6 @@ class DefaultFacetManager {
    * @var \Drupal\facetapi\Processor\ProcessorPluginManager
    */
   protected $processor_plugin_manager;
-
-  /**
-   * The empty behavior plugin manager.
-   *
-   * @var \Drupal\facetapi\EmptyBehavior\EmptyBehaviorPluginManager
-   */
-  protected $empty_behavior_plugin_manager;
 
   /**
    * An array of facets that are being rendered.
@@ -121,16 +113,14 @@ class DefaultFacetManager {
    * @param \Drupal\facetapi\Widget\WidgetPluginManager $widget_plugin_manager
    * @param \Drupal\facetapi\FacetSource\FacetSourcePluginManager $facet_source_manager
    * @param \Drupal\facetapi\Processor\ProcessorPluginManager $processor_plugin_manager
-   * @param \Drupal\facetapi\EmptyBehavior\EmptyBehaviorPluginManager $empty_behavior_plugin_manager
    * @param \Drupal\Core\Entity\EntityTypeManager $entity_type_manager
    */
-  public function __construct(QueryTypePluginManager $query_type_plugin_manager, WidgetPluginManager $widget_plugin_manager, FacetSourcePluginManager $facet_source_manager, ProcessorPluginManager $processor_plugin_manager, EmptyBehaviorPluginManager $empty_behavior_plugin_manager, EntityTypeManager $entity_type_manager) {
+  public function __construct(QueryTypePluginManager $query_type_plugin_manager, WidgetPluginManager $widget_plugin_manager, FacetSourcePluginManager $facet_source_manager, ProcessorPluginManager $processor_plugin_manager, EntityTypeManager $entity_type_manager) {
 
     $this->query_type_plugin_manager = $query_type_plugin_manager;
     $this->widget_plugin_manager = $widget_plugin_manager;
     $this->facet_source_manager = $facet_source_manager;
     $this->processor_plugin_manager = $processor_plugin_manager;
-    $this->empty_behavior_plugin_manager = $empty_behavior_plugin_manager;
     $this->facet_storage = $entity_type_manager->getStorage('facetapi_facet');
 
     // Immediately initialize the facets. This can be done directly because the
@@ -283,17 +273,15 @@ class DefaultFacetManager {
     }
     $facet->setResults($results);
 
-    // Returns the render array, this render array contains the empty behaviour
-    // if no results are found. If there are results we're going to initialize
-    // the widget from the widget plugin manager and return it's build method.
+    // No results behavior handling. Return a custom text or false depending on
+    // settings.
     if (empty($facet->getResults())) {
-      // Get the empty behavior id and the configuration.
-      $facet_empty_behavior_configs = $facet->get('empty_behavior_configs');
-      $behavior_id = $facet->get('empty_behavior');
-
-      // Build the result using the empty behavior configuration.
-      $empty_behavior_plugin = $this->empty_behavior_plugin_manager->createInstance($behavior_id);
-      return $empty_behavior_plugin->build($facet_empty_behavior_configs);
+      $empty_behavior = $facet->getOption('empty_behavior');
+      if($empty_behavior['behavior'] == 'text'){
+        return ['#markup' => $empty_behavior['text']];
+      }else{
+        return;
+      }
     }
 
     // Let the widget plugin render the facet.

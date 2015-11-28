@@ -17,8 +17,8 @@ use Drupal\user\Entity\User;
  *
  * @FacetApiProcessor(
  *   id = "uid_to_username_callback",
- *   label = @Translation("uid to username callback"),
- *   description = @Translation("Transform the uid to user name in facet results"),
+ *   label = @Translation("Transform uid to username"),
+ *   description = @Translation("Show the username instead, when the source field is a user id."),
  *   stages = {
  *     "build" = 5
  *   }

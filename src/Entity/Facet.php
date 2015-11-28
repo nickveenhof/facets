@@ -43,8 +43,6 @@ use Drupal\facetapi\FacetInterface;
  *     "widget",
  *     "widget_configs",
  *     "options",
- *     "empty_behavior",
- *     "empty_behavior_configs",
  *     "only_visible_when_facet_source_is_visible",
  *   },
  *   links = {
@@ -92,13 +90,6 @@ class Facet extends ConfigEntityBase implements FacetInterface {
    * @var string
    */
   protected $widget_configs;
-
-  /**
-   * Configuration for the empty behavior.
-   *
-   * @var string
-   */
-  protected $empty_behavior;
 
   /**
    * An array of options configuring this index.
@@ -325,21 +316,6 @@ class Facet extends ConfigEntityBase implements FacetInterface {
    */
   public function getQueryTypes() {
     return $this->query_type_name;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function setFieldEmptyBehavior($behavior_id) {
-    $this->empty_behavior = $behavior_id;
-    return $this;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function getFieldEmptyBehavior() {
-    return $this->empty_behavior;
   }
 
   /**

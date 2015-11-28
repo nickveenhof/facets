@@ -36,23 +36,6 @@ interface FacetInterface extends ConfigEntityInterface {
   public function getFieldIdentifier();
 
   /**
-   * Sets the empty_behavior id.
-   *
-   * @param $behavior_id
-   *   The id for the empty behavior.
-   *
-   * @return mixed
-   */
-  public function setFieldEmptyBehavior($behavior_id);
-
-  /**
-   * Get field empty_behavior.
-   *
-   * @return mixed
-   */
-  public function getFieldEmptyBehavior();
-
-  /**
    * Set field identifier.
    *
    * @return mixed

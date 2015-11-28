@@ -32,7 +32,13 @@
 /*
  * Facet API Display page
  */
-#edit-processors .facetapi-processor-settings {
+.facetapi-processor-settings-sorting {
+  margin-bottom: -7px;
   margin-left: 20px;
-  margin-bottom: 25px;
+  margin-top: -16px;
+}
+
+.facetapi-processor-settings-facet {
+  margin-left: 20px;
+  margin-bottom: 20px;
 }

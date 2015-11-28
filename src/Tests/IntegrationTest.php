@@ -85,12 +85,6 @@ class IntegrationTest extends FacetWebTestBase {
     // Verify that facet blocks appear as expected.
     $this->assertFacetBlocksAppear();
 
-    // Verify that the facet is visible when removing a facet for example.
-    $this->goToDeleteFacetPage("Test Facet Name");
-    $this->assertText('item');
-    $this->assertText('article');
-
-
     // Show the facet only when the facet source is visible.
     // @TODO Only for SearchApiViewsPage for the moment.
     $this->setOptionShowOnlyWhenFacetSourceVisible("Test Facet name");
@@ -200,10 +194,11 @@ class IntegrationTest extends FacetWebTestBase {
     $this->assertResponse(200);
 
     // Configure the text for empty results behavior.
-    $this->drupalPostForm(NULL, ['empty_behavior' => 'text'], $this->t('Configure empty behavior'));
-    $this->drupalPostForm(NULL, ['empty_behavior_configs[empty_text][value]' => 'No results found for this block!'], $this->t('Configure empty behavior'));
-
-    $this->drupalPostForm(NULL, NULL, $this->t('Save'));
+    $edit = [
+      'facet_settings[empty_behavior]' => 'text',
+      'facet_settings[empty_behavior_text][value]' => 'No results found for this block!'
+    ];
+    $this->drupalPostForm(NULL, $edit, $this->t('Save'));
 
   }
 
@@ -220,10 +215,9 @@ class IntegrationTest extends FacetWebTestBase {
     $this->assertResponse(200);
 
     $edit = [
-      'only_visible_when_facet_source_is_visible' => 1,
+      'facet_settings[only_visible_when_facet_source_is_visible]' => TRUE,
       'widget' => 'links',
       'widget_configs[show_numbers]' => '0',
-//      'processors[query_string][status]' => '1',
     ];
     $this->drupalPostForm(NULL, $edit, $this->t('Save'));
   }
@@ -290,7 +284,7 @@ class IntegrationTest extends FacetWebTestBase {
 
     // Make sure that the redirection back to the overview was successful and
     // the newly added facet is shown on the overview page.
-    $this->assertRaw(t('Facet %name has been updated.', ['%name' => $facet_name]));
+    $this->assertRaw(t('Facet %name has been created.', ['%name' => $facet_name]));
   }
 
 
