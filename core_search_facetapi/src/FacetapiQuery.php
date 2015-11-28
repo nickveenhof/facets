@@ -75,8 +75,8 @@ class FacetapiQuery extends SearchQuery {
     $this->join('search_total', 't', 'i.word = t.word');
     $this
       ->condition('i.type', $this->type)
-      // @TODO adding n.uid,n.type and others to avoid "Syntax error or access violation: 1055"
-      ->groupBy('n.langcode')
+      // @TODO needs review. Adding n.uid,n.type and others to avoid "Syntax error or access violation: 1055"
+      ->groupBy('i.langcode')
       ->groupBy('n.uid')
       ->groupBy('n.type')
       ->groupBy('i.type')
