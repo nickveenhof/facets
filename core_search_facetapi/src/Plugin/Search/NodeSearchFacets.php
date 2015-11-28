@@ -29,17 +29,6 @@ class NodeSearchFacets extends NodeSearch {
   /**
    * {@inheritdoc}
    */
-  protected $advanced = [
-    'langcode' => ['column' => 'i.langcode'],
-    'type' => ['column' => 'n.type'],
-    'language' => ['column' => 'i.langcode'],
-    'author' => ['column' => 'n.uid'],
-    'term' => ['column' => 'ti.tid', 'join' => ['table' => 'taxonomy_index', 'alias' => 'ti', 'condition' => 'n.nid = ti.nid']],
-  ];
-
-  /**
-   * {@inheritdoc}
-   */
   public function __construct(
     array $configuration,
     $plugin_id,
