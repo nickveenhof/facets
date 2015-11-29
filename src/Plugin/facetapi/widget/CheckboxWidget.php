@@ -41,10 +41,17 @@ class CheckboxWidget implements WidgetInterface {
     /** @var \Drupal\facetapi\Result\Result[] $results */
     $results = $facet->getResults();
     $items = [];
+
+    $configuration = $facet->get('widget_configs');
+    $show_numbers = (bool) $configuration['show_numbers'];
+
     foreach ($results as $result) {
       if ($result->getCount()) {
         // Get the link.
-        $text = $result->getDisplayValue() . ' (' . $result->getCount() . ')';
+        $text = $result->getDisplayValue();
+        if($show_numbers){
+          $text .= ' (' . $result->getCount() . ')';
+        }
         if ($result->isActive()) {
           $text = '(-) ' . $text;
         }
@@ -65,24 +72,16 @@ class CheckboxWidget implements WidgetInterface {
    * {@inheritdoc}
    */
   public function buildConfigurationForm(array $form, FormStateInterface $form_state, $config) {
-    $checkbox_options = [
-      'radio' => $this->t('Radio'),
-      'checkboxes' => $this->t('Checkboxes'),
-    ];
 
-    $form['checkbox_placement'] = [
-      '#type' => 'radios',
-      '#title' => $this->t('Type of selection'),
-      '#description' => $this->t('Choose if checkboxes or radio boxes should be used.'),
-      '#options' => $checkbox_options,
-      '#required' => TRUE,
+    $form['show_numbers'] = [
+      '#type' => 'checkbox',
+      '#title' => $this->t('Show the amount of results'),
     ];
-
 
     if (!is_null($config)) {
       $widget_configs = $config->get('widget_configs');
-      if (isset($widget_configs['checkbox_placement'])) {
-        $form['checkbox_placement']['#default_value'] = $widget_configs['checkbox_placement'];
+      if (isset($widget_configs['show_numbers'])) {
+        $form['show_numbers']['#default_value'] = $widget_configs['show_numbers'];
       }
     }
 
