@@ -327,12 +327,11 @@ class FacetDisplayForm extends EntityForm {
       '#format' => isset($empty_behavior_config['text_format']) ? $empty_behavior_config['text_format'] : 'plain_text',
       '#editor' => true,
       '#default_value' => isset($empty_behavior_config['text_format']) ? $empty_behavior_config['text'] : '',
-      // TODO: Next code (ajax) needs work, editor has an issue where format is still shown, looks like core issue.
-//      '#states' => array(
-//        'visible' => array(
-//          ':input[name="facet_settings[empty_behavior]"]' => array('value' => 'text'),
-//        ),
-//      ),
+      '#states' => array(
+        'visible' => array(
+          ':input[name="facet_settings[empty_behavior]"]' => array('value' => 'text'),
+        ),
+      ),
     ];
 
     $form['weights'] = array(
