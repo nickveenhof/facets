@@ -1,4 +1,4 @@
-entity.facetapi_facet.edit_form:
-  title: 'Edit facet'
-  route_name: 'entity.facetapi_facet.edit_form'
+entity.facetapi_facet.display_form:
+  title: 'Configure facet display'
+  route_name: 'entity.facetapi_facet.display_form'
   group: facetapi_facet
