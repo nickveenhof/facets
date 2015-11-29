@@ -82,7 +82,7 @@ class CheckboxWidgetTest extends UnitTestCase {
     $this->assertInternalType('array', $output);
     $this->assertCount(4, $output['#items']);
 
-    $expected_links = ['Llama (10)', 'Badger (20)', 'Duck (15)', 'Alpaca (9)'];
+    $expected_links = ['Llama', 'Badger', 'Duck', 'Alpaca'];
     foreach ($expected_links as $index => $value) {
       $this->assertEquals($value, $output['#items'][$index]);
     }
