@@ -217,9 +217,8 @@ class CoreNodeSearchFacetSource extends FacetSourcePluginBase implements CoreSea
     //if (!$facet['field api name']) {
     // We add the language code of the indexed item to the result of the query.
     // So in this case we need to use the search_index table alias (i) for the
-    // langcode field. Otherwise we will have same nid for multiples languages
-    // as result. For more details you can take a look at
-    // NodeSearch::findResults().
+    // langcode field. Otherwise we will have same nid for multiple languages
+    // as result. For more details see NodeSearch::findResults().
      $table_alias = $facet->getFieldIdentifier() == 'langcode' ? 'i' : 'n';
       $query_info = [
         'fields' => [
