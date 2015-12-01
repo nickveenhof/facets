@@ -20,8 +20,9 @@ class CoreNodeSearchFacetSourceDeriver extends FacetSourceDeriverBase {
 
   protected $searchManager;
 
-  public function __construct(ContainerInterface $container, $base_plugin_id, $search_manager) {
+  public function __construct(ContainerInterface $container, $base_plugin_id, $search_manager, $entity_type_manager) {
     $this->searchManager = $search_manager;
+    $this->entityTypeManager = $entity_type_manager ;
   }
 
   /**
@@ -31,7 +32,8 @@ class CoreNodeSearchFacetSourceDeriver extends FacetSourceDeriverBase {
     return new static(
       $container,
       $base_plugin_id,
-      $container->get('plugin.manager.search')
+      $container->get('plugin.manager.search'),
+      $container->get('entity_type.manager')
       );
   }
 
@@ -43,8 +45,8 @@ class CoreNodeSearchFacetSourceDeriver extends FacetSourceDeriverBase {
 
     if (!isset($this->derivatives[$base_plugin_id])) {
       $plugin_derivatives = [];
-      // @TODO inject entity plugin manager.
-      $pages = \Drupal::entityManager()->getListBuilder('search_page')->load();
+
+      $pages = $this->entityTypeManager->getListBuilder('search_page')->load();
 
       foreach($pages as $machine_name => $page) {
         /** @var \Drupal\search\Entity\SearchPage $page * */
