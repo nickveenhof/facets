@@ -40,7 +40,8 @@ function core_search_facetapi_search_plugin_alter(array &$definitions) {
   // Replace the Search Plugin class to alter the search form on a different
   // way because we don't need content types or languages as advanced search
   // filters.
+  // @TODO wait until we can add configuration to a facet source.
   if (isset($definitions['node_search'])) {
-    $definitions['node_search']['class'] = 'Drupal\core_search_facetapi\Plugin\Search\NodeSearchFacets';
+    //$definitions['node_search']['class'] = 'Drupal\core_search_facetapi\Plugin\Search\NodeSearchFacets';
   }
 }
