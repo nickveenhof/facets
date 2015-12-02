@@ -79,6 +79,7 @@ class QueryStringUrlProcessorTest extends UnitTestCase {
 
   public function testEmptyBuild() {
     $facet = new Facet([], 'facet');
+    $facet->setFacetSourceId('facet_source__dummy');
 
     $request = new Request;
     $request->query->set('f', []);
@@ -91,11 +92,12 @@ class QueryStringUrlProcessorTest extends UnitTestCase {
   public function testBuild() {
     $facet = new Facet([], 'facet');
     $facet->setFieldIdentifier('test');
+    $facet->setFacetSourceId('facet_source__dummy');
 
     $request = new Request;
     $request->query->set('f', []);
 
-    $this->setRouter();
+    $this->setContainer();
 
     $this->processor = new QueryStringUrlProcessor([], 'query_string', [], $request);
     $results = $this->processor->build($facet, $this->original_results);
@@ -110,6 +112,7 @@ class QueryStringUrlProcessorTest extends UnitTestCase {
   public function testBuildWithActiveItem() {
     $facet = new Facet([], 'facet');
     $facet->setFieldIdentifier('test');
+    $facet->setFacetSourceId('facet_source__dummy');
 
     $original_results = $this->original_results;
     $original_results[2]->setActiveState(TRUE);
@@ -117,7 +120,7 @@ class QueryStringUrlProcessorTest extends UnitTestCase {
     $request = new Request;
     $request->query->set('f', ['king:kong']);
 
-    $this->setRouter();
+    $this->setContainer();
 
     $this->processor = new QueryStringUrlProcessor([], 'query_string', [], $request);
     $results = $this->processor->build($facet, $original_results);
@@ -134,7 +137,7 @@ class QueryStringUrlProcessorTest extends UnitTestCase {
     }
   }
 
-  protected function setRouter() {
+  protected function setContainer() {
     $router = $this->getMockBuilder('Drupal\Tests\Core\Routing\TestRouterInterface')
       ->disableOriginalConstructor()
       ->getMock();
@@ -147,8 +150,21 @@ class QueryStringUrlProcessorTest extends UnitTestCase {
         ]
       );
 
+    $fsi = $this->getMockBuilder('\Drupal\facetapi\FacetSource\FacetSourceInterface')
+      ->disableOriginalConstructor()
+      ->getMock();
+    $fsi->method('getPath')
+      ->willReturn('search/test');
+
+    $manager = $this->getMockBuilder('Drupal\facetapi\FacetSource\FacetSourcePluginManager')
+      ->disableOriginalConstructor()
+      ->getMock();
+    $manager->method('createInstance')
+      ->willReturn($fsi);
+
     $container = new ContainerBuilder();
     $container->set('router.no_access_checks', $router);
+    $container->set('plugin.manager.facetapi.facet_source', $manager);
     \Drupal::setContainer($container);
   }
 

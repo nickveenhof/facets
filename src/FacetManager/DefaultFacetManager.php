@@ -300,10 +300,6 @@ class DefaultFacetManager {
     $facet_source_plugin = $this->facet_source_manager->createInstance($this->facetsource_id);
 
     $facet_source_plugin->fillFacetsWithResults($this->facets);
-
-    foreach ($this->facets as $facet) {
-      $facet->setPath($facet_source_plugin->getPath());
-    }
   }
 
 }

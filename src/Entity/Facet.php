@@ -129,6 +129,15 @@ class Facet extends ConfigEntityBase implements FacetInterface {
   protected $facet_source_id;
 
   /**
+   * The facet source belonging to this facet.
+   *
+   * @var \Drupal\facetapi\FacetSourceInterface
+   *
+   * @see getFacetSource()
+   */
+  protected $facet_source_instance;
+
+  /**
    * The path all the links should point to.
    *
    * @var string
@@ -345,10 +354,14 @@ class Facet extends ConfigEntityBase implements FacetInterface {
    * {@inheritdoc}
    */
   public function getFacetSource() {
-    /** @var $facet_source_plugin_manager \Drupal\facetapi\FacetSource\FacetSourcePluginManager */
-    $facet_source_plugin_manager = \Drupal::service('plugin.manager.facetapi.facet_source');
 
-    return $facet_source_plugin_manager->createInstance($this->facet_source_id);
+    if (!$this->facet_source_instance && $this->facet_source_id) {
+      /** @var $facet_source_plugin_manager \Drupal\facetapi\FacetSource\FacetSourcePluginManager */
+      $facet_source_plugin_manager = \Drupal::service('plugin.manager.facetapi.facet_source');
+      $this->facet_source_instance = $facet_source_plugin_manager->createInstance($this->facet_source_id);
+    }
+
+    return $this->facet_source_instance;
   }
 
   /**
@@ -474,20 +487,6 @@ class Facet extends ConfigEntityBase implements FacetInterface {
     }
 
     return array_intersect_key($this->facetSourcePlugins, array_flip($this->facetSourcePlugins));
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function setPath($path) {
-    $this->path = $path;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function getPath() {
-    return $this->path;
   }
 
   /**
