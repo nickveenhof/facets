@@ -120,22 +120,22 @@ class CountLimitProcessorTest extends UnitTestCase {
    */
   public function testBetweenMinAndMaxValue() {
     $facet = new Facet([], 'facet');
-    $facet->setResults($this->original_results);
+    $facet->setResults($this->originalResults);
     $facet->setOption('processors', [
       'count_limit' => [],
     ]);
 
     $this->processor->setConfiguration(['minimum_items' => 6, 'maximum_items' => 14]);
-    $sorted_results = $this->processor->build($facet, $this->original_results);
+    $sorted_results = $this->processor->build($facet, $this->originalResults);
     $this->assertCount(1, $sorted_results);
     $this->assertEquals('llama', $sorted_results[0]->getDisplayValue());
 
     $this->processor->setConfiguration(['minimum_items' => 60, 'maximum_items' => 140]);
-    $sorted_results = $this->processor->build($facet, $this->original_results);
+    $sorted_results = $this->processor->build($facet, $this->originalResults);
     $this->assertCount(0, $sorted_results);
 
     $this->processor->setConfiguration(['minimum_items' => 1, 'maximum_items' => 10]);
-    $sorted_results = $this->processor->build($facet, $this->original_results);
+    $sorted_results = $this->processor->build($facet, $this->originalResults);
     $this->assertCount(2, $sorted_results);
   }
 
@@ -144,26 +144,26 @@ class CountLimitProcessorTest extends UnitTestCase {
    */
   public function testMaxValue() {
     $facet = new Facet([], 'facet');
-    $facet->setResults($this->original_results);
+    $facet->setResults($this->originalResults);
     $facet->setOption('processors', [
       'count_limit' => [],
     ]);
 
     $this->processor->setConfiguration(['maximum_items' => 14]);
-    $sorted_results = $this->processor->build($facet, $this->original_results);
+    $sorted_results = $this->processor->build($facet, $this->originalResults);
     $this->assertCount(2, $sorted_results);
     $this->assertEquals('llama', $sorted_results[0]->getDisplayValue());
     $this->assertEquals('badger', $sorted_results[1]->getDisplayValue());
 
     $this->processor->setConfiguration(['maximum_items' => 140]);
-    $sorted_results = $this->processor->build($facet, $this->original_results);
+    $sorted_results = $this->processor->build($facet, $this->originalResults);
     $this->assertCount(3, $sorted_results);
     $this->assertEquals('llama', $sorted_results[0]->getDisplayValue());
     $this->assertEquals('badger', $sorted_results[1]->getDisplayValue());
     $this->assertEquals('duck', $sorted_results[2]->getDisplayValue());
 
     $this->processor->setConfiguration(['maximum_items' => 1]);
-    $sorted_results = $this->processor->build($facet, $this->original_results);
+    $sorted_results = $this->processor->build($facet, $this->originalResults);
     $this->assertCount(0, $sorted_results);
   }
 
