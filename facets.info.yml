@@ -1,4 +1,4 @@
-name: 'Facet API'
+name: 'Facets'
 type: module
 description: 'Faceted search interfaces that can be used on Search API searchers.'
 core: 8.x
