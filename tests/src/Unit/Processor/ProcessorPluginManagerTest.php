@@ -1,7 +1,8 @@
 <?php
 
 /**
- * @file Contains \Drupal\Tests\facets\Unit\Processor\ProcessorPluginManagerTest.
+ * @file
+ * Contains \Drupal\Tests\facets\Unit\Processor\ProcessorPluginManagerTest.
  */
 
 namespace Drupal\Tests\facets\Unit\Processor;
@@ -16,6 +17,8 @@ use Drupal\Tests\UnitTestCase;
 use Zend\Stdlib\ArrayObject;
 
 /**
+ * Unit test for Processor plugin manager.
+ *
  * @group facets
  */
 class ProcessorPluginManagerTest extends UnitTestCase {

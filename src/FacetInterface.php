@@ -7,8 +7,9 @@
 namespace Drupal\facets;
 
 use Drupal\Core\Config\Entity\ConfigEntityInterface;
+
 /**
- *
+ * The facet entity.
  */
 interface FacetInterface extends ConfigEntityInterface {
 
@@ -16,8 +17,10 @@ interface FacetInterface extends ConfigEntityInterface {
    * Sets the facet's widget plugin id.
    *
    * @param string $widget
+   *   The widget plugin id.
    *
    * @return $this
+   *   Returns self
    */
   public function setWidget($widget);
 
@@ -25,6 +28,7 @@ interface FacetInterface extends ConfigEntityInterface {
    * Returns the facet's widget plugin id.
    *
    * @return string
+   *   The widget plugin id.
    */
   public function getWidget();
 
@@ -32,20 +36,26 @@ interface FacetInterface extends ConfigEntityInterface {
    * Get field identifier.
    *
    * @return string
+   *   The field identifier of this facet.
    */
   public function getFieldIdentifier();
 
   /**
    * Set field identifier.
    *
-   * @return mixed
+   * @param string $field_identifier
+   *   The field identifier of this facet.
+   *
+   * @return $this
+   *   Returns self.
    */
   public function setFieldIdentifier($field_identifier);
 
   /**
    * Get the field alias used to identify the facet in the url.
    *
-   * @return mixed
+   * @return string
+   *   The field alias for the facet.
    */
   public function getFieldAlias();
 
@@ -54,13 +64,16 @@ interface FacetInterface extends ConfigEntityInterface {
    *
    * @TODO: Check if fieldIdentifier can be used as well!
    *
-   * @return mixed
+   * @return string
+   *   The name of the facet.
    */
   public function getName();
+
   /**
    * Sets an item with value to active.
    *
-   * @param $value
+   * @param string $value
+   *   An item that is active.
    */
   public function setActiveItem($value);
 
@@ -68,15 +81,18 @@ interface FacetInterface extends ConfigEntityInterface {
    * Get all the active items in the facet.
    *
    * @return mixed
+   *   An array containing all active items.
    */
   public function getActiveItems();
 
   /**
-   * Check if a value is active.
+   * Checks if a value is active.
    *
    * @param string $value
+   *   The value to be checked.
    *
    * @return bool
+   *   Is an active value.
    */
   public function isActiveValue($value);
 
@@ -84,13 +100,15 @@ interface FacetInterface extends ConfigEntityInterface {
    * Get the result for the facet.
    *
    * @return \Drupal\facets\Result\ResultInterface[] $results
+   *   The results of the facet.
    */
   public function getResults();
 
   /**
-   * Sets the reuslts for the facet.
+   * Sets the results for the facet.
    *
    * @param \Drupal\facets\Result\ResultInterface[] $results
+   *   The results of the facet.
    */
   public function setResults(array $results);
 
@@ -99,13 +117,15 @@ interface FacetInterface extends ConfigEntityInterface {
    * Get the query type instance.
    *
    * @return string
+   *   The query type plugin being used.
    */
   public function getQueryType();
 
   /**
    * Get the plugin name for the url processor.
    *
-   * @return mixed
+   * @return string
+   *   The id of the url processor.
    */
   public function getUrlProcessorName();
 
@@ -141,6 +161,7 @@ interface FacetInterface extends ConfigEntityInterface {
    *   The new option.
    *
    * @return $this
+   *   Returns self.
    */
   public function setOption($name, $option);
 
@@ -151,16 +172,9 @@ interface FacetInterface extends ConfigEntityInterface {
    *   The new index options.
    *
    * @return $this
+   *   Returns self.
    */
   public function setOptions(array $options);
-
-
-  /**
-   * Gets the facet manager plugin id.
-   *
-   * @return string
-   */
-  public function getManagerPluginId();
 
   /**
    * Sets a string representation of the Facet source plugin.
@@ -168,8 +182,10 @@ interface FacetInterface extends ConfigEntityInterface {
    * This is usually the name of the Search-api view.
    *
    * @param string $facet_source_id
+   *   The facet source id.
    *
    * @return $this
+   *   Returns self.
    */
   public function setFacetSourceId($facet_source_id);
 
@@ -177,6 +193,7 @@ interface FacetInterface extends ConfigEntityInterface {
    * Returns the Facet source id.
    *
    * @return string
+   *   The id of the facet source.
    */
   public function getFacetSourceId();
 
@@ -192,8 +209,10 @@ interface FacetInterface extends ConfigEntityInterface {
    * Load the facet sources for this facet.
    *
    * @param bool|TRUE $only_enabled
+   *   Only return enabled facet sources.
    *
    * @return \Drupal\facets\FacetSource\FacetSourceInterface[]
+   *   An array of facet sources.
    */
   public function getFacetSources($only_enabled = TRUE);
 
@@ -201,8 +220,10 @@ interface FacetInterface extends ConfigEntityInterface {
    * Returns an array of processors with their configuration.
    *
    * @param bool|TRUE $only_enabled
+   *   Only return enabled processors.
    *
    * @return \Drupal\facets\Processor\ProcessorInterface[]
+   *   An array of processors.
    */
   public function getProcessors($only_enabled = TRUE);
 
@@ -231,13 +252,15 @@ interface FacetInterface extends ConfigEntityInterface {
    *   does not show the facet source.
    *
    * @return $this
+   *   Returns self.
    */
   public function setOnlyVisibleWhenFacetSourceIsVisible($only_visible_when_facet_source_is_visible);
 
   /**
    * Returns the "only visible when facet source is visible" boolean flag.
    *
-   * @return boolean
+   * @return bool
+   *   True when the facet is only shown on a page with the facet source.
    */
   public function getOnlyVisibleWhenFacetSourceIsVisible();
 

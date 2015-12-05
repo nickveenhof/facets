@@ -2,16 +2,18 @@
 
 /**
  * @file
+ * Contains \Drupal\facets\Plugin\facets\processor\CountWidgetOrderProcessor.
  */
 
 namespace Drupal\facets\Plugin\facets\processor;
-
 
 use Drupal\facets\Processor\WidgetOrderPluginBase;
 use Drupal\facets\Processor\WidgetOrderProcessorInterface;
 use Drupal\facets\Result\Result;
 
 /**
+ * A processor that orders the results by amount.
+ *
  * @FacetsProcessor(
  *   id = "count_widget_order",
  *   label = @Translation("Sort by count"),
@@ -38,7 +40,7 @@ class CountWidgetOrderProcessor extends WidgetOrderPluginBase implements WidgetO
   }
 
   /**
-   *
+   * Sorts ascending.
    */
   protected static function sortCountAsc(Result $a, Result $b) {
     if ($a->getCount() == $b->getCount()) {
@@ -48,7 +50,7 @@ class CountWidgetOrderProcessor extends WidgetOrderPluginBase implements WidgetO
   }
 
   /**
-   *
+   * Sorts descending.
    */
   protected static function sortCountDesc(Result $a, Result $b) {
     if ($a->getCount() == $b->getCount()) {

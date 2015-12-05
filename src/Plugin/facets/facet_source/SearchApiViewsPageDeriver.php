@@ -35,15 +35,15 @@ class SearchApiViewsPageDeriver extends FacetSourceDeriverBase {
         if (strpos($view->get('base_table'), 'search_api_index') !== FALSE) {
           $displays = $view->get('display');
           foreach ($displays as $name => $display_info) {
-            if($display_info['display_plugin'] == "page"){
+            if ($display_info['display_plugin'] == "page") {
               $machine_name = $view->id() . PluginBase::DERIVATIVE_SEPARATOR . $name;
 
               $plugin_derivatives[$machine_name] = [
-                  'id' => $base_plugin_id . PluginBase::DERIVATIVE_SEPARATOR . $machine_name,
-                  'label' => $this->t('Search api view: %view_name, display: %display_title', ['%view_name' => $view->label(), '%display_title' => $display_info['display_title']]),
-                  'description' => $this->t('Provides a facet source.'),
-                  'view_id' => $view->id(),
-                  'view_display' => $name,
+                'id' => $base_plugin_id . PluginBase::DERIVATIVE_SEPARATOR . $machine_name,
+                'label' => $this->t('Search api view: %view_name, display: %display_title', ['%view_name' => $view->label(), '%display_title' => $display_info['display_title']]),
+                'description' => $this->t('Provides a facet source.'),
+                'view_id' => $view->id(),
+                'view_display' => $name,
               ] + $base_plugin_definition;
 
               $sources[] = $this->t('Search api view: ' . $view->label() . ' display: ' . $display_info['display_title']);

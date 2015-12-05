@@ -1,7 +1,7 @@
 <?php
-
 /**
- * @file Contains \Drupal\Tests\facets\Unit\QueryType\QueryTypePluginManagerTest.
+ * @file
+ * Contains \Drupal\Tests\facets\Unit\QueryType\QueryTypePluginManagerTest.
  */
 
 namespace Drupal\Tests\facets\Unit\QueryType;
@@ -15,6 +15,8 @@ use Drupal\Tests\UnitTestCase;
 use Zend\Stdlib\ArrayObject;
 
 /**
+ * Unit test for the query type plugin manager.
+ *
  * @group facets
  */
 class QueryTypePluginManagerTest extends UnitTestCase {

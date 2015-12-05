@@ -13,6 +13,8 @@ use Drupal\Tests\UnitTestCase;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 
 /**
+ * Unit test for processor.
+ *
  * @group facets
  */
 class ExcludeSpecifiedItemsProcessorTest extends UnitTestCase {
@@ -29,7 +31,7 @@ class ExcludeSpecifiedItemsProcessorTest extends UnitTestCase {
    *
    * @var \Drupal\facets\Result\Result[]
    */
-  protected $original_results;
+  protected $originalResults;
 
   /**
    * Creates a new processor object for use in the tests.
@@ -37,7 +39,7 @@ class ExcludeSpecifiedItemsProcessorTest extends UnitTestCase {
   protected function setUp() {
     parent::setUp();
 
-    $this->original_results = [
+    $this->originalResults = [
       new Result('llama', 'llama', 10),
       new Result('badger', 'badger', 5),
       new Result('duck', 'duck', 15),
@@ -53,7 +55,7 @@ class ExcludeSpecifiedItemsProcessorTest extends UnitTestCase {
     $processor_id = 'exclude_specified_items';
     $this->processor = new ExcludeSpecifiedItemsProcessor([], $processor_id, []);
 
-    $processorDefinitions = [
+    $processor_definitions = [
       $processor_id => [
         'id' => $processor_id,
         'class' => 'Drupal\facets\Plugin\facets\processor\ExcludeSpecifiedItemsProcessor',
@@ -65,7 +67,7 @@ class ExcludeSpecifiedItemsProcessorTest extends UnitTestCase {
       ->getMock();
     $manager->expects($this->once())
       ->method('getDefinitions')
-      ->willReturn($processorDefinitions);
+      ->willReturn($processor_definitions);
     $manager->expects($this->once())
       ->method('createInstance')
       ->willReturn($this->processor);
@@ -80,45 +82,45 @@ class ExcludeSpecifiedItemsProcessorTest extends UnitTestCase {
    */
   public function testNoFilter() {
     $facet = new Facet([], 'facet');
-    $facet->setResults($this->original_results);
+    $facet->setResults($this->originalResults);
     $facet->setOption('processors', [
       'exclude_specified_items' => [
         'settings' => [
           'exclude' => 'alpaca',
-          'regex' => 0
+          'regex' => 0,
         ],
       ],
     ]);
     $this->processor->setConfiguration([
       'exclude' => 'alpaca',
-      'regex' => 0
+      'regex' => 0,
     ]);
-    $filtered_results = $this->processor->build($facet, $this->original_results);
+    $filtered_results = $this->processor->build($facet, $this->originalResults);
 
-    $this->assertCount(count($this->original_results), $filtered_results);
+    $this->assertCount(count($this->originalResults), $filtered_results);
   }
 
   /**
-   * Test filtering happens for string filter
+   * Test filtering happens for string filter.
    */
   public function testStringFilter() {
     $facet = new Facet([], 'facet');
-    $facet->setResults($this->original_results);
+    $facet->setResults($this->originalResults);
     $facet->setOption('processors', [
       'exclude_specified_items' => [
         'settings' => [
           'exclude' => 'llama',
-          'regex' => 0
+          'regex' => 0,
         ],
       ],
     ]);
     $this->processor->setConfiguration([
       'exclude' => 'llama',
-      'regex' => 0
+      'regex' => 0,
     ]);
-    $filtered_results = $this->processor->build($facet, $this->original_results);
+    $filtered_results = $this->processor->build($facet, $this->originalResults);
 
-    $this->assertCount((count($this->original_results) -1), $filtered_results);
+    $this->assertCount((count($this->originalResults) - 1), $filtered_results);
 
     foreach ($filtered_results as $result) {
       $this->assertNotEquals('llama', $result->getDisplayValue());
@@ -126,67 +128,121 @@ class ExcludeSpecifiedItemsProcessorTest extends UnitTestCase {
   }
 
   /**
-   * Test filtering happens for regex filter
+   * Test filtering happens for regex filter.
    *
    * @dataProvider provideRegexTests
    */
-  public function testRegexFilter($regex, $expectedResults) {
+  public function testRegexFilter($regex, $expected_results) {
     $facet = new Facet([], 'facet');
-    $facet->setResults($this->original_results);
+    $facet->setResults($this->originalResults);
     $facet->setOption('processors', [
       'exclude_specified_items' => [
         'settings' => [
           'exclude' => $regex,
-          'regex' => 1
+          'regex' => 1,
         ],
       ],
     ]);
     $this->processor->setConfiguration([
       'exclude' => $regex,
-      'regex' => 1
+      'regex' => 1,
     ]);
-    $filtered_results = $this->processor->build($facet, $this->original_results);
+    $filtered_results = $this->processor->build($facet, $this->originalResults);
 
-    $this->assertCount(count($expectedResults), $filtered_results);
+    $this->assertCount(count($expected_results), $filtered_results);
 
     foreach ($filtered_results as $res) {
-      $this->assertTrue(in_array($res->getDisplayValue(), $expectedResults));
+      $this->assertTrue(in_array($res->getDisplayValue(), $expected_results));
     }
   }
 
   /**
-   * Provide multiple data sets for ::testRegexFilter
+   * Provide multiple data sets for ::testRegexFilter.
    */
   public function provideRegexTests() {
     return [
       [
         'test',
-        ['llama', 'duck', 'badger', 'snake', 'snaake', 'snaaake', 'snaaaake', 'snaaaaake', 'snaaaaaake', 'snbke']
+        [
+          'llama',
+          'duck',
+          'badger',
+          'snake',
+          'snaake',
+          'snaaake',
+          'snaaaake',
+          'snaaaaake',
+          'snaaaaaake',
+          'snbke',
+        ],
       ],
       [
         'llama',
-        ['badger', 'duck', 'snake', 'snaake', 'snaaake', 'snaaaake', 'snaaaaake', 'snaaaaaake', 'snbke']
+        [
+          'badger',
+          'duck',
+          'snake',
+          'snaake',
+          'snaaake',
+          'snaaaake',
+          'snaaaaake',
+          'snaaaaaake',
+          'snbke',
+        ],
       ],
       [
         'duck',
-        ['llama', 'badger', 'snake', 'snaake', 'snaaake', 'snaaaake', 'snaaaaake', 'snaaaaaake', 'snbke']
+        [
+          'llama',
+          'badger',
+          'snake',
+          'snaake',
+          'snaaake',
+          'snaaaake',
+          'snaaaaake',
+          'snaaaaaake',
+          'snbke',
+        ],
       ],
       [
         'sn(.*)ke',
-        ['llama', 'duck', 'badger']
+        [
+          'llama',
+          'duck',
+          'badger',
+        ],
       ],
       [
         'sn(a*)ke',
-        ['llama', 'duck', 'badger', 'snbke']
+        [
+          'llama',
+          'duck',
+          'badger',
+          'snbke',
+        ],
       ],
       [
         'sn(a+)ke',
-        ['llama', 'duck', 'badger', 'snbke']
+        [
+          'llama',
+          'duck',
+          'badger',
+          'snbke',
+        ],
       ],
       [
         'sn(a{3,5})ke',
-        ['llama', 'duck', 'badger', 'snake', 'snaake', 'snaaaaaake', 'snbke']
+        [
+          'llama',
+          'duck',
+          'badger',
+          'snake',
+          'snaake',
+          'snaaaaaake',
+          'snbke',
+        ],
       ],
     ];
   }
+
 }

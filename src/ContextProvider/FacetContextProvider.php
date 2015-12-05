@@ -26,9 +26,10 @@ class FacetContextProvider implements ContextProviderInterface {
   protected $facetStorage;
 
   /**
-   * Create a new instance of the context provider.
+   * Creates a new instance of the context provider.
    *
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
+   *   The entity type manager.
    */
   public function __construct(EntityTypeManagerInterface $entity_type_manager) {
     $this->facetStorage = $entity_type_manager->getStorage('facets_facet');

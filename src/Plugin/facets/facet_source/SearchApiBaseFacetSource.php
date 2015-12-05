@@ -15,8 +15,9 @@ use Drupal\facets\FacetSource\FacetSourceInterface;
 use Drupal\facets\FacetSource\FacetSourcePluginBase;
 use Drupal\search_api\FacetsQueryTypeMappingInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+
 /**
- *
+ * A base class for Search API facet sources.
  */
 abstract class SearchApiBaseFacetSource extends FacetSourcePluginBase {
 
@@ -121,7 +122,6 @@ abstract class SearchApiBaseFacetSource extends FacetSourcePluginBase {
    *
    * @param \Drupal\search_api\Backend\BackendInterface $backend
    *   The backend that we want to get the query types for.
-   *
    * @param string $data_type_plugin_id
    *   The identifier of the data type.
    *

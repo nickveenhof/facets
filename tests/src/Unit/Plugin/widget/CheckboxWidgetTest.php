@@ -14,6 +14,8 @@ use Drupal\Tests\UnitTestCase;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 
 /**
+ * Unit test for widget.
+ *
  * @group facets
  */
 class CheckboxWidgetTest extends UnitTestCase {
@@ -30,7 +32,7 @@ class CheckboxWidgetTest extends UnitTestCase {
    *
    * @var \Drupal\facets\Result\Result[]
    */
-  protected $original_results;
+  protected $originalResults;
 
   /**
    * Creates a new processor object for use in the tests.
@@ -49,7 +51,7 @@ class CheckboxWidgetTest extends UnitTestCase {
     foreach ($original_results as $original_result) {
       $original_result->setUrl(new \Drupal\Core\Url('test'));
     }
-    $this->original_results = $original_results;
+    $this->originalResults = $original_results;
 
     $link_generator = $this->getMockBuilder('\Drupal\Core\Utility\LinkGenerator')
       ->disableOriginalConstructor()
@@ -75,7 +77,7 @@ class CheckboxWidgetTest extends UnitTestCase {
    */
   public function testDefaultSettings() {
     $facet = new Facet([], 'facet');
-    $facet->setResults($this->original_results);
+    $facet->setResults($this->originalResults);
 
     $output = $this->widget->build($facet);
 
@@ -93,7 +95,7 @@ class CheckboxWidgetTest extends UnitTestCase {
    */
   public function testShowAmount() {
     $facet = new Facet([], 'facet');
-    $facet->setResults($this->original_results);
+    $facet->setResults($this->originalResults);
     $facet->set('widget_configs', ['show_numbers' => 1]);
 
     $output = $this->widget->build($facet);

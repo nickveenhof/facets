@@ -39,9 +39,9 @@ class NodeSearchFacets extends NodeSearch {
     Config $search_settings,
     LanguageManagerInterface $language_manager,
     RendererInterface $renderer,
-    AccountInterface $account = NULL,
     $facet_source_plugin_manager,
-    $request_stack) {
+    $request_stack,
+    AccountInterface $account = NULL) {
 
     parent::__construct($configuration, $plugin_id, $plugin_definition, $database, $entity_manager, $module_handler, $search_settings, $language_manager, $renderer, $account);
     /** @var \Symfony\Component\HttpFoundation\RequestStack $request_stack */
@@ -65,9 +65,9 @@ class NodeSearchFacets extends NodeSearch {
       $container->get('config.factory')->get('search.settings'),
       $container->get('language_manager'),
       $container->get('renderer'),
-      $container->get('current_user'),
       $container->get('plugin.manager.facets.facet_source'),
-      $container->get('request_stack')
+      $container->get('request_stack'),
+      $container->get('current_user')
     );
   }
 
@@ -80,7 +80,7 @@ class NodeSearchFacets extends NodeSearch {
     $used_advanced = !empty($parameters[self::ADVANCED_FORM]);
     if ($used_advanced) {
       $f = isset($parameters['f']) ? (array) $parameters['f'] : array();
-      $defaults =  $this->parseAdvancedDefaults($f, $keys);
+      $defaults = $this->parseAdvancedDefaults($f, $keys);
     }
     else {
       $defaults = array('keys' => $keys);
@@ -188,4 +188,3 @@ class NodeSearchFacets extends NodeSearch {
   }
 
 }
-

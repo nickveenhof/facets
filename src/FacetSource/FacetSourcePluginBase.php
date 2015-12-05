@@ -1,6 +1,6 @@
 <?php
 
-/**+
+/**
  * @file
  * Contains \Drupal\facets\FacetSource\FacetSourcePluginBase.
  */
@@ -101,4 +101,5 @@ abstract class FacetSourcePluginBase extends PluginBase implements FacetSourceIn
   public function getSearchKeys() {
     return $this->keys;
   }
+
 }

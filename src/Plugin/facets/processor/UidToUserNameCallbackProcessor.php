@@ -6,14 +6,13 @@
 
 namespace Drupal\facets\Plugin\facets\processor;
 
-use Drupal\Core\Entity\Entity;
 use Drupal\facets\FacetInterface;
 use Drupal\facets\Processor\BuildProcessorInterface;
 use Drupal\facets\Processor\ProcessorPluginBase;
 use Drupal\user\Entity\User;
 
 /**
- * Provides a processor that transforms the results to show the user's name
+ * Provides a processor that transforms the results to show the user's name.
  *
  * @FacetsProcessor(
  *   id = "uid_to_username_callback",

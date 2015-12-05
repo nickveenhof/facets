@@ -21,7 +21,8 @@ interface PreQueryProcessorInterface extends ProcessorInterface {
    * alteration to the query was added before the query is executed in the
    * backend?
    *
-   * @param \Drupal\facets\FacetInterface $queryType
+   * @param \Drupal\facets\FacetInterface $facet
+   *   The facet being changed.
    */
   public function preQuery(FacetInterface $facet);
 

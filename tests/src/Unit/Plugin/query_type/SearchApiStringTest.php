@@ -5,7 +5,7 @@
  * Contains \Drupal\Tests\facets\Plugin\query_string\SearchApiStringTest.
  */
 
-namespace Drupal\Tests\facets\Unit\Plugin\query_string;
+namespace Drupal\Tests\facets\Unit\Plugin\query_type;
 
 use Drupal\facets\Entity\Facet;
 use Drupal\facets\Plugin\facets\query_type\SearchApiString;
@@ -13,9 +13,10 @@ use Drupal\search_api\Plugin\views\query\SearchApiQuery;
 use Drupal\Tests\UnitTestCase;
 
 /**
+ * Unit test for query type.
+ *
  * @group facets
  */
-
 class SearchApiStringTest extends UnitTestCase {
 
   /**

@@ -10,12 +10,11 @@ namespace Drupal\core_search_facets\Plugin;
 use Drupal\facets\FacetInterface;
 
 /**
- *
+ * Additional interface for core facet sources.
  *
  * A facet source is used to abstract the data source where facets can be added
  * to. A good example of this is a search api view. There are other possible
  * facet data sources, these all implement the FacetSourceInterface.
- *
  */
 interface CoreSearchFacetSourceInterface {
 
@@ -23,6 +22,7 @@ interface CoreSearchFacetSourceInterface {
    * Sets the facet query object.
    *
    * @return \Drupal\core_search_facets\FacetsQuery
+   *   The facet query object.
    */
   public function getFacetQueryExtender();
 
@@ -47,4 +47,3 @@ interface CoreSearchFacetSourceInterface {
   public function getQueryInfo(FacetInterface $facet);
 
 }
-

@@ -2,6 +2,7 @@
 
 /**
  * @file
+ * Contains \Drupal\facets\Processor\WidgetOrderPluginBase.
  */
 
 namespace Drupal\facets\Processor;
@@ -19,7 +20,7 @@ abstract class WidgetOrderPluginBase extends ProcessorPluginBase implements Widg
    */
   public function buildConfigurationForm(array $form, FormStateInterface $form_state, FacetInterface $facet) {
     $processors = $facet->getProcessors();
-    $config = isset($processors[$this->getPluginId()]) ? $processors[$this->getPluginId()] : null;
+    $config = isset($processors[$this->getPluginId()]) ? $processors[$this->getPluginId()] : NULL;
 
     $build['sort'] = [
       '#type' => 'radios',

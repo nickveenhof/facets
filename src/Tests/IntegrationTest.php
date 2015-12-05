@@ -180,6 +180,7 @@ class IntegrationTest extends FacetWebTestBase {
    * Configures empty behavior option to show a text on empty results.
    *
    * @param string $facet_name
+   *   The name of the facet.
    */
   protected function setEmptyBehaviorFacetText($facet_name) {
     $facet_id = $this->convertNameToMachineName($facet_name);
@@ -193,7 +194,7 @@ class IntegrationTest extends FacetWebTestBase {
     // Configure the text for empty results behavior.
     $edit = [
       'facet_settings[empty_behavior]' => 'text',
-      'facet_settings[empty_behavior_container][empty_behavior_text][value]' => 'No results found for this block!'
+      'facet_settings[empty_behavior_container][empty_behavior_text][value]' => 'No results found for this block!',
     ];
     $this->drupalPostForm(NULL, $edit, $this->t('Save'));
 
@@ -203,6 +204,7 @@ class IntegrationTest extends FacetWebTestBase {
    * Configures a facet to only be visible when accessing to the facet source.
    *
    * @param string $facet_name
+   *   The name of the facet.
    */
   protected function setOptionShowOnlyWhenFacetSourceVisible($facet_name) {
     $facet_id = $this->convertNameToMachineName($facet_name);
@@ -235,7 +237,8 @@ class IntegrationTest extends FacetWebTestBase {
   /**
    * Tests adding a facet trough the interface.
    *
-   * @param $facet_name
+   * @param string $facet_name
+   *   The name of the facet.
    */
   protected function addFacet($facet_name) {
     $facet_id = $this->convertNameToMachineName($facet_name);
@@ -288,7 +291,8 @@ class IntegrationTest extends FacetWebTestBase {
   /**
    * Tests editing of a facet through the UI.
    *
-   * @param $facet_name
+   * @param string $facet_name
+   *   The name of the facet.
    */
   public function editFacet($facet_name) {
     $facet_id = $this->convertNameToMachineName($facet_name);
@@ -308,7 +312,6 @@ class IntegrationTest extends FacetWebTestBase {
     // the edited facet is shown on the overview page.
     $this->assertRaw(t('Facet %name has been updated.', ['%name' => $facet_name . ' - 2']));
 
-
     // Make sure the "-2" suffix is still on the facet when editing a facet.
     $this->drupalGet($facet_edit_page);
     $this->assertRaw($this->t('Edit facet @facet', ['@facet' => $facet_name . ' - 2']));
@@ -326,6 +329,7 @@ class IntegrationTest extends FacetWebTestBase {
    * This deletes an unused facet through the UI.
    *
    * @param string $facet_name
+   *   The name of the facet.
    */
   protected function deleteUsedFacet($facet_name) {
     $facet_id = $this->convertNameToMachineName($facet_name);
@@ -346,6 +350,7 @@ class IntegrationTest extends FacetWebTestBase {
    * This deletes a facet through the UI.
    *
    * @param string $facet_name
+   *   The name of the facet.
    */
   protected function deleteUnusedFacet($facet_name) {
     $facet_id = $this->convertNameToMachineName($facet_name);
@@ -391,11 +396,13 @@ class IntegrationTest extends FacetWebTestBase {
   }
 
   /**
-   * Covert facet name to machine name.
+   * Convert facet name to machine name.
    *
-   * @param $facet_name
+   * @param string $facet_name
+   *   The name of the facet.
    *
    * @return string
+   *   The facet name changed to a machine name.
    */
   protected function convertNameToMachineName($facet_name) {
     return preg_replace('@[^a-zA-Z0-9_]+@', '_', strtolower($facet_name));
@@ -405,6 +412,7 @@ class IntegrationTest extends FacetWebTestBase {
    * Go to the Delete Facet Page using the facet name.
    *
    * @param string $facet_name
+   *   The name of the facet.
    */
   protected function goToDeleteFacetPage($facet_name) {
     $facet_id = $this->convertNameToMachineName($facet_name);

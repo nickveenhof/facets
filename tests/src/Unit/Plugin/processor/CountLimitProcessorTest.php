@@ -14,6 +14,8 @@ use Drupal\Tests\UnitTestCase;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 
 /**
+ * Unit test for processor.
+ *
  * @group facets
  */
 class CountLimitProcessorTest extends UnitTestCase {
@@ -30,7 +32,7 @@ class CountLimitProcessorTest extends UnitTestCase {
    *
    * @var \Drupal\facets\Result\Result[]
    */
-  protected $original_results;
+  protected $originalResults;
 
   /**
    * Creates a new processor object for use in the tests.
@@ -38,7 +40,7 @@ class CountLimitProcessorTest extends UnitTestCase {
   protected function setUp() {
     parent::setUp();
 
-    $this->original_results = [
+    $this->originalResults = [
       new Result('llama', 'llama', 10),
       new Result('badger', 'badger', 5),
       new Result('duck', 'duck', 15),
@@ -47,7 +49,7 @@ class CountLimitProcessorTest extends UnitTestCase {
     $processor_id = 'count_limit';
     $this->processor = new CountLimitProcessor([], $processor_id, []);
 
-    $processorDefinitions = [
+    $processor_definitions = [
       $processor_id => [
         'id' => $processor_id,
         'class' => 'Drupal\facets\Plugin\facets\processor\CountLimitProcessor',
@@ -59,7 +61,7 @@ class CountLimitProcessorTest extends UnitTestCase {
       ->getMock();
     $manager->expects($this->once())
       ->method('getDefinitions')
-      ->willReturn($processorDefinitions);
+      ->willReturn($processor_definitions);
     $manager->expects($this->once())
       ->method('createInstance')
       ->willReturn($this->processor);
@@ -75,14 +77,14 @@ class CountLimitProcessorTest extends UnitTestCase {
    */
   public function testNoFilter() {
     $facet = new Facet([], 'facet');
-    $facet->setResults($this->original_results);
+    $facet->setResults($this->originalResults);
     $facet->setOption('processors', [
       'count_limit' => [
         'settings' => ['minimum_items' => 4],
       ],
     ]);
     $this->processor->setConfiguration(['minimum_items' => 4]);
-    $sorted_results = $this->processor->build($facet, $this->original_results);
+    $sorted_results = $this->processor->build($facet, $this->originalResults);
 
     $this->assertCount(3, $sorted_results);
 
@@ -96,7 +98,7 @@ class CountLimitProcessorTest extends UnitTestCase {
    */
   public function testMinEqualsValue() {
     $facet = new Facet([], 'facet');
-    $facet->setResults($this->original_results);
+    $facet->setResults($this->originalResults);
     $facet->setOption('processors', [
       'count_limit' => [
         'settings' => ['minimum_items' => 5],
@@ -104,7 +106,7 @@ class CountLimitProcessorTest extends UnitTestCase {
     ]);
     $this->processor->setConfiguration(['minimum_items' => 5]);
 
-    $sorted_results = $this->processor->build($facet, $this->original_results);
+    $sorted_results = $this->processor->build($facet, $this->originalResults);
 
     $this->assertCount(3, $sorted_results);
 
@@ -170,7 +172,7 @@ class CountLimitProcessorTest extends UnitTestCase {
    */
   public function testFilterResults() {
     $facet = new Facet([], 'facet');
-    $facet->setResults($this->original_results);
+    $facet->setResults($this->originalResults);
     $facet->setOption('processors', [
       'count_limit' => [
         'settings' => ['minimum_items' => 8],
@@ -178,7 +180,7 @@ class CountLimitProcessorTest extends UnitTestCase {
     ]);
     $this->processor->setConfiguration(['minimum_items' => 8]);
 
-    $sorted_results = $this->processor->build($facet, $this->original_results);
+    $sorted_results = $this->processor->build($facet, $this->originalResults);
 
     $this->assertCount(2, $sorted_results);
 

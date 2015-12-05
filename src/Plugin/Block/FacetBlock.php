@@ -12,7 +12,7 @@ namespace Drupal\facets\Plugin\Block;
 use Drupal\Core\Block\BlockBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
-use Drupal\facetapi\Entity\Facet;
+use Drupal\facets\FacetManager\DefaultFacetManager;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -25,14 +25,13 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  *    "facet" = @ContextDefinition("entity:facets_facet", label=@Translation("Facet"))
  *  }
  * )
- *
  */
 class FacetBlock extends BlockBase implements ContainerFactoryPluginInterface {
 
   /**
    * The facet_manager plugin manager.
    *
-   * @var \Drupal\facets\FacetManager\DefaultFacetManager
+   * @var DefaultFacetManager
    */
   protected $facetManager;
 
@@ -45,10 +44,11 @@ class FacetBlock extends BlockBase implements ContainerFactoryPluginInterface {
    *   The plugin_id for the plugin instance.
    * @param string $plugin_definition
    *   The plugin implementation definition.
-   * @param \Drupal\facets\FacetManager\DefaultFacetManager $facetManager
+   * @param \Drupal\facets\FacetManager\DefaultFacetManager $facet_manager
+   *   The facet manager service.
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, \Drupal\facets\FacetManager\DefaultFacetManager $facetManager) {
-    $this->facetManager = $facetManager;
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, DefaultFacetManager $facet_manager) {
+    $this->facetManager = $facet_manager;
     parent::__construct($configuration, $plugin_id, $plugin_definition);
   }
 
@@ -57,14 +57,14 @@ class FacetBlock extends BlockBase implements ContainerFactoryPluginInterface {
    */
   public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
 
-    /** @var \Drupal\facets\FacetManager\DefaultFacetManager $facetManager */
-    $facetManager = $container->get('facets.manager');
+    /** @var \Drupal\facets\FacetManager\DefaultFacetManager $facet_manager */
+    $facet_manager = $container->get('facets.manager');
 
     return new static(
       $configuration,
       $plugin_id,
       $plugin_definition,
-      $facetManager
+      $facet_manager
     );
   }
 

@@ -12,6 +12,8 @@ use Drupal\facets\Result\Result;
 use Drupal\Tests\UnitTestCase;
 
 /**
+ * Unit test for processor.
+ *
  * @group facets
  */
 class CountWidgetOrderProcessorTest extends UnitTestCase {
@@ -28,7 +30,7 @@ class CountWidgetOrderProcessorTest extends UnitTestCase {
    *
    * @var \Drupal\facets\Result\Result[]
    */
-  protected $original_results;
+  protected $originalResults;
 
   /**
    * Creates a new processor object for use in the tests.
@@ -36,7 +38,7 @@ class CountWidgetOrderProcessorTest extends UnitTestCase {
   protected function setUp() {
     parent::setUp();
 
-    $this->original_results = [
+    $this->originalResults = [
       new Result('llama', 'llama', 10),
       new Result('badger', 'badger', 5),
       new Result('duck', 'duck', 15),
@@ -50,7 +52,7 @@ class CountWidgetOrderProcessorTest extends UnitTestCase {
    */
   public function testAscending() {
 
-    $sorted_results = $this->processor->sortResults($this->original_results, 'ASC');
+    $sorted_results = $this->processor->sortResults($this->originalResults, 'ASC');
 
     $this->assertEquals(5, $sorted_results[0]->getCount());
     $this->assertEquals('badger', $sorted_results[0]->getDisplayValue());
@@ -65,7 +67,7 @@ class CountWidgetOrderProcessorTest extends UnitTestCase {
    */
   public function testDescending() {
 
-    $sorted_results = $this->processor->sortResults($this->original_results, 'DESC');
+    $sorted_results = $this->processor->sortResults($this->originalResults, 'DESC');
 
     $this->assertEquals(15, $sorted_results[0]->getCount());
     $this->assertEquals('duck', $sorted_results[0]->getDisplayValue());

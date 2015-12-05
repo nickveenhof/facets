@@ -25,9 +25,13 @@ interface FacetSourceInterface {
    * Adds a configuration form for this facet source.
    *
    * @param array $form
+   *   The configuration form definition.
    * @param \Drupal\Core\Form\FormStateInterface $form_state
+   *   The current form state.
    * @param \Drupal\facets\FacetInterface $facet
+   *   The facet being edited.
    * @param \Drupal\facets\FacetSource\FacetSourceInterface $facet_source
+   *   The facet source being edited.
    */
   public function buildConfigurationForm(array $form, FormStateInterface $form_state, FacetInterface $facet, FacetSourceInterface $facet_source);
 
@@ -35,8 +39,7 @@ interface FacetSourceInterface {
    * Fill in facet data in to the configured facets.
    *
    * @param \Drupal\facets\FacetInterface[] $facets
-   *
-   * @return mixed
+   *   The configured facets.
    */
   public function fillFacetsWithResults($facets);
 
@@ -44,6 +47,7 @@ interface FacetSourceInterface {
    * Returns the path where a facet should link to.
    *
    * @return string
+   *   The path of the facet.
    */
   public function getPath();
 
@@ -51,10 +55,13 @@ interface FacetSourceInterface {
    * Get the allowed query types for a given facet for the facet source.
    *
    * @param \Drupal\facets\FacetInterface $facet
+   *   The facet we should get query types for.
    *
-   * @return array of allowed query types
+   * @return string[]
+   *   array of allowed query types
    *
    * @throws \Drupal\facets\Exception\Exception
+   *   An error when no query types are found.
    */
   public function getQueryTypesForFacet(FacetInterface $facet);
 
@@ -65,7 +72,8 @@ interface FacetSourceInterface {
    * when facet source visibility: "being rendered" is configured in the facet
    * visibility settings.
    *
-   * @return boolean
+   * @return bool
+   *   True when the facet is rendered on the same page.
    */
   public function isRenderedInCurrentRequest();
 
@@ -76,6 +84,7 @@ interface FacetSourceInterface {
    * is keyed by the field's machine name and has values of the field's label.
    *
    * @return array
+   *   An array of available fields.
    */
   public function getFields();
 

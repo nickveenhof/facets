@@ -11,6 +11,7 @@ use Drupal\facets\QueryType\QueryTypePluginBase;
 use Drupal\facets\Result\Result;
 
 /**
+ * A string query type for core.
  *
  * @FacetsQueryType(
  *   id = "core_node_search_string",
@@ -31,11 +32,11 @@ class CoreNodeSearchString extends QueryTypePluginBase {
    */
   public function execute() {
 
-    /** @var \Drupal\core_search_facets\Plugin\CoreSearchFacetSourceInterface $facetSource */
-    $facetSource = $this->facet->getFacetSource();
-    $query_info = $facetSource->getQueryInfo($this->facet);
+    /** @var \Drupal\core_search_facets\Plugin\CoreSearchFacetSourceInterface $facet_source */
+    $facet_source = $this->facet->getFacetSource();
+    $query_info = $facet_source->getQueryInfo($this->facet);
     /** @var \Drupal\core_search_facets\FacetsQuery $facet_query */
-    $facet_query = $facetSource->getFacetQueryExtender();
+    $facet_query = $facet_source->getFacetQueryExtender();
     $tables_joined = [];
 
     // Add the filter to the query if there are active values.
@@ -49,11 +50,12 @@ class CoreNodeSearchString extends QueryTypePluginBase {
 
         // Adds adds join to search query, makes sure it is only added once.
         if (isset($query_info['joins'][$field_info['table_alias']])) {
-          if (!isset($tables_joined[$field_info['table_alias']])) {
-            $tables_joined[$field_info['table_alias']] = TRUE;
-            $join_info = $query_info['joins'][$field_info['table_alias']];
-            $this->query->join($join_info['table'], $join_info['alias'], $join_info['condition']);
-          }
+        if (!isset($tables_joined[$field_info['table_alias']])) {
+        $tables_joined[$field_info['table_alias']] = TRUE;
+        $join_info = $query_info['joins'][$field_info['table_alias']];
+        $this->query->join($join_info['table'], $join_info['alias'],
+        $join_info['condition']);
+        }
         }*/
 
         // Adds facet conditions to the queries.
@@ -68,12 +70,12 @@ class CoreNodeSearchString extends QueryTypePluginBase {
    * {@inheritdoc}
    */
   public function build() {
-    /** @var \Drupal\core_search_facets\Plugin\CoreSearchFacetSourceInterface $facetSource */
-    $facetSource = $this->facet->getFacetSource();
-    $query_info = $facetSource->getQueryInfo($this->facet);
+    /* @var \Drupal\core_search_facets\Plugin\CoreSearchFacetSourceInterface $facet_source */
+    $facet_source = $this->facet->getFacetSource();
+    $query_info = $facet_source->getQueryInfo($this->facet);
 
     /** @var \Drupal\core_search_facets\FacetsQuery $facet_query */
-    $facet_query = $facetSource->getFacetQueryExtender();
+    $facet_query = $facet_source->getFacetQueryExtender();
 
     $facet_query->addFacetField($query_info);
 
@@ -94,4 +96,3 @@ class CoreNodeSearchString extends QueryTypePluginBase {
   }
 
 }
-

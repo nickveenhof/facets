@@ -2,6 +2,7 @@
 
 /**
  * @file
+ * Contains \Drupal\facets\Plugin\facets\widget\LinksWidget.
  */
 
 namespace Drupal\facets\Plugin\facets\widget;
@@ -12,20 +13,23 @@ use Drupal\facets\FacetInterface;
 use Drupal\facets\Widget\WidgetInterface;
 
 /**
+ * The links widget.
+ *
  * @FacetsWidget(
  *   id = "links",
  *   label = @Translation("List of links"),
  *   description = @Translation("A simple widget that shows a list of links"),
  * )
- *
- * Class LinksWidget
  */
 class LinksWidget implements WidgetInterface {
 
   use StringTranslationTrait;
 
   /**
+   * The link generator.
+   *
    * @var \Drupal\Core\Utility\LinkGeneratorInterface $linkGenerator
+   *   The link generator.
    */
   protected $linkGenerator;
 
@@ -107,6 +111,7 @@ class LinksWidget implements WidgetInterface {
    * Gets the link generator.
    *
    * @return \Drupal\Core\Utility\LinkGeneratorInterface
+   *   The link generator.
    */
   protected function linkGenerator() {
     if (!isset($this->linkGenerator)) {

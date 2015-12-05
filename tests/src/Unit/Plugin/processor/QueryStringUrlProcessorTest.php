@@ -16,6 +16,8 @@ use Symfony\Component\HttpFoundation\ParameterBag;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
+ * Unit test for processor.
+ *
  * @group facets
  */
 class QueryStringUrlProcessorTest extends UnitTestCase {
@@ -32,7 +34,7 @@ class QueryStringUrlProcessorTest extends UnitTestCase {
    *
    * @var \Drupal\facets\Result\Result[]
    */
-  protected $original_results;
+  protected $originalResults;
 
   /**
    * Creates a new processor object for use in the tests.
@@ -40,7 +42,7 @@ class QueryStringUrlProcessorTest extends UnitTestCase {
   protected function setUp() {
     parent::setUp();
 
-    $this->original_results = [
+    $this->originalResults = [
       new Result('llama', 'Llama', 15),
       new Result('badger', 'Badger', 5),
       new Result('mushroom', 'Mushroom', 5),
@@ -49,12 +51,15 @@ class QueryStringUrlProcessorTest extends UnitTestCase {
     ];
   }
 
+  /**
+   * Basic test with one active item.
+   */
   public function testSetSingleActiveItem() {
     $facet = new Facet([], 'facet');
-    $facet->setResults($this->original_results);
+    $facet->setResults($this->originalResults);
     $facet->setFieldIdentifier('test');
 
-    $request = new Request;
+    $request = new Request();
     $request->query->set('f', ['test:badger']);
 
     $this->processor = new QueryStringUrlProcessor([], 'query_string', [], $request);
@@ -63,12 +68,15 @@ class QueryStringUrlProcessorTest extends UnitTestCase {
     $this->assertEquals(['badger'], $facet->getActiveItems());
   }
 
+  /**
+   * Basic test with multiple active items.
+   */
   public function testSetMultipleActiveItems() {
     $facet = new Facet([], 'facet');
-    $facet->setResults($this->original_results);
+    $facet->setResults($this->originalResults);
     $facet->setFieldIdentifier('test');
 
-    $request = new Request;
+    $request = new Request();
     $request->query->set('f', ['test:badger', 'test:mushroom', 'donkey:kong']);
 
     $this->processor = new QueryStringUrlProcessor([], 'query_string', [], $request);
@@ -77,11 +85,14 @@ class QueryStringUrlProcessorTest extends UnitTestCase {
     $this->assertEquals(['badger', 'mushroom'], $facet->getActiveItems());
   }
 
+  /**
+   * Basic test with an empty build.
+   */
   public function testEmptyBuild() {
     $facet = new Facet([], 'facet');
     $facet->setFacetSourceId('facet_source__dummy');
 
-    $request = new Request;
+    $request = new Request();
     $request->query->set('f', []);
 
     $this->processor = new QueryStringUrlProcessor([], 'query_string', [], $request);
@@ -89,18 +100,21 @@ class QueryStringUrlProcessorTest extends UnitTestCase {
     $this->assertEmpty($results);
   }
 
+  /**
+   * Test with default build.
+   */
   public function testBuild() {
     $facet = new Facet([], 'facet');
     $facet->setFieldIdentifier('test');
     $facet->setFacetSourceId('facet_source__dummy');
 
-    $request = new Request;
+    $request = new Request();
     $request->query->set('f', []);
 
     $this->setContainer();
 
     $this->processor = new QueryStringUrlProcessor([], 'query_string', [], $request);
-    $results = $this->processor->build($facet, $this->original_results);
+    $results = $this->processor->build($facet, $this->originalResults);
 
     /** @var \Drupal\facets\Result\ResultInterface $r */
     foreach ($results as $r) {
@@ -109,15 +123,18 @@ class QueryStringUrlProcessorTest extends UnitTestCase {
     }
   }
 
+  /**
+   * Test with an active item already from url.
+   */
   public function testBuildWithActiveItem() {
     $facet = new Facet([], 'facet');
     $facet->setFieldIdentifier('test');
     $facet->setFacetSourceId('facet_source__dummy');
 
-    $original_results = $this->original_results;
+    $original_results = $this->originalResults;
     $original_results[2]->setActiveState(TRUE);
 
-    $request = new Request;
+    $request = new Request();
     $request->query->set('f', ['king:kong']);
 
     $this->setContainer();
@@ -137,6 +154,9 @@ class QueryStringUrlProcessorTest extends UnitTestCase {
     }
   }
 
+  /**
+   * Set the container for use in unit tests.
+   */
   protected function setContainer() {
     $router = $this->getMockBuilder('Drupal\Tests\Core\Routing\TestRouterInterface')
       ->disableOriginalConstructor()

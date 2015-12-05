@@ -12,7 +12,7 @@ use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Plugin\DefaultPluginManager;
 
 /**
- * Defines a plugin manager for widgets
+ * Defines a plugin manager for widgets.
  */
 class WidgetPluginManager extends DefaultPluginManager {
 

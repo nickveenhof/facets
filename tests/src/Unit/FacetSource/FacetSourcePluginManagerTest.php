@@ -1,7 +1,8 @@
 <?php
 
 /**
- * @file Contains \Drupal\Tests\facets\Unit\FacetSource\FacetSourcePluginManagerTest.
+ * @file
+ * Contains \Drupal\Tests\facets\Unit\FacetSource\FacetSourcePluginManagerTest.
  */
 
 namespace Drupal\Tests\facets\Unit\FacetSource;
@@ -15,6 +16,8 @@ use Drupal\Tests\UnitTestCase;
 use Zend\Stdlib\ArrayObject;
 
 /**
+ * Unit test for plugin manager.
+ *
  * @group facets
  */
 class FacetSourcePluginManagerTest extends UnitTestCase {

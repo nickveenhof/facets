@@ -13,6 +13,8 @@ use Drupal\facets\Result\Result;
 use Drupal\Tests\UnitTestCase;
 
 /**
+ * Unit test for processor.
+ *
  * @group facets
  */
 class HideNonNarrowingResultProcessorTest extends UnitTestCase {
@@ -29,7 +31,7 @@ class HideNonNarrowingResultProcessorTest extends UnitTestCase {
    *
    * @var \Drupal\facets\Result\Result[]
    */
-  protected $original_results;
+  protected $originalResults;
 
   /**
    * Creates a new processor object for use in the tests.
@@ -37,7 +39,7 @@ class HideNonNarrowingResultProcessorTest extends UnitTestCase {
   protected function setUp() {
     parent::setUp();
 
-    $this->original_results = [
+    $this->originalResults = [
       new Result('llama', 'llama', 10),
       new Result('badger', 'badger', 15),
       new Result('duck', 'duck', 15),
@@ -53,9 +55,9 @@ class HideNonNarrowingResultProcessorTest extends UnitTestCase {
   public function testNoFilterResults() {
 
     $facet = new Facet([], 'facet');
-    $facet->setResults($this->original_results);
+    $facet->setResults($this->originalResults);
 
-    $filtered_results = $this->processor->build($facet, $this->original_results);
+    $filtered_results = $this->processor->build($facet, $this->originalResults);
 
     $this->assertCount(3, $filtered_results);
 
@@ -72,7 +74,7 @@ class HideNonNarrowingResultProcessorTest extends UnitTestCase {
    */
   public function testFilterResults() {
 
-    $results = $this->original_results;
+    $results = $this->originalResults;
     $results[2]->setActiveState(TRUE);
 
     $facet = new Facet([], 'facet');

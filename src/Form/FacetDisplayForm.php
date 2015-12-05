@@ -58,13 +58,13 @@ class FacetDisplayForm extends EntityForm {
    *   The entity manager.
    * @param \Drupal\facets\Processor\ProcessorPluginManager $processor_plugin_manager
    *   The processor plugin manager.
-   * @param \Drupal\facets\Widget\WidgetPluginManager $widgetPluginManager
+   * @param \Drupal\facets\Widget\WidgetPluginManager $widget_plugin_manager
    *   The plugin manager for widgets.
    */
-  public function __construct(EntityTypeManager $entity_type_manager, ProcessorPluginManager $processor_plugin_manager, WidgetPluginManager $widgetPluginManager) {
+  public function __construct(EntityTypeManager $entity_type_manager, ProcessorPluginManager $processor_plugin_manager, WidgetPluginManager $widget_plugin_manager) {
     $this->entityTypeManager = $entity_type_manager;
     $this->processorPluginManager = $processor_plugin_manager;
-    $this->widgetPluginManager = $widgetPluginManager;
+    $this->widgetPluginManager = $widget_plugin_manager;
   }
 
   /**
@@ -86,7 +86,7 @@ class FacetDisplayForm extends EntityForm {
   /**
    * {@inheritdoc}
    */
-  public function getBaseFormID() {
+  public function getBaseFormId() {
     return NULL;
   }
 
@@ -207,16 +207,19 @@ class FacetDisplayForm extends EntityForm {
     $form['#attached']['library'][] = 'search_api/drupal.search_api.index-active-formatters';
     $form['#title'] = $this->t('Manage processors for facet %label', array('%label' => $facet->label()));
 
-    // Add the list of all other processors with checkboxes to enable/disable them.
+    // Add the list of all other processors with checkboxes to enable/disable
+    // them.
     $form['facet_settings'] = array(
       '#type' => 'fieldset',
       '#title' => $this->t('Facet settings'),
-      '#attributes' => array('class' => array(
-        'search-api-status-wrapper',
-      )),
+      '#attributes' => array(
+        'class' => array(
+          'search-api-status-wrapper',
+        ),
+      ),
     );
     foreach ($all_processors as $processor_id => $processor) {
-      if(!($processor instanceof WidgetOrderProcessorInterface)){
+      if (!($processor instanceof WidgetOrderProcessorInterface)) {
         $clean_css_id = Html::cleanCssIdentifier($processor_id);
         $form['facet_settings'][$processor_id]['status'] = array(
           '#type' => 'checkbox',
@@ -233,18 +236,23 @@ class FacetDisplayForm extends EntityForm {
           '#access' => !$processor->isHidden(),
         );
 
-        $processor_form_state = new SubFormState($form_state, array('facet_settings', $processor_id, 'settings'));
+        $processor_form_state = new SubFormState(
+          $form_state,
+          ['facet_settings', $processor_id, 'settings']
+        );
         $processor_form = $processor->buildConfigurationForm($form, $processor_form_state, $facet);
         if ($processor_form) {
           $form['facet_settings'][$processor_id]['settings'] = array(
             '#type' => 'details',
             '#title' => $this->t('%processor settings', ['%processor' => (string) $processor->getPluginDefinition()['label']]),
-            '#open' => true,
-            '#attributes' => array('class' => array(
-              'facets-processor-settings-' . Html::cleanCssIdentifier($processor_id),
-              'facets-processor-settings-facet',
-              'facets-processor-settings'
-            ),),
+            '#open' => TRUE,
+            '#attributes' => array(
+              'class' => array(
+                'facets-processor-settings-' . Html::cleanCssIdentifier($processor_id),
+                'facets-processor-settings-facet',
+                'facets-processor-settings',
+              ),
+            ),
             '#states' => array(
               'visible' => array(
                 ':input[name="facet_settings[' . $processor_id . '][status]"]' => array('checked' => TRUE),
@@ -255,16 +263,19 @@ class FacetDisplayForm extends EntityForm {
         }
       }
     }
-    // Add the list of widget sort processors with checkboxes to enable/disable them.
+    // Add the list of widget sort processors with checkboxes to enable/disable
+    // them.
     $form['facet_sorting'] = array(
       '#type' => 'fieldset',
       '#title' => $this->t('Facet sorting'),
-      '#attributes' => array('class' => array(
-        'search-api-status-wrapper',
-      )),
+      '#attributes' => array(
+        'class' => array(
+          'search-api-status-wrapper',
+        ),
+      ),
     );
     foreach ($all_processors as $processor_id => $processor) {
-      if($processor instanceof WidgetOrderProcessorInterface){
+      if ($processor instanceof WidgetOrderProcessorInterface) {
         $clean_css_id = Html::cleanCssIdentifier($processor_id);
         $form['facet_sorting'][$processor_id]['status'] = array(
           '#type' => 'checkbox',
@@ -281,18 +292,22 @@ class FacetDisplayForm extends EntityForm {
           '#access' => !$processor->isHidden(),
         );
 
-        $processor_form_state = new SubFormState($form_state, array('facet_sorting', $processor_id, 'settings'));
+        $processor_form_state = new SubFormState(
+          $form_state,
+          array('facet_sorting', $processor_id, 'settings')
+        );
         $processor_form = $processor->buildConfigurationForm($form, $processor_form_state, $facet);
         if ($processor_form) {
           $form['facet_sorting'][$processor_id]['settings'] = array(
             '#type' => 'container',
-//            '#title' => $this->t('%processor settings', ['%processor' => (string) $processor->getPluginDefinition()['label']]),
-            '#open' => true,
-            '#attributes' => array('class' => array(
-              'facets-processor-settings-' . Html::cleanCssIdentifier($processor_id),
-              'facets-processor-settings-sorting',
-              'facets-processor-settings'
-            ),),
+            '#open' => TRUE,
+            '#attributes' => array(
+              'class' => array(
+                'facets-processor-settings-' . Html::cleanCssIdentifier($processor_id),
+                'facets-processor-settings-sorting',
+                'facets-processor-settings',
+              ),
+            ),
             '#states' => array(
               'visible' => array(
                 ':input[name="facet_sorting[' . $processor_id . '][status]"]' => array('checked' => TRUE),
@@ -321,7 +336,7 @@ class FacetDisplayForm extends EntityForm {
       '#description' => $this->t('The action to take when a facet has no items.'),
       '#required' => TRUE,
     ];
-    $form['facet_settings']['empty_behavior_container']= [
+    $form['facet_settings']['empty_behavior_container'] = [
       '#type' => 'container',
       '#states' => array(
         'visible' => array(
@@ -333,7 +348,7 @@ class FacetDisplayForm extends EntityForm {
       '#type' => 'text_format',
       '#title' => $this->t('Empty text'),
       '#format' => isset($empty_behavior_config['text_format']) ? $empty_behavior_config['text_format'] : 'plain_text',
-      '#editor' => true,
+      '#editor' => TRUE,
       '#default_value' => isset($empty_behavior_config['text_format']) ? $empty_behavior_config['text'] : '',
     ];
 
@@ -349,13 +364,15 @@ class FacetDisplayForm extends EntityForm {
     // Order enabled processors per stage, create all the containers for the
     // different stages.
     foreach ($stages as $stage => $description) {
-      $form['weights'][$stage] = array (
+      $form['weights'][$stage] = array(
         '#type' => 'fieldset',
         '#title' => $description['label'],
-        '#attributes' => array('class' => array(
-          'search-api-stage-wrapper',
-          'search-api-stage-wrapper-' . Html::cleanCssIdentifier($stage),
-        )),
+        '#attributes' => array(
+          'class' => array(
+            'search-api-stage-wrapper',
+            'search-api-stage-wrapper-' . Html::cleanCssIdentifier($stage),
+          ),
+        ),
       );
       $form['weights'][$stage]['order'] = array(
         '#type' => 'table',
@@ -392,9 +409,11 @@ class FacetDisplayForm extends EntityForm {
           '#title_display' => 'invisible',
           '#default_value' => $weight,
           '#parents' => array('processors', $processor_id, 'weights', $stage),
-          '#attributes' => array('class' => array(
-            'search-api-processor-weight-' . Html::cleanCssIdentifier($stage),
-          )),
+          '#attributes' => array(
+            'class' => array(
+              'search-api-processor-weight-' . Html::cleanCssIdentifier($stage),
+            ),
+          ),
         );
       }
     }
@@ -426,14 +445,20 @@ class FacetDisplayForm extends EntityForm {
     // Iterate over all processors that have a form and are enabled.
     foreach ($form['facet_settings'] as $processor_id => $processor_form) {
       if (!empty($values['processors'][$processor_id])) {
-        $processor_form_state = new SubFormState($form_state, array('facet_settings', $processor_id, 'settings'));
+        $processor_form_state = new SubFormState(
+          $form_state,
+          array('facet_settings', $processor_id, 'settings')
+        );
         $processors[$processor_id]->validateConfigurationForm($form['facet_settings'][$processor_id], $processor_form_state, $facet);
       }
     }
     // Iterate over all sorting processors that have a form and are enabled.
     foreach ($form['facet_sorting'] as $processor_id => $processor_form) {
       if (!empty($values['processors'][$processor_id])) {
-        $processor_form_state = new SubFormState($form_state, array('facet_sorting', $processor_id, 'settings'));
+        $processor_form_state = new SubFormState(
+          $form_state,
+          array('facet_sorting', $processor_id, 'settings')
+        );
         $processors[$processor_id]->validateConfigurationForm($form['facet_sorting'][$processor_id], $processor_form_state, $facet);
       }
     }
@@ -449,7 +474,6 @@ class FacetDisplayForm extends EntityForm {
     // Store processor settings.
     // @todo Go through all available processors, enable/disable with method on
     //   processor plugin to allow reaction.
-
     /** @var \Drupal\facets\FacetInterface $facet */
     $facet = $this->entity;
 
@@ -470,26 +494,38 @@ class FacetDisplayForm extends EntityForm {
         $new_settings[$processor_id]['weights'] = $processor_values['weights'];
       }
       if (isset($form[$form_container_key][$processor_id]['settings'])) {
-        $processor_form_state = new SubFormState($form_state, array($form_container_key, $processor_id, 'settings'));
+        $processor_form_state = new SubFormState(
+          $form_state,
+          array($form_container_key, $processor_id, 'settings')
+        );
         $processor->submitConfigurationForm($form[$form_container_key][$processor_id]['settings'], $processor_form_state, $facet);
         $new_settings[$processor_id]['settings'] = $processor->getConfiguration();
       }
     }
-
 
     // Sort the processors so we won't have unnecessary changes.
     ksort($new_settings);
     $facet->setOption('processors', $new_settings);
     $facet->setWidget($form_state->getValue('widget'));
     $facet->set('widget_configs', $form_state->getValue('widget_configs'));
-    $facet->set('only_visible_when_facet_source_is_visible', $form_state->getValue(['facet_settings','only_visible_when_facet_source_is_visible']));
+    $facet->set('only_visible_when_facet_source_is_visible', $form_state->getValue(['facet_settings', 'only_visible_when_facet_source_is_visible']));
 
     $empty_behavior_config = [];
     $empty_behavior = $form_state->getValue(['facet_settings', 'empty_behavior']);
     $empty_behavior_config['behavior'] = $empty_behavior;
-    if($empty_behavior == 'text'){
-      $empty_behavior_config['text_format'] = $form_state->getValue(['facet_settings', 'empty_behavior_container', 'empty_behavior_text', 'format']);
-      $empty_behavior_config['text'] = $form_state->getValue(['facet_settings', 'empty_behavior_container', 'empty_behavior_text', 'value']);
+    if ($empty_behavior == 'text') {
+      $empty_behavior_config['text_format'] = $form_state->getValue([
+        'facet_settings',
+        'empty_behavior_container',
+        'empty_behavior_text',
+        'format',
+      ]);
+      $empty_behavior_config['text'] = $form_state->getValue([
+        'facet_settings',
+        'empty_behavior_container',
+        'empty_behavior_text',
+        'value',
+      ]);
     }
     $facet->setOption('empty_behavior', $empty_behavior_config);
 

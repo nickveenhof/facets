@@ -24,11 +24,8 @@ class FacetsQuery extends SearchQuery {
    *
    * @param array $query_info
    *   An associative array of query information.
-   * @param $table_alias
+   * @param string $table_alias
    *   The alias of the table being joined.
-   *
-   *  @return FacetsQuery
-   *    An instance of this class.
    */
   public function addFacetJoin(array $query_info, $table_alias) {
     if (isset($query_info['joins'][$table_alias])) {
@@ -46,7 +43,7 @@ class FacetsQuery extends SearchQuery {
    * @param array $query_info
    *   An associative array of query information.
    *
-   *  @return FacetsQuery
+   * @return FacetsQuery
    *    An instance of this class.
    */
   public function addFacetField(array $query_info) {
@@ -120,5 +117,5 @@ class FacetsQuery extends SearchQuery {
   public function getSearchExpression() {
     return $this->searchExpression;
   }
-}
 
+}

@@ -12,7 +12,7 @@ use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Plugin\DefaultPluginManager;
 
 /**
- * Defines a plugin manager for query types
+ * Defines a plugin manager for query types.
  */
 class QueryTypePluginManager extends DefaultPluginManager {
 

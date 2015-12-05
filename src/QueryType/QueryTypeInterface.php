@@ -13,8 +13,6 @@ interface QueryTypeInterface {
 
   /**
    * Add facet info to the query using the backend native query object.
-   *
-   * @return mixed
    */
   public function execute();
 

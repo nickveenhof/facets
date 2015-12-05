@@ -53,7 +53,7 @@ abstract class QueryTypePluginBase extends PluginBase implements QueryTypeInterf
    *
    * @var \Drupal\Core\Utility\LinkGeneratorInterface
    */
-  protected $link_generator;
+  protected $linkGenerator;
 
   /**
    * {@inheritdoc}

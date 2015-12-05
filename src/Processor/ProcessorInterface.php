@@ -35,8 +35,11 @@ interface ProcessorInterface extends ConfigurablePluginInterface {
    * Adds a configuration form for this processor.
    *
    * @param array $form
+   *   The form.
    * @param \Drupal\Core\Form\FormStateInterface $form_state
+   *   The current form state.
    * @param \Drupal\facets\FacetInterface $facet
+   *   The facet this processor is being added to.
    */
   public function buildConfigurationForm(array $form, FormStateInterface $form_state, FacetInterface $facet);
 
@@ -44,8 +47,11 @@ interface ProcessorInterface extends ConfigurablePluginInterface {
    * Validates a configuration form for this processor.
    *
    * @param array $form
+   *   The form.
    * @param \Drupal\Core\Form\FormStateInterface $form_state
+   *   The current form state.
    * @param \Drupal\facets\FacetInterface $facet
+   *   The facet this processor is being added to.
    */
   public function validateConfigurationForm(array $form, FormStateInterface $form_state, FacetInterface $facet);
 

@@ -2,6 +2,7 @@
 
 /**
  * @file
+ * Contains \Drupal\facets\Plugin\facets\processor\DisplayValueWidgetOrderProcessor.
  */
 
 namespace Drupal\facets\Plugin\facets\processor;
@@ -11,6 +12,8 @@ use Drupal\facets\Processor\WidgetOrderProcessorInterface;
 use Drupal\facets\Result\Result;
 
 /**
+ * A processor that orders the results by display value.
+ *
  * @FacetsProcessor(
  *   id = "display_value_widget_order",
  *   label = @Translation("Sort by display value"),
@@ -37,14 +40,14 @@ class DisplayValueWidgetOrderProcessor extends WidgetOrderPluginBase implements 
   }
 
   /**
-   *
+   * Sorts ascending.
    */
   protected static function sortDisplayValueAsc(Result $a, Result $b) {
     return strnatcasecmp($a->getDisplayValue(), $b->getDisplayValue());
   }
 
   /**
-   *
+   * Sorts descending.
    */
   protected static function sortDisplayValueDesc(Result $a, Result $b) {
     return strnatcasecmp($b->getDisplayValue(), $a->getDisplayValue());

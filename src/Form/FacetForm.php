@@ -10,7 +10,6 @@ namespace Drupal\facets\Form;
 use Drupal\Core\Entity\EntityForm;
 use Drupal\Core\Entity\EntityTypeManager;
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\facets\Exception\Exception;
 use Drupal\facets\FacetInterface;
 use Drupal\facets\FacetSource\FacetSourcePluginManager;
 use Drupal\facets\Processor\ProcessorPluginManager;
@@ -48,15 +47,15 @@ class FacetForm extends EntityForm {
    *
    * @param \Drupal\Core\Entity\EntityTypeManager $entity_type_manager
    *   The entity manager.
-   * @param \Drupal\facets\FacetSource\FacetSourcePluginManager $facetSourcePluginManager
+   * @param \Drupal\facets\FacetSource\FacetSourcePluginManager $facet_source_plugin_manager
    *   The plugin manager for facet sources.
-   * @param \Drupal\facets\Processor\ProcessorPluginManager $processorPluginManager
+   * @param \Drupal\facets\Processor\ProcessorPluginManager $processor_plugin_manager
    *   The plugin manager for processors.
    */
-  public function __construct(EntityTypeManager $entity_type_manager, FacetSourcePluginManager $facetSourcePluginManager, ProcessorPluginManager $processorPluginManager) {
+  public function __construct(EntityTypeManager $entity_type_manager, FacetSourcePluginManager $facet_source_plugin_manager, ProcessorPluginManager $processor_plugin_manager) {
     $this->facetStorage = $entity_type_manager->getStorage('facets_facet');
-    $this->facetSourcePluginManager = $facetSourcePluginManager;
-    $this->processorPluginManager = $processorPluginManager;
+    $this->facetSourcePluginManager = $facet_source_plugin_manager;
+    $this->processorPluginManager = $processor_plugin_manager;
   }
 
   /**
@@ -214,8 +213,6 @@ class FacetForm extends EntityForm {
     ];
     $this->buildFacetSourceConfigForm($form, $form_state);
 
-
-
     $form['status'] = [
       '#type' => 'checkbox',
       '#title' => $this->t('Enabled'),
@@ -287,8 +284,8 @@ class FacetForm extends EntityForm {
       foreach ($processors_definitions as $processor_id => $processor) {
         if (isset($processor['locked']) && $processor['locked'] == TRUE) {
           $weights = [];
-          foreach($stages as $stage_id => $stage) {
-            if(isset($processor['stages'][$stage_id])) {
+          foreach ($stages as $stage_id => $stage) {
+            if (isset($processor['stages'][$stage_id])) {
               $weights[$stage_id] = $processor['stages'][$stage_id];
             }
           }
@@ -304,7 +301,7 @@ class FacetForm extends EntityForm {
       // Set a default widget for new facets.
       $facet->setWidget('links');
 
-      // Set default empty behaviour
+      // Set default empty behaviour.
       $facet->setOption('empty_behavior', ['behavior' => 'none']);
       $facet->setOnlyVisibleWhenFacetSourceIsVisible(TRUE);
     }
@@ -341,7 +338,8 @@ class FacetForm extends EntityForm {
         drupal_set_message($message);
         $form_state->setRedirect('entity.facets_facet.display_form', ['facets_facet' => $facet->id()]);
       }
-    }else{
+    }
+    else {
       drupal_set_message(t('Facet %name has been updated.', ['%name' => $facet->getName()]));
     }
 

@@ -2,7 +2,7 @@
 
 /**
  * @file
- *   Contains \Drupal\core_search_facets\Plugin\facets\facet_source\CoreNodeSearchFacetSource
+ * Contains \Drupal\core_search_facets\Plugin\facets\facet_source\CoreNodeSearchFacetSource.
  */
 
 namespace Drupal\core_search_facets\Plugin\facets\facet_source;
@@ -95,7 +95,7 @@ class CoreNodeSearchFacetSource extends FacetSourcePluginBase implements CoreSea
     $view->execute();
 
     return $view->getDisplay()->getOption('path');*/
-    return;
+    return '';
   }
 
   /**
@@ -126,8 +126,13 @@ class CoreNodeSearchFacetSource extends FacetSourcePluginBase implements CoreSea
   }
 
   /**
-   * @param $field_id
+   * Get the query types for a data type.
+   *
+   * @param string $field_id
+   *   The field id.
+   *
    * @return array
+   *   An array of query types.
    */
   public function getQueryTypesForDataType($field_id) {
     $query_types = [];
@@ -194,19 +199,20 @@ class CoreNodeSearchFacetSource extends FacetSourcePluginBase implements CoreSea
    * {@inheritdoc}
    */
   public function getFacetQueryExtender() {
-    //if (!$this->facetQueryExtender) {
-
-    //$this->facetQueryExtender = db_select('search_index', 'i', array('target' => 'replica'))->extend('Drupal\search\ViewsSearchQuery');
-    //$this->searchQuery->searchExpression($input, $this->searchType);
-    //$this->searchQuery->publicParseSearchExpression();
-
+    // If (!$this->facetQueryExtender) {
+    // $this->facetQueryExtender = db_select('search_index',
+    // 'i',
+    // array('target' => 'replica'))
+    // ->extend('Drupal\search\ViewsSearchQuery');
+    // $this->searchQuery->searchExpression($input, $this->searchType);
+    // $this->searchQuery->publicParseSearchExpression();
     $this->facetQueryExtender = db_select('search_index', 'i', array('target' => 'replica'))->extend('Drupal\core_search_facets\FacetsQuery');
     $this->facetQueryExtender->join('node_field_data', 'n', 'n.nid = i.sid');
     $this->facetQueryExtender
-      //->condition('n.status', 1)
+      // ->condition('n.status', 1).
       ->addTag('node_access')
       ->searchExpression($this->keys, 'node_search');
-    //}
+    // }.
     return $this->facetQueryExtender;
   }
 
@@ -214,45 +220,45 @@ class CoreNodeSearchFacetSource extends FacetSourcePluginBase implements CoreSea
    * {@inheritdoc}
    */
   public function getQueryInfo(FacetInterface $facet) {
-    //if (!$facet['field api name']) {
+    // If (!$facet['field api name']) {
     // We add the language code of the indexed item to the result of the query.
     // So in this case we need to use the search_index table alias (i) for the
     // langcode field. Otherwise we will have same nid for multiple languages
     // as result. For more details see NodeSearch::findResults().
-     $table_alias = $facet->getFieldIdentifier() == 'langcode' ? 'i' : 'n';
-      $query_info = [
-        'fields' => [
-          $table_alias . '.' . $facet->getFieldIdentifier() => [
-            'table_alias' => $table_alias,
-            'field' => $facet->getFieldIdentifier(),
-          ],
+    $table_alias = $facet->getFieldIdentifier() == 'langcode' ? 'i' : 'n';
+    $query_info = [
+      'fields' => [
+        $table_alias . '.' . $facet->getFieldIdentifier() => [
+          'table_alias' => $table_alias,
+          'field' => $facet->getFieldIdentifier(),
         ],
-      ];
-    //}
+      ],
+    ];
+    // }
     /*else {
-      $query_info = array();
+    $query_info = array();
 
-      // Gets field info, finds table name and field name.
-      $field = field_info_field($facet['field api name']);
-      $table = _field_sql_storage_tablename($field);
+    // Gets field info, finds table name and field name.
+    $field = field_info_field($facet['field api name']);
+    $table = _field_sql_storage_tablename($field);
 
-      // Iterates over columns, adds fields to query info.
-      foreach ($field['columns'] as $column_name => $attributes) {
-        $column = _field_sql_storage_columnname($field['field_name'], $column_name);
-        $query_info['fields'][$table . '.' . $column] = array(
-          'table_alias' => $table,
-          'field' => $column,
-        );
-      }
+    // Iterates over columns, adds fields to query info.
+    foreach ($field['columns'] as $column_name => $attributes) {
+    $column = _field_sql_storage_columnname($field['field_name'], $column_name);
+    $query_info['fields'][$table . '.' . $column] = array(
+    'table_alias' => $table,
+    'field' => $column,
+    );
+    }
 
-      // Adds the join on the node table.
-      $query_info['joins'] = array(
-        $table => array(
-          'table' => $table,
-          'alias' => $table,
-          'condition' => "n.vid = $table.revision_id",
-        ),
-      );
+    // Adds the join on the node table.
+    $query_info['joins'] = array(
+    $table => array(
+    'table' => $table,
+    'alias' => $table,
+    'condition' => "n.vid = $table.revision_id",
+    ),
+    );
     }*/
 
     // Returns query info, makes sure all keys are present.
@@ -263,12 +269,14 @@ class CoreNodeSearchFacetSource extends FacetSourcePluginBase implements CoreSea
   }
 
   /**
+   * Checks if the search has facets.
+   *
    * @TODO move to the Base class???
    */
   public function hasFacets() {
     $manager = \Drupal::service('entity_type.manager')->getStorage('facets_facet');
     $facets = $manager->loadMultiple();
-    foreach($facets as $facet) {
+    foreach ($facets as $facet) {
       if ($facet->getFacetSourceId() == $this->getPluginId()) {
         return TRUE;
       }

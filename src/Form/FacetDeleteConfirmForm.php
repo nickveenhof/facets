@@ -7,7 +7,6 @@
 
 namespace Drupal\facets\Form;
 
-use Drupal\block\Entity\Block;
 use Drupal\Core\Entity\EntityConfirmFormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Url;
@@ -53,4 +52,5 @@ class FacetDeleteConfirmForm extends EntityConfirmFormBase {
     drupal_set_message($this->t('The facet %name has been deleted.', array('%name' => $this->entity->label())));
     $form_state->setRedirect('facets.overview');
   }
+
 }

@@ -10,7 +10,6 @@ namespace Drupal\facets;
 use Drupal\Core\Config\Entity\ConfigEntityInterface;
 use Drupal\Core\Config\Entity\ConfigEntityListBuilder;
 use Drupal\Core\Entity\EntityInterface;
-use Drupal\facets\FacetSource\FacetSourceInterface;
 
 /**
  * Builds a listing of facet entities.
@@ -102,10 +101,10 @@ class FacetListBuilder extends ConfigEntityListBuilder {
         ),
         'title' => array(
           'data' => array(
-              '#type' => 'link',
-              '#title' => $entity->getName(),
-              '#suffix' => '<div>' . $entity->getFieldAlias() . ' - ' . $entity->getWidget() . '</div>',
-            ) + $entity->urlInfo('edit-form')->toRenderArray(),
+            '#type' => 'link',
+            '#title' => $entity->getName(),
+            '#suffix' => '<div>' . $entity->getFieldAlias() . ' - ' . $entity->getWidget() . '</div>',
+          ) + $entity->urlInfo('edit-form')->toRenderArray(),
           'class' => array('search-api-title'),
         ),
         'status' => array(
@@ -155,7 +154,7 @@ class FacetListBuilder extends ConfigEntityListBuilder {
           'You currently have no facet sources defined. You should start by adding a facet source before creating facets.<br />
            An example of a facet source is a view based on Search API or a Search API page.
            Other modules can also implement a facet source by providing a plugin that implements the FacetSourceInterface.'
-        )
+        ),
       ];
     }
 
@@ -171,7 +170,7 @@ class FacetListBuilder extends ConfigEntityListBuilder {
       '#attributes' => array(
         'class' => array(
           'facets-groups-list',
-        )
+        ),
       ),
     );
 
@@ -218,7 +217,7 @@ class FacetListBuilder extends ConfigEntityListBuilder {
     foreach ($facet_sources as $facet_source) {
       $facet_source_groups[$facet_source['id']] = [
         'facet_source' => $facet_source,
-        'facets' => []
+        'facets' => [],
       ];
 
       foreach ($facets as $facet) {

@@ -51,7 +51,7 @@ class FacetController extends ControllerBase {
    * Returns a form to edit a facet on a search api index.
    *
    * @param \Drupal\facets\FacetInterface $facets_facet
-   *   Facet currently being edited
+   *   Facet currently being edited.
    *
    * @return array
    *   The facet edit form.
@@ -64,7 +64,7 @@ class FacetController extends ControllerBase {
   /**
    * Returns the page title for an facets's "View" tab.
    *
-   * @param \Drupal\facets/FacetInterface $facet
+   * @param \Drupal\facets\FacetInterface $facet
    *   The facet that is displayed.
    *
    * @return string

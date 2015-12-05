@@ -131,7 +131,7 @@ class Facet extends ConfigEntityBase implements FacetInterface {
   /**
    * The facet source belonging to this facet.
    *
-   * @var \Drupal\facets\FacetSourceInterface
+   * @var \Drupal\facets\FacetSource\FacetSourceInterface
    *
    * @see getFacetSource()
    */
@@ -170,6 +170,8 @@ class Facet extends ConfigEntityBase implements FacetInterface {
   protected $processors;
 
   /**
+   * Is the facet only visible when the facet source is only visible.
+   *
    * A boolean that defines whether or not the facet is only visible when the
    * facet source is visible.
    *
@@ -192,12 +194,15 @@ class Facet extends ConfigEntityBase implements FacetInterface {
   }
 
   /**
+   * Gets the widget plugin manager.
+   *
    * @return \Drupal\facets\Widget\WidgetPluginManager
+   *   The widget plugin manager.
    */
   public function getWidgetManager() {
     $container = \Drupal::getContainer();
 
-    return $this->widget_plugin_manager ? : $container->get('plugin.manager.facets.widget');
+    return $this->widget_plugin_manager ?: $container->get('plugin.manager.facets.widget');
   }
 
   /**
@@ -245,9 +250,7 @@ class Facet extends ConfigEntityBase implements FacetInterface {
   }
 
   /**
-   * Get the field alias used to identify the facet in the url.
-   *
-   * @return mixed
+   * {@inheritdoc}
    */
   public function getFieldAlias() {
     // For now, create the field alias based on the field identifier.
@@ -256,9 +259,7 @@ class Facet extends ConfigEntityBase implements FacetInterface {
   }
 
   /**
-   * Sets an item with value to active.
-   *
-   * @param $value
+   * {@inheritdoc}
    */
   public function setActiveItem($value) {
     if (!in_array($value, $this->active_values)) {
@@ -267,9 +268,7 @@ class Facet extends ConfigEntityBase implements FacetInterface {
   }
 
   /**
-   * Get all the active items in the facet.
-   *
-   * @return mixed
+   * {@inheritdoc}
    */
   public function getActiveItems() {
     return $this->active_values;
@@ -356,7 +355,7 @@ class Facet extends ConfigEntityBase implements FacetInterface {
   public function getFacetSource() {
 
     if (!$this->facet_source_instance && $this->facet_source_id) {
-      /** @var $facet_source_plugin_manager \Drupal\facets\FacetSource\FacetSourcePluginManager */
+      /* @var $facet_source_plugin_manager \Drupal\facets\FacetSource\FacetSourcePluginManager */
       $facet_source_plugin_manager = \Drupal::service('plugin.manager.facets.facet_source');
       $this->facet_source_instance = $facet_source_plugin_manager->createInstance($this->facet_source_id);
     }
@@ -379,7 +378,7 @@ class Facet extends ConfigEntityBase implements FacetInterface {
    */
   protected function loadProcessors() {
     if (!isset($this->processors)) {
-      /** @var $processor_plugin_manager \Drupal\facets\Processor\ProcessorPluginManager */
+      /* @var $processor_plugin_manager \Drupal\facets\Processor\ProcessorPluginManager */
       $processor_plugin_manager = \Drupal::service('plugin.manager.facets.processor');
       $processor_settings = $this->getOption('processors', []);
 
@@ -389,7 +388,7 @@ class Facet extends ConfigEntityBase implements FacetInterface {
           $settings = empty($processor_settings[$name]['settings']) ? [] : $processor_settings[$name]['settings'];
           $settings['facet'] = $this;
 
-          /** @var $processor \Drupal\facets\Processor\ProcessorInterface */
+          /* @var $processor \Drupal\facets\Processor\ProcessorInterface */
           $processor = $processor_plugin_manager->createInstance($name, $settings);
           $this->processors[$name] = $processor;
         }
@@ -418,10 +417,7 @@ class Facet extends ConfigEntityBase implements FacetInterface {
   }
 
   /**
-   * Set an array of Result objects.
-   *
-   * @param array $results
-   *   Array containing \Drupal\facets\Result\Result objects.
+   * {@inheritdoc}
    */
   public function setResults(array $results) {
     $this->results = $results;
@@ -437,16 +433,7 @@ class Facet extends ConfigEntityBase implements FacetInterface {
   }
 
   /**
-   * Until facets supports more than just search api, this is enough.
-   *
-   * @return string
-   */
-  public function getManagerPluginId() {
-    return 'facets_default';
-  }
-
-  /**
-   * @inheritdoc
+   * {@inheritdoc}
    */
   public function isActiveValue($value) {
     $is_active = FALSE;
@@ -463,7 +450,7 @@ class Facet extends ConfigEntityBase implements FacetInterface {
     if (!isset($this->facetSourcePlugins)) {
       $this->facetSourcePlugins = [];
 
-      /** @var $facet_source_plugin_manager \Drupal\facets\FacetSource\FacetSourcePluginManager */
+      /* @var $facet_source_plugin_manager \Drupal\facets\FacetSource\FacetSourcePluginManager */
       $facet_source_plugin_manager = \Drupal::service('plugin.manager.facets.facet_source');
 
       foreach ($facet_source_plugin_manager->getDefinitions() as $name => $facet_source_definition) {
@@ -471,7 +458,7 @@ class Facet extends ConfigEntityBase implements FacetInterface {
           // Create our settings for this facet source..
           $config = isset($this->facetSourcePlugins[$name]) ? $this->facetSourcePlugins[$name] : [];
 
-          /** @var $facet_source \Drupal\facets\FacetSource\FacetSourceInterface */
+          /* @var $facet_source \Drupal\facets\FacetSource\FacetSourceInterface */
           $facet_source = $facet_source_plugin_manager->createInstance($name, $config);
           $this->facetSourcePlugins[$name] = $facet_source;
         }

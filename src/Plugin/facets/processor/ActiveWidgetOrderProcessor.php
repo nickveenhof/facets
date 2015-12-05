@@ -2,6 +2,7 @@
 
 /**
  * @file
+ * Contains \Drupal\facets\Plugin\facets\processor\ActiveWidgetOrderProcessor.
  */
 
 namespace Drupal\facets\Plugin\facets\processor;
@@ -12,6 +13,8 @@ use Drupal\facets\Processor\WidgetOrderProcessorInterface;
 use Drupal\facets\Result\Result;
 
 /**
+ * A processor that orders the results by active state.
+ *
  * @FacetsProcessor(
  *   id = "active_widget_order",
  *   label = @Translation("Sort by active state"),
@@ -38,7 +41,7 @@ class ActiveWidgetOrderProcessor extends WidgetOrderPluginBase implements Widget
   }
 
   /**
-   *
+   * Sorts ascending.
    */
   protected static function sortActiveAsc(Result $a, Result $b) {
     if ($a->isActive() == $b->isActive()) {
@@ -48,7 +51,7 @@ class ActiveWidgetOrderProcessor extends WidgetOrderPluginBase implements Widget
   }
 
   /**
-   *
+   * Sorts descending.
    */
   protected static function sortActiveDesc(Result $a, Result $b) {
     if ($a->isActive() == $b->isActive()) {

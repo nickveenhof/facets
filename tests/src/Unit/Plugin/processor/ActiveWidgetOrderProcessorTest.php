@@ -12,6 +12,8 @@ use Drupal\facets\Result\Result;
 use Drupal\Tests\UnitTestCase;
 
 /**
+ * Unit test for processor.
+ *
  * @group facets
  */
 class ActiveWidgetOrderProcessorTest extends UnitTestCase {
@@ -28,7 +30,7 @@ class ActiveWidgetOrderProcessorTest extends UnitTestCase {
    *
    * @var \Drupal\facets\Result\Result[]
    */
-  protected $original_results;
+  protected $originalResults;
 
   /**
    * Creates a new processor object for use in the tests.
@@ -49,7 +51,7 @@ class ActiveWidgetOrderProcessorTest extends UnitTestCase {
     $original_results[2]->setActiveState(TRUE);
     $original_results[3]->setActiveState(TRUE);
 
-    $this->original_results = $original_results;
+    $this->originalResults = $original_results;
 
     $this->processor = new ActiveWidgetOrderProcessor([], 'active_widget_order', []);
   }
@@ -58,7 +60,7 @@ class ActiveWidgetOrderProcessorTest extends UnitTestCase {
    * Test sorting ascending.
    */
   public function testAscending() {
-    $sorted_results = $this->processor->sortResults($this->original_results, 'ASC');
+    $sorted_results = $this->processor->sortResults($this->originalResults, 'ASC');
     $expected_values = [TRUE, TRUE, TRUE, FALSE, FALSE];
     foreach ($expected_values as $index => $value) {
       $this->assertEquals($value, $sorted_results[$index]->isActive());
@@ -69,7 +71,7 @@ class ActiveWidgetOrderProcessorTest extends UnitTestCase {
    * Test sorting descending.
    */
   public function testDescending() {
-    $sorted_results = $this->processor->sortResults($this->original_results, 'DESC');
+    $sorted_results = $this->processor->sortResults($this->originalResults, 'DESC');
     $expected_values = array_reverse([TRUE, TRUE, TRUE, FALSE, FALSE]);
     foreach ($expected_values as $index => $value) {
       $this->assertEquals($value, $sorted_results[$index]->isActive());

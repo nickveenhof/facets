@@ -12,8 +12,9 @@ use Drupal\Core\Entity\EntityTypeManager;
 use Drupal\Core\Plugin\Discovery\ContainerDeriverInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+
 /**
- *
+ * A base class for facet source derivers.
  */
 abstract class FacetSourceDeriverBase implements ContainerDeriverInterface {
 

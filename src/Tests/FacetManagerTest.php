@@ -25,12 +25,6 @@ class FacetManagerTest extends WebTestBase {
   public static $modules = array('facets');
 
   /**
-   * The URL generator.
-   *
-   * @var \Drupal\Core\Routing\UrlGeneratorInterface
-   */
-  // Protected $urlGenerator;.
-  /**
    * {@inheritdoc}
    */
   public function setUp() {
@@ -38,7 +32,7 @@ class FacetManagerTest extends WebTestBase {
   }
 
   /**
-   *
+   * A mocked test, to make sure the test runner doesn't crash.
    */
   public function testMock() {
     $this->verbose("We need to have at least one test method in a test or otherwise all tests fail.");

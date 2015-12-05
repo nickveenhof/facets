@@ -50,7 +50,7 @@ class CountLimitProcessor extends ProcessorPluginBase implements BuildProcessorI
    */
   public function buildConfigurationForm(array $form, FormStateInterface $form_state, FacetInterface $facet) {
     $processors = $facet->getProcessors();
-    $config = isset($processors[$this->getPluginId()]) ? $processors[$this->getPluginId()] : null;
+    $config = isset($processors[$this->getPluginId()]) ? $processors[$this->getPluginId()] : NULL;
 
     $build['minimum_items'] = array(
       '#title' => $this->t('Minimum items'),

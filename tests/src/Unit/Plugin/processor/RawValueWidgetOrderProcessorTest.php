@@ -12,6 +12,8 @@ use Drupal\facets\Result\Result;
 use Drupal\Tests\UnitTestCase;
 
 /**
+ * Unit test for processor.
+ *
  * @group facets
  */
 class RawValueWidgetOrderProcessorTest extends UnitTestCase {
@@ -28,7 +30,7 @@ class RawValueWidgetOrderProcessorTest extends UnitTestCase {
    *
    * @var \Drupal\facets\Result\Result[]
    */
-  protected $original_results;
+  protected $originalResults;
 
   /**
    * Creates a new processor object for use in the tests.
@@ -36,7 +38,7 @@ class RawValueWidgetOrderProcessorTest extends UnitTestCase {
   protected function setUp() {
     parent::setUp();
 
-    $this->original_results = [
+    $this->originalResults = [
       new Result('C', 'thetans', 10),
       new Result('B', 'xenu', 5),
       new Result('A', 'Tom', 15),
@@ -53,8 +55,16 @@ class RawValueWidgetOrderProcessorTest extends UnitTestCase {
    * Test sorting ascending.
    */
   public function testAscending() {
-    $sorted_results = $this->processor->sortResults($this->original_results, 'ASC');
-    $expected_values = ['Tom', 'xenu', 'thetans', 'Hubbard', 'FALSE', '2', '1977'];
+    $sorted_results = $this->processor->sortResults($this->originalResults, 'ASC');
+    $expected_values = [
+      'Tom',
+      'xenu',
+      'thetans',
+      'Hubbard',
+      'FALSE',
+      '2',
+      '1977',
+    ];
     foreach ($expected_values as $index => $value) {
       $this->assertEquals($value, $sorted_results[$index]->getDisplayValue());
     }
@@ -64,8 +74,16 @@ class RawValueWidgetOrderProcessorTest extends UnitTestCase {
    * Test sorting descending.
    */
   public function testDescending() {
-    $sorted_results = $this->processor->sortResults($this->original_results, 'DESC');
-    $expected_values = array_reverse(['Tom', 'xenu', 'thetans', 'Hubbard', 'FALSE', '2', '1977']);
+    $sorted_results = $this->processor->sortResults($this->originalResults, 'DESC');
+    $expected_values = array_reverse([
+      'Tom',
+      'xenu',
+      'thetans',
+      'Hubbard',
+      'FALSE',
+      '2',
+      '1977',
+    ]);
     foreach ($expected_values as $index => $value) {
       $this->assertEquals($value, $sorted_results[$index]->getDisplayValue());
     }

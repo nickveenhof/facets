@@ -14,6 +14,8 @@ use Drupal\Tests\UnitTestCase;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 
 /**
+ * Unit test for processor.
+ *
  * @group facets
  */
 class UidToUserNameCallbackProcessorTest extends UnitTestCase {
@@ -38,7 +40,7 @@ class UidToUserNameCallbackProcessorTest extends UnitTestCase {
 
 
   /**
-   * Test that results were correctly changed
+   * Test that results were correctly changed.
    */
   public function testResultsChanged() {
     $original_results = [
@@ -69,21 +71,21 @@ class UidToUserNameCallbackProcessorTest extends UnitTestCase {
    * Creates and sets up the container to be used in tests.
    */
   protected function createMocks() {
-    $userStorage = $this->getMock('\Drupal\Core\Entity\EntityStorageInterface');
-    $entityManager = $this->getMock('\Drupal\Core\Entity\EntityManagerInterface');
-    $entityManager->expects($this->any())
+    $user_storage = $this->getMock('\Drupal\Core\Entity\EntityStorageInterface');
+    $entity_manager = $this->getMock('\Drupal\Core\Entity\EntityManagerInterface');
+    $entity_manager->expects($this->any())
       ->method('getStorage')
-      ->willReturn($userStorage);
+      ->willReturn($user_storage);
 
     $user1 = $this->getMock('\Drupal\Core\Session\AccountInterface');
     $user1->method('getDisplayName')
       ->willReturn('Admin');
 
-    $userStorage->method('load')
+    $user_storage->method('load')
       ->willReturn($user1);
 
     $container = new ContainerBuilder();
-    $container->set('entity.manager', $entityManager);
+    $container->set('entity.manager', $entity_manager);
     \Drupal::setContainer($container);
   }
 

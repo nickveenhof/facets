@@ -2,6 +2,7 @@
 
 /**
  * @file
+ * Contains \Drupal\facets\Plugin\facets\widget\CheckboxWidget.
  */
 
 namespace Drupal\facets\Plugin\facets\widget;
@@ -12,6 +13,8 @@ use Drupal\facets\FacetInterface;
 use Drupal\facets\Widget\WidgetInterface;
 
 /**
+ * The checkbox / radios widget.
+ *
  * @FacetsWidget(
  *   id = "checkbox",
  *   label = @Translation("List of checkboxes"),
@@ -23,7 +26,10 @@ class CheckboxWidget implements WidgetInterface {
   use StringTranslationTrait;
 
   /**
+   * The link generator.
+   *
    * @var \Drupal\Core\Utility\LinkGeneratorInterface $linkGenerator
+   *   The link generator.
    */
   protected $linkGenerator;
 
@@ -49,7 +55,7 @@ class CheckboxWidget implements WidgetInterface {
       if ($result->getCount()) {
         // Get the link.
         $text = $result->getDisplayValue();
-        if($show_numbers){
+        if ($show_numbers) {
           $text .= ' (' . $result->getCount() . ')';
         }
         if ($result->isActive()) {
@@ -99,6 +105,7 @@ class CheckboxWidget implements WidgetInterface {
    * Gets the link generator.
    *
    * @return \Drupal\Core\Utility\LinkGeneratorInterface
+   *   The link generator.
    */
   protected function linkGenerator() {
     if (!isset($this->linkGenerator)) {
@@ -106,4 +113,5 @@ class CheckboxWidget implements WidgetInterface {
     }
     return $this->linkGenerator;
   }
+
 }

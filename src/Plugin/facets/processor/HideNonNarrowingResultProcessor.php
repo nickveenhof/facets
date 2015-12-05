@@ -28,17 +28,17 @@ class HideNonNarrowingResultProcessor extends ProcessorPluginBase implements Bui
    * {@inheritdoc}
    */
   public function build(FacetInterface $facet, array $results) {
-    $facetResults = $facet->getResults();
-    $resultCount = 0;
-    foreach ($facetResults as $result) {
+    $facet_results = $facet->getResults();
+    $result_count = 0;
+    foreach ($facet_results as $result) {
       if ($result->isActive()) {
-        $resultCount += $result->getCount();
+        $result_count += $result->getCount();
       }
     }
 
     /** @var \Drupal\facets\Result\ResultInterface $result */
     foreach ($results as $id => $result) {
-      if ($result->getCount() == $resultCount && !$result->isActive()) {
+      if ($result->getCount() == $result_count && !$result->isActive()) {
         unset($results[$id]);
       }
     }

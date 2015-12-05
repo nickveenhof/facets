@@ -14,6 +14,8 @@ use Drupal\Tests\UnitTestCase;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 
 /**
+ * Unit test for widget.
+ *
  * @group facets
  */
 class LinksWidgetTest extends UnitTestCase {
@@ -30,7 +32,7 @@ class LinksWidgetTest extends UnitTestCase {
    *
    * @var \Drupal\facets\Result\Result[]
    */
-  protected $original_results;
+  protected $originalResults;
 
   /**
    * Creates a new processor object for use in the tests.
@@ -49,7 +51,7 @@ class LinksWidgetTest extends UnitTestCase {
     foreach ($original_results as $original_result) {
       $original_result->setUrl(new \Drupal\Core\Url('test'));
     }
-    $this->original_results = $original_results;
+    $this->originalResults = $original_results;
 
     $link_generator = $this->getMockBuilder('\Drupal\Core\Utility\LinkGenerator')
       ->disableOriginalConstructor()
@@ -66,11 +68,11 @@ class LinksWidgetTest extends UnitTestCase {
   }
 
   /**
-   * Test widget
+   * Test widget.
    */
   public function testNoFilterResults() {
     $facet = new Facet([], 'facet');
-    $facet->setResults($this->original_results);
+    $facet->setResults($this->originalResults);
     $facet->set('widget_configs', ['show_numbers' => 1]);
 
     $output = $this->widget->build($facet);
@@ -85,10 +87,10 @@ class LinksWidgetTest extends UnitTestCase {
   }
 
   /**
-   * Test widget
+   * Test widget.
    */
   public function testHideEmptyCount() {
-    $original_results = $this->original_results;
+    $original_results = $this->originalResults;
     $original_results[1] = new Result('badger', 'Badger', 0);
 
     $facet = new Facet([], 'facet');
@@ -107,10 +109,10 @@ class LinksWidgetTest extends UnitTestCase {
   }
 
   /**
-   * Test widget
+   * Test widget.
    */
   public function testActiveItems() {
-    $original_results = $this->original_results;
+    $original_results = $this->originalResults;
     $original_results[0]->setActiveState(TRUE);
     $original_results[3]->setActiveState(TRUE);
 
@@ -123,7 +125,12 @@ class LinksWidgetTest extends UnitTestCase {
     $this->assertInternalType('array', $output);
     $this->assertCount(4, $output['#items']);
 
-    $expected_links = ['(-) Llama (10)', 'Badger (20)', 'Duck (15)', '(-) Alpaca (9)'];
+    $expected_links = [
+      '(-) Llama (10)',
+      'Badger (20)',
+      'Duck (15)',
+      '(-) Alpaca (9)',
+    ];
     foreach ($expected_links as $index => $value) {
       $this->assertEquals($value, $output['#items'][$index]);
     }
@@ -133,7 +140,7 @@ class LinksWidgetTest extends UnitTestCase {
    * Test widget, make sure hiding and showing numbers works.
    */
   public function testHideNumbers() {
-    $original_results = $this->original_results;
+    $original_results = $this->originalResults;
     $original_results[1]->setActiveState(TRUE);
 
     $facet = new Facet([], 'facet');
@@ -159,11 +166,15 @@ class LinksWidgetTest extends UnitTestCase {
     $this->assertInternalType('array', $output);
     $this->assertCount(4, $output['#items']);
 
-    $expected_links = ['Llama (10)', '(-) Badger (20)', 'Duck (15)', 'Alpaca (9)'];
+    $expected_links = [
+      'Llama (10)',
+      '(-) Badger (20)',
+      'Duck (15)',
+      'Alpaca (9)',
+    ];
     foreach ($expected_links as $index => $value) {
       $this->assertEquals($value, $output['#items'][$index]);
     }
   }
 
 }
-

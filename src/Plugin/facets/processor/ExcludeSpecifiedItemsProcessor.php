@@ -56,7 +56,7 @@ class ExcludeSpecifiedItemsProcessor extends ProcessorPluginBase implements Buil
    */
   public function buildConfigurationForm(array $form, FormStateInterface $form_state, FacetInterface $facet) {
     $processors = $facet->getProcessors();
-    $config = isset($processors[$this->getPluginId()]) ? $processors[$this->getPluginId()] : null;
+    $config = isset($processors[$this->getPluginId()]) ? $processors[$this->getPluginId()] : NULL;
 
     $build['exclude'] = [
       '#title' => $this->t('Exclude items'),
@@ -83,4 +83,5 @@ class ExcludeSpecifiedItemsProcessor extends ProcessorPluginBase implements Buil
       'regex' => 0,
     ];
   }
+
 }

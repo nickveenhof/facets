@@ -36,7 +36,15 @@ abstract class WebTestBase extends SimpletestWebTestBase {
    *
    * @var string[]
    */
-  public static $modules = ['views', 'node', 'search_api', 'search_api_test_backend', 'facets', 'search_api_test_views', 'block'];
+  public static $modules = [
+    'views',
+    'node',
+    'search_api',
+    'search_api_test_backend',
+    'facets',
+    'search_api_test_views',
+    'block',
+  ];
 
   /**
    * An admin user used for this test.
@@ -96,16 +104,9 @@ abstract class WebTestBase extends SimpletestWebTestBase {
     // Get the URL generator.
     $this->urlGenerator = $this->container->get('url_generator');
 
-    // @TODO do we need to create article CT?
-    // Create a node article type.
-    // $this->drupalCreateContentType(['type' => 'article', 'name' => 'Article']);
-    // @TODO do we need to create Page CT?
-    // Create a node page type.
-    // $this->drupalCreateContentType(['type' => 'page', 'name' => 'Page']);
     $this->setUpExampleStructure();
 
     Utility::getIndexTaskManager()->addItemsAll(Index::load($this->indexId));
-
   }
 
   /**
@@ -121,7 +122,7 @@ abstract class WebTestBase extends SimpletestWebTestBase {
    *   (optional) The backend configuration to set for the server.
    * @param bool $reset
    *   (optional) If TRUE, delete the server instead of creating it. (Only the
-   *   server's ID is required in that case.)
+   *   server's ID is required in that case).
    *
    * @return \Drupal\search_api\ServerInterface
    *   A search server.
@@ -160,7 +161,7 @@ abstract class WebTestBase extends SimpletestWebTestBase {
    *   (optional) The ID of a datasource to set for this index.
    * @param bool $reset
    *   (optional) If TRUE, delete the index instead of creating it. (Only the
-   *   index's ID is required in that case.)
+   *   index's ID is required in that case).
    *
    * @return \Drupal\search_api\IndexInterface
    *   A search index.

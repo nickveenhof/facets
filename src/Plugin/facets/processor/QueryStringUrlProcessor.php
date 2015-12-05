@@ -13,6 +13,8 @@ use Drupal\facets\Processor\UrlProcessorPluginBase;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
+ * The basic url processor, uses query strings.
+ *
  * @FacetsProcessor(
  *   id = "query_string",
  *   label = @Translation("Query string url processor"),
@@ -32,10 +34,12 @@ class QueryStringUrlProcessor extends UrlProcessorPluginBase {
   const SEPARATOR = ':';
 
   /**
-   * @var array
+   * An array of active filters.
+   *
+   * @var string[]
    *   An array containing the active filters
    */
-  protected $active_filters = [];
+  protected $activeFilters = [];
 
   /**
    * {@inheritdoc}
@@ -63,7 +67,7 @@ class QueryStringUrlProcessor extends UrlProcessorPluginBase {
       $filter_string = $facet->getFieldAlias() . ':' . $result->getRawValue();
       $result_get_params = clone $get_params;
 
-      $filter_params = $result_get_params->get($this->filter_key, [], TRUE);
+      $filter_params = $result_get_params->get($this->filterKey, [], TRUE);
       // If the value is active, remove the filter string from the parameters.
       if ($result->isActive()) {
         foreach ($filter_params as $key => $filter_param) {
@@ -77,7 +81,7 @@ class QueryStringUrlProcessor extends UrlProcessorPluginBase {
         $filter_params[] = $filter_string;
       }
 
-      $result_get_params->set($this->filter_key, $filter_params);
+      $result_get_params->set($this->filterKey, $filter_params);
       $request = $this->request;
       if ($facet->getFacetSource()->getPath()) {
         $request = Request::create('/' . $facet->getFacetSource()->getPath());
@@ -96,8 +100,8 @@ class QueryStringUrlProcessor extends UrlProcessorPluginBase {
    */
   public function preQuery(FacetInterface $facet) {
     // Get the filter key of the facet.
-    if (isset($this->active_filters[$facet->getFieldAlias()])) {
-      foreach ($this->active_filters[$facet->getFieldAlias()] as $value) {
+    if (isset($this->activeFilters[$facet->getFieldAlias()])) {
+      foreach ($this->activeFilters[$facet->getFieldAlias()] as $value) {
         $facet->setActiveItem(trim($value, '"'));
       }
     }
@@ -114,16 +118,16 @@ class QueryStringUrlProcessor extends UrlProcessorPluginBase {
     $url_parameters = $this->request->query;
 
     // Get the active facet parameters.
-    $active_params = $url_parameters->get($this->filter_key, array(), TRUE);
+    $active_params = $url_parameters->get($this->filterKey, array(), TRUE);
 
     // Explode the active params on the separator.
     foreach ($active_params as $param) {
       list($key, $value) = explode(self::SEPARATOR, $param);
-      if (!isset($this->active_filters[$key])) {
-        $this->active_filters[$key] = [$value];
+      if (!isset($this->activeFilters[$key])) {
+        $this->activeFilters[$key] = [$value];
       }
       else {
-        $this->active_filters[$key][] = $value;
+        $this->activeFilters[$key][] = $value;
       }
     }
   }

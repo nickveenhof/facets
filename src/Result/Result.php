@@ -16,12 +16,12 @@ class Result implements ResultInterface {
   /**
    * The facet value.
    */
-  protected $display_value;
+  protected $displayValue;
 
   /**
    * The raw facet value.
    */
-  protected $raw_value;
+  protected $rawValue;
 
   /**
    * The facet count.
@@ -47,13 +47,16 @@ class Result implements ResultInterface {
   /**
    * Construct a new instance of the value object.
    *
-   * @param $raw_value
-   * @param $display_value
-   * @param $count
+   * @param mixed $raw_value
+   *   The raw value.
+   * @param mixed $display_value
+   *   The formatted value.
+   * @param int $count
+   *   The amount of items.
    */
-  function __construct($raw_value, $display_value, $count) {
-    $this->raw_value = $raw_value;
-    $this->display_value = $display_value;
+  public function __construct($raw_value, $display_value, $count) {
+    $this->rawValue = $raw_value;
+    $this->displayValue = $display_value;
     $this->count = $count;
   }
 
@@ -61,14 +64,14 @@ class Result implements ResultInterface {
    * {@inheritdoc}
    */
   public function getDisplayValue() {
-    return $this->display_value;
+    return $this->displayValue;
   }
 
   /**
    * {@inheritdoc}
    */
   public function getRawValue() {
-    return $this->raw_value;
+    return $this->rawValue;
   }
 
   /**
@@ -110,7 +113,7 @@ class Result implements ResultInterface {
    * {@inheritdoc}
    */
   public function setDisplayValue($display_value) {
-    $this->display_value = $display_value;
+    $this->displayValue = $display_value;
   }
 
 }

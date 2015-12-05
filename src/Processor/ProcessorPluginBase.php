@@ -2,6 +2,7 @@
 
 /**
  * @file
+ * Contains Drupal\facets\Processor\ProcessorPluginBase.
  */
 
 namespace Drupal\facets\Processor;
@@ -28,7 +29,6 @@ class ProcessorPluginBase extends PluginBase implements ProcessorInterface {
    * {@inheritdoc}
    */
   public function validateConfigurationForm(array $form, FormStateInterface $form_state, FacetInterface $facet) {
-    return;
   }
 
   /**
