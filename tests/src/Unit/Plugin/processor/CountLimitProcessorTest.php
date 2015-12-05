@@ -138,6 +138,34 @@ class CountLimitProcessorTest extends UnitTestCase {
   }
 
   /**
+   * Test maximum values.
+   */
+  public function testMaxValue() {
+    $facet = new Facet([], 'facet');
+    $facet->setResults($this->original_results);
+    $facet->setOption('processors', [
+      'count_limit' => [],
+    ]);
+
+    $this->processor->setConfiguration(['maximum_items' => 14]);
+    $sorted_results = $this->processor->build($facet, $this->original_results);
+    $this->assertCount(2, $sorted_results);
+    $this->assertEquals('llama', $sorted_results[0]->getDisplayValue());
+    $this->assertEquals('badger', $sorted_results[1]->getDisplayValue());
+
+    $this->processor->setConfiguration(['maximum_items' => 140]);
+    $sorted_results = $this->processor->build($facet, $this->original_results);
+    $this->assertCount(3, $sorted_results);
+    $this->assertEquals('llama', $sorted_results[0]->getDisplayValue());
+    $this->assertEquals('badger', $sorted_results[1]->getDisplayValue());
+    $this->assertEquals('duck', $sorted_results[2]->getDisplayValue());
+
+    $this->processor->setConfiguration(['maximum_items' => 1]);
+    $sorted_results = $this->processor->build($facet, $this->original_results);
+    $this->assertCount(0, $sorted_results);
+  }
+
+  /**
    * Test filtering of results.
    */
   public function testFilterResults() {
