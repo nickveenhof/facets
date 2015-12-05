@@ -422,16 +422,16 @@ class FacetDisplayForm extends EntityForm {
 
     // Iterate over all processors that have a form and are enabled.
     foreach ($form['facet_settings'] as $processor_id => $processor_form) {
-      if (!empty($values['status'][$processor_id])) {
+      if (!empty($values['processors'][$processor_id])) {
         $processor_form_state = new SubFormState($form_state, array('facet_settings', $processor_id, 'settings'));
-        $processors[$processor_id]->validateConfigurationForm($form['facet_settings'][$processor_id], $processor_form_state);
+        $processors[$processor_id]->validateConfigurationForm($form['facet_settings'][$processor_id], $processor_form_state, $facet);
       }
     }
     // Iterate over all sorting processors that have a form and are enabled.
     foreach ($form['facet_sorting'] as $processor_id => $processor_form) {
-      if (!empty($values['status'][$processor_id])) {
+      if (!empty($values['processors'][$processor_id])) {
         $processor_form_state = new SubFormState($form_state, array('facet_sorting', $processor_id, 'settings'));
-        $processors[$processor_id]->validateConfigurationForm($form['facet_sorting'][$processor_id], $processor_form_state);
+        $processors[$processor_id]->validateConfigurationForm($form['facet_sorting'][$processor_id], $processor_form_state, $facet);
       }
     }
   }

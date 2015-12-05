@@ -2,13 +2,13 @@
 
 /**
  * @file
- * Contains \Drupal\Tests\facets\Plugin\Processor\MinimumCountProcessorTest.
+ * Contains \Drupal\Tests\facets\Plugin\Processor\CountLimitProcessorTest.
  */
 
 namespace Drupal\Tests\facets\Unit\Plugin\Processor;
 
 use Drupal\facets\Entity\Facet;
-use Drupal\facets\Plugin\facets\processor\MinimumCountProcessor;
+use Drupal\facets\Plugin\facets\processor\CountLimitProcessor;
 use Drupal\facets\Result\Result;
 use Drupal\Tests\UnitTestCase;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -16,7 +16,7 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 /**
  * @group facets
  */
-class MinimumCountProcessorTest extends UnitTestCase {
+class CountLimitProcessorTest extends UnitTestCase {
 
   /**
    * The processor to be tested.
@@ -44,13 +44,13 @@ class MinimumCountProcessorTest extends UnitTestCase {
       new Result('duck', 'duck', 15),
     ];
 
-    $processor_id = 'minimum_count';
-    $this->processor = new MinimumCountProcessor([], $processor_id, []);
+    $processor_id = 'count_limit';
+    $this->processor = new CountLimitProcessor([], $processor_id, []);
 
     $processorDefinitions = [
       $processor_id => [
         'id' => $processor_id,
-        'class' => 'Drupal\facets\Plugin\facets\processor\MinimumCountProcessor',
+        'class' => 'Drupal\facets\Plugin\facets\processor\CountLimitProcessor',
       ],
     ];
 
@@ -74,11 +74,10 @@ class MinimumCountProcessorTest extends UnitTestCase {
    * Test no filtering happens.
    */
   public function testNoFilter() {
-
     $facet = new Facet([], 'facet');
     $facet->setResults($this->original_results);
     $facet->setOption('processors', [
-      'minimum_count' => [
+      'count_limit' => [
         'settings' => ['minimum_items' => 4],
       ],
     ]);
@@ -96,11 +95,10 @@ class MinimumCountProcessorTest extends UnitTestCase {
    * Test no filtering happens.
    */
   public function testMinEqualsValue() {
-
     $facet = new Facet([], 'facet');
     $facet->setResults($this->original_results);
     $facet->setOption('processors', [
-      'minimum_count' => [
+      'count_limit' => [
         'settings' => ['minimum_items' => 5],
       ],
     ]);
@@ -116,14 +114,37 @@ class MinimumCountProcessorTest extends UnitTestCase {
   }
 
   /**
-   * Test filtering of results.
+   * Test between minimum and maximum values.
    */
-  public function testFilterResults() {
-
+  public function testBetweenMinAndMaxValue() {
     $facet = new Facet([], 'facet');
     $facet->setResults($this->original_results);
     $facet->setOption('processors', [
-      'minimum_count' => [
+      'count_limit' => [],
+    ]);
+
+    $this->processor->setConfiguration(['minimum_items' => 6, 'maximum_items' => 14]);
+    $sorted_results = $this->processor->build($facet, $this->original_results);
+    $this->assertCount(1, $sorted_results);
+    $this->assertEquals('llama', $sorted_results[0]->getDisplayValue());
+
+    $this->processor->setConfiguration(['minimum_items' => 60, 'maximum_items' => 140]);
+    $sorted_results = $this->processor->build($facet, $this->original_results);
+    $this->assertCount(0, $sorted_results);
+
+    $this->processor->setConfiguration(['minimum_items' => 1, 'maximum_items' => 10]);
+    $sorted_results = $this->processor->build($facet, $this->original_results);
+    $this->assertCount(2, $sorted_results);
+  }
+
+  /**
+   * Test filtering of results.
+   */
+  public function testFilterResults() {
+    $facet = new Facet([], 'facet');
+    $facet->setResults($this->original_results);
+    $facet->setOption('processors', [
+      'count_limit' => [
         'settings' => ['minimum_items' => 8],
       ],
     ]);
