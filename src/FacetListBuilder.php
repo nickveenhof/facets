@@ -169,7 +169,9 @@ class FacetListBuilder extends ConfigEntityListBuilder {
       '#rows' => array(),
       '#empty' => $groups['lone_facets'] ? '' : $this->t('There are no facet sources or facets defined.'),
       '#attributes' => array(
-        'id' => 'facets-groups-list',
+        'class' => array(
+          'facets-groups-list',
+        )
       ),
     );
 

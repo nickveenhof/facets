@@ -6,25 +6,25 @@
 /*
  * Facets overview page
  */
-#facets-groups-list {
+.facets-groups-list {
   margin-bottom: 2em;
 }
-#facets-groups-list tr {
+.facets-groups-list tr {
   border-bottom: none;
 }
 
-#facets-groups-list tr.facet-source {
+.facets-groups-list tr.facet-source {
   border-top: 1px solid #e6e4df;
 }
-#facets-groups-list tr.facet:last-of-type {
+.facets-groups-list tr.facet:last-of-type {
   border-bottom: 1px solid #e6e4df;
 }
 
-#facets-groups-list tr.facet-source .facets-type,
-#facets-groups-list tr.facet-source .search-api-title {
+.facets-groups-list tr.facet-source .facets-type,
+.facets-groups-list tr.facet-source .search-api-title {
   font-weight: bold;
 }
-#facets-groups-list tr.facet .facets-type {
+.facets-groups-list tr.facet .facets-type {
   padding-left: 3em;
 }
 
