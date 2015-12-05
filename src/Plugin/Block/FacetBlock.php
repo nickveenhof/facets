@@ -12,6 +12,7 @@ namespace Drupal\facets\Plugin\Block;
 use Drupal\Core\Block\BlockBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
+use Drupal\facetapi\Entity\Facet;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -92,7 +93,6 @@ class FacetBlock extends BlockBase implements ContainerFactoryPluginInterface {
    */
   public function blockSubmit($form, FormStateInterface $form_state) {
     parent::blockSubmit($form, $form_state);
-    $this->configuration['facet_identifier'] = $form_state->getValue('facet_identifier');
   }
 
   /**
@@ -102,6 +102,28 @@ class FacetBlock extends BlockBase implements ContainerFactoryPluginInterface {
     // Makes sure a facet block is never cached.
     // @TODO Make blocks cacheable, see: https://www.drupal.org/node/2581629
     return 0;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function calculateDependencies() {
+    $facet_context_mapping = $this->configuration['context_mapping']['facet'];
+    $facet_id = explode(':', $facet_context_mapping)[1];
+
+    $em = \Drupal::getContainer()->get('entity_type.manager');
+
+    /** @var \Drupal\facets\FacetInterface $facet */
+    $facets = $em->getStorage('facets_facet')
+      ->loadByProperties(['uuid' => $facet_id]);
+
+    $keys = array_keys($facets);
+
+    $facet = $facets[$keys[0]];
+
+    $config_name = $facet->getConfigDependencyName();
+
+    return ['config' => [$config_name]];
   }
 
 }

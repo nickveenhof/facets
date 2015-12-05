@@ -107,9 +107,6 @@ class IntegrationTest extends FacetWebTestBase {
     $this->assertRaw('block-test-facet-name');
     $this->assertRaw('No results found for this block!');
 
-    // Verify that we cannot delete a facet used in a block.
-    $this->deleteUsedFacet("Test Facet name");
-
     // Delete the block.
     $this->deleteBlock('test_facet_name');
 
