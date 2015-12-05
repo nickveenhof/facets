@@ -193,7 +193,7 @@ class IntegrationTest extends FacetWebTestBase {
     // Configure the text for empty results behavior.
     $edit = [
       'facet_settings[empty_behavior]' => 'text',
-      'facet_settings[empty_behavior_text][value]' => 'No results found for this block!'
+      'facet_settings[empty_behavior_container][empty_behavior_text][value]' => 'No results found for this block!'
     ];
     $this->drupalPostForm(NULL, $edit, $this->t('Save'));
 
