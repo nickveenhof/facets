@@ -321,17 +321,20 @@ class FacetDisplayForm extends EntityForm {
       '#description' => $this->t('The action to take when a facet has no items.'),
       '#required' => TRUE,
     ];
-    $form['facet_settings']['empty_behavior_text'] = [
-      '#type' => 'text_format',
-      '#title' => $this->t('Empty text'),
-      '#format' => isset($empty_behavior_config['text_format']) ? $empty_behavior_config['text_format'] : 'plain_text',
-      '#editor' => true,
-      '#default_value' => isset($empty_behavior_config['text_format']) ? $empty_behavior_config['text'] : '',
+    $form['facet_settings']['empty_behavior_container']= [
+      '#type' => 'container',
       '#states' => array(
         'visible' => array(
           ':input[name="facet_settings[empty_behavior]"]' => array('value' => 'text'),
         ),
       ),
+    ];
+    $form['facet_settings']['empty_behavior_container']['empty_behavior_text'] = [
+      '#type' => 'text_format',
+      '#title' => $this->t('Empty text'),
+      '#format' => isset($empty_behavior_config['text_format']) ? $empty_behavior_config['text_format'] : 'plain_text',
+      '#editor' => true,
+      '#default_value' => isset($empty_behavior_config['text_format']) ? $empty_behavior_config['text'] : '',
     ];
 
     $form['weights'] = array(
@@ -485,8 +488,8 @@ class FacetDisplayForm extends EntityForm {
     $empty_behavior = $form_state->getValue(['facet_settings', 'empty_behavior']);
     $empty_behavior_config['behavior'] = $empty_behavior;
     if($empty_behavior == 'text'){
-      $empty_behavior_config['text_format'] = $form_state->getValue(['facet_settings', 'empty_behavior_text', 'format']);
-      $empty_behavior_config['text'] = $form_state->getValue(['facet_settings', 'empty_behavior_text', 'value']);
+      $empty_behavior_config['text_format'] = $form_state->getValue(['facet_settings', 'empty_behavior_container', 'empty_behavior_text', 'format']);
+      $empty_behavior_config['text'] = $form_state->getValue(['facet_settings', 'empty_behavior_container', 'empty_behavior_text', 'value']);
     }
     $facet->setOption('empty_behavior', $empty_behavior_config);
 
