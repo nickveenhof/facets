@@ -2,33 +2,33 @@
 
 /**
  * @file
- * Contains \Drupal\Tests\facetapi\Plugin\Processor\MinimumCountProcessorTest.
+ * Contains \Drupal\Tests\facets\Plugin\Processor\MinimumCountProcessorTest.
  */
 
-namespace Drupal\Tests\facetapi\Unit\Plugin\Processor;
+namespace Drupal\Tests\facets\Unit\Plugin\Processor;
 
-use Drupal\facetapi\Entity\Facet;
-use Drupal\facetapi\Plugin\facetapi\processor\MinimumCountProcessor;
-use Drupal\facetapi\Result\Result;
+use Drupal\facets\Entity\Facet;
+use Drupal\facets\Plugin\facets\processor\MinimumCountProcessor;
+use Drupal\facets\Result\Result;
 use Drupal\Tests\UnitTestCase;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 
 /**
- * @group facetapi
+ * @group facets
  */
 class MinimumCountProcessorTest extends UnitTestCase {
 
   /**
    * The processor to be tested.
    *
-   * @var \Drupal\facetapi\processor\BuildProcessorInterface
+   * @var \Drupal\facets\processor\BuildProcessorInterface
    */
   protected $processor;
 
   /**
    * An array containing the results before the processor has ran.
    *
-   * @var \Drupal\facetapi\Result\Result[]
+   * @var \Drupal\facets\Result\Result[]
    */
   protected $original_results;
 
@@ -50,11 +50,11 @@ class MinimumCountProcessorTest extends UnitTestCase {
     $processorDefinitions = [
       $processor_id => [
         'id' => $processor_id,
-        'class' => 'Drupal\facetapi\Plugin\facetapi\processor\MinimumCountProcessor',
+        'class' => 'Drupal\facets\Plugin\facets\processor\MinimumCountProcessor',
       ],
     ];
 
-    $manager = $this->getMockBuilder('Drupal\facetapi\Processor\ProcessorPluginManager')
+    $manager = $this->getMockBuilder('Drupal\facets\Processor\ProcessorPluginManager')
       ->disableOriginalConstructor()
       ->getMock();
     $manager->expects($this->once())
@@ -65,7 +65,7 @@ class MinimumCountProcessorTest extends UnitTestCase {
       ->willReturn($this->processor);
 
     $container_builder = new ContainerBuilder();
-    $container_builder->set('plugin.manager.facetapi.processor', $manager);
+    $container_builder->set('plugin.manager.facets.processor', $manager);
     \Drupal::setContainer($container_builder);
 
   }

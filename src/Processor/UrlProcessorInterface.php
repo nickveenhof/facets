@@ -1,10 +1,10 @@
 <?php
 /**
  * @file
- * Contains Drupal\facetapi\Processor\UrlProcessorInterface.
+ * Contains Drupal\facets\Processor\UrlProcessorInterface.
  */
 
-namespace Drupal\facetapi\Processor;
+namespace Drupal\facets\Processor;
 
 /**
  * Interface UrlProcessorInterface.
@@ -16,7 +16,7 @@ namespace Drupal\facetapi\Processor;
  *
  * The facet manager has one url processor.
  *
- * @package Drupal\facetapi\UrlProcessor
+ * @package Drupal\facets\UrlProcessor
  */
 interface UrlProcessorInterface extends PreQueryProcessorInterface, BuildProcessorInterface {
 

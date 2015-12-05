@@ -2,10 +2,10 @@
 
 /**
  * @file
- * Contains \Drupal\facetapi\Exception\InvalidQueryTypeException.
+ * Contains \Drupal\facets\Exception\InvalidQueryTypeException.
  */
 
-namespace Drupal\facetapi\Exception;
+namespace Drupal\facets\Exception;
 
 /**
  * Represents an exception that occurred when calling an invalid query type.

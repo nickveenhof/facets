@@ -2,14 +2,14 @@
 
 /**
  * @file
- * Contains \Drupal\facetapi\Controller\FacetController.
+ * Contains \Drupal\facets\Controller\FacetController.
  */
 
-namespace Drupal\facetapi\Controller;
+namespace Drupal\facets\Controller;
 
 use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Core\Controller\ControllerBase;
-use Drupal\facetapi\FacetInterface;
+use Drupal\facets\FacetInterface;
 
 /**
  * Provides route responses for facets.
@@ -19,7 +19,7 @@ class FacetController extends ControllerBase {
   /**
    * Displays information about a search facet.
    *
-   * @param \Drupal\facetapi\FacetInterface $facet
+   * @param \Drupal\facets\FacetInterface $facet
    *   The facet to display.
    *
    * @return array
@@ -29,7 +29,7 @@ class FacetController extends ControllerBase {
     // Build the search index information.
     $render = array(
       'view' => array(
-        '#theme' => 'facetapi_facet',
+        '#theme' => 'facets_facet',
         '#facet' => $facet,
       ),
     );
@@ -43,28 +43,28 @@ class FacetController extends ControllerBase {
    *   The facet add form.
    */
   public function addForm() {
-    $facet = \Drupal::service('entity_type.manager')->getStorage('facetapi_facet')->create();
+    $facet = \Drupal::service('entity_type.manager')->getStorage('facets_facet')->create();
     return $this->entityFormBuilder()->getForm($facet, 'default');
   }
 
   /**
    * Returns a form to edit a facet on a search api index.
    *
-   * @param \Drupal\facetapi\FacetInterface $facetapi_facet
+   * @param \Drupal\facets\FacetInterface $facets_facet
    *   Facet currently being edited
    *
    * @return array
    *   The facet edit form.
    */
-  public function editForm(FacetInterface $facetapi_facet) {
-    $facet = \Drupal::service('entity_type.manager')->getStorage('facetapi_facet')->load($facetapi_facet->id());
+  public function editForm(FacetInterface $facets_facet) {
+    $facet = \Drupal::service('entity_type.manager')->getStorage('facets_facet')->load($facets_facet->id());
     return $this->entityFormBuilder()->getForm($facet, 'default');
   }
 
   /**
    * Returns the page title for an facets's "View" tab.
    *
-   * @param \Drupal\facetapi/FacetInterface $facet
+   * @param \Drupal\facets/FacetInterface $facet
    *   The facet that is displayed.
    *
    * @return string

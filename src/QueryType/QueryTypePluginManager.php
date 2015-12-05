@@ -1,10 +1,10 @@
 <?php
 /**
  * @file
- * Contains Drupal\facetapi\QueryType\QueryTypePluginManager.
+ * Contains Drupal\facets\QueryType\QueryTypePluginManager.
  */
 
-namespace Drupal\facetapi\QueryType;
+namespace Drupal\facets\QueryType;
 
 
 use Drupal\Core\Cache\CacheBackendInterface;
@@ -20,7 +20,7 @@ class QueryTypePluginManager extends DefaultPluginManager {
    * {@inheritdoc}
    */
   public function __construct(\Traversable $namespaces, CacheBackendInterface $cache_backend, ModuleHandlerInterface $module_handler) {
-    parent::__construct('Plugin/facetapi/query_type', $namespaces, $module_handler, 'Drupal\facetapi\QueryType\QueryTypeInterface', 'Drupal\facetapi\Annotation\FacetApiQueryType');
+    parent::__construct('Plugin/facets/query_type', $namespaces, $module_handler, 'Drupal\facets\QueryType\QueryTypeInterface', 'Drupal\facets\Annotation\FacetsQueryType');
   }
 
 }

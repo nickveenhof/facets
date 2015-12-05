@@ -2,18 +2,18 @@
 
 /**
  * @file
- * Contains \Drupal\facetapi\Form\FacetForm.
+ * Contains \Drupal\facets\Form\FacetForm.
  */
 
-namespace Drupal\facetapi\Form;
+namespace Drupal\facets\Form;
 
 use Drupal\Core\Entity\EntityForm;
 use Drupal\Core\Entity\EntityTypeManager;
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\facetapi\Exception\Exception;
-use Drupal\facetapi\FacetInterface;
-use Drupal\facetapi\FacetSource\FacetSourcePluginManager;
-use Drupal\facetapi\Processor\ProcessorPluginManager;
+use Drupal\facets\Exception\Exception;
+use Drupal\facets\FacetInterface;
+use Drupal\facets\FacetSource\FacetSourcePluginManager;
+use Drupal\facets\Processor\ProcessorPluginManager;
 use Drupal\views\Views;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -32,14 +32,14 @@ class FacetForm extends EntityForm {
   /**
    * The plugin manager for facet sources.
    *
-   * @var \Drupal\facetapi\FacetSource\FacetSourcePluginManager
+   * @var \Drupal\facets\FacetSource\FacetSourcePluginManager
    */
   protected $facetSourcePluginManager;
 
   /**
    * The plugin manager for processors.
    *
-   * @var \Drupal\facetapi\Processor\ProcessorPluginManager
+   * @var \Drupal\facets\Processor\ProcessorPluginManager
    */
   protected $processorPluginManager;
 
@@ -48,13 +48,13 @@ class FacetForm extends EntityForm {
    *
    * @param \Drupal\Core\Entity\EntityTypeManager $entity_type_manager
    *   The entity manager.
-   * @param \Drupal\facetapi\FacetSource\FacetSourcePluginManager $facetSourcePluginManager
+   * @param \Drupal\facets\FacetSource\FacetSourcePluginManager $facetSourcePluginManager
    *   The plugin manager for facet sources.
-   * @param \Drupal\facetapi\Processor\ProcessorPluginManager $processorPluginManager
+   * @param \Drupal\facets\Processor\ProcessorPluginManager $processorPluginManager
    *   The plugin manager for processors.
    */
   public function __construct(EntityTypeManager $entity_type_manager, FacetSourcePluginManager $facetSourcePluginManager, ProcessorPluginManager $processorPluginManager) {
-    $this->facetStorage = $entity_type_manager->getStorage('facetapi_facet');
+    $this->facetStorage = $entity_type_manager->getStorage('facets_facet');
     $this->facetSourcePluginManager = $facetSourcePluginManager;
     $this->processorPluginManager = $processorPluginManager;
   }
@@ -66,11 +66,11 @@ class FacetForm extends EntityForm {
     /** @var \Drupal\Core\Entity\EntityTypeManager $entity_type_manager */
     $entity_type_manager = $container->get('entity_type.manager');
 
-    /** @var \Drupal\facetapi\FacetSource\FacetSourcePluginManager $facet_source_plugin_manager */
-    $facet_source_plugin_manager = $container->get('plugin.manager.facetapi.facet_source');
+    /** @var \Drupal\facets\FacetSource\FacetSourcePluginManager $facet_source_plugin_manager */
+    $facet_source_plugin_manager = $container->get('plugin.manager.facets.facet_source');
 
-    /** @var \Drupal\facetapi\Processor\ProcessorPluginManager $processor_plugin_manager */
-    $processor_plugin_manager = $container->get('plugin.manager.facetapi.processor');
+    /** @var \Drupal\facets\Processor\ProcessorPluginManager $processor_plugin_manager */
+    $processor_plugin_manager = $container->get('plugin.manager.facets.processor');
 
     return new static($entity_type_manager, $facet_source_plugin_manager, $processor_plugin_manager);
   }
@@ -84,7 +84,7 @@ class FacetForm extends EntityForm {
    * this makes IDE's smarter about the other places where we use
    * $this->getEntity().
    *
-   * @return \Drupal\facetapi\FacetInterface
+   * @return \Drupal\facets\FacetInterface
    *   The current form facet entity.
    */
   public function getEntity() {
@@ -98,27 +98,27 @@ class FacetForm extends EntityForm {
    *   The facet storage controller.
    */
   protected function getFacetStorage() {
-    return $this->facetStorage ?: \Drupal::service('entity_type.manager')->getStorage('facetapi_facet');
+    return $this->facetStorage ?: \Drupal::service('entity_type.manager')->getStorage('facets_facet');
   }
 
   /**
    * Returns the facet source plugin manager.
    *
-   * @return \Drupal\facetapi\FacetSource\FacetSourcePluginManager
+   * @return \Drupal\facets\FacetSource\FacetSourcePluginManager
    *   The facet source plugin manager.
    */
   protected function getFacetSourcePluginManager() {
-    return $this->facetSourcePluginManager ?: \Drupal::service('plugin.manager.facetapi.facet_source');
+    return $this->facetSourcePluginManager ?: \Drupal::service('plugin.manager.facets.facet_source');
   }
 
   /**
    * Returns the processor plugin manager.
    *
-   * @return \Drupal\facetapi\Processor\ProcessorPluginManager
+   * @return \Drupal\facets\Processor\ProcessorPluginManager
    *   The processor plugin manager.
    */
   protected function getProcessorPluginManager() {
-    return $this->processorPluginManager ?: \Drupal::service('plugin.manager.facetapi.processor');
+    return $this->processorPluginManager ?: \Drupal::service('plugin.manager.facets.processor');
   }
 
   /**
@@ -150,8 +150,8 @@ class FacetForm extends EntityForm {
   /**
    * Builds the form for editing and creating a facet.
    *
-   * @param \Drupal\facetapi\FacetInterface $facet
-   *   The facetapi facet entity that is being created or edited.
+   * @param \Drupal\facets\FacetInterface $facet
+   *   The facets facet entity that is being created or edited.
    */
   public function buildEntityForm(array &$form, FormStateInterface $form_state, FacetInterface $facet) {
 
@@ -188,7 +188,7 @@ class FacetForm extends EntityForm {
       '#ajax' => [
         'trigger_as' => ['name' => 'facet_source_configure'],
         'callback' => '::buildAjaxFacetSourceConfigForm',
-        'wrapper' => 'facetapi-facet-sources-config-form',
+        'wrapper' => 'facets-facet-sources-config-form',
         'method' => 'replace',
         'effect' => 'fade',
       ],
@@ -196,7 +196,7 @@ class FacetForm extends EntityForm {
     $form['facet_source_configs'] = [
       '#type' => 'container',
       '#attributes' => [
-        'id' => 'facetapi-facet-sources-config-form',
+        'id' => 'facets-facet-sources-config-form',
       ],
       '#tree' => TRUE,
     ];
@@ -208,7 +208,7 @@ class FacetForm extends EntityForm {
       '#submit' => ['::submitAjaxFacetSourceConfigForm'],
       '#ajax' => [
         'callback' => '::buildAjaxFacetSourceConfigForm',
-        'wrapper' => 'facetapi-facet-sources-config-form',
+        'wrapper' => 'facets-facet-sources-config-form',
       ],
       '#attributes' => ['class' => ['js-hide']],
     ];
@@ -250,7 +250,7 @@ class FacetForm extends EntityForm {
     $facet_source_id = $this->getEntity()->getFacetSourceId();
 
     if (!is_null($facet_source_id) && $facet_source_id !== '') {
-      /** @var \Drupal\facetapi\FacetSource\FacetSourceInterface $facet_source */
+      /** @var \Drupal\facets\FacetSource\FacetSourceInterface $facet_source */
       $facet_source = $this->getFacetSourcePluginManager()->createInstance($facet_source_id);
 
       if ($config_form = $facet_source->buildConfigurationForm([], $form_state, $this->getEntity(), $facet_source)) {
@@ -274,7 +274,7 @@ class FacetForm extends EntityForm {
   public function submitForm(array &$form, FormStateInterface $form_state) {
     parent::submitForm($form, $form_state);
 
-    /** @var \Drupal\facetapi\FacetInterface $facet */
+    /** @var \Drupal\facets\FacetInterface $facet */
     $facet = $this->getEntity();
     $is_new = $facet->isNew();
     if ($is_new) {
@@ -339,7 +339,7 @@ class FacetForm extends EntityForm {
       if (\Drupal::moduleHandler()->moduleExists('block')) {
         $message = $this->t('Facet %name has been created. Go to the <a href=":block_overview">Block overview page</a> and add a new "Facet block". If this is your first and only facet, just adding that block make it link to this facet, if you have addded more facets already, please make sure to select the correct Facet to render.', ['%name' => $facet->getName(), ':block_overview' => \Drupal::urlGenerator()->generateFromRoute('block.admin_display')]);
         drupal_set_message($message);
-        $form_state->setRedirect('entity.facetapi_facet.display_form', ['facetapi_facet' => $facet->id()]);
+        $form_state->setRedirect('entity.facets_facet.display_form', ['facets_facet' => $facet->id()]);
       }
     }else{
       drupal_set_message(t('Facet %name has been updated.', ['%name' => $facet->getName()]));
@@ -352,7 +352,7 @@ class FacetForm extends EntityForm {
    * {@inheritdoc}
    */
   public function delete(array $form, FormStateInterface $form_state) {
-    $form_state->setRedirect('entity.facetapi_facet.delete_form', ['facetapi_facet' => $this->getEntity()->id()]);
+    $form_state->setRedirect('entity.facets_facet.delete_form', ['facets_facet' => $this->getEntity()->id()]);
   }
 
 }

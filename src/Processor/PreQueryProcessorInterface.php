@@ -2,12 +2,12 @@
 
 /**
  * @file
- * Contains \Drupal\facetapi\Processor\PreQueryProcessorInterface.
+ * Contains \Drupal\facets\Processor\PreQueryProcessorInterface.
  */
 
-namespace Drupal\facetapi\Processor;
+namespace Drupal\facets\Processor;
 
-use Drupal\facetapi\FacetInterface;
+use Drupal\facets\FacetInterface;
 
 /**
  * Processor runs before the query is executed.
@@ -21,7 +21,7 @@ interface PreQueryProcessorInterface extends ProcessorInterface {
    * alteration to the query was added before the query is executed in the
    * backend?
    *
-   * @param \Drupal\facetapi\FacetInterface $queryType
+   * @param \Drupal\facets\FacetInterface $queryType
    */
   public function preQuery(FacetInterface $facet);
 

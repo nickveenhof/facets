@@ -2,31 +2,31 @@
 
 /**
  * @file
- * Contains \Drupal\Tests\facetapi\Plugin\Processor\DisplayValueWidgetOrderProcessorTest.
+ * Contains \Drupal\Tests\facets\Plugin\Processor\DisplayValueWidgetOrderProcessorTest.
  */
 
-namespace Drupal\Tests\facetapi\Unit\Plugin\Processor;
+namespace Drupal\Tests\facets\Unit\Plugin\Processor;
 
-use Drupal\facetapi\Plugin\facetapi\processor\DisplayValueWidgetOrderProcessor;
-use Drupal\facetapi\Result\Result;
+use Drupal\facets\Plugin\facets\processor\DisplayValueWidgetOrderProcessor;
+use Drupal\facets\Result\Result;
 use Drupal\Tests\UnitTestCase;
 
 /**
- * @group facetapi
+ * @group facets
  */
 class DisplayValueWidgetOrderProcessorTest extends UnitTestCase {
 
   /**
    * The processor to be tested.
    *
-   * @var \Drupal\facetapi\processor\WidgetOrderProcessorInterface
+   * @var \Drupal\facets\processor\WidgetOrderProcessorInterface
    */
   protected $processor;
 
   /**
    * An array containing the results before the processor has ran.
    *
-   * @var \Drupal\facetapi\Result\Result[]
+   * @var \Drupal\facets\Result\Result[]
    */
   protected $original_results;
 

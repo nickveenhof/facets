@@ -1,5 +1,0 @@
-drupal.facetapi.admin_css:
-  version: VERSION
-  css:
-    theme:
-      css/facetapi.admin.css: {}

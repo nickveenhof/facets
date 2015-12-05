@@ -1,10 +1,10 @@
 <?php
 /**
  * @file
- * Contains Drupal\facetapi\Result\Result.
+ * Contains Drupal\facets\Result\Result.
  */
 
-namespace Drupal\facetapi\Result;
+namespace Drupal\facets\Result;
 
 use Drupal\Core\Url;
 

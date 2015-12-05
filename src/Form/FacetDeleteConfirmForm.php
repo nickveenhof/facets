@@ -2,10 +2,10 @@
 
 /**
  * @file
- * Contains \Drupal\facetapi\Form\FacetDeleteConfirmForm.
+ * Contains \Drupal\facets\Form\FacetDeleteConfirmForm.
  */
 
-namespace Drupal\facetapi\Form;
+namespace Drupal\facets\Form;
 
 use Drupal\block\Entity\Block;
 use Drupal\Core\Entity\EntityConfirmFormBase;
@@ -28,7 +28,7 @@ class FacetDeleteConfirmForm extends EntityConfirmFormBase {
    * {@inheritdoc}
    */
   public function getCancelUrl() {
-    return new Url('entity.facetapi_facet.canonical', array('facetapi_facet' => $this->entity->id()));
+    return new Url('entity.facets_facet.canonical', array('facets_facet' => $this->entity->id()));
   }
 
   /**
@@ -62,7 +62,7 @@ class FacetDeleteConfirmForm extends EntityConfirmFormBase {
   public function submitForm(array &$form, FormStateInterface $form_state) {
     $this->entity->delete();
     drupal_set_message($this->t('The facet %name has been deleted.', array('%name' => $this->entity->label())));
-    $form_state->setRedirect('facetapi.overview');
+    $form_state->setRedirect('facets.overview');
   }
 
   /**
@@ -89,7 +89,7 @@ class FacetDeleteConfirmForm extends EntityConfirmFormBase {
     // Check if any blocks are currently using this facet.
     $blocks = Block::loadMultiple();
     foreach ($blocks as $block) {
-      if ($block->getPlugin() instanceof \Drupal\facetapi\Plugin\Block\FacetBlock) {
+      if ($block->getPlugin() instanceof \Drupal\facets\Plugin\Block\FacetBlock) {
         $facet_context_mapping = $block->getPlugin()->getConfiguration()['context_mapping']['facet'];
         list(, $block_facet_uuid) = explode(':', $facet_context_mapping);
 

@@ -2,10 +2,10 @@
 
 /**
  * @file
- * Contains \Drupal\facetapi\Exception\Exception.
+ * Contains \Drupal\facets\Exception\Exception.
  */
 
-namespace Drupal\facetapi\Exception;
+namespace Drupal\facets\Exception;
 
 /**
  * Represents an exception that occurred in some part of the Facet API.

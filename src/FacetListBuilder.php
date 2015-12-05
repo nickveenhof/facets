@@ -2,15 +2,15 @@
 
 /**
  * @file
- * Contains \Drupal\facetapi\FacetListBuilder.
+ * Contains \Drupal\facets\FacetListBuilder.
  */
 
-namespace Drupal\facetapi;
+namespace Drupal\facets;
 
 use Drupal\Core\Config\Entity\ConfigEntityInterface;
 use Drupal\Core\Config\Entity\ConfigEntityListBuilder;
 use Drupal\Core\Entity\EntityInterface;
-use Drupal\facetapi\FacetSource\FacetSourceInterface;
+use Drupal\facets\FacetSource\FacetSourceInterface;
 
 /**
  * Builds a listing of facet entities.
@@ -81,7 +81,7 @@ class FacetListBuilder extends ConfigEntityListBuilder {
    * {@inheritdoc}
    */
   public function buildRow(EntityInterface $entity) {
-    /** @var \Drupal\facetapi\FacetInterface $entity */
+    /** @var \Drupal\facets\FacetInterface $entity */
     $row = parent::buildRow($entity);
 
     $status_label = $entity->status() ? $this->t('Enabled') : $this->t('Disabled');
@@ -98,7 +98,7 @@ class FacetListBuilder extends ConfigEntityListBuilder {
       'data' => array(
         'type' => array(
           'data' => 'Facet',
-          'class' => array('facetapi-type'),
+          'class' => array('facets-type'),
         ),
         'title' => array(
           'data' => array(
@@ -127,7 +127,7 @@ class FacetListBuilder extends ConfigEntityListBuilder {
       'data' => array(
         'type' => array(
           'data' => 'Facet source',
-          'class' => array('facetapi-type'),
+          'class' => array('facets-type'),
         ),
         'title' => array(
           'data' => $facet_source['id'],
@@ -159,7 +159,7 @@ class FacetListBuilder extends ConfigEntityListBuilder {
       ];
     }
 
-    $list['#attached']['library'][] = 'facetapi/drupal.facetapi.admin_css';
+    $list['#attached']['library'][] = 'facets/drupal.facets.admin_css';
 
     $list['#type'] = 'container';
 
@@ -169,7 +169,7 @@ class FacetListBuilder extends ConfigEntityListBuilder {
       '#rows' => array(),
       '#empty' => $groups['lone_facets'] ? '' : $this->t('There are no facet sources or facets defined.'),
       '#attributes' => array(
-        'id' => 'facetapi-groups-list',
+        'id' => 'facets-groups-list',
       ),
     );
 
@@ -206,7 +206,7 @@ class FacetListBuilder extends ConfigEntityListBuilder {
    *   - lone_facets: All facets that aren't attached to any facet source.
    */
   public function loadGroups() {
-    $facet_source_plugin_manager = \Drupal::service('plugin.manager.facetapi.facet_source');
+    $facet_source_plugin_manager = \Drupal::service('plugin.manager.facets.facet_source');
     $facets = $this->storage->loadMultiple();
     $facet_sources = $facet_source_plugin_manager->getDefinitions();
 
@@ -220,7 +220,7 @@ class FacetListBuilder extends ConfigEntityListBuilder {
       ];
 
       foreach ($facets as $facet) {
-        /** @var \Drupal\facetapi\FacetInterface $facet */
+        /** @var \Drupal\facets\FacetInterface $facet */
         if ($facet->getFacetSourceId() == $facet_source['id']) {
           $facet_source_groups[$facet_source['id']]['facets'][$facet->id()] = $facet;
           // Remove this facet from $facet so it will finally only contain those

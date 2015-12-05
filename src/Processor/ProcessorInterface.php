@@ -2,13 +2,13 @@
 
 /**
  * @file
- * Contains \Drupal\facetapi\Processor\ProcessorInterface.
+ * Contains \Drupal\facets\Processor\ProcessorInterface.
  */
 
-namespace Drupal\facetapi\Processor;
+namespace Drupal\facets\Processor;
 
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\facetapi\FacetInterface;
+use Drupal\facets\FacetInterface;
 use Drupal\Component\Plugin\ConfigurablePluginInterface;
 
 /**
@@ -36,7 +36,7 @@ interface ProcessorInterface extends ConfigurablePluginInterface {
    *
    * @param array $form
    * @param \Drupal\Core\Form\FormStateInterface $form_state
-   * @param \Drupal\facetapi\FacetInterface $facet
+   * @param \Drupal\facets\FacetInterface $facet
    */
   public function buildConfigurationForm(array $form, FormStateInterface $form_state, FacetInterface $facet);
 
@@ -45,7 +45,7 @@ interface ProcessorInterface extends ConfigurablePluginInterface {
    *
    * @param array $form
    * @param \Drupal\Core\Form\FormStateInterface $form_state
-   * @param \Drupal\facetapi\FacetInterface $facet
+   * @param \Drupal\facets\FacetInterface $facet
    */
   public function validateConfigurationForm(array $form, FormStateInterface $form_state, FacetInterface $facet);
 
@@ -72,7 +72,7 @@ interface ProcessorInterface extends ConfigurablePluginInterface {
    *
    * @param string $stage
    *   The stage whose default weight should be returned. See
-   *   \Drupal\facetapi\Processor\ProcessorPluginManager::getProcessingStages()
+   *   \Drupal\facets\Processor\ProcessorPluginManager::getProcessingStages()
    *   for the valid values.
    *
    * @return int

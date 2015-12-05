@@ -2,12 +2,12 @@
 
 /**
  * @file
- * Contains Drupal\facetapi\Plugin\Block\FacetBlock.
+ * Contains Drupal\facets\Plugin\Block\FacetBlock.
  *
  * NOTE: There should be a facetblock or settings for the facets later.
  */
 
-namespace Drupal\facetapi\Plugin\Block;
+namespace Drupal\facets\Plugin\Block;
 
 use Drupal\Core\Block\BlockBase;
 use Drupal\Core\Form\FormStateInterface;
@@ -21,7 +21,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  *  id = "facet_block",
  *  admin_label = @Translation("Facet block"),
  *  context = {
- *    "facet" = @ContextDefinition("entity:facetapi_facet", label=@Translation("Facet"))
+ *    "facet" = @ContextDefinition("entity:facets_facet", label=@Translation("Facet"))
  *  }
  * )
  *
@@ -31,7 +31,7 @@ class FacetBlock extends BlockBase implements ContainerFactoryPluginInterface {
   /**
    * The facet_manager plugin manager.
    *
-   * @var \Drupal\facetapi\FacetManager\DefaultFacetManager
+   * @var \Drupal\facets\FacetManager\DefaultFacetManager
    */
   protected $facetManager;
 
@@ -44,9 +44,9 @@ class FacetBlock extends BlockBase implements ContainerFactoryPluginInterface {
    *   The plugin_id for the plugin instance.
    * @param string $plugin_definition
    *   The plugin implementation definition.
-   * @param \Drupal\facetapi\FacetManager\DefaultFacetManager $facetManager
+   * @param \Drupal\facets\FacetManager\DefaultFacetManager $facetManager
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, \Drupal\facetapi\FacetManager\DefaultFacetManager $facetManager) {
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, \Drupal\facets\FacetManager\DefaultFacetManager $facetManager) {
     $this->facetManager = $facetManager;
     parent::__construct($configuration, $plugin_id, $plugin_definition);
   }
@@ -56,8 +56,8 @@ class FacetBlock extends BlockBase implements ContainerFactoryPluginInterface {
    */
   public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
 
-    /** @var \Drupal\facetapi\FacetManager\DefaultFacetManager $facetManager */
-    $facetManager = $container->get('facetapi.manager');
+    /** @var \Drupal\facets\FacetManager\DefaultFacetManager $facetManager */
+    $facetManager = $container->get('facets.manager');
 
     return new static(
       $configuration,
@@ -79,8 +79,8 @@ class FacetBlock extends BlockBase implements ContainerFactoryPluginInterface {
 
     // Add contextual links only when we have results.
     if (!empty($build)) {
-      $build['#contextual_links']['facetapi_facet'] = array(
-        'route_parameters' => array('facetapi_facet' => $facet->id()),
+      $build['#contextual_links']['facets_facet'] = array(
+        'route_parameters' => array('facets_facet' => $facet->id()),
       );
     }
 

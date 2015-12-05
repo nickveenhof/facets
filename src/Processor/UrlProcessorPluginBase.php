@@ -1,10 +1,10 @@
 <?php
 /**
  * @file
- * Contains Drupal\facetapi\Processor\UrlProcessorPluginBase.
+ * Contains Drupal\facets\Processor\UrlProcessorPluginBase.
  */
 
-namespace Drupal\facetapi\Processor;
+namespace Drupal\facets\Processor;
 
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;

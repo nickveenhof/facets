@@ -1,5 +1,0 @@
-entity.facetapi_facet.add_form:
-  route_name: entity.facetapi_facet.add_form
-  title: 'Add facet'
-  appears_on:
-    - facetapi.overview

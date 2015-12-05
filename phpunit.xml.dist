@@ -8,7 +8,7 @@
     <ini name="memory_limit" value="-1"/>
   </php>
   <testsuites>
-    <testsuite name="Facetapi Test Suite">
+    <testsuite name="Facets Test Suite">
       <directory>./tests</directory>
     </testsuite>
   </testsuites>

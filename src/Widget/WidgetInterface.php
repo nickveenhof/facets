@@ -1,12 +1,12 @@
 <?php
 /**
  * @file
- * Contains Drupal\facetapi\Widget\WidgetInterface.
+ * Contains Drupal\facets\Widget\WidgetInterface.
  */
 
-namespace Drupal\facetapi\Widget;
+namespace Drupal\facets\Widget;
 
-use Drupal\facetapi\FacetInterface;
+use Drupal\facets\FacetInterface;
 /**
  *
  */

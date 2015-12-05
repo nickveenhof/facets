@@ -2,10 +2,10 @@
 
 /**
  * @file
- * Contains \Drupal\facetapi\Tests\WebTestBase.
+ * Contains \Drupal\facets\Tests\WebTestBase.
  */
 
-namespace Drupal\facetapi\Tests;
+namespace Drupal\facets\Tests;
 
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\search_api\Tests\ExampleContentTrait;
@@ -36,7 +36,7 @@ abstract class WebTestBase extends SimpletestWebTestBase {
    *
    * @var string[]
    */
-  public static $modules = ['views', 'node', 'search_api', 'search_api_test_backend', 'facetapi', 'search_api_test_views', 'block'];
+  public static $modules = ['views', 'node', 'search_api', 'search_api_test_backend', 'facets', 'search_api_test_views', 'block'];
 
   /**
    * An admin user used for this test.
@@ -82,7 +82,7 @@ abstract class WebTestBase extends SimpletestWebTestBase {
     // Create the users used for the tests.
     $this->adminUser = $this->drupalCreateUser([
       'administer search_api',
-      'administer facetapi',
+      'administer facets',
       'access administration pages',
       'administer nodes',
       'access content overview',

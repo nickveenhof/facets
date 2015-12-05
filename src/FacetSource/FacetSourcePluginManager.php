@@ -2,10 +2,10 @@
 
 /**
  * @file
- * Contains \Drupal\facetapi\FacetSource\FacetSourcePluginManager.
+ * Contains \Drupal\facets\FacetSource\FacetSourcePluginManager.
  */
 
-namespace Drupal\facetapi\FacetSource;
+namespace Drupal\facets\FacetSource;
 
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
@@ -14,8 +14,8 @@ use Drupal\Core\Plugin\DefaultPluginManager;
 /**
  * Manages facet source plugins.
  *
- * @see \Drupal\facetapi\Annotation\FacetApiFacetSource
- * @see \Drupal\facetapi\FacetSource\FacetSourcePluginBase
+ * @see \Drupal\facets\Annotation\FacetsFacetSource
+ * @see \Drupal\facets\FacetSource\FacetSourcePluginBase
  * @see plugin_api
  */
 class FacetSourcePluginManager extends DefaultPluginManager {
@@ -32,7 +32,7 @@ class FacetSourcePluginManager extends DefaultPluginManager {
    *   The module handler.
    */
   public function __construct(\Traversable $namespaces, CacheBackendInterface $cache_backend, ModuleHandlerInterface $module_handler) {
-    parent::__construct('Plugin/facetapi/facet_source', $namespaces, $module_handler, 'Drupal\facetapi\FacetSource\FacetSourceInterface', 'Drupal\facetapi\Annotation\FacetApiFacetSource');
+    parent::__construct('Plugin/facets/facet_source', $namespaces, $module_handler, 'Drupal\facets\FacetSource\FacetSourceInterface', 'Drupal\facets\Annotation\FacetsFacetSource');
   }
 
 }

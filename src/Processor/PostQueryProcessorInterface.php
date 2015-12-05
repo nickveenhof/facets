@@ -2,9 +2,9 @@
 
 /**
  * @file
- * Contains \Drupal\facetapi\Processor\PostQueryProcessorInterface.
+ * Contains \Drupal\facets\Processor\PostQueryProcessorInterface.
  */
-namespace Drupal\facetapi\Processor;
+namespace Drupal\facets\Processor;
 
 
 /**
@@ -18,7 +18,7 @@ interface PostQueryProcessorInterface extends ProcessorInterface {
    * Uses the query results and can alter those results, for example a
    * ValueCallbackProcessor.
    *
-   * @param \Drupal\facetapi\Result\Result[] $results
+   * @param \Drupal\facets\Result\Result[] $results
    */
   public function postQuery(array $results);
 

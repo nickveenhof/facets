@@ -1,22 +1,22 @@
 <?php
 
 /**
- * @file Contains \Drupal\Tests\facetapi\Unit\Processor\ProcessorPluginManagerTest.
+ * @file Contains \Drupal\Tests\facets\Unit\Processor\ProcessorPluginManagerTest.
  */
 
-namespace Drupal\Tests\facetapi\Unit\Processor;
+namespace Drupal\Tests\facets\Unit\Processor;
 
 use Drupal\Component\Plugin\Discovery\DiscoveryInterface;
 use Drupal\Component\Plugin\Factory\DefaultFactory;
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\StringTranslation\TranslationInterface;
-use Drupal\facetapi\Processor\ProcessorPluginManager;
+use Drupal\facets\Processor\ProcessorPluginManager;
 use Drupal\Tests\UnitTestCase;
 use Zend\Stdlib\ArrayObject;
 
 /**
- * @group facetapi
+ * @group facets
  */
 class ProcessorPluginManagerTest extends UnitTestCase {
 
@@ -58,7 +58,7 @@ class ProcessorPluginManagerTest extends UnitTestCase {
   /**
    * The plugin manager under test.
    *
-   * @var \Drupal\facetapi\Processor\ProcessorPluginManager
+   * @var \Drupal\facets\Processor\ProcessorPluginManager
    */
   public $sut;
 

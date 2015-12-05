@@ -1,10 +1,10 @@
 <?php
 /**
  * @file
- * Contains Drupal\facetapi\QueryType\QueryTypePluginBase.
+ * Contains Drupal\facets\QueryType\QueryTypePluginBase.
  */
 
-namespace Drupal\facetapi\QueryType;
+namespace Drupal\facets\QueryType;
 
 use Drupal\Component\Plugin\ConfigurablePluginInterface;
 use Drupal\Core\Entity\DependencyTrait;
@@ -37,14 +37,14 @@ abstract class QueryTypePluginBase extends PluginBase implements QueryTypeInterf
   /**
    * The facet that needs the query type.
    *
-   * @var \Drupal\facetapi\FacetInterface
+   * @var \Drupal\facets\FacetInterface
    */
   protected $facet;
 
   /**
    * Holds the results for the facet.
    *
-   * @var \Drupal\facetapi\Result\ResultInterface[]
+   * @var \Drupal\facets\Result\ResultInterface[]
    */
   protected $results;
 

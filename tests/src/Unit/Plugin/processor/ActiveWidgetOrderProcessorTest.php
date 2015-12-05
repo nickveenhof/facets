@@ -2,31 +2,31 @@
 
 /**
  * @file
- * Contains \Drupal\Tests\facetapi\Plugin\Processor\ActiveWidgetOrderProcessorTest.
+ * Contains \Drupal\Tests\facets\Plugin\Processor\ActiveWidgetOrderProcessorTest.
  */
 
-namespace Drupal\Tests\facetapi\Unit\Plugin\Processor;
+namespace Drupal\Tests\facets\Unit\Plugin\Processor;
 
-use Drupal\facetapi\Plugin\facetapi\processor\ActiveWidgetOrderProcessor;
-use Drupal\facetapi\Result\Result;
+use Drupal\facets\Plugin\facets\processor\ActiveWidgetOrderProcessor;
+use Drupal\facets\Result\Result;
 use Drupal\Tests\UnitTestCase;
 
 /**
- * @group facetapi
+ * @group facets
  */
 class ActiveWidgetOrderProcessorTest extends UnitTestCase {
 
   /**
    * The processor to be tested.
    *
-   * @var \Drupal\facetapi\processor\WidgetOrderProcessorInterface
+   * @var \Drupal\facets\processor\WidgetOrderProcessorInterface
    */
   protected $processor;
 
   /**
    * An array containing the results before the processor has ran.
    *
-   * @var \Drupal\facetapi\Result\Result[]
+   * @var \Drupal\facets\Result\Result[]
    */
   protected $original_results;
 
@@ -36,7 +36,7 @@ class ActiveWidgetOrderProcessorTest extends UnitTestCase {
   protected function setUp() {
     parent::setUp();
 
-    /** @var \Drupal\facetapi\Result\Result[] $original_results */
+    /** @var \Drupal\facets\Result\Result[] $original_results */
     $original_results = [
       new Result('Boxer', 'Boxer', 10),
       new Result('Old Major', 'Old Major', 3),

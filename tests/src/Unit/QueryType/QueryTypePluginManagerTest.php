@@ -1,21 +1,21 @@
 <?php
 
 /**
- * @file Contains \Drupal\Tests\facetapi\Unit\QueryType\QueryTypePluginManagerTest.
+ * @file Contains \Drupal\Tests\facets\Unit\QueryType\QueryTypePluginManagerTest.
  */
 
-namespace Drupal\Tests\facetapi\Unit\QueryType;
+namespace Drupal\Tests\facets\Unit\QueryType;
 
 use Drupal\Component\Plugin\Discovery\DiscoveryInterface;
 use Drupal\Component\Plugin\Factory\DefaultFactory;
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
-use Drupal\facetapi\QueryType\QueryTypePluginManager;
+use Drupal\facets\QueryType\QueryTypePluginManager;
 use Drupal\Tests\UnitTestCase;
 use Zend\Stdlib\ArrayObject;
 
 /**
- * @group facetapi
+ * @group facets
  */
 class QueryTypePluginManagerTest extends UnitTestCase {
 
@@ -50,7 +50,7 @@ class QueryTypePluginManagerTest extends UnitTestCase {
   /**
    * The plugin manager under test.
    *
-   * @var \Drupal\facetapi\QueryType\QueryTypePluginManager
+   * @var \Drupal\facets\QueryType\QueryTypePluginManager
    */
   public $sut;
 

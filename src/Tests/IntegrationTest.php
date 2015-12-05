@@ -2,17 +2,17 @@
 
 /**
  * @file
- * Contains \Drupal\facetapi\Tests\IntegrationTest.
+ * Contains \Drupal\facets\Tests\IntegrationTest.
  */
 
-namespace Drupal\facetapi\Tests;
+namespace Drupal\facets\Tests;
 
-use \Drupal\facetapi\Tests\WebTestBase as FacetWebTestBase;
+use \Drupal\facets\Tests\WebTestBase as FacetWebTestBase;
 
 /**
  * Tests the overall functionality of the Facet API admin UI.
  *
- * @group facetapi
+ * @group facets
  */
 class IntegrationTest extends FacetWebTestBase {
 
@@ -35,7 +35,7 @@ class IntegrationTest extends FacetWebTestBase {
    * Tests the facet api permissions.
    */
   public function testOverviewPermissions() {
-    $facet_overview = $this->urlGenerator->generateFromRoute('facetapi.overview');
+    $facet_overview = $this->urlGenerator->generateFromRoute('facets.overview');
 
     // Login with a user that is not authorized to administer facets and test
     // that we're correctly getting a 403 HTTP response code.
@@ -158,7 +158,7 @@ class IntegrationTest extends FacetWebTestBase {
   protected function createFacetBlock($id) {
     // Create a block. Load the entity to obtain the uuid when creating the
     // block.
-    $facet = \Drupal::service('entity_type.manager')->getStorage('facetapi_facet')->load($id);
+    $facet = \Drupal::service('entity_type.manager')->getStorage('facets_facet')->load($id);
     $this->blockValues = [
       [
         'label' => 'Facet Block',
@@ -168,7 +168,7 @@ class IntegrationTest extends FacetWebTestBase {
           'region' => 'footer',
           'id' => str_replace('_', '-', $id),
           'context_mapping' => [
-            'facet' => '@facetapi.facet_context:' . $facet->uuid(),
+            'facet' => '@facets.facet_context:' . $facet->uuid(),
           ],
         ],
         'test_weight' => '0',
@@ -187,7 +187,7 @@ class IntegrationTest extends FacetWebTestBase {
   protected function setEmptyBehaviorFacetText($facet_name) {
     $facet_id = $this->convertNameToMachineName($facet_name);
 
-    $facet_display_page = $this->urlGenerator->generateFromRoute('entity.facetapi_facet.display_form', ['facetapi_facet' => $facet_id], ['absolute' => TRUE]);
+    $facet_display_page = $this->urlGenerator->generateFromRoute('entity.facets_facet.display_form', ['facets_facet' => $facet_id], ['absolute' => TRUE]);
 
     // Go to the facet edit page and make sure "edit facet %facet" is present.
     $this->drupalGet($facet_display_page);
@@ -210,7 +210,7 @@ class IntegrationTest extends FacetWebTestBase {
   protected function setOptionShowOnlyWhenFacetSourceVisible($facet_name) {
     $facet_id = $this->convertNameToMachineName($facet_name);
 
-    $facet_display_page = $this->urlGenerator->generateFromRoute('entity.facetapi_facet.display_form', ['facetapi_facet' => $facet_id], ['absolute' => TRUE]);
+    $facet_display_page = $this->urlGenerator->generateFromRoute('entity.facets_facet.display_form', ['facets_facet' => $facet_id], ['absolute' => TRUE]);
     $this->drupalGet($facet_display_page);
     $this->assertResponse(200);
 
@@ -226,7 +226,7 @@ class IntegrationTest extends FacetWebTestBase {
    * Get the facet overview page and make sure the overview is empty.
    */
   protected function checkEmptyOverview() {
-    $facet_overview = $this->urlGenerator->generateFromRoute('facetapi.overview');
+    $facet_overview = $this->urlGenerator->generateFromRoute('facets.overview');
     $this->drupalGet($facet_overview);
     $this->assertResponse(200);
 
@@ -244,7 +244,7 @@ class IntegrationTest extends FacetWebTestBase {
     $facet_id = $this->convertNameToMachineName($facet_name);
 
     // Go to the Add facet page and make sure that returns a 200.
-    $facet_add_page = $this->urlGenerator->generateFromRoute('entity.facetapi_facet.add_form', [], ['absolute' => TRUE]);
+    $facet_add_page = $this->urlGenerator->generateFromRoute('entity.facets_facet.add_form', [], ['absolute' => TRUE]);
     $this->drupalGet($facet_add_page);
     $this->assertResponse(200);
 
@@ -296,7 +296,7 @@ class IntegrationTest extends FacetWebTestBase {
   public function editFacet($facet_name) {
     $facet_id = $this->convertNameToMachineName($facet_name);
 
-    $facet_edit_page = $this->urlGenerator->generateFromRoute('entity.facetapi_facet.edit_form', ['facetapi_facet' => $facet_id], ['absolute' => TRUE]);
+    $facet_edit_page = $this->urlGenerator->generateFromRoute('entity.facets_facet.edit_form', ['facets_facet' => $facet_id], ['absolute' => TRUE]);
 
     // Go to the facet edit page and make sure "edit facet %facet" is present.
     $this->drupalGet($facet_edit_page);
@@ -333,7 +333,7 @@ class IntegrationTest extends FacetWebTestBase {
   protected function deleteUsedFacet($facet_name) {
     $facet_id = $this->convertNameToMachineName($facet_name);
 
-    $facet_delete_page = $this->urlGenerator->generateFromRoute('entity.facetapi_facet.delete_form', ['facetapi_facet' => $facet_id], ['absolute' => TRUE]);
+    $facet_delete_page = $this->urlGenerator->generateFromRoute('entity.facets_facet.delete_form', ['facets_facet' => $facet_id], ['absolute' => TRUE]);
 
     // Go to the facet delete page and make the warning is shown.
     $this->drupalGet($facet_delete_page);
@@ -353,7 +353,7 @@ class IntegrationTest extends FacetWebTestBase {
   protected function deleteUnusedFacet($facet_name) {
     $facet_id = $this->convertNameToMachineName($facet_name);
 
-    $facet_delete_page = $this->urlGenerator->generateFromRoute('entity.facetapi_facet.delete_form', ['facetapi_facet' => $facet_id], ['absolute' => TRUE]);
+    $facet_delete_page = $this->urlGenerator->generateFromRoute('entity.facets_facet.delete_form', ['facets_facet' => $facet_id], ['absolute' => TRUE]);
 
     // Go to the facet delete page and make the warning is shown.
     $this->drupalGet($facet_delete_page);
@@ -369,7 +369,7 @@ class IntegrationTest extends FacetWebTestBase {
 
     // Refresh the page because on the previous page the $facet_name is still
     // visible (in the message).
-    $facet_overview = $this->urlGenerator->generateFromRoute('facetapi.overview');
+    $facet_overview = $this->urlGenerator->generateFromRoute('facets.overview');
     $this->drupalGet($facet_overview);
     $this->assertResponse(200);
     $this->assertNoText($facet_name);
@@ -412,7 +412,7 @@ class IntegrationTest extends FacetWebTestBase {
   protected function goToDeleteFacetPage($facet_name) {
     $facet_id = $this->convertNameToMachineName($facet_name);
 
-    $facet_delete_page = $this->urlGenerator->generateFromRoute('entity.facetapi_facet.delete_form', ['facetapi_facet' => $facet_id], ['absolute' => TRUE]);
+    $facet_delete_page = $this->urlGenerator->generateFromRoute('entity.facets_facet.delete_form', ['facets_facet' => $facet_id], ['absolute' => TRUE]);
 
     // Go to the facet delete page and make the warning is shown.
     $this->drupalGet($facet_delete_page);

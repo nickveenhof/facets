@@ -1,0 +1,27 @@
+services:
+  plugin.manager.facets.query_type:
+    class: Drupal\facets\QueryType\QueryTypePluginManager
+    parent: default_plugin_manager
+  plugin.manager.facets.widget:
+    class: Drupal\facets\Widget\WidgetPluginManager
+    parent: default_plugin_manager
+  plugin.manager.facets.facet_source:
+    class: Drupal\facets\FacetSource\FacetSourcePluginManager
+    parent: default_plugin_manager
+  plugin.manager.facets.processor:
+    class: Drupal\facets\Processor\ProcessorPluginManager
+    arguments: ['@container.namespaces', '@cache.discovery', '@module_handler', '@string_translation']
+  facets.manager:
+    class: Drupal\facets\FacetManager\DefaultFacetManager
+    arguments:
+      - '@plugin.manager.facets.query_type'
+      - '@plugin.manager.facets.widget'
+      - '@plugin.manager.facets.facet_source'
+      - '@plugin.manager.facets.processor'
+      - '@entity_type.manager'
+
+  facets.facet_context:
+    class: Drupal\facets\ContextProvider\FacetContextProvider
+    arguments: ['@entity_type.manager']
+    tags:
+      - { name: context_provider }

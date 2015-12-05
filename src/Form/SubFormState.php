@@ -2,10 +2,10 @@
 
 /**
  * @file
- * Contains \Drupal\facetapi\Form\SubFormState.
+ * Contains \Drupal\facets\Form\SubFormState.
  */
 
-namespace Drupal\facetapi\Form;
+namespace Drupal\facets\Form;
 
 use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Form\FormInterface;

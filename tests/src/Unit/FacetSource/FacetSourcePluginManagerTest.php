@@ -1,21 +1,21 @@
 <?php
 
 /**
- * @file Contains \Drupal\Tests\facetapi\Unit\FacetSource\FacetSourcePluginManagerTest.
+ * @file Contains \Drupal\Tests\facets\Unit\FacetSource\FacetSourcePluginManagerTest.
  */
 
-namespace Drupal\Tests\facetapi\Unit\FacetSource;
+namespace Drupal\Tests\facets\Unit\FacetSource;
 
 use Drupal\Component\Plugin\Discovery\DiscoveryInterface;
 use Drupal\Component\Plugin\Factory\DefaultFactory;
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
-use Drupal\facetapi\FacetSource\FacetSourcePluginManager;
+use Drupal\facets\FacetSource\FacetSourcePluginManager;
 use Drupal\Tests\UnitTestCase;
 use Zend\Stdlib\ArrayObject;
 
 /**
- * @group facetapi
+ * @group facets
  */
 class FacetSourcePluginManagerTest extends UnitTestCase {
 
@@ -50,7 +50,7 @@ class FacetSourcePluginManagerTest extends UnitTestCase {
   /**
    * The plugin manager under test.
    *
-   * @var \Drupal\facetapi\FacetSource\FacetSourcePluginManager
+   * @var \Drupal\facets\FacetSource\FacetSourcePluginManager
    */
   public $sut;
 

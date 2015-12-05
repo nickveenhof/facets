@@ -2,32 +2,32 @@
 
 /**
  * @file
- * Contains \Drupal\Tests\facetapi\Plugin\Processor\HideNonNarrowingResultProcessorTest.
+ * Contains \Drupal\Tests\facets\Plugin\Processor\HideNonNarrowingResultProcessorTest.
  */
 
-namespace Drupal\Tests\facetapi\Unit\Plugin\Processor;
+namespace Drupal\Tests\facets\Unit\Plugin\Processor;
 
-use Drupal\facetapi\Entity\Facet;
-use Drupal\facetapi\Plugin\facetapi\processor\HideNonNarrowingResultProcessor;
-use Drupal\facetapi\Result\Result;
+use Drupal\facets\Entity\Facet;
+use Drupal\facets\Plugin\facets\processor\HideNonNarrowingResultProcessor;
+use Drupal\facets\Result\Result;
 use Drupal\Tests\UnitTestCase;
 
 /**
- * @group facetapi
+ * @group facets
  */
 class HideNonNarrowingResultProcessorTest extends UnitTestCase {
 
   /**
    * The processor to be tested.
    *
-   * @var \Drupal\facetapi\processor\WidgetOrderProcessorInterface
+   * @var \Drupal\facets\processor\WidgetOrderProcessorInterface
    */
   protected $processor;
 
   /**
    * An array containing the results before the processor has ran.
    *
-   * @var \Drupal\facetapi\Result\Result[]
+   * @var \Drupal\facets\Result\Result[]
    */
   protected $original_results;
 

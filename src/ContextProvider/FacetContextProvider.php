@@ -2,10 +2,10 @@
 
 /**
  * @file
- * Contains \Drupal\facetapi\ContextProvider\FacetContextProvider.
+ * Contains \Drupal\facets\ContextProvider\FacetContextProvider.
  */
 
-namespace Drupal\facetapi\ContextProvider;
+namespace Drupal\facets\ContextProvider;
 
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Plugin\Context\Context;
@@ -31,7 +31,7 @@ class FacetContextProvider implements ContextProviderInterface {
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
    */
   public function __construct(EntityTypeManagerInterface $entity_type_manager) {
-    $this->facetStorage = $entity_type_manager->getStorage('facetapi_facet');
+    $this->facetStorage = $entity_type_manager->getStorage('facets_facet');
   }
 
   /**
@@ -43,7 +43,7 @@ class FacetContextProvider implements ContextProviderInterface {
       ->execute();
     $contexts = [];
     foreach ($this->facetStorage->loadMultiple($ids) as $facet) {
-      $context = new Context(new ContextDefinition('entity:facetapi_facet'), $facet);
+      $context = new Context(new ContextDefinition('entity:facets_facet'), $facet);
       $contexts[$facet->uuid()] = $context;
     }
     return $contexts;
@@ -56,10 +56,10 @@ class FacetContextProvider implements ContextProviderInterface {
     $facets = $this->facetStorage->loadMultiple();
     $contexts = [];
 
-    /** @var \Drupal\facetapi\FacetInterface $facet */
+    /** @var \Drupal\facets\FacetInterface $facet */
     foreach ($facets as $facet) {
       $context = new Context(
-        new ContextDefinition('entity:facetapi_facet', $facet->label()),
+        new ContextDefinition('entity:facets_facet', $facet->label()),
         $facet
       );
       $contexts[$facet->uuid()] = $context;

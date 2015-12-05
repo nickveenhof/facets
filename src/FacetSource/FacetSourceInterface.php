@@ -2,13 +2,13 @@
 
 /**
  * @file
- * Contains \Drupal\facetapi\FacetSource\FacetSourceInterface.
+ * Contains \Drupal\facets\FacetSource\FacetSourceInterface.
  */
 
-namespace Drupal\facetapi\FacetSource;
+namespace Drupal\facets\FacetSource;
 
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\facetapi\FacetInterface;
+use Drupal\facets\FacetInterface;
 
 /**
  * Describes a source for facet items.
@@ -26,15 +26,15 @@ interface FacetSourceInterface {
    *
    * @param array $form
    * @param \Drupal\Core\Form\FormStateInterface $form_state
-   * @param \Drupal\facetapi\FacetInterface $facet
-   * @param \Drupal\facetapi\FacetSource\FacetSourceInterface $facet_source
+   * @param \Drupal\facets\FacetInterface $facet
+   * @param \Drupal\facets\FacetSource\FacetSourceInterface $facet_source
    */
   public function buildConfigurationForm(array $form, FormStateInterface $form_state, FacetInterface $facet, FacetSourceInterface $facet_source);
 
   /**
    * Fill in facet data in to the configured facets.
    *
-   * @param \Drupal\facetapi\FacetInterface[] $facets
+   * @param \Drupal\facets\FacetInterface[] $facets
    *
    * @return mixed
    */
@@ -50,11 +50,11 @@ interface FacetSourceInterface {
   /**
    * Get the allowed query types for a given facet for the facet source.
    *
-   * @param \Drupal\facetapi\FacetInterface $facet
+   * @param \Drupal\facets\FacetInterface $facet
    *
    * @return array of allowed query types
    *
-   * @throws \Drupal\facetapi\Exception\Exception
+   * @throws \Drupal\facets\Exception\Exception
    */
   public function getQueryTypesForFacet(FacetInterface $facet);
 

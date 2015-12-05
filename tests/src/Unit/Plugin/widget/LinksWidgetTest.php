@@ -2,33 +2,33 @@
 
 /**
  * @file
- * Contains \Drupal\Tests\facetapi\Plugin\widget\LinksWidgetTest.
+ * Contains \Drupal\Tests\facets\Plugin\widget\LinksWidgetTest.
  */
 
-namespace Drupal\Tests\facetapi\Unit\Plugin\widget;
+namespace Drupal\Tests\facets\Unit\Plugin\widget;
 
-use Drupal\facetapi\Entity\Facet;
-use Drupal\facetapi\Plugin\facetapi\widget\LinksWidget;
-use Drupal\facetapi\Result\Result;
+use Drupal\facets\Entity\Facet;
+use Drupal\facets\Plugin\facets\widget\LinksWidget;
+use Drupal\facets\Result\Result;
 use Drupal\Tests\UnitTestCase;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 
 /**
- * @group facetapi
+ * @group facets
  */
 class LinksWidgetTest extends UnitTestCase {
 
   /**
    * The processor to be tested.
    *
-   * @var \drupal\facetapi\Widget\WidgetInterface
+   * @var \drupal\facets\Widget\WidgetInterface
    */
   protected $widget;
 
   /**
    * An array containing the results before the processor has ran.
    *
-   * @var \Drupal\facetapi\Result\Result[]
+   * @var \Drupal\facets\Result\Result[]
    */
   protected $original_results;
 
@@ -38,7 +38,7 @@ class LinksWidgetTest extends UnitTestCase {
   protected function setUp() {
     parent::setUp();
 
-    /** @var \Drupal\facetapi\Result\Result[] $original_results */
+    /** @var \Drupal\facets\Result\Result[] $original_results */
     $original_results = [
       new Result('llama', 'Llama', 10),
       new Result('badger', 'Badger', 20),

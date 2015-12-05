@@ -2,15 +2,15 @@
 
 /**+
  * @file
- * Contains \Drupal\facetapi\FacetSource\FacetSourcePluginBase.
+ * Contains \Drupal\facets\FacetSource\FacetSourcePluginBase.
  */
 
-namespace Drupal\facetapi\FacetSource;
+namespace Drupal\facets\FacetSource;
 
 use Drupal\Component\Plugin\PluginBase;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
-use Drupal\FacetApi\FacetInterface;
+use Drupal\Facets\FacetInterface;
 
 /**
  * Defines a base class from which other facet sources may extend.
@@ -21,9 +21,9 @@ use Drupal\FacetApi\FacetInterface;
  * - label: The human-readable name of the datasource, translated.
  * - description: A human-readable description for the datasource, translated.
  *
- * @see \Drupal\facetapi\Annotation\FacetApiFacetSource
- * @see \Drupal\facetapi\FacetSource\FacetSourcePluginManager
- * @see \Drupal\facetapi\FacetSource\FacetSourceInterface
+ * @see \Drupal\facets\Annotation\FacetsFacetSource
+ * @see \Drupal\facets\FacetSource\FacetSourcePluginManager
+ * @see \Drupal\facets\FacetSource\FacetSourceInterface
  * @see plugin_api
  */
 abstract class FacetSourcePluginBase extends PluginBase implements FacetSourceInterface, ContainerFactoryPluginInterface {
@@ -31,7 +31,7 @@ abstract class FacetSourcePluginBase extends PluginBase implements FacetSourceIn
   /**
    * The plugin manager.
    *
-   * @var \Drupal\facetapi\QueryType\QueryTypePluginManager
+   * @var \Drupal\facets\QueryType\QueryTypePluginManager
    */
   protected $queryTypePluginManager;
 
@@ -60,8 +60,8 @@ abstract class FacetSourcePluginBase extends PluginBase implements FacetSourceIn
    */
   public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
     // Insert the plugin manager for query types.
-    /** @var \Drupal\facetapi\QueryType\QueryTypePluginManager $query_type_plugin_manager */
-    $query_type_plugin_manager = $container->get('plugin.manager.facetapi.query_type');
+    /** @var \Drupal\facets\QueryType\QueryTypePluginManager $query_type_plugin_manager */
+    $query_type_plugin_manager = $container->get('plugin.manager.facets.query_type');
 
     return new static($configuration, $plugin_id, $plugin_definition, $query_type_plugin_manager);
   }

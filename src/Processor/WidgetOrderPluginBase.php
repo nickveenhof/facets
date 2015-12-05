@@ -4,10 +4,10 @@
  * @file
  */
 
-namespace Drupal\facetapi\Processor;
+namespace Drupal\facets\Processor;
 
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\facetapi\FacetInterface;
+use Drupal\facets\FacetInterface;
 
 /**
  * A base class for plugins that implements most of the boilerplate.

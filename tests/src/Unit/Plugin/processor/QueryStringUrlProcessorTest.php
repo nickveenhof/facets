@@ -2,35 +2,35 @@
 
 /**
  * @file
- * Contains \Drupal\Tests\facetapi\Plugin\Processor\QueryStringUrlProcessorTest.
+ * Contains \Drupal\Tests\facets\Plugin\Processor\QueryStringUrlProcessorTest.
  */
 
-namespace Drupal\Tests\facetapi\Unit\Plugin\Processor;
+namespace Drupal\Tests\facets\Unit\Plugin\Processor;
 
-use Drupal\facetapi\Entity\Facet;
-use Drupal\facetapi\Plugin\facetapi\processor\QueryStringUrlProcessor;
-use Drupal\facetapi\Result\Result;
+use Drupal\facets\Entity\Facet;
+use Drupal\facets\Plugin\facets\processor\QueryStringUrlProcessor;
+use Drupal\facets\Result\Result;
 use Drupal\Tests\UnitTestCase;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpFoundation\ParameterBag;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
- * @group facetapi
+ * @group facets
  */
 class QueryStringUrlProcessorTest extends UnitTestCase {
 
   /**
    * The processor to be tested.
    *
-   * @var \Drupal\facetapi\Plugin\facetapi\processor\QueryStringUrlProcessor
+   * @var \Drupal\facets\Plugin\facets\processor\QueryStringUrlProcessor
    */
   protected $processor;
 
   /**
    * An array containing the results before the processor has ran.
    *
-   * @var \Drupal\facetapi\Result\Result[]
+   * @var \Drupal\facets\Result\Result[]
    */
   protected $original_results;
 
@@ -102,9 +102,9 @@ class QueryStringUrlProcessorTest extends UnitTestCase {
     $this->processor = new QueryStringUrlProcessor([], 'query_string', [], $request);
     $results = $this->processor->build($facet, $this->original_results);
 
-    /** @var \Drupal\facetapi\Result\ResultInterface $r */
+    /** @var \Drupal\facets\Result\ResultInterface $r */
     foreach ($results as $r) {
-      $this->assertInstanceOf('\Drupal\facetapi\Result\ResultInterface', $r);
+      $this->assertInstanceOf('\Drupal\facets\Result\ResultInterface', $r);
       $this->assertEquals('route:test?f[0]=test%3A' . $r->getRawValue(), $r->getUrl()->toUriString());
     }
   }
@@ -125,9 +125,9 @@ class QueryStringUrlProcessorTest extends UnitTestCase {
     $this->processor = new QueryStringUrlProcessor([], 'query_string', [], $request);
     $results = $this->processor->build($facet, $original_results);
 
-    /** @var \Drupal\facetapi\Result\ResultInterface $r */
+    /** @var \Drupal\facets\Result\ResultInterface $r */
     foreach ($results as $k => $r) {
-      $this->assertInstanceOf('\Drupal\facetapi\Result\ResultInterface', $r);
+      $this->assertInstanceOf('\Drupal\facets\Result\ResultInterface', $r);
       if ($k === 2) {
         $this->assertEquals('route:test?f[0]=king%3Akong', $r->getUrl()->toUriString());
       }
@@ -150,13 +150,13 @@ class QueryStringUrlProcessorTest extends UnitTestCase {
         ]
       );
 
-    $fsi = $this->getMockBuilder('\Drupal\facetapi\FacetSource\FacetSourceInterface')
+    $fsi = $this->getMockBuilder('\Drupal\facets\FacetSource\FacetSourceInterface')
       ->disableOriginalConstructor()
       ->getMock();
     $fsi->method('getPath')
       ->willReturn('search/test');
 
-    $manager = $this->getMockBuilder('Drupal\facetapi\FacetSource\FacetSourcePluginManager')
+    $manager = $this->getMockBuilder('Drupal\facets\FacetSource\FacetSourcePluginManager')
       ->disableOriginalConstructor()
       ->getMock();
     $manager->method('createInstance')
@@ -164,7 +164,7 @@ class QueryStringUrlProcessorTest extends UnitTestCase {
 
     $container = new ContainerBuilder();
     $container->set('router.no_access_checks', $router);
-    $container->set('plugin.manager.facetapi.facet_source', $manager);
+    $container->set('plugin.manager.facets.facet_source', $manager);
     \Drupal::setContainer($container);
   }
 

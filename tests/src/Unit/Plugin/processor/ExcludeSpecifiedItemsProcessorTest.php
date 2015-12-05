@@ -1,33 +1,33 @@
 <?php
 /**
  * @file
- * Contains \Drupal\Tests\facetapi\Plugin\Processor\ExcludeSpecifiedItemsProcessorTest.
+ * Contains \Drupal\Tests\facets\Plugin\Processor\ExcludeSpecifiedItemsProcessorTest.
  */
 
-namespace Drupal\Tests\facetapi\Unit\Plugin\Processor;
+namespace Drupal\Tests\facets\Unit\Plugin\Processor;
 
-use Drupal\facetapi\Entity\Facet;
-use Drupal\facetapi\Plugin\facetapi\processor\ExcludeSpecifiedItemsProcessor;
-use Drupal\facetapi\Result\Result;
+use Drupal\facets\Entity\Facet;
+use Drupal\facets\Plugin\facets\processor\ExcludeSpecifiedItemsProcessor;
+use Drupal\facets\Result\Result;
 use Drupal\Tests\UnitTestCase;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 
 /**
- * @group facetapi
+ * @group facets
  */
 class ExcludeSpecifiedItemsProcessorTest extends UnitTestCase {
 
   /**
    * The processor to be tested.
    *
-   * @var \Drupal\facetapi\processor\BuildProcessorInterface
+   * @var \Drupal\facets\processor\BuildProcessorInterface
    */
   protected $processor;
 
   /**
    * An array containing the results before the processor has ran.
    *
-   * @var \Drupal\facetapi\Result\Result[]
+   * @var \Drupal\facets\Result\Result[]
    */
   protected $original_results;
 
@@ -56,11 +56,11 @@ class ExcludeSpecifiedItemsProcessorTest extends UnitTestCase {
     $processorDefinitions = [
       $processor_id => [
         'id' => $processor_id,
-        'class' => 'Drupal\facetapi\Plugin\facetapi\processor\ExcludeSpecifiedItemsProcessor',
+        'class' => 'Drupal\facets\Plugin\facets\processor\ExcludeSpecifiedItemsProcessor',
       ],
     ];
 
-    $manager = $this->getMockBuilder('Drupal\facetapi\Processor\ProcessorPluginManager')
+    $manager = $this->getMockBuilder('Drupal\facets\Processor\ProcessorPluginManager')
       ->disableOriginalConstructor()
       ->getMock();
     $manager->expects($this->once())
@@ -71,7 +71,7 @@ class ExcludeSpecifiedItemsProcessorTest extends UnitTestCase {
       ->willReturn($this->processor);
 
     $container_builder = new ContainerBuilder();
-    $container_builder->set('plugin.manager.facetapi.processor', $manager);
+    $container_builder->set('plugin.manager.facets.processor', $manager);
     \Drupal::setContainer($container_builder);
   }
 

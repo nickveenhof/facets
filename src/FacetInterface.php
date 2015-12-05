@@ -1,10 +1,10 @@
 <?php
 /**
  * @file
- * Contains  Drupal\facetapi\FacetInterface.
+ * Contains  Drupal\facets\FacetInterface.
  */
 
-namespace Drupal\facetapi;
+namespace Drupal\facets;
 
 use Drupal\Core\Config\Entity\ConfigEntityInterface;
 /**
@@ -83,14 +83,14 @@ interface FacetInterface extends ConfigEntityInterface {
   /**
    * Get the result for the facet.
    *
-   * @return \Drupal\facetapi\Result\ResultInterface[] $results
+   * @return \Drupal\facets\Result\ResultInterface[] $results
    */
   public function getResults();
 
   /**
    * Sets the reuslts for the facet.
    *
-   * @param \Drupal\facetapi\Result\ResultInterface[] $results
+   * @param \Drupal\facets\Result\ResultInterface[] $results
    */
   public function setResults(array $results);
 
@@ -183,7 +183,7 @@ interface FacetInterface extends ConfigEntityInterface {
   /**
    * Returns the plugin instance of a facet source.
    *
-   * @return \Drupal\facetapi\FacetSource\FacetSourceInterface
+   * @return \Drupal\facets\FacetSource\FacetSourceInterface
    *   The plugin instance for the facet source.
    */
   public function getFacetSource();
@@ -193,7 +193,7 @@ interface FacetInterface extends ConfigEntityInterface {
    *
    * @param bool|TRUE $only_enabled
    *
-   * @return \Drupal\facetapi\FacetSource\FacetSourceInterface[]
+   * @return \Drupal\facets\FacetSource\FacetSourceInterface[]
    */
   public function getFacetSources($only_enabled = TRUE);
 
@@ -202,7 +202,7 @@ interface FacetInterface extends ConfigEntityInterface {
    *
    * @param bool|TRUE $only_enabled
    *
-   * @return \Drupal\facetapi\Processor\ProcessorInterface[]
+   * @return \Drupal\facets\Processor\ProcessorInterface[]
    */
   public function getProcessors($only_enabled = TRUE);
 
@@ -211,12 +211,12 @@ interface FacetInterface extends ConfigEntityInterface {
    *
    * @param string $stage
    *   The stage for which to return the processors. One of the
-   *   \Drupal\facetapi\Processor\ProcessorInterface::STAGE_* constants.
+   *   \Drupal\facets\Processor\ProcessorInterface::STAGE_* constants.
    * @param bool $only_enabled
    *   (optional) If FALSE, also include disabled processors. Otherwise, only
    *   load enabled ones.
    *
-   * @return \Drupal\facetapi\Processor\ProcessorInterface[]
+   * @return \Drupal\facets\Processor\ProcessorInterface[]
    *   An array of all enabled (or available, if if $only_enabled is FALSE)
    *   processors that support the given stage, ordered by the weight for that
    *   stage.

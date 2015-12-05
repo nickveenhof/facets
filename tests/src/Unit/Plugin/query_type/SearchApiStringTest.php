@@ -2,18 +2,18 @@
 
 /**
  * @file
- * Contains \Drupal\Tests\facetapi\Plugin\query_string\SearchApiStringTest.
+ * Contains \Drupal\Tests\facets\Plugin\query_string\SearchApiStringTest.
  */
 
-namespace Drupal\Tests\facetapi\Unit\Plugin\query_string;
+namespace Drupal\Tests\facets\Unit\Plugin\query_string;
 
-use Drupal\facetapi\Entity\Facet;
-use Drupal\facetapi\Plugin\facetapi\query_type\SearchApiString;
+use Drupal\facets\Entity\Facet;
+use Drupal\facets\Plugin\facets\query_type\SearchApiString;
 use Drupal\search_api\Plugin\views\query\SearchApiQuery;
 use Drupal\Tests\UnitTestCase;
 
 /**
- * @group facetapi
+ * @group facets
  */
 
 class SearchApiStringTest extends UnitTestCase {
@@ -23,7 +23,7 @@ class SearchApiStringTest extends UnitTestCase {
    */
   public function testQueryType() {
     $query = new SearchApiQuery([], 'search_api_query', []);
-    $facet = new Facet([], 'facetapi_facet');
+    $facet = new Facet([], 'facets_facet');
 
     $original_results = [
       ['count' => 3, 'filter' => 'badger'],
@@ -43,13 +43,13 @@ class SearchApiStringTest extends UnitTestCase {
     );
 
     $built_facet = $query_type->build();
-    $this->assertInstanceOf('\Drupal\facetapi\FacetInterface', $built_facet);
+    $this->assertInstanceOf('\Drupal\facets\FacetInterface', $built_facet);
 
     $results = $built_facet->getResults();
     $this->assertInternalType('array', $results);
 
     foreach ($original_results as $k => $result) {
-      $this->assertInstanceOf('\Drupal\facetapi\Result\ResultInterface', $results[$k]);
+      $this->assertInstanceOf('\Drupal\facets\Result\ResultInterface', $results[$k]);
       $this->assertEquals($result['count'], $results[$k]->getCount());
       $this->assertEquals($result['filter'], $results[$k]->getDisplayValue());
     }
@@ -60,7 +60,7 @@ class SearchApiStringTest extends UnitTestCase {
    */
   public function testEmptyResults() {
     $query = new SearchApiQuery([], 'search_api_query', []);
-    $facet = new Facet([], 'facetapi_facet');
+    $facet = new Facet([], 'facets_facet');
 
     $query_type = new SearchApiString(
       [
@@ -72,7 +72,7 @@ class SearchApiStringTest extends UnitTestCase {
     );
 
     $built_facet = $query_type->build();
-    $this->assertInstanceOf('\Drupal\facetapi\FacetInterface', $built_facet);
+    $this->assertInstanceOf('\Drupal\facets\FacetInterface', $built_facet);
 
     $results = $built_facet->getResults();
     $this->assertInternalType('array', $results);

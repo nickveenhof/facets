@@ -2,10 +2,10 @@
 
 /**
  * @file
- * Contains \Drupal\facetapi\Processor\ProcessorPluginManager.
+ * Contains \Drupal\facets\Processor\ProcessorPluginManager.
  */
 
-namespace Drupal\facetapi\Processor;
+namespace Drupal\facets\Processor;
 
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
@@ -16,9 +16,9 @@ use Drupal\Core\StringTranslation\TranslationInterface;
 /**
  * Manages processor plugins.
  *
- * @see \Drupal\facetapi\Annotation\FacetApiProcessor
- * @see \Drupal\facetapi\Processor\ProcessorInterface
- * @see \Drupal\facetapi\Processor\ProcessorPluginBase
+ * @see \Drupal\facets\Annotation\FacetsProcessor
+ * @see \Drupal\facets\Processor\ProcessorInterface
+ * @see \Drupal\facets\Processor\ProcessorPluginBase
  * @see plugin_api
  */
 class ProcessorPluginManager extends DefaultPluginManager {
@@ -29,8 +29,8 @@ class ProcessorPluginManager extends DefaultPluginManager {
    * {@inheritdoc}
    */
   public function __construct(\Traversable $namespaces, CacheBackendInterface $cache_backend, ModuleHandlerInterface $module_handler, TranslationInterface $translation) {
-    parent::__construct('Plugin/facetapi/processor', $namespaces, $module_handler, 'Drupal\facetapi\Processor\ProcessorInterface', 'Drupal\facetapi\Annotation\FacetApiProcessor');
-    $this->setCacheBackend($cache_backend, 'facetapi_processors');
+    parent::__construct('Plugin/facets/processor', $namespaces, $module_handler, 'Drupal\facets\Processor\ProcessorInterface', 'Drupal\facets\Annotation\FacetsProcessor');
+    $this->setCacheBackend($cache_backend, 'facets_processors');
     $this->setStringTranslation($translation);
   }
 

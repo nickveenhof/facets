@@ -2,11 +2,11 @@
 
 /**
  * @file
- * Contains \Drupal\facetapi\Processor\BuildProcessorInterface.
+ * Contains \Drupal\facets\Processor\BuildProcessorInterface.
  */
-namespace Drupal\facetapi\Processor;
+namespace Drupal\facets\Processor;
 
-use Drupal\facetapi\FacetInterface;
+use Drupal\facets\FacetInterface;
 
 
 /**
@@ -17,10 +17,10 @@ interface BuildProcessorInterface extends ProcessorInterface {
   /**
    * Processor runs before the renderable array is created.
    *
-   * @param \Drupal\facetapi\FacetInterface $facet
-   * @param \Drupal\facetapi\Result\Result[] $results
+   * @param \Drupal\facets\FacetInterface $facet
+   * @param \Drupal\facets\Result\Result[] $results
    *
-   * @return \Drupal\facetapi\Result\Result[] $results
+   * @return \Drupal\facets\Result\Result[] $results
    */
   public function build(FacetInterface $facet, array $results);
 

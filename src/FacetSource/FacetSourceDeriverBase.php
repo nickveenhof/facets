@@ -2,10 +2,10 @@
 
 /**
  * @file
- * Contains \Drupal\facetapi\FacetSource\FacetSourceDeriverBase.
+ * Contains \Drupal\facets\FacetSource\FacetSourceDeriverBase.
  */
 
-namespace Drupal\facetapi\FacetSource;
+namespace Drupal\facets\FacetSource;
 
 
 use Drupal\Core\Entity\EntityTypeManager;

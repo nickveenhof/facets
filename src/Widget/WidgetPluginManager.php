@@ -1,10 +1,10 @@
 <?php
 /**
  * @file
- * Contains Drupal\facetapi\Widget\WidgetPluginManager.
+ * Contains Drupal\facets\Widget\WidgetPluginManager.
  */
 
-namespace Drupal\facetapi\Widget;
+namespace Drupal\facets\Widget;
 
 
 use Drupal\Core\Cache\CacheBackendInterface;
@@ -20,7 +20,7 @@ class WidgetPluginManager extends DefaultPluginManager {
    * {@inheritdoc}
    */
   public function __construct(\Traversable $namespaces, CacheBackendInterface $cache_backend, ModuleHandlerInterface $module_handler) {
-    parent::__construct('Plugin/facetapi/widget', $namespaces, $module_handler, 'Drupal\facetapi\Widget\WidgetInterface', 'Drupal\facetapi\Annotation\FacetApiWidget');
+    parent::__construct('Plugin/facets/widget', $namespaces, $module_handler, 'Drupal\facets\Widget\WidgetInterface', 'Drupal\facets\Annotation\FacetsWidget');
   }
 
 }

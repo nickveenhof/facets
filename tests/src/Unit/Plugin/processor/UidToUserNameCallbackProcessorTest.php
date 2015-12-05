@@ -2,26 +2,26 @@
 
 /**
  * @file
- * Contains \Drupal\Tests\facetapi\Plugin\Processor\UidToUserNameCallbackProcessorTest.
+ * Contains \Drupal\Tests\facets\Plugin\Processor\UidToUserNameCallbackProcessorTest.
  */
 
-namespace Drupal\Tests\facetapi\Unit\Plugin\Processor;
+namespace Drupal\Tests\facets\Unit\Plugin\Processor;
 
-use Drupal\facetapi\Entity\Facet;
-use Drupal\facetapi\Plugin\facetapi\processor\UidToUserNameCallbackProcessor;
-use Drupal\facetapi\Result\Result;
+use Drupal\facets\Entity\Facet;
+use Drupal\facets\Plugin\facets\processor\UidToUserNameCallbackProcessor;
+use Drupal\facets\Result\Result;
 use Drupal\Tests\UnitTestCase;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 
 /**
- * @group facetapi
+ * @group facets
  */
 class UidToUserNameCallbackProcessorTest extends UnitTestCase {
 
   /**
    * The processor to be tested.
    *
-   * @var \Drupal\facetapi\processor\WidgetOrderProcessorInterface
+   * @var \Drupal\facets\processor\WidgetOrderProcessorInterface
    */
   protected $processor;
 

@@ -1,0 +1,47 @@
+<?php
+
+/**
+ * @file
+ * Contains core_search_facets.module
+ */
+
+use Drupal\Core\Database\Query\AlterableInterface;
+
+/**
+ * Implements hook_query_TAG_alter(): tag search_$type with $type node_search.
+ *
+ * @param \Drupal\Core\Database\Query\AlterableInterface $query
+ */
+function core_search_facets_query_search_node_search_alter(AlterableInterface $query) {
+  // Obtain the Facet Source id for the current search.
+  $request = \Drupal::requestStack()->getMasterRequest();
+  $search_page = $request->attributes->get('entity');
+
+  /** @var \Drupal\facets\FacetManager\DefaultFacetManager $facet_manager */
+  $facet_manager = \Drupal::service('facets.manager');
+  $search_id = 'core_node_search:' . $search_page->id();
+
+  // Add the active filters.
+  $facet_manager->setFacetSourceId($search_id);
+  $facet_manager->alterQuery($query);
+
+}
+
+/**
+ * Implements hook_search_plugin_alter(). Alter search plugin definitions.
+ *
+ * @param array $definitions
+ *   The array of search plugin definitions, keyed by plugin ID.
+ *
+ * @see \Drupal\search\Annotation\SearchPlugin
+ * @see \Drupal\search\SearchPluginManager
+ */
+function core_search_facets_search_plugin_alter(array &$definitions) {
+  // Replace the Search Plugin class to alter the search form on a different
+  // way because we don't need content types or languages as advanced search
+  // filters.
+  // @TODO wait until we can add configuration to a facet source.
+  if (isset($definitions['node_search'])) {
+    //$definitions['node_search']['class'] = 'Drupal\core_search_facets\Plugin\Search\NodeSearchFacets';
+  }
+}

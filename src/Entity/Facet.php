@@ -2,31 +2,31 @@
 
 /**
  * @file
- * Contains \Drupal\facetapi\Entity\Facet.
+ * Contains \Drupal\facets\Entity\Facet.
  */
 
-namespace Drupal\facetapi\Entity;
+namespace Drupal\facets\Entity;
 
 use Drupal\Core\Config\Entity\ConfigEntityBase;
-use Drupal\facetapi\FacetInterface;
+use Drupal\facets\FacetInterface;
 
 /**
  * Defines the search index configuration entity.
  *
  * @ConfigEntityType(
- *   id = "facetapi_facet",
+ *   id = "facets_facet",
  *   label = @Translation("Facet"),
  *   handlers = {
  *     "storage" = "Drupal\Core\Config\Entity\ConfigEntityStorage",
- *     "list_builder" = "Drupal\facetapi\FacetListBuilder",
+ *     "list_builder" = "Drupal\facets\FacetListBuilder",
  *     "form" = {
- *       "default" = "Drupal\facetapi\Form\FacetForm",
- *       "edit" = "Drupal\facetapi\Form\FacetForm",
- *       "display" = "Drupal\facetapi\Form\FacetDisplayForm",
- *       "delete" = "Drupal\facetapi\Form\FacetDeleteConfirmForm",
+ *       "default" = "Drupal\facets\Form\FacetForm",
+ *       "edit" = "Drupal\facets\Form\FacetForm",
+ *       "display" = "Drupal\facets\Form\FacetDisplayForm",
+ *       "delete" = "Drupal\facets\Form\FacetDeleteConfirmForm",
  *     },
  *   },
- *   admin_permission = "administer facetapi",
+ *   admin_permission = "administer facets",
  *   config_prefix = "facet",
  *   entity_keys = {
  *     "id" = "id",
@@ -48,9 +48,9 @@ use Drupal\facetapi\FacetInterface;
  *   links = {
  *     "canonical" = "/admin/config/search/facet-api",
  *     "add-form" = "/admin/config/search/facet-api/add-facet",
- *     "edit-form" = "/admin/config/search/facet-api/{facetapi_facet}/edit",
- *     "display-form" = "/admin/config/search/facet-api/{facetapi_facet}/display",
- *     "delete-form" = "/admin/config/search/facet-api/{facetapi_facet}/delete",
+ *     "edit-form" = "/admin/config/search/facet-api/{facets_facet}/edit",
+ *     "display-form" = "/admin/config/search/facet-api/{facets_facet}/display",
+ *     "delete-form" = "/admin/config/search/facet-api/{facets_facet}/delete",
  *   }
  * )
  */
@@ -131,7 +131,7 @@ class Facet extends ConfigEntityBase implements FacetInterface {
   /**
    * The facet source belonging to this facet.
    *
-   * @var \Drupal\facetapi\FacetSourceInterface
+   * @var \Drupal\facets\FacetSourceInterface
    *
    * @see getFacetSource()
    */
@@ -147,7 +147,7 @@ class Facet extends ConfigEntityBase implements FacetInterface {
   /**
    * The results.
    *
-   * @var \Drupal\facetapi\Result\ResultInterface[]
+   * @var \Drupal\facets\Result\ResultInterface[]
    */
   protected $results = [];
 
@@ -163,7 +163,7 @@ class Facet extends ConfigEntityBase implements FacetInterface {
   /**
    * Cached information about the processors available for this facet.
    *
-   * @var \Drupal\facetapi\Processor\ProcessorInterface[]|null
+   * @var \Drupal\facets\Processor\ProcessorInterface[]|null
    *
    * @see loadProcessors()
    */
@@ -192,12 +192,12 @@ class Facet extends ConfigEntityBase implements FacetInterface {
   }
 
   /**
-   * @return \Drupal\facetapi\Widget\WidgetPluginManager
+   * @return \Drupal\facets\Widget\WidgetPluginManager
    */
   public function getWidgetManager() {
     $container = \Drupal::getContainer();
 
-    return $this->widget_plugin_manager ? : $container->get('plugin.manager.facetapi.widget');
+    return $this->widget_plugin_manager ? : $container->get('plugin.manager.facets.widget');
   }
 
   /**
@@ -237,7 +237,7 @@ class Facet extends ConfigEntityBase implements FacetInterface {
     $query_types = $facet_source->getQueryTypesForFacet($this);
 
     // Get our widget configured for this facet.
-    /** @var \Drupal\facetapi\Widget\WidgetInterface $widget */
+    /** @var \Drupal\facets\Widget\WidgetInterface $widget */
     $widget = $this->getWidgetManager()->createInstance($this->getWidget());
     // Give the widget the chance to select a preferred query type. This is
     // useful with a date widget, as it needs to select the date query type.
@@ -356,8 +356,8 @@ class Facet extends ConfigEntityBase implements FacetInterface {
   public function getFacetSource() {
 
     if (!$this->facet_source_instance && $this->facet_source_id) {
-      /** @var $facet_source_plugin_manager \Drupal\facetapi\FacetSource\FacetSourcePluginManager */
-      $facet_source_plugin_manager = \Drupal::service('plugin.manager.facetapi.facet_source');
+      /** @var $facet_source_plugin_manager \Drupal\facets\FacetSource\FacetSourcePluginManager */
+      $facet_source_plugin_manager = \Drupal::service('plugin.manager.facets.facet_source');
       $this->facet_source_instance = $facet_source_plugin_manager->createInstance($this->facet_source_id);
     }
 
@@ -374,13 +374,13 @@ class Facet extends ConfigEntityBase implements FacetInterface {
   /**
    * Retrieves all processors supported by this facet.
    *
-   * @return \Drupal\facetapi\Processor\ProcessorInterface[]
+   * @return \Drupal\facets\Processor\ProcessorInterface[]
    *   The loaded processors, keyed by processor ID.
    */
   protected function loadProcessors() {
     if (!isset($this->processors)) {
-      /** @var $processor_plugin_manager \Drupal\facetapi\Processor\ProcessorPluginManager */
-      $processor_plugin_manager = \Drupal::service('plugin.manager.facetapi.processor');
+      /** @var $processor_plugin_manager \Drupal\facets\Processor\ProcessorPluginManager */
+      $processor_plugin_manager = \Drupal::service('plugin.manager.facets.processor');
       $processor_settings = $this->getOption('processors', []);
 
       foreach ($processor_plugin_manager->getDefinitions() as $name => $processor_definition) {
@@ -389,12 +389,12 @@ class Facet extends ConfigEntityBase implements FacetInterface {
           $settings = empty($processor_settings[$name]['settings']) ? [] : $processor_settings[$name]['settings'];
           $settings['facet'] = $this;
 
-          /** @var $processor \Drupal\facetapi\Processor\ProcessorInterface */
+          /** @var $processor \Drupal\facets\Processor\ProcessorInterface */
           $processor = $processor_plugin_manager->createInstance($name, $settings);
           $this->processors[$name] = $processor;
         }
         elseif (!class_exists($processor_definition['class'])) {
-          \Drupal::logger('facetapi')->warning('Processor @id specifies a non-existing @class.', array('@id' => $name, '@class' => $processor_definition['class']));
+          \Drupal::logger('facets')->warning('Processor @id specifies a non-existing @class.', array('@id' => $name, '@class' => $processor_definition['class']));
         }
       }
     }
@@ -421,7 +421,7 @@ class Facet extends ConfigEntityBase implements FacetInterface {
    * Set an array of Result objects.
    *
    * @param array $results
-   *   Array containing \Drupal\facetapi\Result\Result objects.
+   *   Array containing \Drupal\facets\Result\Result objects.
    */
   public function setResults(array $results) {
     $this->results = $results;
@@ -442,7 +442,7 @@ class Facet extends ConfigEntityBase implements FacetInterface {
    * @return string
    */
   public function getManagerPluginId() {
-    return 'facetapi_default';
+    return 'facets_default';
   }
 
   /**
@@ -463,20 +463,20 @@ class Facet extends ConfigEntityBase implements FacetInterface {
     if (!isset($this->facetSourcePlugins)) {
       $this->facetSourcePlugins = [];
 
-      /** @var $facet_source_plugin_manager \Drupal\facetapi\FacetSource\FacetSourcePluginManager */
-      $facet_source_plugin_manager = \Drupal::service('plugin.manager.facetapi.facet_source');
+      /** @var $facet_source_plugin_manager \Drupal\facets\FacetSource\FacetSourcePluginManager */
+      $facet_source_plugin_manager = \Drupal::service('plugin.manager.facets.facet_source');
 
       foreach ($facet_source_plugin_manager->getDefinitions() as $name => $facet_source_definition) {
         if (class_exists($facet_source_definition['class']) && empty($this->facetSourcePlugins[$name])) {
           // Create our settings for this facet source..
           $config = isset($this->facetSourcePlugins[$name]) ? $this->facetSourcePlugins[$name] : [];
 
-          /** @var $facet_source \Drupal\facetapi\FacetSource\FacetSourceInterface */
+          /** @var $facet_source \Drupal\facets\FacetSource\FacetSourceInterface */
           $facet_source = $facet_source_plugin_manager->createInstance($name, $config);
           $this->facetSourcePlugins[$name] = $facet_source;
         }
         elseif (!class_exists($facet_source_definition['class'])) {
-          \Drupal::logger('facetapi')->warning('Facet Source @id specifies a non-existing @class.', ['@id' => $name, '@class' => $facet_source_definition['class']]);
+          \Drupal::logger('facets')->warning('Facet Source @id specifies a non-existing @class.', ['@id' => $name, '@class' => $facet_source_definition['class']]);
         }
       }
     }

@@ -2,21 +2,21 @@
 
 /**
  * @file
- * Contains \Drupal\facetapi\Form\FacetDisplayForm.
+ * Contains \Drupal\facets\Form\FacetDisplayForm.
  */
 
-namespace Drupal\facetapi\Form;
+namespace Drupal\facets\Form;
 
 use Drupal\Core\Config\Config;
 use Drupal\Component\Utility\Html;
 use Drupal\Core\Entity\EntityForm;
 use Drupal\Core\Entity\EntityTypeManager;
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\facetapi\Processor\ProcessorInterface;
-use Drupal\facetapi\Processor\ProcessorPluginManager;
+use Drupal\facets\Processor\ProcessorInterface;
+use Drupal\facets\Processor\ProcessorPluginManager;
 use Symfony\Component\DependencyInjection\ContainerInterface;
-use Drupal\facetapi\Widget\WidgetPluginManager;
-use Drupal\facetapi\Processor\WidgetOrderProcessorInterface;
+use Drupal\facets\Widget\WidgetPluginManager;
+use Drupal\facets\Processor\WidgetOrderProcessorInterface;
 
 /**
  * Provides a form for configuring the processors of a facet.
@@ -26,7 +26,7 @@ class FacetDisplayForm extends EntityForm {
   /**
    * The facet being configured.
    *
-   * @var \Drupal\facetapi\FacetInterface
+   * @var \Drupal\facets\FacetInterface
    */
   protected $facet;
 
@@ -40,14 +40,14 @@ class FacetDisplayForm extends EntityForm {
   /**
    * The processor manager.
    *
-   * @var \Drupal\facetapi\Processor\ProcessorPluginManager
+   * @var \Drupal\facets\Processor\ProcessorPluginManager
    */
   protected $processorPluginManager;
 
   /**
    * The plugin manager for widgets.
    *
-   * @var \Drupal\facetapi\Widget\WidgetPluginManager
+   * @var \Drupal\facets\Widget\WidgetPluginManager
    */
   protected $widgetPluginManager;
 
@@ -56,9 +56,9 @@ class FacetDisplayForm extends EntityForm {
    *
    * @param \Drupal\Core\Entity\EntityTypeManager $entity_type_manager
    *   The entity manager.
-   * @param \Drupal\facetapi\Processor\ProcessorPluginManager $processor_plugin_manager
+   * @param \Drupal\facets\Processor\ProcessorPluginManager $processor_plugin_manager
    *   The processor plugin manager.
-   * @param \Drupal\facetapi\Widget\WidgetPluginManager $widgetPluginManager
+   * @param \Drupal\facets\Widget\WidgetPluginManager $widgetPluginManager
    *   The plugin manager for widgets.
    */
   public function __construct(EntityTypeManager $entity_type_manager, ProcessorPluginManager $processor_plugin_manager, WidgetPluginManager $widgetPluginManager) {
@@ -74,11 +74,11 @@ class FacetDisplayForm extends EntityForm {
     /** @var \Drupal\Core\Entity\EntityTypeManager $entity_type_manager */
     $entity_type_manager = $container->get('entity_type.manager');
 
-    /** @var \Drupal\facetapi\Processor\ProcessorPluginManager $processor_plugin_manager */
-    $processor_plugin_manager = $container->get('plugin.manager.facetapi.processor');
+    /** @var \Drupal\facets\Processor\ProcessorPluginManager $processor_plugin_manager */
+    $processor_plugin_manager = $container->get('plugin.manager.facets.processor');
 
-    /** @var \Drupal\facetapi\Widget\WidgetPluginManager $widget_plugin_manager */
-    $widget_plugin_manager = $container->get('plugin.manager.facetapi.widget');
+    /** @var \Drupal\facets\Widget\WidgetPluginManager $widget_plugin_manager */
+    $widget_plugin_manager = $container->get('plugin.manager.facets.widget');
 
     return new static($entity_type_manager, $processor_plugin_manager, $widget_plugin_manager);
   }
@@ -93,11 +93,11 @@ class FacetDisplayForm extends EntityForm {
   /**
    * Returns the widget plugin manager.
    *
-   * @return \Drupal\facetapi\Widget\WidgetPluginManager
+   * @return \Drupal\facets\Widget\WidgetPluginManager
    *   The widget plugin manager.
    */
   protected function getWidgetPluginManager() {
-    return $this->widgetPluginManager ?: \Drupal::service('plugin.manager.facetapi.widget');
+    return $this->widgetPluginManager ?: \Drupal::service('plugin.manager.facets.widget');
   }
 
   /**
@@ -115,7 +115,7 @@ class FacetDisplayForm extends EntityForm {
       $widget_instance = $this->getWidgetPluginManager()->createInstance($widget);
       // @todo Create, use and save SubFormState already here, not only in
       //   validate(). Also, use proper subset of $form for first parameter?
-      $config = $this->config('facetapi.facet.' . $this->entity->id());
+      $config = $this->config('facets.facet.' . $this->entity->id());
       if ($config_form = $widget_instance->buildConfigurationForm([], $form_state, ($config instanceof Config) ? $config : NULL)) {
         $form['widget_configs']['#type'] = 'fieldset';
         $form['widget_configs']['#title'] = $this->t('%widget settings', ['%widget' => $this->getWidgetPluginManager()->getDefinition($widget)['label']]);
@@ -138,9 +138,9 @@ class FacetDisplayForm extends EntityForm {
    * {@inheritdoc}
    */
   public function form(array $form, FormStateInterface $form_state) {
-    $form['#attached']['library'][] = 'facetapi/drupal.facetapi.admin_css';
+    $form['#attached']['library'][] = 'facets/drupal.facets.admin_css';
 
-    /** @var \Drupal\facetapi\FacetInterface $facet */
+    /** @var \Drupal\facets\FacetInterface $facet */
     $facet = $this->entity;
 
     $widget_options = [];
@@ -241,9 +241,9 @@ class FacetDisplayForm extends EntityForm {
             '#title' => $this->t('%processor settings', ['%processor' => (string) $processor->getPluginDefinition()['label']]),
             '#open' => true,
             '#attributes' => array('class' => array(
-              'facetapi-processor-settings-' . Html::cleanCssIdentifier($processor_id),
-              'facetapi-processor-settings-facet',
-              'facetapi-processor-settings'
+              'facets-processor-settings-' . Html::cleanCssIdentifier($processor_id),
+              'facets-processor-settings-facet',
+              'facets-processor-settings'
             ),),
             '#states' => array(
               'visible' => array(
@@ -289,9 +289,9 @@ class FacetDisplayForm extends EntityForm {
 //            '#title' => $this->t('%processor settings', ['%processor' => (string) $processor->getPluginDefinition()['label']]),
             '#open' => true,
             '#attributes' => array('class' => array(
-              'facetapi-processor-settings-' . Html::cleanCssIdentifier($processor_id),
-              'facetapi-processor-settings-sorting',
-              'facetapi-processor-settings'
+              'facets-processor-settings-' . Html::cleanCssIdentifier($processor_id),
+              'facets-processor-settings-sorting',
+              'facets-processor-settings'
             ),),
             '#states' => array(
               'visible' => array(
@@ -367,7 +367,7 @@ class FacetDisplayForm extends EntityForm {
     // Fill in the containers previously created with the processors that are
     // enabled on the facet.
     foreach ($processors_by_stage as $stage => $processors) {
-      /** @var \Drupal\facetapi\Processor\ProcessorInterface $processor */
+      /** @var \Drupal\facets\Processor\ProcessorInterface $processor */
       foreach ($processors as $processor_id => $processor) {
         $weight = isset($processor_settings[$processor_id]['weights'][$stage])
           ? $processor_settings[$processor_id]['weights'][$stage]
@@ -413,11 +413,11 @@ class FacetDisplayForm extends EntityForm {
   public function validateForm(array &$form, FormStateInterface $form_state) {
     parent::validateForm($form, $form_state);
 
-    /** @var \Drupal\facetapi\FacetInterface $facet */
+    /** @var \Drupal\facets\FacetInterface $facet */
     $facet = $this->entity;
 
     $values = $form_state->getValues();
-    /** @var \Drupal\facetapi\Processor\ProcessorInterface[] $processors */
+    /** @var \Drupal\facets\Processor\ProcessorInterface[] $processors */
     $processors = $facet->getProcessors(FALSE);
 
     // Iterate over all processors that have a form and are enabled.
@@ -447,10 +447,10 @@ class FacetDisplayForm extends EntityForm {
     // @todo Go through all available processors, enable/disable with method on
     //   processor plugin to allow reaction.
 
-    /** @var \Drupal\facetapi\FacetInterface $facet */
+    /** @var \Drupal\facets\FacetInterface $facet */
     $facet = $this->entity;
 
-    /** @var \Drupal\facetapi\Processor\ProcessorInterface $processor */
+    /** @var \Drupal\facets\Processor\ProcessorInterface $processor */
     $processors = $facet->getProcessors(FALSE);
     foreach ($processors as $processor_id => $processor) {
       $form_container_key = $processor instanceof WidgetOrderProcessorInterface ? 'facet_sorting' : 'facet_settings';

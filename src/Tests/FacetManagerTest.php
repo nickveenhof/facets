@@ -4,14 +4,14 @@
  * Tests Facet API's FacetManager implementation.
  */
 
-namespace Drupal\facetapi\Tests;
+namespace Drupal\facets\Tests;
 
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\simpletest\WebTestBase;
 
 /**
- * @coversDefaultClass Drupal\facetapi\Tests\FacetManager
- * @group facetapi
+ * @coversDefaultClass Drupal\facets\Tests\FacetManager
+ * @group facets
  */
 class FacetManagerTest extends WebTestBase {
 
@@ -22,7 +22,7 @@ class FacetManagerTest extends WebTestBase {
    *
    * @var array
    */
-  public static $modules = array('facetapi');
+  public static $modules = array('facets');
 
   /**
    * The URL generator.

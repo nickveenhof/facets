@@ -2,23 +2,23 @@
 
 /**
  * @file
- * Contains Drupal\facetapi\FacetManager\DefaultFacetManager.
+ * Contains Drupal\facets\FacetManager\DefaultFacetManager.
  */
 
-namespace Drupal\facetapi\FacetManager;
+namespace Drupal\facets\FacetManager;
 
 use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Core\Entity\EntityTypeManager;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
-use Drupal\facetapi\Exception\InvalidProcessorException;
-use Drupal\facetapi\FacetInterface;
-use Drupal\facetapi\FacetSource\FacetSourcePluginManager;
-use Drupal\facetapi\Processor\BuildProcessorInterface;
-use Drupal\facetapi\Processor\PreQueryProcessorInterface;
-use Drupal\facetapi\Processor\ProcessorInterface;
-use Drupal\facetapi\Processor\ProcessorPluginManager;
-use Drupal\facetapi\QueryType\QueryTypePluginManager;
-use Drupal\facetapi\Widget\WidgetPluginManager;
+use Drupal\facets\Exception\InvalidProcessorException;
+use Drupal\facets\FacetInterface;
+use Drupal\facets\FacetSource\FacetSourcePluginManager;
+use Drupal\facets\Processor\BuildProcessorInterface;
+use Drupal\facets\Processor\PreQueryProcessorInterface;
+use Drupal\facets\Processor\ProcessorInterface;
+use Drupal\facets\Processor\ProcessorPluginManager;
+use Drupal\facets\QueryType\QueryTypePluginManager;
+use Drupal\facets\Widget\WidgetPluginManager;
 
 /**
  * The facet manager.
@@ -46,17 +46,17 @@ class DefaultFacetManager {
   /**
    * The processor plugin manager.
    *
-   * @var \Drupal\facetapi\Processor\ProcessorPluginManager
+   * @var \Drupal\facets\Processor\ProcessorPluginManager
    */
   protected $processor_plugin_manager;
 
   /**
    * An array of facets that are being rendered.
    *
-   * @var \Drupal\facetapi\FacetInterface[]
+   * @var \Drupal\facets\FacetInterface[]
    *
-   * @see \Drupal\facetapi\FacetInterface
-   * @see \Drupal\facetapi\Entity\Facet
+   * @see \Drupal\facets\FacetInterface
+   * @see \Drupal\facets\Entity\Facet
    */
   protected $facets = [];
 
@@ -68,7 +68,7 @@ class DefaultFacetManager {
    *
    * @var boolean
    *
-   * @see FacetapiFacetManager::processFacets()
+   * @see FacetsFacetManager::processFacets()
    */
   protected $processed = FALSE;
 
@@ -84,7 +84,7 @@ class DefaultFacetManager {
    *
    * @var array
    *
-   * @see FacetapiFacetManager::getFacetSettings()
+   * @see FacetsFacetManager::getFacetSettings()
    */
   protected $settings = [];
 
@@ -92,7 +92,7 @@ class DefaultFacetManager {
    * The id of the facet source.
    *
    * @var string
-   * @see \Drupal\facetapi\FacetSource\FacetSourceInterface
+   * @see \Drupal\facets\FacetSource\FacetSourceInterface
    */
   protected $facetsource_id;
 
@@ -109,10 +109,10 @@ class DefaultFacetManager {
   /**
    * Constructs a new instance of the DefaultFacetManager.
    *
-   * @param \Drupal\facetapi\QueryType\QueryTypePluginManager $query_type_plugin_manager
-   * @param \Drupal\facetapi\Widget\WidgetPluginManager $widget_plugin_manager
-   * @param \Drupal\facetapi\FacetSource\FacetSourcePluginManager $facet_source_manager
-   * @param \Drupal\facetapi\Processor\ProcessorPluginManager $processor_plugin_manager
+   * @param \Drupal\facets\QueryType\QueryTypePluginManager $query_type_plugin_manager
+   * @param \Drupal\facets\Widget\WidgetPluginManager $widget_plugin_manager
+   * @param \Drupal\facets\FacetSource\FacetSourcePluginManager $facet_source_manager
+   * @param \Drupal\facets\Processor\ProcessorPluginManager $processor_plugin_manager
    * @param \Drupal\Core\Entity\EntityTypeManager $entity_type_manager
    */
   public function __construct(QueryTypePluginManager $query_type_plugin_manager, WidgetPluginManager $widget_plugin_manager, FacetSourcePluginManager $facet_source_manager, ProcessorPluginManager $processor_plugin_manager, EntityTypeManager $entity_type_manager) {
@@ -121,7 +121,7 @@ class DefaultFacetManager {
     $this->widget_plugin_manager = $widget_plugin_manager;
     $this->facet_source_manager = $facet_source_manager;
     $this->processor_plugin_manager = $processor_plugin_manager;
-    $this->facet_storage = $entity_type_manager->getStorage('facetapi_facet');
+    $this->facet_storage = $entity_type_manager->getStorage('facets_facet');
 
     // Immediately initialize the facets. This can be done directly because the
     // only thing needed is the url.
@@ -138,12 +138,12 @@ class DefaultFacetManager {
    *   The backend's native query object.
    */
   public function alterQuery(&$query) {
-    /** @var \Drupal\facetapi\FacetInterface[] $facets */
+    /** @var \Drupal\facets\FacetInterface[] $facets */
     foreach ($this->facets as $facet) {
 
       // Make sure we don't alter queries for facets with a different source.
       if ($facet->getFacetSourceId() == $this->facetsource_id) {
-        /** @var \Drupal\facetapi\QueryType\QueryTypeInterface $query_type_plugin */
+        /** @var \Drupal\facets\QueryType\QueryTypeInterface $query_type_plugin */
         $query_type_plugin = $this->query_type_plugin_manager->createInstance($facet->getQueryType(), ['query' => $query, 'facet' => $facet]);
         $query_type_plugin->execute();
       }
@@ -153,7 +153,7 @@ class DefaultFacetManager {
   /**
    * Returns enabled facets for the searcher associated with this FacetManager.
    *
-   * @return \Drupal\facetapi\FacetInterface[]
+   * @return \Drupal\facets\FacetInterface[]
    *   An array of enabled facets.
    */
   public function getEnabledFacets() {
@@ -172,8 +172,8 @@ class DefaultFacetManager {
   /**
    * Initializes facet builds, sets the breadcrumb trail.
    *
-   * Facets are built via FacetapiFacetProcessor objects. Facets only need to be
-   * processed, or built, once The FacetapiFacetManager::processed semaphore is
+   * Facets are built via FacetsFacetProcessor objects. Facets only need to be
+   * processed, or built, once The FacetsFacetManager::processed semaphore is
    * set when this method is called ensuring that facets are built only once
    * regardless of how many times this method is called.
    */
@@ -223,7 +223,7 @@ class DefaultFacetManager {
    * Before doing any rendering, the processors that implement the
    * BuildProcessorInterface enabled on this facet will run.
    *
-   * @param \Drupal\facetapi\FacetInterface $facet
+   * @param \Drupal\facets\FacetInterface $facet
    *
    * @return array
    *   Facet render arrays.
@@ -256,8 +256,8 @@ class DefaultFacetManager {
 
     // Get the current results from the facets and let all processors that
     // trigger on the build step do their build processing.
-    // @see \Drupal\facetapi\Processor\BuildProcessorInterface.
-    // @see \Drupal\facetapi\Processor\WidgetOrderProcessorInterface.
+    // @see \Drupal\facets\Processor\BuildProcessorInterface.
+    // @see \Drupal\facets\Processor\WidgetOrderProcessorInterface.
     $results = $facet->getResults();
 
     foreach ($facet->getProcessors() as $processor) {
@@ -285,7 +285,7 @@ class DefaultFacetManager {
     }
 
     // Let the widget plugin render the facet.
-    /** @var \Drupal\facetapi\Widget\WidgetInterface $widget */
+    /** @var \Drupal\facets\Widget\WidgetInterface $widget */
     $widget = $this->widget_plugin_manager->createInstance($facet->getWidget());
 
     return $widget->build($facet);
@@ -296,7 +296,7 @@ class DefaultFacetManager {
    */
   public function updateResults() {
     // Get an instance of the facet source.
-    /** @var \drupal\facetapi\FacetSource\FacetSourceInterface $facet_source_plugin */
+    /** @var \drupal\facets\FacetSource\FacetSourceInterface $facet_source_plugin */
     $facet_source_plugin = $this->facet_source_manager->createInstance($this->facetsource_id);
 
     $facet_source_plugin->fillFacetsWithResults($this->facets);

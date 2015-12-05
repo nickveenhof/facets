@@ -1,10 +1,10 @@
 <?php
 /**
  * @file
- * Contains Drupal\facetapi\QueryType\QueryType.
+ * Contains Drupal\facets\QueryType\QueryType.
  */
 
-namespace Drupal\facetapi\QueryType;
+namespace Drupal\facets\QueryType;
 
 /**
  * The interface defining the required methods for a query type.
