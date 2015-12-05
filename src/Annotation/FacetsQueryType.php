@@ -10,7 +10,7 @@ namespace Drupal\facets\Annotation;
 use Drupal\Component\Annotation\Plugin;
 
 /**
- * Defines a Facet API query type annotation.
+ * Defines a Facets query type annotation.
  *
  * @see \Drupal\facets\QueryType\QueryTypePluginManager
  * @see plugin_api

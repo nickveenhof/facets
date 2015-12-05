@@ -1,5 +1,5 @@
 facets.overview:
-  path: '/admin/config/search/facet-api'
+  path: '/admin/config/search/facets'
   defaults:
     _title: 'Facet API'
     _entity_list: 'facets_facet'
@@ -7,14 +7,14 @@ facets.overview:
     _entity_create_access: 'facets_facet'
 
 entity.facets_facet.add_form:
-  path: '/admin/config/search/facet-api/add-facet'
+  path: '/admin/config/search/facets/add-facet'
   defaults:
     _entity_form: 'facets_facet.default'
   requirements:
     _entity_create_access: 'facets_facet'
 
 entity.facets_facet.canonical:
-  path: '/admin/config/search/facet-api/{facets_facet}'
+  path: '/admin/config/search/facets/{facets_facet}'
   defaults:
     _controller: '\Drupal\facets\Controller\FacetController::page'
     _title_callback: '\Drupal\facets\Controller\FacetController::pageTitle'
@@ -22,21 +22,21 @@ entity.facets_facet.canonical:
     _entity_access: 'facets_facet.view'
 
 entity.facets_facet.edit_form:
-  path: '/admin/config/search/facet-api/{facets_facet}/edit'
+  path: '/admin/config/search/facets/{facets_facet}/edit'
   defaults:
     _entity_form: 'facets_facet.edit'
   requirements:
     _entity_access: 'facets_facet.edit'
 
 entity.facets_facet.delete_form:
-  path: '/admin/config/search/facet-api/{facets_facet}/delete'
+  path: '/admin/config/search/facets/{facets_facet}/delete'
   defaults:
     _entity_form: 'facets_facet.delete'
   requirements:
     _entity_access: 'facets_facet.delete'
 
 entity.facets_facet.display_form:
-  path: '/admin/config/search/facet-api/{facets_facet}/display'
+  path: '/admin/config/search/facets/{facets_facet}/display'
   defaults:
     _entity_form: 'facets_facet.display'
   requirements:

@@ -10,7 +10,7 @@ namespace Drupal\facets\Tests;
 use \Drupal\facets\Tests\WebTestBase as FacetWebTestBase;
 
 /**
- * Tests the overall functionality of the Facet API admin UI.
+ * Tests the overall functionality of the Facets admin UI.
  *
  * @group facets
  */
@@ -32,7 +32,7 @@ class IntegrationTest extends FacetWebTestBase {
 
 
   /**
-   * Tests the facet api permissions.
+   * Tests Facets' permissions.
    */
   public function testOverviewPermissions() {
     $facet_overview = $this->urlGenerator->generateFromRoute('facets.overview');
@@ -52,7 +52,7 @@ class IntegrationTest extends FacetWebTestBase {
   }
 
   /**
-   * Tests various operations via the Facet API's admin UI.
+   * Tests various operations via the Facets' admin UI.
    */
   public function testFramework() {
 

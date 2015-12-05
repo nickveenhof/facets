@@ -1,10 +1,10 @@
 /**
  * @file
- * Administration styles for the Facet API module.
+ * Administration styles for the Facets module.
  */
 
 /*
- * Facet API overview page
+ * Facets overview page
  */
 #facets-groups-list {
   margin-bottom: 2em;
@@ -30,7 +30,7 @@
 
 
 /*
- * Facet API Display page
+ * Facets Display page
  */
 .facets-processor-settings-sorting {
   margin-bottom: -7px;

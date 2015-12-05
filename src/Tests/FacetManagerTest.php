@@ -1,7 +1,7 @@
 <?php
 /**
  * @file
- * Tests Facet API's FacetManager implementation.
+ * Tests Facets' FacetManager implementation.
  */
 
 namespace Drupal\facets\Tests;

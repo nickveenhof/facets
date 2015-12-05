@@ -46,11 +46,11 @@ use Drupal\facets\FacetInterface;
  *     "only_visible_when_facet_source_is_visible",
  *   },
  *   links = {
- *     "canonical" = "/admin/config/search/facet-api",
- *     "add-form" = "/admin/config/search/facet-api/add-facet",
- *     "edit-form" = "/admin/config/search/facet-api/{facets_facet}/edit",
- *     "display-form" = "/admin/config/search/facet-api/{facets_facet}/display",
- *     "delete-form" = "/admin/config/search/facet-api/{facets_facet}/delete",
+ *     "canonical" = "/admin/config/search/facets",
+ *     "add-form" = "/admin/config/search/facets/add-facet",
+ *     "edit-form" = "/admin/config/search/facets/{facets_facet}/edit",
+ *     "display-form" = "/admin/config/search/facets/{facets_facet}/display",
+ *     "delete-form" = "/admin/config/search/facets/{facets_facet}/delete",
  *   }
  * )
  */
@@ -437,7 +437,7 @@ class Facet extends ConfigEntityBase implements FacetInterface {
   }
 
   /**
-   * Until facet api supports more than just search api, this is enough.
+   * Until facets supports more than just search api, this is enough.
    *
    * @return string
    */

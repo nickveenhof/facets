@@ -46,7 +46,7 @@ abstract class WebTestBase extends SimpletestWebTestBase {
   protected $adminUser;
 
   /**
-   * A user without Search / Facet API admin permission.
+   * A user without Search / Facet admin permission.
    *
    * @var \Drupal\Core\Session\AccountInterface
    */

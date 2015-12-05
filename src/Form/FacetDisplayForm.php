@@ -157,7 +157,7 @@ class FacetDisplayForm extends EntityForm {
       '#ajax' => [
         'trigger_as' => ['name' => 'widget_configure'],
         'callback' => '::buildAjaxWidgetConfigForm',
-        'wrapper' => 'facet-api-widget-config-form',
+        'wrapper' => 'facets-widget-config-form',
         'method' => 'replace',
         'effect' => 'fade',
       ],
@@ -165,7 +165,7 @@ class FacetDisplayForm extends EntityForm {
     $form['widget_configs'] = [
       '#type' => 'container',
       '#attributes' => [
-        'id' => 'facet-api-widget-config-form',
+        'id' => 'facets-widget-config-form',
       ],
       '#tree' => TRUE,
     ];
@@ -177,7 +177,7 @@ class FacetDisplayForm extends EntityForm {
       '#submit' => ['::submitAjaxWidgetConfigForm'],
       '#ajax' => [
         'callback' => '::buildAjaxWidgetConfigForm',
-        'wrapper' => 'facet-api-widget-config-form',
+        'wrapper' => 'facets-widget-config-form',
       ],
       '#attributes' => ['class' => ['js-hide']],
     ];
