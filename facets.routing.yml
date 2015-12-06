@@ -1,7 +1,7 @@
 facets.overview:
   path: '/admin/config/search/facets'
   defaults:
-    _title: 'Facet API'
+    _title: 'Facets'
     _entity_list: 'facets_facet'
   requirements:
     _entity_create_access: 'facets_facet'

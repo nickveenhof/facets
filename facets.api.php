@@ -1,7 +1,7 @@
 <?php
 /**
  * @file
- * Hooks provided by the Facet API module.
+ * Hooks provided by the Facets module.
  */
 
 /**
@@ -10,7 +10,7 @@
  */
 
 /**
- * Alter the Facet API Query Type mapping.
+ * Alter the Facets Query Type mapping.
  *
  * Modules may implement this hook to alter the mapping that defines how a
  * certain data type should be handled in Search API based Facets.
