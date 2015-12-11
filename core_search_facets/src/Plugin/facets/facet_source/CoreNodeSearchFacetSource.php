@@ -14,6 +14,8 @@ use Drupal\core_search_facets\Plugin\CoreSearchFacetSourceInterface;
 use Drupal\facets\FacetInterface;
 use Drupal\facets\FacetSource\FacetSourceInterface;
 use Drupal\facets\FacetSource\FacetSourcePluginBase;
+use Drupal\field\Entity\FieldConfig;
+use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\search\SearchPageInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -110,6 +112,7 @@ class CoreNodeSearchFacetSource extends FacetSourcePluginBase implements CoreSea
 
       // Get the Facet Specific Query Type so we can process the results
       // using the build() function of the query type.
+      /** @var \Drupal\facets\Entity\Facet $facet **/
       $query_type = $this->queryTypePluginManager->createInstance($facet->getQueryType(), $configuration);
       $query_type->build();
     }
@@ -121,6 +124,10 @@ class CoreNodeSearchFacetSource extends FacetSourcePluginBase implements CoreSea
   public function getQueryTypesForFacet(FacetInterface $facet) {
     // Get our Facets Field Identifier.
     $field_id = $facet->getFieldIdentifier();
+
+    // @TODO missing the field type here to understand what query type I should
+    // use from getQueryTypesForDataType or maybe add the query type name
+    // directly when creating the facet Config Entity.
 
     return $this->getQueryTypesForDataType($field_id);
   }
@@ -191,6 +198,15 @@ class CoreNodeSearchFacetSource extends FacetSourcePluginBase implements CoreSea
       'uid' => $this->t('Author'),
       'langcode' => $this->t('Language'),
     ];
+    // @TODO Only taxonomy terms for the moment.
+    // Get the current field instances and detect if the field type is allowed.
+    $fields = FieldConfig::loadMultiple();
+    foreach ($fields as $field) {
+      if ($field->getFieldStorageDefinition()->getSetting('target_type') == 'taxonomy_term') {
+        /** @var \Drupal\field\Entity\FieldConfig $field */
+        $default_fields[$field->getName()] = $this->t('@label', ['@label' => $field->getLabel()]);
+      }
+    }
 
     return $default_fields;
   }
