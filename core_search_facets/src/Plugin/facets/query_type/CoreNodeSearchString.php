@@ -37,7 +37,7 @@ class CoreNodeSearchString extends QueryTypePluginBase {
     $query_info = $facet_source->getQueryInfo($this->facet);
     /** @var \Drupal\core_search_facets\FacetsQuery $facet_query */
     $facet_query = $facet_source->getFacetQueryExtender();
-    $tables_joined = [];
+    //$tables_joined = [];
 
     // Add the filter to the query if there are active values.
     $active_items = $this->facet->getActiveItems();
@@ -78,6 +78,9 @@ class CoreNodeSearchString extends QueryTypePluginBase {
     $facet_query = $facet_source->getFacetQueryExtender();
 
     $facet_query->addFacetField($query_info);
+    foreach ($query_info['joins'] as $table_alias => $join_info) {
+      $facet_query->addFacetJoin($query_info, $table_alias);
+    }
 
     // Only build results if a search is executed.
     if ($facet_query->getSearchExpression()) {
