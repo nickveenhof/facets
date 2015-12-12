@@ -11,7 +11,7 @@ use Drupal\Core\Config\Entity\ConfigEntityBase;
 use Drupal\facets\FacetInterface;
 
 /**
- * Defines the search index configuration entity.
+ * Defines the facet configuration entity.
  *
  * @ConfigEntityType(
  *   id = "facets_facet",
@@ -57,28 +57,28 @@ use Drupal\facets\FacetInterface;
 class Facet extends ConfigEntityBase implements FacetInterface {
 
   /**
-   * The ID of the index.
+   * The ID of the facet.
    *
    * @var string
    */
   protected $id;
 
   /**
-   * A name to be displayed for the index.
+   * A name to be displayed for the facet.
    *
    * @var string
    */
   protected $name;
 
   /**
-   * A string describing the index.
+   * A string describing the facet.
    *
    * @var string
    */
   protected $description;
 
   /**
-   * A string describing the widget.
+   * The plugin name of the widget.
    *
    * @var string
    */
@@ -92,7 +92,7 @@ class Facet extends ConfigEntityBase implements FacetInterface {
   protected $widget_configs;
 
   /**
-   * An array of options configuring this index.
+   * An array of options configuring this facet.
    *
    * @var array
    *
