@@ -122,31 +122,34 @@ class CoreNodeSearchFacetSource extends FacetSourcePluginBase implements CoreSea
    * {@inheritdoc}
    */
   public function getQueryTypesForFacet(FacetInterface $facet) {
-    // Get our Facets Field Identifier.
-    $field_id = $facet->getFieldIdentifier();
+    // Verify if the field exists. Otherwise the type will be a column
+    // (type,uid...) from the node and we can use the field identifier directly.
+    if ($field = FieldStorageConfig::loadByName('node', $facet->getFieldIdentifier())) {
+      $field_type = $field->getType();
+    }
+    else {
+      $field_type = $facet->getFieldIdentifier();
+    }
 
-    // @TODO missing the field type here to understand what query type I should
-    // use from getQueryTypesForDataType or maybe add the query type name
-    // directly when creating the facet Config Entity.
-
-    return $this->getQueryTypesForDataType($field_id);
+    return $this->getQueryTypesForFieldType($field_type);
   }
 
   /**
-   * Get the query types for a data type.
+   * Get the query types for a field type.
    *
-   * @param string $field_id
-   *   The field id.
+   * @param string $field_type
+   *   The field type.
    *
    * @return array
    *   An array of query types.
    */
-  public function getQueryTypesForDataType($field_id) {
+  public function getQueryTypesForFieldType($field_type) {
     $query_types = [];
-    switch ($field_id) {
+    switch ($field_type) {
       case 'type':
       case 'uid':
       case 'langcode':
+      case 'entity_reference':
         $query_types['string'] = 'core_node_search_string';
         break;
     }
@@ -193,42 +196,48 @@ class CoreNodeSearchFacetSource extends FacetSourcePluginBase implements CoreSea
    * {@inheritdoc}
    */
   public function getFields() {
-    $default_fields = [
-      'type' => $this->t('Content Type'),
-      'uid' => $this->t('Author'),
-      'langcode' => $this->t('Language'),
-    ];
-    // @TODO Only taxonomy terms for the moment.
+    // Default fields.
+    $facet_fields = $this->getDefaultFields();
+    // @TODO Only taxonomy term reference for the moment.
     // Get the current field instances and detect if the field type is allowed.
     $fields = FieldConfig::loadMultiple();
     foreach ($fields as $field) {
       if ($field->getFieldStorageDefinition()->getSetting('target_type') == 'taxonomy_term') {
         /** @var \Drupal\field\Entity\FieldConfig $field */
-        $default_fields[$field->getName()] = $this->t('@label', ['@label' => $field->getLabel()]);
+        if (!array_key_exists($field->getName(), $facet_fields)) {
+          $facet_fields[$field->getName()] = $this->t('@label', ['@label' => $field->getLabel()]);
+        }
       }
     }
 
-    return $default_fields;
+    return $facet_fields;
+  }
+
+  /**
+   * Getter for default node fields.
+   *
+   * @return array
+   */
+  protected function getDefaultFields() {
+    return [
+      'type' => $this->t('Content Type'),
+      'uid' => $this->t('Author'),
+      'langcode' => $this->t('Language'),
+    ];
   }
 
   /**
    * {@inheritdoc}
    */
   public function getFacetQueryExtender() {
-    // If (!$this->facetQueryExtender) {
-    // $this->facetQueryExtender = db_select('search_index',
-    // 'i',
-    // array('target' => 'replica'))
-    // ->extend('Drupal\search\ViewsSearchQuery');
-    // $this->searchQuery->searchExpression($input, $this->searchType);
-    // $this->searchQuery->publicParseSearchExpression();
-    $this->facetQueryExtender = db_select('search_index', 'i', array('target' => 'replica'))->extend('Drupal\core_search_facets\FacetsQuery');
-    $this->facetQueryExtender->join('node_field_data', 'n', 'n.nid = i.sid');
-    $this->facetQueryExtender
-      // ->condition('n.status', 1).
-      ->addTag('node_access')
-      ->searchExpression($this->keys, 'node_search');
-    // }.
+     if (!$this->facetQueryExtender) {
+       $this->facetQueryExtender = db_select('search_index', 'i', array('target' => 'replica'))->extend('Drupal\core_search_facets\FacetsQuery');
+       $this->facetQueryExtender->join('node_field_data', 'n', 'n.nid = i.sid');
+       $this->facetQueryExtender
+         // ->condition('n.status', 1).
+         ->addTag('node_access')
+         ->searchExpression($this->keys, 'node_search');
+     }
     return $this->facetQueryExtender;
   }
 
@@ -236,46 +245,43 @@ class CoreNodeSearchFacetSource extends FacetSourcePluginBase implements CoreSea
    * {@inheritdoc}
    */
   public function getQueryInfo(FacetInterface $facet) {
-    // If (!$facet['field api name']) {
-    // We add the language code of the indexed item to the result of the query.
-    // So in this case we need to use the search_index table alias (i) for the
-    // langcode field. Otherwise we will have same nid for multiple languages
-    // as result. For more details see NodeSearch::findResults().
-    $table_alias = $facet->getFieldIdentifier() == 'langcode' ? 'i' : 'n';
-    $query_info = [
-      'fields' => [
-        $table_alias . '.' . $facet->getFieldIdentifier() => [
-          'table_alias' => $table_alias,
-          'field' => $facet->getFieldIdentifier(),
+    $query_info = [];
+    $field_name = $facet->getFieldIdentifier();
+    $default_fields = $this->getDefaultFields();
+    if (array_key_exists($facet->getFieldIdentifier(), $default_fields)) {
+      // We add the language code of the indexed item to the result of the query.
+      // So in this case we need to use the search_index table alias (i) for the
+      // langcode field. Otherwise we will have same nid for multiple languages
+      // as result. For more details see NodeSearch::findResults().
+      // @TODO review if I can refactor this.
+      $table_alias = $facet->getFieldIdentifier() == 'langcode' ? 'i' : 'n';
+      $query_info = [
+        'fields' => [
+          $table_alias . '.' . $facet->getFieldIdentifier() => [
+            'table_alias' => $table_alias,
+            'field' => $facet->getFieldIdentifier(),
+          ],
         ],
-      ],
-    ];
-    // }
-    /*else {
-    $query_info = array();
-
-    // Gets field info, finds table name and field name.
-    $field = field_info_field($facet['field api name']);
-    $table = _field_sql_storage_tablename($field);
-
-    // Iterates over columns, adds fields to query info.
-    foreach ($field['columns'] as $column_name => $attributes) {
-    $column = _field_sql_storage_columnname($field['field_name'], $column_name);
-    $query_info['fields'][$table . '.' . $column] = array(
-    'table_alias' => $table,
-    'field' => $column,
-    );
+      ];
     }
+    else {
+      // Gets field info, finds table name and field name.
+      $table = "node__{$field_name}";
+      $column = $facet->getFieldIdentifier() . '_target_id';
+      $query_info['fields'][$field_name . '.' . $column] = array(
+        'table_alias' => $table,
+        'field' => $column,
+      );
 
-    // Adds the join on the node table.
-    $query_info['joins'] = array(
-    $table => array(
-    'table' => $table,
-    'alias' => $table,
-    'condition' => "n.vid = $table.revision_id",
-    ),
-    );
-    }*/
+      // Adds the join on the node table.
+      $query_info['joins'] = array(
+        $table => array(
+          'table' => $table,
+          'alias' => $table,
+          'condition' => "n.vid = $table.revision_id",
+        ),
+      );
+    }
 
     // Returns query info, makes sure all keys are present.
     return $query_info + [
