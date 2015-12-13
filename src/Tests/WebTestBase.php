@@ -8,7 +8,6 @@
 namespace Drupal\facets\Tests;
 
 use Drupal\Core\StringTranslation\StringTranslationTrait;
-use Drupal\search_api\Tests\ExampleContentTrait;
 use Drupal\search_api\Entity\Index;
 use Drupal\search_api\Entity\Server;
 use Drupal\simpletest\WebTestBase as SimpletestWebTestBase;
