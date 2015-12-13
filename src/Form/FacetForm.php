@@ -341,6 +341,7 @@ class FacetForm extends EntityForm {
     }
     else {
       drupal_set_message(t('Facet %name has been updated.', ['%name' => $facet->getName()]));
+      $form_state->setRedirect('entity.facets_facet.edit_form', ['facets_facet' => $facet->id()]);
     }
 
     return $facet;

@@ -30,7 +30,6 @@ class IntegrationTest extends FacetWebTestBase {
    */
   protected $blocks;
 
-
   /**
    * Tests Facets' permissions.
    */
@@ -113,6 +112,40 @@ class IntegrationTest extends FacetWebTestBase {
     // Delete the facet and make sure the overview is empty again.
     $this->deleteUnusedFacet("Test Facet name");
     $this->checkEmptyOverview();
+  }
+
+  /**
+   * Tests renaming of a facet.
+   *
+   * @see https://www.drupal.org/node/2629504
+   */
+  public function testRenameFacet() {
+
+    // Set names.
+    $facet_id = 'ab_facet';
+    $new_facet_id = 'facet__ab';
+    $facet_name = 'ab>Facet';
+
+    // Make sure we're logged in with a user that has sufficient permissions.
+    $this->drupalLogin($this->adminUser);
+
+    // Add a new facet.
+    $this->addFacet($facet_name);
+
+    $facet_edit_page = $this->urlGenerator->generateFromRoute('entity.facets_facet.edit_form', ['facets_facet' => $facet_id], ['absolute' => TRUE]);
+
+    // Go to the facet edit page and make sure "edit facet %facet" is present.
+    $this->drupalGet($facet_edit_page);
+    $this->assertResponse(200);
+    $this->assertRaw($this->t('Edit facet @facet', ['@facet' => $facet_name]));
+
+    // Change the machine name to a new name and check that the redirected page
+    // is the correct url.
+    $form = ['id' => $new_facet_id];
+    $this->drupalPostForm($facet_edit_page, $form, $this->t('Save'));
+
+    $expected_url = $this->urlGenerator->generateFromRoute('entity.facets_facet.edit_form', ['facets_facet' => $new_facet_id], ['absolute' => TRUE]);
+    $this->assertUrl($expected_url);
   }
 
   /**
@@ -282,9 +315,9 @@ class IntegrationTest extends FacetWebTestBase {
     $this->drupalPostForm(NULL, $form_values + $facet_source_form, $this->t('Save'));
     $this->assertNoText('field is required.');
 
-    // Make sure that the redirection back to the overview was successful and
-    // the newly added facet is shown on the overview page.
+    // Make sure that the redirection to the display page is correct.
     $this->assertRaw(t('Facet %name has been created.', ['%name' => $facet_name]));
+    $this->assertUrl('admin/config/search/facets/' . $facet_id . '/display');
   }
 
 
