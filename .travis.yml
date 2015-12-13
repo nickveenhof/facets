@@ -103,8 +103,6 @@ before_script:
   - drupal-ti before_script
 
 script:
-  - cd $TRAVIS_BUILD_DIR/../drupal-8/drupal/modules/
-  - git clone --branch 8.x-1.x http://git.drupal.org/project/search_api.git
   - drupal-ti script
 
 after_script:
