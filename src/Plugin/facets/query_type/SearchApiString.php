@@ -58,9 +58,9 @@ class SearchApiString extends QueryTypePluginBase {
       $active_items = $this->facet->getActiveItems();
       if (count($active_items)) {
         foreach ($active_items as $value) {
-          $filter = $query->createFilter();
-          $filter->condition($this->facet->getFieldIdentifier(), $value);
-          $query->filter($filter);
+          $filter = $query->createConditionGroup();
+          $filter->addCondition($this->facet->getFieldIdentifier(), $value);
+          $query->addConditionGroup($filter);
         }
       }
     }
