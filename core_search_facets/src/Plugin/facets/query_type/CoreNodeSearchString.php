@@ -48,7 +48,7 @@ class CoreNodeSearchString extends QueryTypePluginBase {
         // Adds join to the facet query.
         $facet_query->addFacetJoin($query_info, $field_info['table_alias']);
 
-        // Adds adds join to search query, makes sure it is only added once.
+        // Adds join to search query, makes sure it is only added once.
         if (isset($query_info['joins'][$field_info['table_alias']])) {
           if (!isset($tables_joined[$field_info['table_alias']])) {
             $tables_joined[$field_info['table_alias']] = TRUE;
