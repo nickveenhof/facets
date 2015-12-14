@@ -37,7 +37,7 @@ class CoreNodeSearchString extends QueryTypePluginBase {
     $query_info = $facet_source->getQueryInfo($this->facet);
     /** @var \Drupal\core_search_facets\FacetsQuery $facet_query */
     $facet_query = $facet_source->getFacetQueryExtender();
-    //$tables_joined = [];
+    $tables_joined = [];
 
     // Add the filter to the query if there are active values.
     $active_items = $this->facet->getActiveItems();
@@ -46,17 +46,16 @@ class CoreNodeSearchString extends QueryTypePluginBase {
       foreach ($query_info['fields'] as $field_info) {
 
         // Adds join to the facet query.
-        /*$facet_query->addFacetJoin($query_info, $field_info['table_alias']);
+        $facet_query->addFacetJoin($query_info, $field_info['table_alias']);
 
         // Adds adds join to search query, makes sure it is only added once.
         if (isset($query_info['joins'][$field_info['table_alias']])) {
-        if (!isset($tables_joined[$field_info['table_alias']])) {
-        $tables_joined[$field_info['table_alias']] = TRUE;
-        $join_info = $query_info['joins'][$field_info['table_alias']];
-        $this->query->join($join_info['table'], $join_info['alias'],
-        $join_info['condition']);
+          if (!isset($tables_joined[$field_info['table_alias']])) {
+            $tables_joined[$field_info['table_alias']] = TRUE;
+            $join_info = $query_info['joins'][$field_info['table_alias']];
+            $this->query->join($join_info['table'], $join_info['alias'], $join_info['condition']);
+          }
         }
-        }*/
 
         // Adds facet conditions to the queries.
         $field = $field_info['table_alias'] . '.' . $field_info['field'];
