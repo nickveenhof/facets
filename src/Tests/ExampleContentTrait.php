@@ -90,7 +90,7 @@ trait ExampleContentTrait {
    */
   protected function indexItems($index_id) {
     $index = Index::load($index_id);
-    return $index->index();
+    return $index->indexItems();
   }
 
   /**
