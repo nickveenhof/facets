@@ -278,7 +278,7 @@ class CoreNodeSearchFacetSource extends FacetSourcePluginBase implements CoreSea
         $table => array(
           'table' => $table,
           'alias' => $table,
-          'condition' => "n.vid = $table.revision_id",
+          'condition' => "n.vid = $table.revision_id AND i.langcode = $table.langcode",
         ),
       );
     }
