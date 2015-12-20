@@ -37,6 +37,7 @@ use Drupal\facets\FacetInterface;
  *   config_export = {
  *     "id",
  *     "name",
+ *     "url_alias",
  *     "field_identifier",
  *     "query_type_name",
  *     "facet_source_id",
@@ -69,6 +70,13 @@ class Facet extends ConfigEntityBase implements FacetInterface {
    * @var string
    */
   protected $name;
+
+  /**
+   * The name for the parameter when used in the URL.
+   *
+   * @var string
+   */
+  protected $url_alias;
 
   /**
    * A string describing the facet.
@@ -347,6 +355,20 @@ class Facet extends ConfigEntityBase implements FacetInterface {
    */
   public function getName() {
     return $this->name;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getUrlAlias() {
+    return $this->url_alias;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setUrlAlias($url_alias) {
+    $this->url_alias = $url_alias;
   }
 
   /**

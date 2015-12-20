@@ -60,6 +60,7 @@ class QueryStringUrlProcessorTest extends UnitTestCase {
   public function testSetSingleActiveItem() {
     $facet = new Facet([], 'facet');
     $facet->setResults($this->originalResults);
+    $facet->setUrlAlias('test');
     $facet->setFieldIdentifier('test');
 
     $request = new Request();
@@ -77,6 +78,7 @@ class QueryStringUrlProcessorTest extends UnitTestCase {
   public function testSetMultipleActiveItems() {
     $facet = new Facet([], 'facet');
     $facet->setResults($this->originalResults);
+    $facet->setUrlAlias('test');
     $facet->setFieldIdentifier('test');
 
     $request = new Request();
@@ -93,6 +95,7 @@ class QueryStringUrlProcessorTest extends UnitTestCase {
    */
   public function testEmptyBuild() {
     $facet = new Facet([], 'facet');
+    $facet->setUrlAlias('test');
     $facet->setFacetSourceId('facet_source__dummy');
 
     $request = new Request();
@@ -109,6 +112,7 @@ class QueryStringUrlProcessorTest extends UnitTestCase {
   public function testBuild() {
     $facet = new Facet([], 'facet');
     $facet->setFieldIdentifier('test');
+    $facet->setUrlAlias('test');
     $facet->setFacetSourceId('facet_source__dummy');
 
     $request = new Request();
@@ -130,6 +134,7 @@ class QueryStringUrlProcessorTest extends UnitTestCase {
   public function testBuildWithActiveItem() {
     $facet = new Facet([], 'facet');
     $facet->setFieldIdentifier('test');
+    $facet->setUrlAlias('test');
     $facet->setFacetSourceId('facet_source__dummy');
 
     $original_results = $this->originalResults;
@@ -178,6 +183,7 @@ class QueryStringUrlProcessorTest extends UnitTestCase {
     $facet = new Facet([], 'facet');
     $facet->setFieldIdentifier('test');
     $facet->setFacetSourceId('facet_source__dummy');
+    $facet->setUrlAlias('test');
 
     $request = new Request();
     $request->query->set('ab', []);

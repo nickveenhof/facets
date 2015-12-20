@@ -149,6 +149,60 @@ class IntegrationTest extends FacetWebTestBase {
   }
 
   /**
+   * Tests that an url alias works correctly.
+   */
+  public function testUrlAlias() {
+    $facet_id = 'ab_facet';
+    $facet_name = 'ab>Facet';
+
+    // Make sure we're logged in with a user that has sufficient permissions.
+    $this->drupalLogin($this->adminUser);
+
+    $facet_add_page = $this->urlGenerator->generateFromRoute('entity.facets_facet.add_form', [], ['absolute' => TRUE]);
+    $facet_edit_page = $this->urlGenerator->generateFromRoute('entity.facets_facet.edit_form', ['facets_facet' => $facet_id], ['absolute' => TRUE]);
+
+    $this->drupalGet($facet_add_page);
+    $this->assertResponse(200);
+
+    $form_values = [
+      'name' => $facet_name,
+      'id' => $facet_id,
+      'status' => 1,
+      'facet_source_id' => 'search_api_views:search_api_test_views_fulltext:page_1',
+      'facet_source_configs[search_api_views:search_api_test_views_fulltext:page_1][field_identifier]' => 'entity:entity_test/type',
+    ];
+    $this->drupalPostForm(NULL, ['facet_source_id' => 'search_api_views:search_api_test_views_fulltext:page_1'], $this->t('Configure facet source'));
+    $this->drupalPostForm(NULL, $form_values, $this->t('Save'));
+    $this->assertText($this->t('The name of the facet for usage in URLs field is required.'));
+
+    $form_values['url_alias'] = 'test';
+    $this->drupalPostForm(NULL, $form_values, $this->t('Save'));
+    $this->assertRaw(t('Facet %name has been created.', ['%name' => $facet_name]));
+
+    $this->createFacetBlock($facet_id);
+
+    $this->insertExampleContent();
+    $this->assertEqual($this->indexItems($this->indexId), 5, '5 items were indexed.');
+
+    $this->drupalGet('search-api-test-fulltext');
+    $this->assertLink('item');
+    $this->assertLink('article');
+
+    $this->clickLink('item');
+    $this->assertUrl('search-api-test-fulltext?f[0]=test:item');
+
+    $this->drupalGet($facet_edit_page);
+    $this->drupalPostForm(NULL, ['url_alias' => 'llama'], $this->t('Save'));
+
+    $this->drupalGet('search-api-test-fulltext');
+    $this->assertLink('item');
+    $this->assertLink('article');
+
+    $this->clickLink('item');
+    $this->assertUrl('search-api-test-fulltext?f[0]=llama:item');
+  }
+
+  /**
    * Deletes a facet block by id.
    *
    * @param string $id
@@ -285,6 +339,7 @@ class IntegrationTest extends FacetWebTestBase {
       'name' => '',
       'id' => $facet_id,
       'status' => 1,
+      'url_alias' => $facet_id,
     ];
 
     // Try filling out the form, but without having filled in a name for the

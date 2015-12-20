@@ -70,6 +70,20 @@ interface FacetInterface extends ConfigEntityInterface {
   public function getName();
 
   /**
+   * Gets the name of the facet for use in the URL.
+   *
+   * @param string $url_parameter
+   */
+  public function getUrlAlias();
+
+  /**
+   * Sets the name of the facet for use in the URL.
+   *
+   * @param string $url_alias
+   */
+  public function setUrlAlias($url_alias);
+
+  /**
    * Sets an item with value to active.
    *
    * @param string $value

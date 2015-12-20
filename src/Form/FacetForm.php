@@ -173,6 +173,14 @@ class FacetForm extends EntityForm {
       ],
     ];
 
+    $form['url_alias'] = [
+      '#type' => 'textfield',
+      '#title' => $this->t('The name of the facet for usage in URLs'),
+      '#default_value' => $facet->getUrlAlias(),
+      '#maxlength' => 50,
+      '#required' => TRUE,
+    ];
+
     $facet_sources = [];
     foreach ($this->getFacetSourcePluginManager()->getDefinitions() as $facet_source_id => $definition) {
       $facet_sources[$definition['id']] = !empty($definition['label']) ? $definition['label'] : $facet_source_id;

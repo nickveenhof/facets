@@ -14,6 +14,9 @@ facets.facet.*:
     status:
       type: boolean
       label: 'Status'
+    url_alias:
+      type: string
+      label: 'Name of facet as used in the URL'
     facet_source_id:
       type: string
       label: 'Facet source id'

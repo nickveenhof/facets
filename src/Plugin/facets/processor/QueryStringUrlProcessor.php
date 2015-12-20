@@ -34,6 +34,13 @@ class QueryStringUrlProcessor extends UrlProcessorPluginBase {
   const SEPARATOR = ':';
 
   /**
+   * A string of how to represent the facet in the url.
+   *
+   * @var string
+   */
+  protected $url_alias;
+
+  /**
    * An array of active filters.
    *
    * @var string[]
@@ -57,6 +64,9 @@ class QueryStringUrlProcessor extends UrlProcessorPluginBase {
     // First get the current list of get parameters.
     $get_params = $this->request->query;
 
+    // Set the url alias from the the facet object.
+    $this->url_alias = $facet->getUrlAlias();
+
     // No results are found for this facet, so don't try to create urls.
     if (empty($results)) {
       return [];
@@ -64,7 +74,7 @@ class QueryStringUrlProcessor extends UrlProcessorPluginBase {
 
     /** @var \Drupal\facets\Result\ResultInterface $result */
     foreach ($results as &$result) {
-      $filter_string = $facet->getFieldAlias() . ':' . $result->getRawValue();
+      $filter_string = $this->url_alias . ':' . $result->getRawValue();
       $result_get_params = clone $get_params;
 
       $filter_params = $result_get_params->get($this->filterKey, [], TRUE);
@@ -99,9 +109,12 @@ class QueryStringUrlProcessor extends UrlProcessorPluginBase {
    * {@inheritdoc}
    */
   public function preQuery(FacetInterface $facet) {
+    // Set the url alias from the the facet object.
+    $this->url_alias = $facet->getUrlAlias();
+
     // Get the filter key of the facet.
-    if (isset($this->activeFilters[$facet->getFieldAlias()])) {
-      foreach ($this->activeFilters[$facet->getFieldAlias()] as $value) {
+    if (isset($this->activeFilters[$this->url_alias])) {
+      foreach ($this->activeFilters[$this->url_alias] as $value) {
         $facet->setActiveItem(trim($value, '"'));
       }
     }
