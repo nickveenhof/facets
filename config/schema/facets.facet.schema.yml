@@ -52,4 +52,4 @@ facets.facet.*:
               type: integer
               label: 'The processor''s weight for this stage'
           settings:
-            type: facets.processor.plugin.[%parent.processor_id]
+            type: plugin.plugin_configuration.facets_processor.[%parent.processor_id]

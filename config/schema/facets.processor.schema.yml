@@ -1,4 +1,4 @@
-facets.processor.plugin.count_widget_order:
+plugin.plugin_configuration.facets_processor.count_widget_widget_order:
   type: mapping
   label: 'Count widget order'
   mapping:
@@ -6,7 +6,7 @@ facets.processor.plugin.count_widget_order:
       type: string
       label: sort order
 
-facets.processor.plugin.display_value_widget_order:
+plugin.plugin_configuration.facets_processor.display_value_widget_order:
   type: mapping
   label: 'Display value widget order'
   mapping:
@@ -14,7 +14,7 @@ facets.processor.plugin.display_value_widget_order:
       type: string
       label: sort order
 
-facets.processor.plugin.raw_value_widget_order:
+plugin.plugin_configuration.facets_processor.raw_value_widget_order:
   type: mapping
   label: 'Raw value widget order'
   mapping:
@@ -22,7 +22,7 @@ facets.processor.plugin.raw_value_widget_order:
       type: string
       label: sort order
 
-facets.processor.plugin.active_widget_order:
+plugin.plugin_configuration.facets_processor.active_widget_order:
   type: mapping
   label: 'Active widget order'
   mapping:
@@ -30,7 +30,7 @@ facets.processor.plugin.active_widget_order:
       type: string
       label: sort order
 
-facets.processor.plugin.count_limit:
+plugin.plugin_configuration.facets_processor.count_limit:
   type: mapping
   label: 'Count limit widget'
   mapping:
