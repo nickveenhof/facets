@@ -54,6 +54,13 @@ class DefaultFacetManager {
   protected $processorPluginManager;
 
   /**
+   * The widget plugin manager.
+   *
+   * @var \Drupal\facets\Widget\WidgetPluginManager
+   */
+  protected $widgetPluginManager;
+
+  /**
    * An array of facets that are being rendered.
    *
    * @var \Drupal\facets\FacetInterface[]
@@ -127,7 +134,7 @@ class DefaultFacetManager {
   public function __construct(QueryTypePluginManager $query_type_plugin_manager, WidgetPluginManager $widget_plugin_manager, FacetSourcePluginManager $facet_source_manager, ProcessorPluginManager $processor_plugin_manager, EntityTypeManager $entity_type_manager) {
 
     $this->queryTypePluginManager = $query_type_plugin_manager;
-    $this->widget_plugin_manager = $widget_plugin_manager;
+    $this->widgetPluginManager = $widget_plugin_manager;
     $this->facetSourcePluginManager = $facet_source_manager;
     $this->processorPluginManager = $processor_plugin_manager;
     $this->facet_storage = $entity_type_manager->getStorage('facets_facet');
@@ -298,7 +305,7 @@ class DefaultFacetManager {
 
     // Let the widget plugin render the facet.
     /** @var \Drupal\facets\Widget\WidgetInterface $widget */
-    $widget = $this->widget_plugin_manager->createInstance($facet->getWidget());
+    $widget = $this->widgetPluginManager->createInstance($facet->getWidget());
 
     return $widget->build($facet);
   }
