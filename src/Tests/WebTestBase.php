@@ -106,7 +106,7 @@ abstract class WebTestBase extends SimpletestWebTestBase {
 
     $this->setUpExampleStructure();
 
-    Utility::getIndexTaskManager()->addItemsAll(Index::load($this->indexId));
+    \Drupal::getContainer()->get('search_api.index_task_manager')->addItemsAll(Index::load($this->indexId));
   }
 
   /**
