@@ -32,7 +32,7 @@ class FacetSourcePluginManager extends DefaultPluginManager {
    *   The module handler.
    */
   public function __construct(\Traversable $namespaces, CacheBackendInterface $cache_backend, ModuleHandlerInterface $module_handler) {
-    parent::__construct('Plugin/facets/facet_source', $namespaces, $module_handler, 'Drupal\facets\FacetSource\FacetSourceInterface', 'Drupal\facets\Annotation\FacetsFacetSource');
+    parent::__construct('Plugin/facets/facet_source', $namespaces, $module_handler, 'Drupal\facets\FacetSource\FacetSourcePluginInterface', 'Drupal\facets\Annotation\FacetsFacetSource');
   }
 
 }

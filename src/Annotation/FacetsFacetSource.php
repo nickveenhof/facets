@@ -13,7 +13,7 @@ use Drupal\Component\Annotation\Plugin;
  * Defines a Facets facet source annotation.
  *
  * @see \Drupal\facets\FacetSource\FacetSourcePluginManager
- * @see \Drupal\facets\FacetSource\FacetSourceInterface
+ * @see \Drupal\facets\FacetSource\FacetSourcePluginInterface
  * @see \Drupal\facets\FacetSource\FacetSourcePluginBase
  * @see plugin_api
  *

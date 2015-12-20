@@ -96,7 +96,7 @@ class DefaultFacetManager {
    *
    * @var string
    *
-   * @see \Drupal\facets\FacetSource\FacetSourceInterface
+   * @see \Drupal\facets\FacetSource\FacetSourcePluginInterface
    */
   protected $facetSourceId;
 
@@ -211,7 +211,7 @@ class DefaultFacetManager {
           $processor_definition = $processor->getPluginDefinition();
           if (is_array($processor_definition['stages']) && array_key_exists(ProcessorInterface::STAGE_PRE_QUERY, $processor_definition['stages'])) {
             /** @var PreQueryProcessorInterface $pre_query_processor */
-            $pre_query_processor = $this->processorPluginManager->createInstance($processor->getPluginDefinition()['id']);
+            $pre_query_processor = $this->processorPluginManager->createInstance($processor->getPluginDefinition()['id'], ['facet' => $facet]);
             if (!$pre_query_processor instanceof PreQueryProcessorInterface) {
               throw new InvalidProcessorException(new FormattableMarkup("The processor @processor has a pre_query definition but doesn't implement the required PreQueryProcessorInterface interface", ['@processor' => $processor_configuration['processor_id']]));
             }
@@ -275,7 +275,7 @@ class DefaultFacetManager {
       $processor_definition = $this->processorPluginManager->getDefinition($processor->getPluginDefinition()['id']);
       if (is_array($processor_definition['stages']) && array_key_exists(ProcessorInterface::STAGE_BUILD, $processor_definition['stages'])) {
         /** @var BuildProcessorInterface $build_processor */
-        $build_processor = $this->processorPluginManager->createInstance($processor->getPluginDefinition()['id']);
+        $build_processor = $this->processorPluginManager->createInstance($processor->getPluginDefinition()['id'], ['facet' => $facet]);
         if (!$build_processor instanceof BuildProcessorInterface) {
           throw new InvalidProcessorException(new FormattableMarkup("The processor @processor has a build definition but doesn't implement the required BuildProcessorInterface interface", ['@processor' => $processor['processor_id']]));
         }
@@ -308,7 +308,7 @@ class DefaultFacetManager {
    */
   public function updateResults() {
     // Get an instance of the facet source.
-    /** @var \drupal\facets\FacetSource\FacetSourceInterface $facet_source_plugin */
+    /** @var \drupal\facets\FacetSource\FacetSourcePluginInterface $facet_source_plugin */
     $facet_source_plugin = $this->facetSourcePluginManager->createInstance($this->facetSourceId);
 
     $facet_source_plugin->fillFacetsWithResults($this->facets);

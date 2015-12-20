@@ -12,10 +12,9 @@ use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\core_search_facets\Plugin\CoreSearchFacetSourceInterface;
 use Drupal\facets\FacetInterface;
-use Drupal\facets\FacetSource\FacetSourceInterface;
 use Drupal\facets\FacetSource\FacetSourcePluginBase;
+use Drupal\facets\FacetSource\FacetSourcePluginInterface;
 use Drupal\field\Entity\FieldConfig;
-use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\search\SearchPageInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -178,7 +177,7 @@ class CoreNodeSearchFacetSource extends FacetSourcePluginBase implements CoreSea
   /**
    * {@inheritdoc}
    */
-  public function buildConfigurationForm(array $form, FormStateInterface $form_state, FacetInterface $facet, FacetSourceInterface $facet_source) {
+  public function buildConfigurationForm(array $form, FormStateInterface $form_state, FacetInterface $facet, FacetSourcePluginInterface $facet_source) {
 
     $form['field_identifier'] = [
       '#type' => 'select',

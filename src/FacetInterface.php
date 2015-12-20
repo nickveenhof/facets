@@ -200,10 +200,18 @@ interface FacetInterface extends ConfigEntityInterface {
   /**
    * Returns the plugin instance of a facet source.
    *
-   * @return \Drupal\facets\FacetSource\FacetSourceInterface
+   * @return \Drupal\facets\FacetSource\FacetSourcePluginInterface
    *   The plugin instance for the facet source.
    */
   public function getFacetSource();
+
+  /**
+   * Returns the facet source configuration object.
+   *
+   * @return \Drupal\facets\FacetSourceInterface
+   *   A facet source configuration object.
+   */
+  public function getFacetSourceConfig();
 
   /**
    * Load the facet sources for this facet.
@@ -211,7 +219,7 @@ interface FacetInterface extends ConfigEntityInterface {
    * @param bool|TRUE $only_enabled
    *   Only return enabled facet sources.
    *
-   * @return \Drupal\facets\FacetSource\FacetSourceInterface[]
+   * @return \Drupal\facets\FacetSource\FacetSourcePluginInterface[]
    *   An array of facet sources.
    */
   public function getFacetSources($only_enabled = TRUE);

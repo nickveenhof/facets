@@ -23,10 +23,10 @@ use Drupal\Facets\FacetInterface;
  *
  * @see \Drupal\facets\Annotation\FacetsFacetSource
  * @see \Drupal\facets\FacetSource\FacetSourcePluginManager
- * @see \Drupal\facets\FacetSource\FacetSourceInterface
+ * @see \Drupal\facets\FacetSource\FacetSourcePluginInterface
  * @see plugin_api
  */
-abstract class FacetSourcePluginBase extends PluginBase implements FacetSourceInterface, ContainerFactoryPluginInterface {
+abstract class FacetSourcePluginBase extends PluginBase implements FacetSourcePluginInterface, ContainerFactoryPluginInterface {
 
   /**
    * The plugin manager.

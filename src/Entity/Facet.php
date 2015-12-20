@@ -131,7 +131,7 @@ class Facet extends ConfigEntityBase implements FacetInterface {
   /**
    * The facet source belonging to this facet.
    *
-   * @var \Drupal\facets\FacetSource\FacetSourceInterface
+   * @var \Drupal\facets\FacetSource\FacetSourcePluginInterface
    *
    * @see getFacetSource()
    */
@@ -185,6 +185,14 @@ class Facet extends ConfigEntityBase implements FacetInterface {
    * @var object
    */
   protected $widget_plugin_manager;
+
+  /**
+   * The facet source config object.
+   *
+   * @var \Drupal\Facets\FacetSourceInterface
+   *   The facet source config object.
+   */
+  protected $facetSourceConfig;
 
   /**
    * {@inheritdoc}
@@ -371,6 +379,40 @@ class Facet extends ConfigEntityBase implements FacetInterface {
   }
 
   /**
+   * {@inheritdoc}
+   */
+  public function getFacetSourceConfig() {
+    // Return the facet source config object, if it's already set on the facet.
+    if ($this->facetSourceConfig instanceof FacetSource) {
+      return $this->facetSourceConfig;
+    }
+
+    $storage = \Drupal::entityTypeManager()->getStorage('facets_facet_source');
+    $source_id = str_replace(':', '__', $this->facet_source_id);
+
+    // Load and return the facet source config object from the storage.
+    $facet_source = $storage->load($source_id);
+    if ($facet_source instanceof FacetSource) {
+      $this->facetSourceConfig = $facet_source;
+      return $this->facetSourceConfig;
+    }
+
+    // We didn't have a facet source config entity yet for this facet source
+    // plugin, so we create it on the fly.
+    $facet_source = new FacetSource(
+      [
+        'id' => $source_id,
+        'name' => $this->facet_source_id,
+      ],
+      'facets_facet_source'
+    );
+    $facet_source->save();
+
+    $this->facetSourceConfig = $facet_source;
+    return $this->facetSourceConfig;
+  }
+
+  /**
    * Retrieves all processors supported by this facet.
    *
    * @return \Drupal\facets\Processor\ProcessorInterface[]
@@ -458,7 +500,7 @@ class Facet extends ConfigEntityBase implements FacetInterface {
           // Create our settings for this facet source..
           $config = isset($this->facetSourcePlugins[$name]) ? $this->facetSourcePlugins[$name] : [];
 
-          /* @var $facet_source \Drupal\facets\FacetSource\FacetSourceInterface */
+          /* @var $facet_source \Drupal\facets\FacetSource\FacetSourcePluginInterface */
           $facet_source = $facet_source_plugin_manager->createInstance($name, $config);
           $this->facetSourcePlugins[$name] = $facet_source;
         }

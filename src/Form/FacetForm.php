@@ -247,7 +247,7 @@ class FacetForm extends EntityForm {
     $facet_source_id = $this->getEntity()->getFacetSourceId();
 
     if (!is_null($facet_source_id) && $facet_source_id !== '') {
-      /** @var \Drupal\facets\FacetSource\FacetSourceInterface $facet_source */
+      /** @var \Drupal\facets\FacetSource\FacetSourcePluginInterface $facet_source */
       $facet_source = $this->getFacetSourcePluginManager()->createInstance($facet_source_id);
 
       if ($config_form = $facet_source->buildConfigurationForm([], $form_state, $this->getEntity(), $facet_source)) {

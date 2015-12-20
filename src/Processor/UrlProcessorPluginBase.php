@@ -7,6 +7,7 @@
 namespace Drupal\facets\Processor;
 
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
+use Drupal\facets\Exception\InvalidProcessorException;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -53,6 +54,18 @@ abstract class UrlProcessorPluginBase extends ProcessorPluginBase implements Url
   public function __construct(array $configuration, $plugin_id, $plugin_definition, Request $request) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
     $this->request = $request;
+
+    if (!isset($configuration['facet'])) {
+      throw new InvalidProcessorException();
+    }
+
+    /** @var \Drupal\facets\FacetInterface $facet */
+    $facet = $configuration['facet'];
+
+    /** @var \Drupal\facets\FacetSourceInterface $facet_source_config */
+    $facet_source_config = $facet->getFacetSourceConfig();
+
+    $this->filterKey = $facet_source_config->getFilterKey() ?: 'f';
   }
 
   /**

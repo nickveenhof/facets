@@ -10,6 +10,7 @@ namespace Drupal\facets;
 use Drupal\Core\Config\Entity\ConfigEntityInterface;
 use Drupal\Core\Config\Entity\ConfigEntityListBuilder;
 use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Link;
 
 /**
  * Builds a listing of facet entities.
@@ -134,7 +135,13 @@ class FacetListBuilder extends ConfigEntityListBuilder {
         'status' => array(
           'data' => '',
         ),
-        'operations' => array(),
+        'operations' => array(
+          'data' => Link::createFromRoute(
+            $this->t('Configure'),
+            'entity.facets_facetsource.edit_form',
+            ['source_id' => $facet_source['id']]
+          )->toRenderable(),
+        ),
       ),
       'class' => array('facet-source'),
     );
@@ -153,7 +160,7 @@ class FacetListBuilder extends ConfigEntityListBuilder {
         '#markup' => $this->t(
           'You currently have no facet sources defined. You should start by adding a facet source before creating facets.<br />
            An example of a facet source is a view based on Search API or a Search API page.
-           Other modules can also implement a facet source by providing a plugin that implements the FacetSourceInterface.'
+           Other modules can also implement a facet source by providing a plugin that implements the FacetSourcePluginInterface.'
         ),
       ];
     }

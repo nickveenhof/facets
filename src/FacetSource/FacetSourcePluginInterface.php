@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\facets\FacetSource\FacetSourceInterface.
+ * Contains \Drupal\facets\FacetSource\FacetSourcePluginInterface.
  */
 
 namespace Drupal\facets\FacetSource;
@@ -15,11 +15,11 @@ use Drupal\facets\FacetInterface;
  *
  * A facet source is used to abstract the data source where facets can be added
  * to. A good example of this is a search api view. There are other possible
- * facet data sources, these all implement the FacetSourceInterface.
+ * facet data sources, these all implement the FacetSourcePluginInterface.
  *
  * @see plugin_api
  */
-interface FacetSourceInterface {
+interface FacetSourcePluginInterface {
 
   /**
    * Adds a configuration form for this facet source.
@@ -30,10 +30,10 @@ interface FacetSourceInterface {
    *   The current form state.
    * @param \Drupal\facets\FacetInterface $facet
    *   The facet being edited.
-   * @param \Drupal\facets\FacetSource\FacetSourceInterface $facet_source
+   * @param \Drupal\facets\FacetSource\FacetSourcePluginInterface $facet_source
    *   The facet source being edited.
    */
-  public function buildConfigurationForm(array $form, FormStateInterface $form_state, FacetInterface $facet, FacetSourceInterface $facet_source);
+  public function buildConfigurationForm(array $form, FormStateInterface $form_state, FacetInterface $facet, FacetSourcePluginInterface $facet_source);
 
   /**
    * Fill in facet data in to the configured facets.
