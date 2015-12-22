@@ -5,7 +5,7 @@
  * Contains \Drupal\Tests\facets\Plugin\Processor\RawValueWidgetOrderProcessorTest.
  */
 
-namespace Drupal\Tests\facets\Unit\Plugin\Processor;
+namespace Drupal\Tests\facets\Unit\Plugin\processor;
 
 use Drupal\facets\Plugin\facets\processor\RawValueWidgetOrderProcessor;
 use Drupal\facets\Result\Result;

@@ -5,7 +5,7 @@
  * Contains \Drupal\Tests\facets\Plugin\Processor\ActiveWidgetOrderProcessorTest.
  */
 
-namespace Drupal\Tests\facets\Unit\Plugin\Processor;
+namespace Drupal\Tests\facets\Unit\Plugin\processor;
 
 use Drupal\facets\Plugin\facets\processor\ActiveWidgetOrderProcessor;
 use Drupal\facets\Result\Result;

@@ -5,7 +5,7 @@
  * Contains \Drupal\Tests\facets\Plugin\Processor\DisplayValueWidgetOrderProcessorTest.
  */
 
-namespace Drupal\Tests\facets\Unit\Plugin\Processor;
+namespace Drupal\Tests\facets\Unit\Plugin\processor;
 
 use Drupal\facets\Plugin\facets\processor\DisplayValueWidgetOrderProcessor;
 use Drupal\facets\Result\Result;

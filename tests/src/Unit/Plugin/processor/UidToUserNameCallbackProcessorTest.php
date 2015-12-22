@@ -5,7 +5,7 @@
  * Contains \Drupal\Tests\facets\Plugin\Processor\UidToUserNameCallbackProcessorTest.
  */
 
-namespace Drupal\Tests\facets\Unit\Plugin\Processor;
+namespace Drupal\Tests\facets\Unit\Plugin\processor;
 
 use Drupal\facets\Entity\Facet;
 use Drupal\facets\Plugin\facets\processor\UidToUserNameCallbackProcessor;

@@ -5,7 +5,7 @@
  * Contains \Drupal\Tests\facets\Plugin\Processor\CountWidgetOrderProcessorTest.
  */
 
-namespace Drupal\Tests\facets\Unit\Plugin\Processor;
+namespace Drupal\Tests\facets\Unit\Plugin\processor;
 
 use Drupal\facets\Plugin\facets\processor\CountWidgetOrderProcessor;
 use Drupal\facets\Result\Result;
