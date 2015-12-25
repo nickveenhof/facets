@@ -3,6 +3,11 @@ facets_processor:
   plugin_manager_service_id: plugin.manager.facets.processor
   plugin_definition_decorator_class: \Drupal\plugin\PluginDefinition\ArrayPluginDefinitionDecorator
 
+facets_url_processor:
+  label: Facets URL processor
+  plugin_manager_service_id: plugin.manager.facets.url_processor
+  plugin_definition_decorator_class: \Drupal\plugin\PluginDefinition\ArrayPluginDefinitionDecorator
+
 facets_facet_source:
   label: Facets source
   plugin_manager_service_id: plugin.manager.facets.facet_source

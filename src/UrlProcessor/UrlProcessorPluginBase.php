@@ -1,13 +1,14 @@
 <?php
 /**
  * @file
- * Contains Drupal\facets\Processor\UrlProcessorPluginBase.
+ * Contains Drupal\facets\UrlProcessor\UrlProcessorPluginBase.
  */
 
-namespace Drupal\facets\Processor;
+namespace Drupal\facets\UrlProcessor;
 
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\facets\Exception\InvalidProcessorException;
+use Drupal\facets\Processor\ProcessorPluginBase;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -56,7 +57,7 @@ abstract class UrlProcessorPluginBase extends ProcessorPluginBase implements Url
     $this->request = $request;
 
     if (!isset($configuration['facet'])) {
-      throw new InvalidProcessorException();
+      throw new InvalidProcessorException("The url processor doesn't have the required 'facet' in the configuration array.");
     }
 
     /** @var \Drupal\facets\FacetInterface $facet */

@@ -8,8 +8,11 @@
 namespace Drupal\facets\Form;
 
 use Drupal\Core\Entity\EntityForm;
+use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\facets\Entity\FacetSource;
+use Drupal\facets\UrlProcessor\UrlProcessorPluginManager;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Provides a form for editing facet sources.
@@ -20,10 +23,32 @@ use Drupal\facets\Entity\FacetSource;
 class FacetSourceEditForm extends EntityForm {
 
   /**
+   * The plugin manager for URL Processors.
+   *
+   * @var \Drupal\facets\UrlProcessor\UrlProcessorPluginManager
+   */
+  protected $urlProcessorPluginManager;
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function create(ContainerInterface $container) {
+    /** @var \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager */
+    $entity_type_manager = $container->get('entity_type.manager');
+
+    /** @var \Drupal\facets\UrlProcessor\UrlProcessorPluginManager $url_processor_plugin_manager */
+    $url_processor_plugin_manager = $container->get('plugin.manager.facets.url_processor');
+
+    return new static($entity_type_manager, $url_processor_plugin_manager);
+  }
+
+  /**
    * Constructs a FacetSourceEditForm.
    */
-  public function __construct() {
-    $facet_source_storage = \Drupal::entityTypeManager()->getStorage('facets_facet_source');
+  public function __construct(EntityTypeManagerInterface $entity_type_manager, UrlProcessorPluginManager $url_processor_plugin_manager) {
+    $facet_source_storage = $entity_type_manager->getStorage('facets_facet_source');
+
+    $this->urlProcessorPluginManager = $url_processor_plugin_manager;
 
     // Make sure we remove colons from the source id, those are disallowed in
     // the entity id.
@@ -79,6 +104,21 @@ class FacetSourceEditForm extends EntityForm {
         'The key used in the url to identify the facet source.
         When using multiple facet sources you should make sure each facet source has a different filter key.'
       ),
+    ];
+
+    $url_processors = array();
+    $url_processors_description = array();
+    foreach ($this->urlProcessorPluginManager->getDefinitions() as $definition) {
+      $url_processors[$definition['id']] = $definition['label'];
+      $url_processors_description[] = $definition['description'];
+    }
+    $form['urlProcessor'] = [
+      '#type' => 'radios',
+      '#title' => $this->t('URL Processor'),
+      '#options' => $url_processors,
+      '#default_value' => $facet_source->getUrlProcessorName(),
+      '#description' => $this->t(
+        'The URL Processor defines the url structure used for this facet source.') . '<br />- ' .  implode('<br>- ', $url_processors_description),
     ];
 
     // The parent's form build method will add a save button.

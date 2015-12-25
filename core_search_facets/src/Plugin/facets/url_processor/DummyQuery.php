@@ -2,36 +2,31 @@
 
 /**
  * @file
- * Contains Drupal\facets\Plugin\facets\url_processor\UrlProcessorQueryString.
+ * Contains Drupal\facets_query_processor\Plugin\facets\url_processor\DummyQuery.
  */
 
-namespace Drupal\facets\Plugin\facets\processor;
+namespace Drupal\facets_query_processor\Plugin\facets\url_processor;
 
 use Drupal\Core\Url;
 use Drupal\facets\FacetInterface;
-use Drupal\facets\Processor\UrlProcessorPluginBase;
+use Drupal\facets\UrlProcessor\UrlProcessorPluginBase;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
- * The basic url processor, uses query strings.
+ * Query string URL processor.
  *
- * @FacetsProcessor(
- *   id = "query_string",
- *   label = @Translation("Query string url processor"),
- *   description = @Translation("Most simple url processor which uses the query sting."),
- *   stages = {
- *     "pre_query" = 50,
- *     "build" = 15,
- *   },
- *   locked = true
+ * @FacetsUrlProcessor(
+ *   id = "dummy_query",
+ *   label = @Translation("Dummy query"),
+ *   description = @Translation("Dummy for testing.")
  * )
  */
-class QueryStringUrlProcessor extends UrlProcessorPluginBase {
+class DummyQuery extends UrlProcessorPluginBase {
 
   /**
    * A string that separates the filters in the query string.
    */
-  const SEPARATOR = ':';
+  const SEPARATOR = '||';
 
   /**
    * A string of how to represent the facet in the url.
@@ -59,7 +54,7 @@ class QueryStringUrlProcessor extends UrlProcessorPluginBase {
   /**
    * {@inheritdoc}
    */
-  public function build(FacetInterface $facet, array $results) {
+  public function buildUrls(FacetInterface $facet, array $results) {
     // Create links for all the values.
     // First get the current list of get parameters.
     $get_params = $this->request->query;
@@ -74,7 +69,7 @@ class QueryStringUrlProcessor extends UrlProcessorPluginBase {
 
     /** @var \Drupal\facets\Result\ResultInterface $result */
     foreach ($results as &$result) {
-      $filter_string = $this->url_alias . ':' . $result->getRawValue();
+      $filter_string = $this->url_alias . self::SEPARATOR . $result->getRawValue();
       $result_get_params = clone $get_params;
 
       $filter_params = $result_get_params->get($this->filterKey, [], TRUE);
@@ -108,7 +103,7 @@ class QueryStringUrlProcessor extends UrlProcessorPluginBase {
   /**
    * {@inheritdoc}
    */
-  public function preQuery(FacetInterface $facet) {
+  public function setActiveItems(FacetInterface $facet) {
     // Set the url alias from the the facet object.
     $this->url_alias = $facet->getUrlAlias();
 

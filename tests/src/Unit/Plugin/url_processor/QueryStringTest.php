@@ -2,14 +2,14 @@
 
 /**
  * @file
- * Contains \Drupal\Tests\facets\Plugin\Processor\QueryStringUrlProcessorTest.
+ * Contains \Drupal\Tests\facets\Plugin\url_processor\QueryStringTest.
  */
 
-namespace Drupal\Tests\facets\Unit\Plugin\Processor;
+namespace Drupal\Tests\facets\Unit\Plugin\url_processor;
 
 use Drupal\facets\Entity\Facet;
 use Drupal\facets\Entity\FacetSource;
-use Drupal\facets\Plugin\facets\processor\QueryStringUrlProcessor;
+use Drupal\facets\Plugin\facets\url_processor\QueryString;
 use Drupal\facets\Result\Result;
 use Drupal\Tests\UnitTestCase;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -21,12 +21,12 @@ use Symfony\Component\HttpFoundation\Request;
  *
  * @group facets
  */
-class QueryStringUrlProcessorTest extends UnitTestCase {
+class QueryStringTest extends UnitTestCase {
 
   /**
    * The processor to be tested.
    *
-   * @var \Drupal\facets\Plugin\facets\processor\QueryStringUrlProcessor
+   * @var \Drupal\facets\Plugin\facets\url_processor\QueryString
    */
   protected $processor;
 
@@ -55,6 +55,14 @@ class QueryStringUrlProcessorTest extends UnitTestCase {
   }
 
   /**
+   * Tests that the processor correctly throws an exception.
+   */
+  public function testEmptyProcessorConfiguration() {
+    $this->setExpectedException('\Drupal\facets\Exception\InvalidProcessorException', "The url processor doesn't have the required 'facet' in the configuration array.");
+    new QueryString([], 'test', [], new Request());
+  }
+
+  /**
    * Basic test with one active item.
    */
   public function testSetSingleActiveItem() {
@@ -66,8 +74,8 @@ class QueryStringUrlProcessorTest extends UnitTestCase {
     $request = new Request();
     $request->query->set('f', ['test:badger']);
 
-    $this->processor = new QueryStringUrlProcessor(['facet' => $facet], 'query_string', [], $request);
-    $this->processor->preQuery($facet);
+    $this->processor = new QueryString(['facet' => $facet], 'query_string', [], $request);
+    $this->processor->setActiveItems($facet);
 
     $this->assertEquals(['badger'], $facet->getActiveItems());
   }
@@ -84,8 +92,8 @@ class QueryStringUrlProcessorTest extends UnitTestCase {
     $request = new Request();
     $request->query->set('f', ['test:badger', 'test:mushroom', 'donkey:kong']);
 
-    $this->processor = new QueryStringUrlProcessor(['facet' => $facet], 'query_string', [], $request);
-    $this->processor->preQuery($facet);
+    $this->processor = new QueryString(['facet' => $facet], 'query_string', [], $request);
+    $this->processor->setActiveItems($facet);
 
     $this->assertEquals(['badger', 'mushroom'], $facet->getActiveItems());
   }
@@ -101,8 +109,8 @@ class QueryStringUrlProcessorTest extends UnitTestCase {
     $request = new Request();
     $request->query->set('f', []);
 
-    $this->processor = new QueryStringUrlProcessor(['facet' => $facet], 'query_string', [], $request);
-    $results = $this->processor->build($facet, []);
+    $this->processor = new QueryString(['facet' => $facet], 'query_string', [], $request);
+    $results = $this->processor->buildUrls($facet, []);
     $this->assertEmpty($results);
   }
 
@@ -118,8 +126,8 @@ class QueryStringUrlProcessorTest extends UnitTestCase {
     $request = new Request();
     $request->query->set('f', []);
 
-    $this->processor = new QueryStringUrlProcessor(['facet' => $facet], 'query_string', [], $request);
-    $results = $this->processor->build($facet, $this->originalResults);
+    $this->processor = new QueryString(['facet' => $facet], 'query_string', [], $request);
+    $results = $this->processor->buildUrls($facet, $this->originalResults);
 
     /** @var \Drupal\facets\Result\ResultInterface $r */
     foreach ($results as $r) {
@@ -143,8 +151,8 @@ class QueryStringUrlProcessorTest extends UnitTestCase {
     $request = new Request();
     $request->query->set('f', ['king:kong']);
 
-    $this->processor = new QueryStringUrlProcessor(['facet' => $facet], 'query_string', [], $request);
-    $results = $this->processor->build($facet, $original_results);
+    $this->processor = new QueryString(['facet' => $facet], 'query_string', [], $request);
+    $results = $this->processor->buildUrls($facet, $original_results);
 
     /** @var \Drupal\facets\Result\ResultInterface $r */
     foreach ($results as $k => $r) {
@@ -188,8 +196,8 @@ class QueryStringUrlProcessorTest extends UnitTestCase {
     $request = new Request();
     $request->query->set('ab', []);
 
-    $this->processor = new QueryStringUrlProcessor(['facet' => $facet], 'query_string', [], $request);
-    $results = $this->processor->build($facet, $this->originalResults);
+    $this->processor = new QueryString(['facet' => $facet], 'query_string', [], $request);
+    $results = $this->processor->buildUrls($facet, $this->originalResults);
 
     /** @var \Drupal\facets\Result\ResultInterface $r */
     foreach ($results as $r) {

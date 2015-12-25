@@ -9,6 +9,7 @@ namespace Drupal\facets\Entity;
 
 use Drupal\Core\Config\Entity\ConfigEntityBase;
 use Drupal\facets\FacetSourceInterface;
+use Drupal\facets\UrlProcessor\UrlProcessorInterface;
 
 /**
  * Defines the facet source configuration entity.
@@ -36,7 +37,8 @@ use Drupal\facets\FacetSourceInterface;
  *   config_export = {
  *     "id",
  *     "name",
- *     "filterKey"
+ *     "filterKey",
+ *     "urlProcessor"
  *   },
  *   links = {
  *     "canonical" = "/admin/config/search/facets/facet-sources/",
@@ -68,6 +70,13 @@ class FacetSource extends ConfigEntityBase implements FacetSourceInterface {
   protected $filterKey;
 
   /**
+   * The url processor name.
+   *
+   * @var string
+   */
+  protected $urlProcessor = 'query_string';
+
+  /**
    * {@inheritdoc}
    */
   public function id() {
@@ -93,6 +102,20 @@ class FacetSource extends ConfigEntityBase implements FacetSourceInterface {
    */
   public function getFilterKey() {
     return $this->filterKey;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setUrlProcessor($processor_name) {
+    $this->urlProcessor = $processor_name;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getUrlProcessorName() {
+    return $this->urlProcessor;
   }
 
 }

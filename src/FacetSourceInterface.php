@@ -38,4 +38,20 @@ interface FacetSourceInterface extends ConfigEntityInterface {
    */
   public function setFilterKey($filter_key);
 
+  /**
+   * Set the processor name to be used.
+   *
+   * @param string $processor_name
+   *   Plugin name of the url processor.
+   */
+  public function setUrlProcessor($processor_name);
+
+  /**
+   * Returns a string version of the url processor.
+   *
+   * @return string
+   *   The url processor to be used as a string.
+   */
+  public function getUrlProcessorName();
+
 }

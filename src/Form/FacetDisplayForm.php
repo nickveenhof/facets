@@ -14,6 +14,7 @@ use Drupal\Core\Entity\EntityTypeManager;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\facets\Processor\ProcessorInterface;
 use Drupal\facets\Processor\ProcessorPluginManager;
+use Drupal\facets\UrlProcessor\UrlProcessorInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Drupal\facets\Widget\WidgetPluginManager;
 use Drupal\facets\Processor\WidgetOrderProcessorInterface;
@@ -219,7 +220,7 @@ class FacetDisplayForm extends EntityForm {
       ),
     );
     foreach ($all_processors as $processor_id => $processor) {
-      if (!($processor instanceof WidgetOrderProcessorInterface)) {
+      if (!($processor instanceof WidgetOrderProcessorInterface) && !($processor instanceof UrlProcessorInterface)) {
         $clean_css_id = Html::cleanCssIdentifier($processor_id);
         $form['facet_settings'][$processor_id]['status'] = array(
           '#type' => 'checkbox',

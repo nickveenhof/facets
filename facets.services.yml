@@ -11,6 +11,9 @@ services:
   plugin.manager.facets.processor:
     class: Drupal\facets\Processor\ProcessorPluginManager
     arguments: ['@container.namespaces', '@cache.discovery', '@module_handler', '@string_translation']
+  plugin.manager.facets.url_processor:
+    class: Drupal\facets\UrlProcessor\UrlProcessorPluginManager
+    parent: default_plugin_manager
   facets.manager:
     class: Drupal\facets\FacetManager\DefaultFacetManager
     arguments:

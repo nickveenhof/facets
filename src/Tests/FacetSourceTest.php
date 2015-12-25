@@ -29,11 +29,17 @@ class FacetSourceTest extends FacetWebTestBase {
     $this->clickLink($this->t('Configure'));
 
     // Test the edit page.
+    $edit = array(
+      'filterKey' => 'fq',
+      'urlProcessor' => 'query_string',
+    );
     $this->assertField('filterKey');
-    $this->drupalPostForm(NULL, array('filterKey' => 'fq'), $this->t('Save'));
+    $this->assertField('urlProcessor');
+    $this->drupalPostForm(NULL, $edit, $this->t('Save'));
 
     // Test that saving worked.
     $this->assertField('filterKey');
+    $this->assertField('urlProcessor');
     $this->assertRaw('fq');
   }
 
