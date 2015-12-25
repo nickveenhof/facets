@@ -3,8 +3,6 @@
 /**
  * @file
  * Contains Drupal\facets\Plugin\Block\FacetBlock.
- *
- * NOTE: There should be a facetblock or settings for the facets later.
  */
 
 namespace Drupal\facets\Plugin\Block;
@@ -12,6 +10,7 @@ namespace Drupal\facets\Plugin\Block;
 use Drupal\Core\Block\BlockBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
+use Drupal\Core\Plugin\PluginBase;
 use Drupal\facets\FacetManager\DefaultFacetManager;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -19,17 +18,14 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * Provides a 'FacetBlock' block.
  *
  * @Block(
- *  id = "facet_block",
- *  admin_label = @Translation("Facet block"),
- *  context = {
- *    "facet" = @ContextDefinition("entity:facets_facet", label=@Translation("Facet"))
- *  }
+ *   id = "facet_block",
+ *   deriver = "Drupal\facets\Plugin\block\FacetBlockDeriver"
  * )
  */
 class FacetBlock extends BlockBase implements ContainerFactoryPluginInterface {
 
   /**
-   * The facet_manager plugin manager.
+   * The facet manager service.
    *
    * @var DefaultFacetManager
    */
@@ -72,8 +68,15 @@ class FacetBlock extends BlockBase implements ContainerFactoryPluginInterface {
    * {@inheritdoc}
    */
   public function build() {
-    /** @var Facet $facet */
-    $facet = $this->getContextValue('facet');
+    $em = \Drupal::getContainer()->get('entity_type.manager');
+
+    // The id saved in the configuration is in the format of
+    // base_plugin:facet_id. We're splitting that to get to the facet id.
+    $facet_mapping = $this->configuration['id'];
+    $facet_id = explode(PluginBase::DERIVATIVE_SEPARATOR, $facet_mapping)[1];
+
+    /** @var \Drupal\facets\FacetInterface $facet */
+    $facet = $em->getStorage('facets_facet')->load($facet_id);
 
     // Let the facet_manager build the facets.
     $build = $this->facetManager->build($facet);
@@ -108,19 +111,15 @@ class FacetBlock extends BlockBase implements ContainerFactoryPluginInterface {
    * {@inheritdoc}
    */
   public function calculateDependencies() {
-    $facet_context_mapping = $this->configuration['context_mapping']['facet'];
-    $facet_id = explode(':', $facet_context_mapping)[1];
-
     $em = \Drupal::getContainer()->get('entity_type.manager');
 
+    // The id saved in the configuration is in the format of
+    // base_plugin:facet_id. We're splitting that to get to the facet id.
+    $facet_mapping = $this->configuration['id'];
+    $facet_id = explode(PluginBase::DERIVATIVE_SEPARATOR, $facet_mapping)[1];
+
     /** @var \Drupal\facets\FacetInterface $facet */
-    $facets = $em->getStorage('facets_facet')
-      ->loadByProperties(['uuid' => $facet_id]);
-
-    $keys = array_keys($facets);
-
-    $facet = $facets[$keys[0]];
-
+    $facet = $em->getStorage('facets_facet')->load($facet_id);
     $config_name = $facet->getConfigDependencyName();
 
     return ['config' => [$config_name]];

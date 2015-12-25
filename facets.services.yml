@@ -19,9 +19,3 @@ services:
       - '@plugin.manager.facets.facet_source'
       - '@plugin.manager.facets.processor'
       - '@entity_type.manager'
-
-  facets.facet_context:
-    class: Drupal\facets\ContextProvider\FacetContextProvider
-    arguments: ['@entity_type.manager']
-    tags:
-      - { name: context_provider }

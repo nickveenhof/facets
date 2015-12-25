@@ -17,13 +17,6 @@ use \Drupal\facets\Tests\WebTestBase as FacetWebTestBase;
 class IntegrationTest extends FacetWebTestBase {
 
   /**
-   * The submitted block values used by this test.
-   *
-   * @var array
-   */
-  protected $blockValues;
-
-  /**
    * The block entities used by this test.
    *
    * @var \Drupal\block\BlockInterface[]
@@ -242,25 +235,15 @@ class IntegrationTest extends FacetWebTestBase {
   protected function createFacetBlock($id) {
     // Create a block. Load the entity to obtain the uuid when creating the
     // block.
-    $facet = \Drupal::service('entity_type.manager')->getStorage('facets_facet')->load($id);
-    $this->blockValues = [
-      [
-        'label' => 'Facet Block',
-        'tr' => '16',
-        'plugin_id' => 'facet_block',
-        'settings' => [
-          'region' => 'footer',
-          'id' => str_replace('_', '-', $id),
-          'context_mapping' => [
-            'facet' => '@facets.facet_context:' . $facet->uuid(),
-          ],
-        ],
-        'test_weight' => '0',
-      ],
+
+    $block = [
+      'plugin_id' => 'facet_block:' . $id,
+      'settings' => [
+        'region' => 'footer',
+        'id' => str_replace('_', '-', $id),
+      ]
     ];
-    foreach ($this->blockValues as $values) {
-      $this->blocks[$id] = $this->drupalPlaceBlock($values['plugin_id'], $values['settings']);
-    }
+    $this->blocks[$id] = $this->drupalPlaceBlock($block['plugin_id'], $block['settings']);
   }
 
   /**
