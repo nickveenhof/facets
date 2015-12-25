@@ -342,7 +342,7 @@ class FacetForm extends EntityForm {
 
     if ($is_new) {
       if (\Drupal::moduleHandler()->moduleExists('block')) {
-        $message = $this->t('Facet %name has been created. Go to the <a href=":block_overview">Block overview page</a> and add a new "Facet block". If this is your first and only facet, just adding that block make it link to this facet, if you have addded more facets already, please make sure to select the correct Facet to render.', ['%name' => $facet->getName(), ':block_overview' => \Drupal::urlGenerator()->generateFromRoute('block.admin_display')]);
+        $message = $this->t('Facet %name has been created. Go to the <a href=":block_overview">Block overview page</a> to place the new block in the desired region.', ['%name' => $facet->getName(), ':block_overview' => \Drupal::urlGenerator()->generateFromRoute('block.admin_display')]);
         drupal_set_message($message);
         $form_state->setRedirect('entity.facets_facet.display_form', ['facets_facet' => $facet->id()]);
       }
