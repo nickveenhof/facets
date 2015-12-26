@@ -74,16 +74,14 @@ class UrlIntegrationTest extends FacetWebTestBase {
     ];
     $this->drupalPostForm(NULL, $edit, $this->t('Save'));
 
-    /** @var \Drupal\facets\FacetInterface $facet */
-    $facet = \Drupal::service('entity_type.manager')->getStorage('facets_facet')->load($id);
     $block_values = [
-      'region' => 'footer',
-      'id' => str_replace('_', '-', $id),
-      'context_mapping' => [
-        'facet' => '@facets.facet_context:' . $facet->uuid(),
-      ],
+      'plugin_id' => 'facet_block:' . $id,
+      'settings' => [
+        'region' => 'footer',
+        'id' => str_replace('_', '-', $id),
+      ]
     ];
-    $this->drupalPlaceBlock('facet_block', $block_values);
+    $this->drupalPlaceBlock($block_values['plugin_id'], $block_values['settings']);
 
     $this->drupalGet('search-api-test-fulltext');
     $this->assertResponse(200);
