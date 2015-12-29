@@ -60,6 +60,8 @@ class IntegrationTest extends FacetWebTestBase {
    * Tests various operations via the Facets' admin UI.
    */
   public function testFramework() {
+    $facet_name = "Test Facet name";
+    $facet_id = 'test_facet_name';
 
     // Make sure we're logged in with a user that has sufficient permissions.
     $this->drupalLogin($this->adminUser);
@@ -68,15 +70,15 @@ class IntegrationTest extends FacetWebTestBase {
     $this->checkEmptyOverview();
 
     // Add a new facet and edit it.
-    $this->addFacet("Test Facet name");
-    $this->editFacet("Test Facet name");
+    $this->addFacet($facet_name);
+    $this->editFacet($facet_name);
 
     // By default, the view should show all entities.
     $this->drupalGet('search-api-test-fulltext');
     $this->assertText('Displaying 5 search results', 'The search view displays the correct number of results.');
 
     // Create and place a block for "Test Facet name" facet.
-    $this->createFacetBlock('test_facet_name');
+    $this->createFacetBlock($facet_id);
 
     // Verify that the facet results are correct.
     $this->drupalGet('search-api-test-fulltext');
@@ -88,8 +90,8 @@ class IntegrationTest extends FacetWebTestBase {
 
     // Show the facet only when the facet source is visible.
     // @TODO Only for SearchApiViewsPage for the moment.
-    $this->setOptionShowOnlyWhenFacetSourceVisible("Test Facet name");
-    $this->goToDeleteFacetPage("Test Facet Name");
+    $this->setOptionShowOnlyWhenFacetSourceVisible($facet_name);
+    $this->goToDeleteFacetPage($facet_name);
     $this->assertNoText('item');
     $this->assertNoText('article');
 
@@ -103,16 +105,16 @@ class IntegrationTest extends FacetWebTestBase {
     $this->assertNoFacetBlocksAppear();
 
     // Verify that the "empty_text" appears as expected.
-    $this->setEmptyBehaviorFacetText("Test Facet name");
+    $this->setEmptyBehaviorFacetText($facet_name);
     $this->drupalGet('search-api-test-fulltext');
     $this->assertRaw('block-test-facet-name');
     $this->assertRaw('No results found for this block!');
 
     // Delete the block.
-    $this->deleteBlock('test_facet_name');
+    $this->deleteBlock($facet_id);
 
     // Delete the facet and make sure the overview is empty again.
-    $this->deleteUnusedFacet("Test Facet name");
+    $this->deleteUnusedFacet($facet_name);
     $this->checkEmptyOverview();
   }
 
