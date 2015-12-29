@@ -59,10 +59,10 @@ class UrlIntegrationTest extends FacetWebTestBase {
       'status' => 1,
       'url_alias' => $id,
       'name' => $name,
-      'facet_source_id' => 'search_api_views:search_api_test_views_fulltext:page_1',
-      'facet_source_configs[search_api_views:search_api_test_views_fulltext:page_1][field_identifier]' => 'type',
+      'facet_source_id' => 'search_api_views:search_api_test_view:page_1',
+      'facet_source_configs[search_api_views:search_api_test_view:page_1][field_identifier]' => 'type',
     ];
-    $this->drupalPostForm(NULL, ['facet_source_id' => 'search_api_views:search_api_test_views_fulltext:page_1'], $this->t('Configure facet source'));
+    $this->drupalPostForm(NULL, ['facet_source_id' => 'search_api_views:search_api_test_view:page_1'], $this->t('Configure facet source'));
     $this->drupalPostForm(NULL, $form_values, $this->t('Save'));
 
     // Go to the only enabled facet source's config.

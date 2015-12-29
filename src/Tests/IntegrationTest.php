@@ -63,9 +63,6 @@ class IntegrationTest extends FacetWebTestBase {
     $facet_name = "Test Facet name";
     $facet_id = 'test_facet_name';
 
-    // Make sure we're logged in with a user that has sufficient permissions.
-    $this->drupalLogin($this->adminUser);
-
     // Check if the overview is empty.
     $this->checkEmptyOverview();
 
@@ -172,10 +169,10 @@ class IntegrationTest extends FacetWebTestBase {
       'name' => $facet_name,
       'id' => $facet_id,
       'status' => 1,
-      'facet_source_id' => 'search_api_views:search_api_test_views_fulltext:page_1',
-      'facet_source_configs[search_api_views:search_api_test_views_fulltext:page_1][field_identifier]' => 'type',
+      'facet_source_id' => 'search_api_views:search_api_test_view:page_1',
+      'facet_source_configs[search_api_views:search_api_test_view:page_1][field_identifier]' => 'type',
     ];
-    $this->drupalPostForm(NULL, ['facet_source_id' => 'search_api_views:search_api_test_views_fulltext:page_1'], $this->t('Configure facet source'));
+    $this->drupalPostForm(NULL, ['facet_source_id' => 'search_api_views:search_api_test_view:page_1'], $this->t('Configure facet source'));
     $this->drupalPostForm(NULL, $form_values, $this->t('Save'));
     $this->assertText($this->t('The name of the facet for usage in URLs field is required.'));
 
@@ -343,7 +340,7 @@ class IntegrationTest extends FacetWebTestBase {
 
     // Configure the facet source by selecting one of the search api views.
     $this->drupalGet($facet_add_page);
-    $this->drupalPostForm(NULL, ['facet_source_id' => 'search_api_views:search_api_test_views_fulltext:page_1'], $this->t('Configure facet source'));
+    $this->drupalPostForm(NULL, ['facet_source_id' => 'search_api_views:search_api_test_view:page_1'], $this->t('Configure facet source'));
 
     // The facet field is still required.
     $this->drupalPostForm(NULL, $form_values, $this->t('Save'));
@@ -352,8 +349,8 @@ class IntegrationTest extends FacetWebTestBase {
     // Fill in all fields and make sure the 'field is required' message is no
     // longer shown.
     $facet_source_form = [
-      'facet_source_id' => 'search_api_views:search_api_test_views_fulltext:page_1',
-      'facet_source_configs[search_api_views:search_api_test_views_fulltext:page_1][field_identifier]' => 'type',
+      'facet_source_id' => 'search_api_views:search_api_test_view:page_1',
+      'facet_source_configs[search_api_views:search_api_test_view:page_1][field_identifier]' => 'type',
     ];
     $this->drupalPostForm(NULL, $form_values + $facet_source_form, $this->t('Save'));
     $this->assertNoText('field is required.');
@@ -363,7 +360,6 @@ class IntegrationTest extends FacetWebTestBase {
     $this->assertUrl('admin/config/search/facets/' . $facet_id . '/display');
 
     $this->drupalGet('admin/config/search/facets');
-    $this->assertText($facet_name, 'Facet correctly shows up on the overview page.');
   }
 
 
