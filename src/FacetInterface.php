@@ -72,7 +72,7 @@ interface FacetInterface extends ConfigEntityInterface {
   /**
    * Gets the name of the facet for use in the URL.
    *
-   * @param string $url_parameter
+   * @return string
    */
   public function getUrlAlias();
 
