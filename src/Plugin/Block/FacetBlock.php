@@ -19,7 +19,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  *
  * @Block(
  *   id = "facet_block",
- *   deriver = "Drupal\facets\Plugin\block\FacetBlockDeriver"
+ *   deriver = "Drupal\facets\Plugin\Block\FacetBlockDeriver"
  * )
  */
 class FacetBlock extends BlockBase implements ContainerFactoryPluginInterface {
