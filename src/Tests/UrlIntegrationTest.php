@@ -39,6 +39,7 @@ class UrlIntegrationTest extends FacetWebTestBase {
 
     $this->drupalLogin($this->adminUser);
 
+    $this->setUpExampleStructure();
     $this->insertExampleContent();
     $this->assertEqual($this->indexItems($this->indexId), 5, '5 items were indexed.');
   }
@@ -59,7 +60,7 @@ class UrlIntegrationTest extends FacetWebTestBase {
       'url_alias' => $id,
       'name' => $name,
       'facet_source_id' => 'search_api_views:search_api_test_views_fulltext:page_1',
-      'facet_source_configs[search_api_views:search_api_test_views_fulltext:page_1][field_identifier]' => 'entity:entity_test/type',
+      'facet_source_configs[search_api_views:search_api_test_views_fulltext:page_1][field_identifier]' => 'type',
     ];
     $this->drupalPostForm(NULL, ['facet_source_id' => 'search_api_views:search_api_test_views_fulltext:page_1'], $this->t('Configure facet source'));
     $this->drupalPostForm(NULL, $form_values, $this->t('Save'));

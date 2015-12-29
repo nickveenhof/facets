@@ -24,6 +24,19 @@ class IntegrationTest extends FacetWebTestBase {
   protected $blocks;
 
   /**
+   * {@inheritdoc}
+   */
+  public function setUp() {
+    parent::setUp();
+
+    $this->drupalLogin($this->adminUser);
+
+    $this->setUpExampleStructure();
+    $this->insertExampleContent();
+    $this->assertEqual($this->indexItems($this->indexId), 5, '5 items were indexed.');
+  }
+
+  /**
    * Tests Facets' permissions.
    */
   public function testOverviewPermissions() {
@@ -58,12 +71,8 @@ class IntegrationTest extends FacetWebTestBase {
     $this->addFacet("Test Facet name");
     $this->editFacet("Test Facet name");
 
-    // Insert Content and index it.
-    $this->insertExampleContent();
-    $this->assertEqual($this->indexItems($this->indexId), 5, '5 items were indexed.');
-
-    $this->drupalGet('search-api-test-fulltext');
     // By default, the view should show all entities.
+    $this->drupalGet('search-api-test-fulltext');
     $this->assertText('Displaying 5 search results', 'The search view displays the correct number of results.');
 
     // Create and place a block for "Test Facet name" facet.
@@ -162,7 +171,7 @@ class IntegrationTest extends FacetWebTestBase {
       'id' => $facet_id,
       'status' => 1,
       'facet_source_id' => 'search_api_views:search_api_test_views_fulltext:page_1',
-      'facet_source_configs[search_api_views:search_api_test_views_fulltext:page_1][field_identifier]' => 'entity:entity_test/type',
+      'facet_source_configs[search_api_views:search_api_test_views_fulltext:page_1][field_identifier]' => 'type',
     ];
     $this->drupalPostForm(NULL, ['facet_source_id' => 'search_api_views:search_api_test_views_fulltext:page_1'], $this->t('Configure facet source'));
     $this->drupalPostForm(NULL, $form_values, $this->t('Save'));
@@ -173,9 +182,6 @@ class IntegrationTest extends FacetWebTestBase {
     $this->assertRaw(t('Facet %name has been created.', ['%name' => $facet_name]));
 
     $this->createFacetBlock($facet_id);
-
-    $this->insertExampleContent();
-    $this->assertEqual($this->indexItems($this->indexId), 5, '5 items were indexed.');
 
     $this->drupalGet('search-api-test-fulltext');
     $this->assertLink('item');
@@ -233,9 +239,6 @@ class IntegrationTest extends FacetWebTestBase {
    *   The id of the block.
    */
   protected function createFacetBlock($id) {
-    // Create a block. Load the entity to obtain the uuid when creating the
-    // block.
-
     $block = [
       'plugin_id' => 'facet_block:' . $id,
       'settings' => [
@@ -348,7 +351,7 @@ class IntegrationTest extends FacetWebTestBase {
     // longer shown.
     $facet_source_form = [
       'facet_source_id' => 'search_api_views:search_api_test_views_fulltext:page_1',
-      'facet_source_configs[search_api_views:search_api_test_views_fulltext:page_1][field_identifier]' => 'entity:entity_test/type',
+      'facet_source_configs[search_api_views:search_api_test_views_fulltext:page_1][field_identifier]' => 'type',
     ];
     $this->drupalPostForm(NULL, $form_values + $facet_source_form, $this->t('Save'));
     $this->assertNoText('field is required.');
@@ -356,6 +359,9 @@ class IntegrationTest extends FacetWebTestBase {
     // Make sure that the redirection to the display page is correct.
     $this->assertRaw(t('Facet %name has been created.', ['%name' => $facet_name]));
     $this->assertUrl('admin/config/search/facets/' . $facet_id . '/display');
+
+    $this->drupalGet('admin/config/search/facets');
+    $this->assertText($facet_name, 'Facet correctly shows up on the overview page.');
   }
 
 

@@ -103,10 +103,6 @@ abstract class WebTestBase extends SimpletestWebTestBase {
 
     // Get the URL generator.
     $this->urlGenerator = $this->container->get('url_generator');
-
-    $this->setUpExampleStructure();
-
-    \Drupal::getContainer()->get('search_api.index_task_manager')->addItemsAll(Index::load($this->indexId));
   }
 
   /**
