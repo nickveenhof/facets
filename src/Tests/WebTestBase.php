@@ -11,7 +11,6 @@ use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\search_api\Entity\Index;
 use Drupal\search_api\Entity\Server;
 use Drupal\simpletest\WebTestBase as SimpletestWebTestBase;
-use Drupal\search_api\Utility;
 
 /**
  * Provides the base class for web tests for Search API.
