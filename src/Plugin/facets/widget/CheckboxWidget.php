@@ -48,7 +48,7 @@ class CheckboxWidget implements WidgetInterface {
     $results = $facet->getResults();
     $items = [];
 
-    $configuration = $facet->get('widget_configs');
+    $configuration = $facet->getWidgetConfigs();
     $show_numbers = (bool) $configuration['show_numbers'];
 
     foreach ($results as $result) {

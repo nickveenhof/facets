@@ -195,14 +195,13 @@ class FacetDisplayForm extends EntityForm {
     else {
       $all_processors = $form_state->get('processors');
     }
+    $enabled_processors = $facet->getProcessors(TRUE);
 
     $stages = $this->processorPluginManager->getProcessingStages();
     $processors_by_stage = array();
     foreach ($stages as $stage => $definition) {
       $processors_by_stage[$stage] = $facet->getProcessorsByStage($stage, FALSE);
     }
-
-    $processor_settings = $facet->getOption('processors');
 
     $form['#tree'] = TRUE;
     $form['#attached']['library'][] = 'search_api/drupal.search_api.index-active-formatters';
@@ -225,7 +224,7 @@ class FacetDisplayForm extends EntityForm {
         $form['facet_settings'][$processor_id]['status'] = array(
           '#type' => 'checkbox',
           '#title' => (string) $processor->getPluginDefinition()['label'],
-          '#default_value' => $processor->isLocked() || !empty($processor_settings[$processor_id]),
+          '#default_value' => $processor->isLocked() || !empty($processor->configuration['enabled']),
           '#description' => $processor->getDescription(),
           '#attributes' => array(
             'class' => array(
@@ -281,7 +280,7 @@ class FacetDisplayForm extends EntityForm {
         $form['facet_sorting'][$processor_id]['status'] = array(
           '#type' => 'checkbox',
           '#title' => (string) $processor->getPluginDefinition()['label'],
-          '#default_value' => $processor->isLocked() || !empty($processor_settings[$processor_id]),
+          '#default_value' => $processor->isLocked() || !empty($enabled_processors[$processor_id]),
           '#description' => $processor->getDescription(),
           '#attributes' => array(
             'class' => array(
@@ -328,7 +327,7 @@ class FacetDisplayForm extends EntityForm {
     ];
 
     // Behavior for empty facets.
-    $empty_behavior_config = $facet->getOption('empty_behavior');
+    $empty_behavior_config = $facet->getEmptyBehavior();
     $form['facet_settings']['empty_behavior'] = [
       '#type' => 'radios',
       '#title' => t('Empty facet behavior'),
@@ -470,7 +469,6 @@ class FacetDisplayForm extends EntityForm {
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
     $values = $form_state->getValues();
-    $new_settings = array();
 
     // Store processor settings.
     // @todo Go through all available processors, enable/disable with method on
@@ -483,16 +481,17 @@ class FacetDisplayForm extends EntityForm {
     foreach ($processors as $processor_id => $processor) {
       $form_container_key = $processor instanceof WidgetOrderProcessorInterface ? 'facet_sorting' : 'facet_settings';
       if (empty($values[$form_container_key][$processor_id]['status'])) {
+        $facet->removeProcessor($processor_id);
         continue;
       }
-      $new_settings[$processor_id] = array(
+      $new_settings = array(
         'processor_id' => $processor_id,
         'weights' => array(),
         'settings' => array(),
       );
       $processor_values = $values[$form_container_key][$processor_id];
       if (!empty($processor_values['weights'])) {
-        $new_settings[$processor_id]['weights'] = $processor_values['weights'];
+        $new_settings['weights'] = $processor_values['weights'];
       }
       if (isset($form[$form_container_key][$processor_id]['settings'])) {
         $processor_form_state = new SubFormState(
@@ -500,16 +499,14 @@ class FacetDisplayForm extends EntityForm {
           array($form_container_key, $processor_id, 'settings')
         );
         $processor->submitConfigurationForm($form[$form_container_key][$processor_id]['settings'], $processor_form_state, $facet);
-        $new_settings[$processor_id]['settings'] = $processor->getConfiguration();
+        $new_settings['settings'] = $processor->getConfiguration();
       }
+      $facet->addProcessor($new_settings);
     }
 
-    // Sort the processors so we won't have unnecessary changes.
-    ksort($new_settings);
-    $facet->setOption('processors', $new_settings);
     $facet->setWidget($form_state->getValue('widget'));
-    $facet->set('widget_configs', $form_state->getValue('widget_configs'));
-    $facet->set('only_visible_when_facet_source_is_visible', $form_state->getValue(['facet_settings', 'only_visible_when_facet_source_is_visible']));
+    $facet->setWidgetConfigs($form_state->getValue('widget_configs'));
+    $facet->setOnlyVisibleWhenFacetSourceIsVisible($form_state->getValue(['facet_settings', 'only_visible_when_facet_source_is_visible']));
 
     $empty_behavior_config = [];
     $empty_behavior = $form_state->getValue(['facet_settings', 'empty_behavior']);
@@ -528,7 +525,7 @@ class FacetDisplayForm extends EntityForm {
         'value',
       ]);
     }
-    $facet->setOption('empty_behavior', $empty_behavior_config);
+    $facet->setEmptyBehavior($empty_behavior_config);
 
     $facet->save();
     drupal_set_message(t('Facet %name has been updated.', ['%name' => $facet->getName()]));

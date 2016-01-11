@@ -73,7 +73,7 @@ class LinksWidgetTest extends UnitTestCase {
   public function testNoFilterResults() {
     $facet = new Facet([], 'facet');
     $facet->setResults($this->originalResults);
-    $facet->set('widget_configs', ['show_numbers' => 1]);
+    $facet->setWidgetConfigs(['show_numbers' => 1]);
 
     $output = $this->widget->build($facet);
 
@@ -95,7 +95,7 @@ class LinksWidgetTest extends UnitTestCase {
 
     $facet = new Facet([], 'facet');
     $facet->setResults($original_results);
-    $facet->set('widget_configs', ['show_numbers' => 1]);
+    $facet->setWidgetConfigs(['show_numbers' => 1]);
 
     $output = $this->widget->build($facet);
 
@@ -118,7 +118,7 @@ class LinksWidgetTest extends UnitTestCase {
 
     $facet = new Facet([], 'facet');
     $facet->setResults($original_results);
-    $facet->set('widget_configs', ['show_numbers' => 1]);
+    $facet->setWidgetConfigs(['show_numbers' => 1]);
 
     $output = $this->widget->build($facet);
 
@@ -145,7 +145,7 @@ class LinksWidgetTest extends UnitTestCase {
 
     $facet = new Facet([], 'facet');
     $facet->setResults($original_results);
-    $facet->set('widget_configs', ['show_numbers' => 0]);
+    $facet->setWidgetConfigs(['show_numbers' => 0]);
 
     $output = $this->widget->build($facet);
 
@@ -159,7 +159,7 @@ class LinksWidgetTest extends UnitTestCase {
 
     // Enable the 'show_numbers' setting again to make sure that the switch
     // between those settings works.
-    $facet->set('widget_configs', ['show_numbers' => 1]);
+    $facet->setWidgetConfigs(['show_numbers' => 1]);
 
     $output = $this->widget->build($facet);
 

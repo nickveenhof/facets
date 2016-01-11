@@ -11,6 +11,8 @@ use Drupal\Component\Plugin\PluginBase;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Drupal\Facets\FacetInterface;
+use Drupal\Core\Form\FormStateInterface;
+
 
 /**
  * Defines a base class from which other facet sources may extend.
@@ -100,6 +102,15 @@ abstract class FacetSourcePluginBase extends PluginBase implements FacetSourcePl
    */
   public function getSearchKeys() {
     return $this->keys;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function submitConfigurationForm(FormStateInterface $form_state, FacetInterface &$facet) {
+    $facet_source_id = $facet->getFacetSourceId();
+    $field_identifier = $form_state->getValue('facet_source_configs')[$facet_source_id]['field_identifier'];
+    $facet->setFieldIdentifier($field_identifier);
   }
 
 }

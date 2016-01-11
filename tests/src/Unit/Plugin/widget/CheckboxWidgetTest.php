@@ -96,7 +96,7 @@ class CheckboxWidgetTest extends UnitTestCase {
   public function testShowAmount() {
     $facet = new Facet([], 'facet');
     $facet->setResults($this->originalResults);
-    $facet->set('widget_configs', ['show_numbers' => 1]);
+    $facet->setWidgetConfigs(['show_numbers' => 1]);
 
     $output = $this->widget->build($facet);
 

@@ -91,6 +91,14 @@ class ExcludeSpecifiedItemsProcessorTest extends UnitTestCase {
         ],
       ],
     ]);
+    $facet->addProcessor([
+      'processor_id' => 'exclude_specified_items',
+      'weights' => [],
+      'settings' => [
+        'exclude' => 'alpaca',
+        'regex' => 0,
+      ],
+    ]);
     $this->processor->setConfiguration([
       'exclude' => 'alpaca',
       'regex' => 0,
@@ -112,6 +120,14 @@ class ExcludeSpecifiedItemsProcessorTest extends UnitTestCase {
           'exclude' => 'llama',
           'regex' => 0,
         ],
+      ],
+    ]);
+    $facet->addProcessor([
+      'processor_id' => 'exclude_specified_items',
+      'weights' => [],
+      'settings' => [
+        'exclude' => 'alpaca',
+        'regex' => 0,
       ],
     ]);
     $this->processor->setConfiguration([
@@ -141,6 +157,14 @@ class ExcludeSpecifiedItemsProcessorTest extends UnitTestCase {
           'exclude' => $regex,
           'regex' => 1,
         ],
+      ],
+    ]);
+    $facet->addProcessor([
+      'processor_id' => 'exclude_specified_items',
+      'weights' => [],
+      'settings' => [
+        'exclude' => 'alpaca',
+        'regex' => 0,
       ],
     ]);
     $this->processor->setConfiguration([

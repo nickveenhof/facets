@@ -78,10 +78,10 @@ class CountLimitProcessorTest extends UnitTestCase {
   public function testNoFilter() {
     $facet = new Facet([], 'facet');
     $facet->setResults($this->originalResults);
-    $facet->setOption('processors', [
-      'count_limit' => [
-        'settings' => ['minimum_items' => 4],
-      ],
+    $facet->addProcessor([
+      'processor_id' => 'count_limit',
+      'weights' => [],
+      'settings' => ['minimum_items' => 4],
     ]);
     $this->processor->setConfiguration(['minimum_items' => 4]);
     $sorted_results = $this->processor->build($facet, $this->originalResults);
@@ -99,10 +99,10 @@ class CountLimitProcessorTest extends UnitTestCase {
   public function testMinEqualsValue() {
     $facet = new Facet([], 'facet');
     $facet->setResults($this->originalResults);
-    $facet->setOption('processors', [
-      'count_limit' => [
-        'settings' => ['minimum_items' => 5],
-      ],
+    $facet->addProcessor([
+      'processor_id' => 'count_limit',
+      'weights' => [],
+      'settings' => ['minimum_items' => 5],
     ]);
     $this->processor->setConfiguration(['minimum_items' => 5]);
 
@@ -121,8 +121,10 @@ class CountLimitProcessorTest extends UnitTestCase {
   public function testBetweenMinAndMaxValue() {
     $facet = new Facet([], 'facet');
     $facet->setResults($this->originalResults);
-    $facet->setOption('processors', [
-      'count_limit' => [],
+    $facet->addProcessor([
+      'processor_id' => 'count_limit',
+      'weights' => [],
+      'settings' => [],
     ]);
 
     $this->processor->setConfiguration(['minimum_items' => 6, 'maximum_items' => 14]);
@@ -145,8 +147,10 @@ class CountLimitProcessorTest extends UnitTestCase {
   public function testMaxValue() {
     $facet = new Facet([], 'facet');
     $facet->setResults($this->originalResults);
-    $facet->setOption('processors', [
-      'count_limit' => [],
+    $facet->addProcessor([
+      'processor_id' => 'count_limit',
+      'weights' => [],
+      'settings' => [],
     ]);
 
     $this->processor->setConfiguration(['maximum_items' => 14]);
@@ -173,10 +177,10 @@ class CountLimitProcessorTest extends UnitTestCase {
   public function testFilterResults() {
     $facet = new Facet([], 'facet');
     $facet->setResults($this->originalResults);
-    $facet->setOption('processors', [
-      'count_limit' => [
-        'settings' => ['minimum_items' => 8],
-      ],
+    $facet->addProcessor([
+      'processor_id' => 'count_limit',
+      'weights' => [],
+      'settings' => ['minimum_items' => 8],
     ]);
     $this->processor->setConfiguration(['minimum_items' => 8]);
 

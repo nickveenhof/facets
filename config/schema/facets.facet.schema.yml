@@ -28,7 +28,20 @@ facets.facet.*:
       label: 'Query Type Name'
     widget:
       type: string
-      label: 'Field identifier'
+      label: 'Widget identifier'
+    empty_behavior:
+      type: mapping
+      label: 'Empty behavior'
+      mapping:
+        behavior:
+          type: string
+          label: 'The empty behavior identifier'
+        text_format:
+          type: string
+          label: 'Text format'
+        text:
+          type: string
+          label: 'Text'
     widget_configs:
       type: sequence
       label: 'Widget plugin configurations'
@@ -56,3 +69,9 @@ facets.facet.*:
               label: 'The processor''s weight for this stage'
           settings:
             type: plugin.plugin_configuration.facets_processor.[%parent.processor_id]
+    facet_configs:
+      type: sequence
+      label: 'Facet plugin-specific options'
+      sequence:
+        type: plugin.plugin_configuration.facets_facet_options.[%key]
+        label: 'Facet plugin options'

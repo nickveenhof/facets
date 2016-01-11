@@ -286,4 +286,61 @@ interface FacetInterface extends ConfigEntityInterface {
    */
   public function getOnlyVisibleWhenFacetSourceIsVisible();
 
+  /**
+   * Enabled a processor for this facet.
+   *
+   * @param array $processor
+   */
+  public function addProcessor(array $processor);
+
+  /**
+   * Disable a processor for this facet.
+   *
+   * @param string $processor_id
+   */
+  public function removeProcessor($processor_id);
+
+  /**
+   * Define the no-results behavior.
+   *
+   * @param array $behavior
+   */
+  public function setEmptyBehavior($behavior);
+
+  /**
+   * Return the defined no-results behavior or NULL if none defined.
+   *
+   * @return array|NULL
+   */
+  public function getEmptyBehavior();
+
+  /**
+   * Return the configuration of the selected widget.
+   *
+   * @return array
+   */
+  public function getWidgetConfigs();
+
+  /**
+   * Set the configuration for the widget of this facet.
+   *
+   * @param array $widget_config
+   */
+  public function setWidgetConfigs(array $widget_config);
+
+  /**
+   * Get any additional configuration for this facet, no defined above.
+   *
+   * @return array
+   */
+  public function getFacetConfigs();
+
+  /**
+   * Define any additional configuration for this facet not defined above.
+   *
+   * @param array $facet_config
+   */
+  public function setFacetConfigs(array $facet_config);
+
+
 }

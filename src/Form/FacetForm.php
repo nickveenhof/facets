@@ -285,7 +285,6 @@ class FacetForm extends EntityForm {
     if ($is_new) {
       // On facet creation, enable all locked processors by default, using their
       // default settings.
-      $initial_settings = [];
       $stages = $this->getProcessorPluginManager()->getProcessingStages();
       $processors_definitions = $this->getProcessorPluginManager()->getDefinitions();
 
@@ -297,39 +296,38 @@ class FacetForm extends EntityForm {
               $weights[$stage_id] = $processor['stages'][$stage_id];
             }
           }
-          $initial_settings[$processor_id] = array(
+          $facet->addProcessor([
             'processor_id' => $processor_id,
             'weights' => $weights,
             'settings' => [],
-          );
+          ]);
         }
       }
-      $facet->setOption('processors', $initial_settings);
 
       // Set a default widget for new facets.
       $facet->setWidget('links');
 
       // Set default empty behaviour.
-      $facet->setOption('empty_behavior', ['behavior' => 'none']);
+      $facet->setEmptyBehavior(['behavior' => 'none']);
       $facet->setOnlyVisibleWhenFacetSourceIsVisible(TRUE);
     }
 
-    // Make sure the field identifier is copied from within the facet source
-    // config to the facet object and saved there.
-    $facet_source = $form_state->getValue('facet_source_id');
-    $field_identifier = $form_state->getValue('facet_source_configs')[$facet_source]['field_identifier'];
-
-    $facet->setFieldIdentifier($field_identifier);
+    $facet_source_id = $form_state->getValue('facet_source_id');
+    if (!is_null($facet_source_id) && $facet_source_id !== '') {
+      /** @var \Drupal\facets\FacetSource\FacetSourcePluginInterface $facet_source */
+      $facet_source = $this->getFacetSourcePluginManager()->createInstance($facet_source_id);
+      $facet_source->submitConfigurationForm($form_state, $facet);
+    }
     $facet->save();
 
     // Ensure that the caching of the view display is disabled, so the search
     // correctly returns the facets. This is a temporary fix, until the cache
     // metadata is correctly stored on the facet block. Only apply this when the
     // facet source type is actually something this is related to views.
-    list($type,) = explode(':', $facet_source);
+    list($type,) = explode(':', $facet_source_id);
 
     if ($type === 'search_api_views') {
-      list(, $view_id, $display) = explode(':', $facet_source);
+      list(, $view_id, $display) = explode(':', $facet_source_id);
     }
 
     if (isset($view_id)) {

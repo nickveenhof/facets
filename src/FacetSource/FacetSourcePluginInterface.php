@@ -36,6 +36,14 @@ interface FacetSourcePluginInterface {
   public function buildConfigurationForm(array $form, FormStateInterface $form_state, FacetInterface $facet, FacetSourcePluginInterface $facet_source);
 
   /**
+   * @param \Drupal\Core\Form\FormStateInterface $form_state
+   *   The current form state.
+   * @param \Drupal\facets\FacetInterface $facet
+   *   The facet being edited.
+   */
+  public function submitConfigurationForm(FormStateInterface $form_state, FacetInterface &$facet);
+
+  /**
    * Fill in facet data in to the configured facets.
    *
    * @param \Drupal\facets\FacetInterface[] $facets

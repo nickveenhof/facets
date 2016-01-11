@@ -294,7 +294,7 @@ class DefaultFacetManager {
     // No results behavior handling. Return a custom text or false depending on
     // settings.
     if (empty($facet->getResults())) {
-      $empty_behavior = $facet->getOption('empty_behavior');
+      $empty_behavior = $facet->getEmptyBehavior();
       if ($empty_behavior['behavior'] == 'text') {
         return ['#markup' => $empty_behavior['text']];
       }
