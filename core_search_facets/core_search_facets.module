@@ -45,3 +45,13 @@ function core_search_facets_search_plugin_alter(array &$definitions) {
     //$definitions['node_search']['class'] = 'Drupal\core_search_facets\Plugin\Search\NodeSearchFacets';
   }
 }
+
+/**
+ * Implements hook_facets_core_allowed_field_types().
+ */
+function core_search_facets_facets_core_allowed_field_types(array $allowed_field_types) {
+  $allowed_field_types[] = 'taxonomy_term';
+  $allowed_field_types[] = 'integer';
+
+  return $allowed_field_types;
+}

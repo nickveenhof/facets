@@ -149,6 +149,7 @@ class CoreNodeSearchFacetSource extends FacetSourcePluginBase implements CoreSea
       case 'type':
       case 'uid':
       case 'langcode':
+      case 'integer':
       case 'entity_reference':
         $query_types['string'] = 'core_node_search_string';
         break;
@@ -161,7 +162,6 @@ class CoreNodeSearchFacetSource extends FacetSourcePluginBase implements CoreSea
    * {@inheritdoc}
    */
   public function isRenderedInCurrentRequest() {
-    // @TODO Avoid the use of \Duupal so maybe inject?
     $request = \Drupal::requestStack()->getMasterRequest();
     $search_page = $request->attributes->get('entity');
     if ($search_page instanceof SearchPageInterface) {
@@ -198,11 +198,16 @@ class CoreNodeSearchFacetSource extends FacetSourcePluginBase implements CoreSea
   public function getFields() {
     // Default fields.
     $facet_fields = $this->getDefaultFields();
-    // @TODO Only taxonomy term reference for the moment.
+
+    // Get the allowed field types.
+    $allowed_field_types = \Drupal::moduleHandler()->invokeAll('facets_core_allowed_field_types', array($field_types = []));
+
     // Get the current field instances and detect if the field type is allowed.
     $fields = FieldConfig::loadMultiple();
     foreach ($fields as $field) {
-      if ($field->getFieldStorageDefinition()->getSetting('target_type') == 'taxonomy_term') {
+      // Verify if the target type is allowed for entity reference fields,
+      // otherwise verify the field type(i.e. integer, float...).
+      if (in_array($field->getFieldStorageDefinition()->getSetting('target_type'), $allowed_field_types) || in_array($field->getFieldStorageDefinition()->getType(), $allowed_field_types)) {
         /** @var \Drupal\field\Entity\FieldConfig $field */
         if (!array_key_exists($field->getName(), $facet_fields)) {
           $facet_fields[$field->getName()] = $this->t('@label', ['@label' => $field->getLabel()]);
@@ -267,7 +272,18 @@ class CoreNodeSearchFacetSource extends FacetSourcePluginBase implements CoreSea
     else {
       // Gets field info, finds table name and field name.
       $table = "node__{$field_name}";
-      $column = $facet->getFieldIdentifier() . '_target_id';
+      // The column name will be different depending on the field type, it's
+      // always the fields machine name, suffixed with '_value'. Entity
+      // reference fields change that suffix into '_target_id'.
+      $field_config = FieldStorageConfig::loadByName('node', $facet->getFieldIdentifier());
+      $field_type = $field_config->getType();
+      if ($field_type == 'entity_reference') {
+        $column = $facet->getFieldIdentifier() . '_target_id';
+      }
+      else {
+        $column = $facet->getFieldIdentifier() . '_value';
+      }
+
       $query_info['fields'][$field_name . '.' . $column] = array(
         'table_alias' => $table,
         'field' => $column,
