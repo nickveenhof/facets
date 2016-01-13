@@ -42,8 +42,7 @@ entity.facets_facet.display_form:
   requirements:
     _entity_access: 'facets_facet.edit'
 
-
-entity.facets_facetsource.edit_form:
+entity.facets_facet_source.edit_form:
   path: '/admin/config/search/facets/facet-sources/{source_id}/edit'
   defaults:
     _controller: '\Drupal\facets\Controller\FacetSourceController::facetSourceConfigForm'

@@ -138,7 +138,7 @@ class FacetListBuilder extends ConfigEntityListBuilder {
         'operations' => array(
           'data' => Link::createFromRoute(
             $this->t('Configure'),
-            'entity.facets_facetsource.edit_form',
+            'entity.facets_facet_source.edit_form',
             ['source_id' => $facet_source['id']]
           )->toRenderable(),
         ),
