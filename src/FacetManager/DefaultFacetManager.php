@@ -132,7 +132,6 @@ class DefaultFacetManager {
    *   The entity type plugin manager.
    */
   public function __construct(QueryTypePluginManager $query_type_plugin_manager, WidgetPluginManager $widget_plugin_manager, FacetSourcePluginManager $facet_source_manager, ProcessorPluginManager $processor_plugin_manager, EntityTypeManager $entity_type_manager) {
-
     $this->queryTypePluginManager = $query_type_plugin_manager;
     $this->widgetPluginManager = $widget_plugin_manager;
     $this->facetSourcePluginManager = $facet_source_manager;
