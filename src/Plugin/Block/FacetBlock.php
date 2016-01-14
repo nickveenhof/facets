@@ -105,13 +105,6 @@ class FacetBlock extends BlockBase implements ContainerFactoryPluginInterface {
   /**
    * {@inheritdoc}
    */
-  public function blockSubmit($form, FormStateInterface $form_state) {
-    parent::blockSubmit($form, $form_state);
-  }
-
-  /**
-   * {@inheritdoc}
-   */
   public function getCacheMaxAge() {
     // Makes sure a facet block is never cached.
     // @TODO Make blocks cacheable, see: https://www.drupal.org/node/2581629
