@@ -61,13 +61,6 @@ abstract class WebTestBase extends SimpletestWebTestBase {
   protected $anonymousUser;
 
   /**
-   * The URL generator.
-   *
-   * @var \Drupal\Core\Routing\UrlGeneratorInterface
-   */
-  protected $urlGenerator;
-
-  /**
    * A search index ID.
    *
    * @var string
@@ -95,8 +88,6 @@ abstract class WebTestBase extends SimpletestWebTestBase {
     $this->unauthorizedUser = $this->drupalCreateUser(['access administration pages']);
     $this->anonymousUser = $this->drupalCreateUser();
 
-    // Get the URL generator.
-    $this->urlGenerator = $this->container->get('url_generator');
   }
 
 }
