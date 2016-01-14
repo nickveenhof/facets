@@ -24,7 +24,7 @@ class FacetBlockDeriver implements ContainerDeriverInterface {
    *
    * @var array
    */
-  protected $derivatives = array();
+  protected $derivatives = [];
 
   /**
    * The entity storage used for facets.
@@ -55,11 +55,10 @@ class FacetBlockDeriver implements ContainerDeriverInterface {
    * {@inheritdoc}
    */
   public function getDerivativeDefinitions($base_plugin_definition) {
-
     $base_plugin_id = $base_plugin_definition['id'];
 
     if (!isset($this->derivatives[$base_plugin_id])) {
-      $plugin_derivatives = array();
+      $plugin_derivatives = [];
 
       /** @var \Drupal\facets\FacetInterface[] $all_facets */
       $all_facets = $this->facetStorage->loadMultiple();
@@ -81,4 +80,5 @@ class FacetBlockDeriver implements ContainerDeriverInterface {
     }
     return $this->derivatives[$base_plugin_id];
   }
+
 }
