@@ -74,6 +74,12 @@ class LinksWidget implements WidgetInterface {
     $build = [
       '#theme' => 'item_list',
       '#items' => $items,
+      '#cache' => [
+        'contexts' => [
+          'url.path',
+          'url.query_args'
+        ]
+      ]
     ];
     return $build;
   }
