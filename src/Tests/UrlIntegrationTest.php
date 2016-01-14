@@ -94,7 +94,7 @@ class UrlIntegrationTest extends FacetWebTestBase {
     $this->assertResponse(200);
     $this->assertLink('(-) item');
     $this->assertNoLink('article');
-    $this->assertUrl('search-api-test-fulltext?y[0]=facet||item');
+    $this->assertUrl('search-api-test-fulltext', ['query' => ['y[0]' => 'facet||item']]);
   }
 
 }
