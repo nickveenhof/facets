@@ -36,7 +36,8 @@ trait ExampleContentTrait {
   protected function insertExampleContent() {
     $count = \Drupal::entityQuery('entity_test')->count()->execute();
 
-    $entity_test_storage = \Drupal::entityManager()->getStorage('entity_test');
+    $entity_test_storage = \Drupal::entityTypeManager()
+      ->getStorage('entity_test');
     $this->entities[1] = $entity_test_storage->create(array(
         'name' => 'foo bar baz',
         'body' => 'test test',
