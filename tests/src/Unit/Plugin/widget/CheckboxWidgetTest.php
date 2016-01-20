@@ -7,6 +7,7 @@
 
 namespace Drupal\Tests\facets\Unit\Plugin\widget;
 
+use Drupal\Core\Form\FormState;
 use Drupal\facets\Entity\Facet;
 use Drupal\facets\Plugin\facets\widget\CheckboxWidget;
 use Drupal\facets\Result\Result;
@@ -23,7 +24,7 @@ class CheckboxWidgetTest extends UnitTestCase {
   /**
    * The processor to be tested.
    *
-   * @var \drupal\facets\Widget\WidgetInterface
+   * @var \Drupal\facets\Plugin\facets\widget\CheckboxWidget
    */
   protected $widget;
 
@@ -53,19 +54,16 @@ class CheckboxWidgetTest extends UnitTestCase {
     }
     $this->originalResults = $original_results;
 
-    $link_generator = $this->getMockBuilder('\Drupal\Core\Utility\LinkGenerator')
+    $form_builder = $this->getMockBuilder('\Drupal\Core\Form\FormBuilder')
       ->disableOriginalConstructor()
       ->getMock();
-    $link_generator->expects($this->atLeastOnce())
-      ->method('generate')
-      ->will($this->returnArgument(0));
 
     $string_translation = $this->getMockBuilder('\Drupal\Core\StringTranslation\TranslationManager')
       ->disableOriginalConstructor()
       ->getMock();
 
     $container_builder = new ContainerBuilder();
-    $container_builder->set('link_generator', $link_generator);
+    $container_builder->set('form_builder', $form_builder);
     $container_builder->set('string_translation', $string_translation);
     \Drupal::setContainer($container_builder);
 
@@ -78,34 +76,74 @@ class CheckboxWidgetTest extends UnitTestCase {
   public function testDefaultSettings() {
     $facet = new Facet([], 'facet');
     $facet->setResults($this->originalResults);
+    $facet->setFieldIdentifier('test_field');
 
-    $output = $this->widget->build($facet);
+    $formState = new FormState();
+    $formState->addBuildInfo('args', [$facet]);
+    $form = [];
+    $built_form = $this->widget->buildForm($form, $formState);
 
-    $this->assertInternalType('array', $output);
-    $this->assertCount(4, $output['#items']);
+    $this->assertInternalType('array', $built_form);
+    $this->assertCount(4, $built_form['test_field']['#options']);
+    $this->assertEquals('checkboxes', $built_form['test_field']['#type']);
 
-    $expected_links = ['Llama', 'Badger', 'Duck', 'Alpaca'];
+    $expected_links = [
+      'llama' => 'Llama',
+      'badger' => 'Badger',
+      'duck' => 'Duck',
+      'alpaca' => 'Alpaca'
+    ];
     foreach ($expected_links as $index => $value) {
-      $this->assertEquals($value, $output['#items'][$index]);
+      $this->assertEquals($value, $built_form['test_field']['#options'][$index]);
     }
   }
 
   /**
-   * Test widget with show numbers enabled.
+   * Test widget, make sure hiding and showing numbers works.
    */
-  public function testShowAmount() {
+  public function testHideNumbers() {
+    $original_results = $this->originalResults;
+    $original_results[1]->setActiveState(TRUE);
+
     $facet = new Facet([], 'facet');
-    $facet->setResults($this->originalResults);
+    $facet->setResults($original_results);
+    $facet->setFieldIdentifier('test__field');
+    $facet->setWidgetConfigs(['show_numbers' => 0]);
+
+    $formState = new FormState();
+    $formState->addBuildInfo('args', [$facet]);
+    $form = [];
+    $built_form = $this->widget->buildForm($form, $formState);
+
+    $this->assertInternalType('array', $built_form);
+    $this->assertCount(4, $built_form['test__field']['#options']);
+    $expected_links = [
+      'llama' => 'Llama',
+      'badger' => 'Badger',
+      'duck' => 'Duck',
+      'alpaca' => 'Alpaca'
+    ];
+    foreach ($expected_links as $index => $value) {
+      $this->assertEquals($value, $built_form['test__field']['#options'][$index]);
+    }
+
+    // Enable the 'show_numbers' setting again to make sure that the switch
+    // between those settings works.
     $facet->setWidgetConfigs(['show_numbers' => 1]);
 
-    $output = $this->widget->build($facet);
+    $built_form = $this->widget->buildForm($form, $formState);
 
-    $this->assertInternalType('array', $output);
-    $this->assertCount(4, $output['#items']);
+    $this->assertInternalType('array', $built_form);
+    $this->assertCount(4, $built_form['test__field']['#options']);
 
-    $expected_links = ['Llama (10)', 'Badger (20)', 'Duck (15)', 'Alpaca (9)'];
+    $expected_links = [
+      'llama' => 'Llama (10)',
+      'badger' => 'Badger (20)',
+      'duck' => 'Duck (15)',
+      'alpaca' => 'Alpaca (9)',
+    ];
     foreach ($expected_links as $index => $value) {
-      $this->assertEquals($value, $output['#items'][$index]);
+      $this->assertEquals($value, $built_form['test__field']['#options'][$index]);
     }
   }
 

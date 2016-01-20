@@ -7,10 +7,13 @@
 
 namespace Drupal\facets\Plugin\facets\widget;
 
+use Drupal\Core\Form\FormInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
+use Drupal\Core\Url;
 use Drupal\facets\FacetInterface;
 use Drupal\facets\Widget\WidgetInterface;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 
 /**
  * The checkbox / radios widget.
@@ -21,17 +24,9 @@ use Drupal\facets\Widget\WidgetInterface;
  *   description = @Translation("A configurable widget that shows a list of checkboxes"),
  * )
  */
-class CheckboxWidget implements WidgetInterface {
+class CheckboxWidget implements WidgetInterface, FormInterface {
 
   use StringTranslationTrait;
-
-  /**
-   * The link generator.
-   *
-   * @var \Drupal\Core\Utility\LinkGeneratorInterface $linkGenerator
-   *   The link generator.
-   */
-  protected $linkGenerator;
 
   /**
    * {@inheritdoc}
@@ -44,33 +39,14 @@ class CheckboxWidget implements WidgetInterface {
    * {@inheritdoc}
    */
   public function build(FacetInterface $facet) {
-    /** @var \Drupal\facets\Result\Result[] $results */
-    $results = $facet->getResults();
-    $items = [];
+    $form_builder = \Drupal::getContainer()->get('form_builder');
 
-    $configuration = $facet->getWidgetConfigs();
-    $show_numbers = (bool) $configuration['show_numbers'];
+    // The form builder's getForm method accepts 1 argument in the interface,
+    // the form ID. Extra arguments get passed into the form states addBuildInfo
+    // method. This way we can pass the facet to the ::buildForm method, it uses
+    // FormState::getBuildInfo to get the facet out.
+    $build = $form_builder->getForm(static::class, $facet);
 
-    foreach ($results as $result) {
-      if ($result->getCount()) {
-        // Get the link.
-        $text = $result->getDisplayValue();
-        if ($show_numbers) {
-          $text .= ' (' . $result->getCount() . ')';
-        }
-        if ($result->isActive()) {
-          $text = '(-) ' . $text;
-        }
-        $link = $this->linkGenerator()->generate($text, $result->getUrl());
-        $items[] = $link;
-      }
-    }
-    $build = [
-      '#theme' => 'item_list',
-      '#items' => $items,
-    ];
-
-    $build['#prefix'] = $this->t('Checkboxes');
     return $build;
   }
 
@@ -102,16 +78,101 @@ class CheckboxWidget implements WidgetInterface {
   }
 
   /**
-   * Gets the link generator.
-   *
-   * @return \Drupal\Core\Utility\LinkGeneratorInterface
-   *   The link generator.
+   * {@inheritdoc}
    */
-  protected function linkGenerator() {
-    if (!isset($this->linkGenerator)) {
-      $this->linkGenerator = \Drupal::linkGenerator();
-    }
-    return $this->linkGenerator;
+  public function getFormId() {
+    return 'facets_checkbox_widget';
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  public function buildForm(array $form, FormStateInterface $form_state) {
+
+    /** @var \Drupal\facets\FacetInterface $facet */
+    // Get the facet form the build info, see the remark in ::build to know
+    // where this comes from.
+    $build_info = $form_state->getBuildInfo();
+    $facet = $build_info['args'][0];
+
+    /** @var \Drupal\facets\Result\Result[] $results */
+    $results = $facet->getResults();
+
+    $configuration = $facet->getWidgetConfigs();
+    $show_numbers = (bool) $configuration['show_numbers'];
+    $form[$facet->getFieldAlias()] = [
+      '#type' => 'checkboxes',
+      '#title' => $facet->getName(),
+    ];
+
+    $options = array();
+    foreach ($results as $result) {
+      $text = $result->getDisplayValue();
+      if ($show_numbers) {
+        $text .= ' (' . $result->getCount() . ')';
+      }
+
+      $options[$result->getRawValue()] = $text;
+
+      if ($result->isActive()) {
+        $form[$facet->getFieldAlias()]['#default_value'][] = $result->getRawValue();
+      }
+    }
+
+    $form[$facet->getFieldAlias()]['#options'] = $options;
+
+    $form[$facet->id() . '_submit'] = [
+      '#type' => 'submit',
+      '#value' => 'submit',
+    ];
+
+    return $form;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function validateForm(array &$form, FormStateInterface $form_state) {}
+
+  /**
+   * {@inheritdoc}
+   */
+  public function submitForm(array &$form, FormStateInterface $form_state) {
+    $values = $form_state->getValues();
+
+    /** @var \Drupal\facets\FacetInterface $facet */
+    $build_info = $form_state->getBuildInfo();
+    $facet = $build_info['args'][0];
+
+    $result_link = FALSE;
+    $active_items = [];
+
+    foreach ($values[$facet->getFieldAlias()] as $key => $value) {
+      if ($value !== 0) {
+        $active_items[] = $value;
+      }
+    }
+
+    foreach ($facet->getResults() as $result) {
+      if (in_array($result->getRawValue(), $active_items)) {
+        $result_link = $result->getUrl();
+      }
+    }
+
+    // We have an active item, so we redirect to the page that has that facet
+    // selected. This should be an absolute link because RedirectResponse is a
+    // symfony class that requires a full URL.
+    if ($result_link instanceof Url) {
+      $result_link->setAbsolute();
+      $form_state->setResponse(new RedirectResponse($result_link->toString()));
+      return;
+    }
+
+    // The form was submitted but nothing was active in the form, we should
+    // still redirect, but the url for the new page can't come from a result.
+    // So we're redirecting to the facet source's page.
+    $link = Url::fromUri($facet->getFacetSource()->getPath());
+    $link->setAbsolute();
+    $form_state->setResponse(new RedirectResponse($link->toString()));
+  }
 }
