@@ -8,6 +8,7 @@
 namespace Drupal\facets\Plugin\facets\widget;
 
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Link;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\facets\FacetInterface;
 use Drupal\facets\Widget\WidgetInterface;
@@ -24,14 +25,6 @@ use Drupal\facets\Widget\WidgetInterface;
 class LinksWidget implements WidgetInterface {
 
   use StringTranslationTrait;
-
-  /**
-   * The link generator.
-   *
-   * @var \Drupal\Core\Utility\LinkGeneratorInterface $linkGenerator
-   *   The link generator.
-   */
-  protected $linkGenerator;
 
   /**
    * {@inheritdoc}
@@ -66,7 +59,7 @@ class LinksWidget implements WidgetInterface {
           $items[] = $text;
         }
         else {
-          $items[] = $this->linkGenerator()->generate($text, $result->getUrl());
+          $items[] = new Link($text, $result->getUrl());
         }
       }
     }
@@ -111,19 +104,6 @@ class LinksWidget implements WidgetInterface {
    */
   public function getQueryType($query_types) {
     return $query_types['string'];
-  }
-
-  /**
-   * Gets the link generator.
-   *
-   * @return \Drupal\Core\Utility\LinkGeneratorInterface
-   *   The link generator.
-   */
-  protected function linkGenerator() {
-    if (!isset($this->linkGenerator)) {
-      $this->linkGenerator = \Drupal::linkGenerator();
-    }
-    return $this->linkGenerator;
   }
 
 }

@@ -53,17 +53,6 @@ class LinksWidgetTest extends UnitTestCase {
     }
     $this->originalResults = $original_results;
 
-    $link_generator = $this->getMockBuilder('\Drupal\Core\Utility\LinkGenerator')
-      ->disableOriginalConstructor()
-      ->getMock();
-    $link_generator->expects($this->atLeastOnce())
-      ->method('generate')
-      ->will($this->returnArgument(0));
-
-    $container_builder = new ContainerBuilder();
-    $container_builder->set('link_generator', $link_generator);
-    \Drupal::setContainer($container_builder);
-
     $this->widget = new LinksWidget();
   }
 
@@ -82,7 +71,8 @@ class LinksWidgetTest extends UnitTestCase {
 
     $expected_links = ['Llama (10)', 'Badger (20)', 'Duck (15)', 'Alpaca (9)'];
     foreach ($expected_links as $index => $value) {
-      $this->assertEquals($value, $output['#items'][$index]);
+      $this->assertInstanceOf('\Drupal\Core\Link', $output['#items'][$index]);
+      $this->assertEquals($value, $output['#items'][$index]->getText());
     }
   }
 
@@ -104,7 +94,8 @@ class LinksWidgetTest extends UnitTestCase {
 
     $expected_links = ['Llama (10)', 'Duck (15)', 'Alpaca (9)'];
     foreach ($expected_links as $index => $value) {
-      $this->assertEquals($value, $output['#items'][$index]);
+      $this->assertInstanceOf('\Drupal\Core\Link', $output['#items'][$index]);
+      $this->assertEquals($value, $output['#items'][$index]->getText());
     }
   }
 
@@ -132,7 +123,8 @@ class LinksWidgetTest extends UnitTestCase {
       '(-) Alpaca (9)',
     ];
     foreach ($expected_links as $index => $value) {
-      $this->assertEquals($value, $output['#items'][$index]);
+      $this->assertInstanceOf('\Drupal\Core\Link', $output['#items'][$index]);
+      $this->assertEquals($value, $output['#items'][$index]->getText());
     }
   }
 
@@ -154,7 +146,8 @@ class LinksWidgetTest extends UnitTestCase {
 
     $expected_links = ['Llama', '(-) Badger', 'Duck', 'Alpaca'];
     foreach ($expected_links as $index => $value) {
-      $this->assertEquals($value, $output['#items'][$index]);
+      $this->assertInstanceOf('\Drupal\Core\Link', $output['#items'][$index]);
+      $this->assertEquals($value, $output['#items'][$index]->getText());
     }
 
     // Enable the 'show_numbers' setting again to make sure that the switch
@@ -173,7 +166,8 @@ class LinksWidgetTest extends UnitTestCase {
       'Alpaca (9)',
     ];
     foreach ($expected_links as $index => $value) {
-      $this->assertEquals($value, $output['#items'][$index]);
+      $this->assertInstanceOf('\Drupal\Core\Link', $output['#items'][$index]);
+      $this->assertEquals($value, $output['#items'][$index]->getText());
     }
   }
 
