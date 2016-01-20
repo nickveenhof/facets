@@ -7,7 +7,7 @@
 
 namespace Drupal\facets\Tests;
 
-use \Drupal\facets\Tests\WebTestBase as FacetWebTestBase;
+use Drupal\facets\Tests\WebTestBase as FacetWebTestBase;
 
 /**
  * Tests the overall functionality of the Facets admin UI.
