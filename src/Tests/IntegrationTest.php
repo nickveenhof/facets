@@ -7,6 +7,7 @@
 
 namespace Drupal\facets\Tests;
 
+use Drupal\Core\Url;
 use Drupal\facets\Tests\WebTestBase as FacetWebTestBase;
 
 /**
@@ -187,7 +188,8 @@ class IntegrationTest extends FacetWebTestBase {
     $this->assertLink('article');
 
     $this->clickLink('item');
-    $this->assertUrl('search-api-test-fulltext?f[0]=test:item');
+    $url = Url::fromUserInput('/search-api-test-fulltext', ['query' => ['f[0]' => 'test:item']]);
+    $this->assertUrl($url);
 
     $this->drupalGet($facet_edit_page);
     $this->drupalPostForm(NULL, ['url_alias' => 'llama'], $this->t('Save'));
@@ -197,7 +199,8 @@ class IntegrationTest extends FacetWebTestBase {
     $this->assertLink('article');
 
     $this->clickLink('item');
-    $this->assertUrl('search-api-test-fulltext', ['query' => ['f[0]' => 'llama:item']]);
+    $url = Url::fromUserInput('/search-api-test-fulltext', ['query' => ['f[0]' => 'llama:item']]);
+    $this->assertUrl($url);
   }
 
   /**
