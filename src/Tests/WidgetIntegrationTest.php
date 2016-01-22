@@ -25,7 +25,6 @@ class WidgetIntegrationTest extends FacetWebTestBase {
     'search_api',
     'search_api_test_backend',
     'facets',
-    'search_api_test_views',
     'block',
     'facets_search_api_dependency',
     'facets_query_processor',

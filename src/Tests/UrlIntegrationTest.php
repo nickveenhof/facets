@@ -7,7 +7,10 @@
 
 namespace Drupal\facets\Tests;
 
+use Drupal\Core\Url;
 use Drupal\facets\Tests\WebTestBase as FacetWebTestBase;
+use Drupal\facets\Entity\Facet;
+use Drupal\facets\FacetSourceInterface;
 
 /**
  * Tests the overall functionality of the Facets admin UI.
@@ -25,7 +28,6 @@ class UrlIntegrationTest extends FacetWebTestBase {
     'search_api',
     'search_api_test_backend',
     'facets',
-    'search_api_test_views',
     'block',
     'facets_search_api_dependency',
     'facets_query_processor',
@@ -65,16 +67,6 @@ class UrlIntegrationTest extends FacetWebTestBase {
     $this->drupalPostForm(NULL, ['facet_source_id' => 'search_api_views:search_api_test_view:page_1'], $this->t('Configure facet source'));
     $this->drupalPostForm(NULL, $form_values, $this->t('Save'));
 
-    // Go to the only enabled facet source's config.
-    $this->drupalGet('admin/config/search/facets');
-    $this->clickLink($this->t('Configure'));
-
-    $edit = [
-      'filterKey' => 'y',
-      'urlProcessor' => 'dummy_query',
-    ];
-    $this->drupalPostForm(NULL, $edit, $this->t('Save'));
-
     $block_values = [
       'plugin_id' => 'facet_block:' . $id,
       'settings' => [
@@ -84,6 +76,71 @@ class UrlIntegrationTest extends FacetWebTestBase {
     ];
     $this->drupalPlaceBlock($block_values['plugin_id'], $block_values['settings']);
 
+    $url = Url::fromUserInput('/search-api-test-fulltext', ['query' => ['f[0]' => 'facet:item']]);
+    $this->checkClickedFacetUrl($url);
+
+    /** @var \Drupal\facets\FacetInterface $facet */
+    $facet = Facet::load($id);
+    $config = $facet->getFacetSourceConfig();
+    $this->assertTrue($config instanceof FacetSourceInterface);
+    $this->assertEqual(NULL, $config->getFilterKey());
+
+    $facet = NULL;
+    $config = NULL;
+
+    // Go to the only enabled facet source's config and change the filter key.
+    $this->drupalGet('admin/config/search/facets');
+    $this->clickLink($this->t('Configure'));
+
+    $edit = [
+      'filterKey' => 'y',
+      'urlProcessor' => 'query_string',
+    ];
+    $this->drupalPostForm(NULL, $edit, $this->t('Save'));
+
+    /** @var \Drupal\facets\FacetInterface $facet */
+    $facet = Facet::load($id);
+    $config = $facet->getFacetSourceConfig();
+    $this->assertTrue($config instanceof FacetSourceInterface);
+    $this->assertEqual('y', $config->getFilterKey());
+
+    $facet = NULL;
+    $config = NULL;
+
+    $url_2 = Url::fromUserInput('/search-api-test-fulltext', ['query' => ['y[0]' => 'facet:item']]);
+    $this->checkClickedFacetUrl($url_2);
+
+    // Go to the only enabled facet source's config and change the url
+    // processor.
+    $this->drupalGet('admin/config/search/facets');
+    $this->clickLink($this->t('Configure'));
+
+    $edit = [
+      'filterKey' => 'y',
+      'urlProcessor' => 'dummy_query',
+    ];
+    $this->drupalPostForm(NULL, $edit, $this->t('Save'));
+
+    /** @var \Drupal\facets\FacetInterface $facet */
+    $facet = Facet::load($id);
+    $config = $facet->getFacetSourceConfig();
+    $this->assertTrue($config instanceof FacetSourceInterface);
+    $this->assertEqual('y', $config->getFilterKey());
+
+    $facet = NULL;
+    $config = NULL;
+
+    $url_3 = Url::fromUserInput('/search-api-test-fulltext', ['query' => ['y[0]' => 'facet||item']]);
+    $this->checkClickedFacetUrl($url_3);
+  }
+
+  /**
+   * Checks that the url after clicking a facet is as expected.
+   *
+   * @param \Drupal\Core\Url $url
+   *   The expected url we end on.
+   */
+  protected function checkClickedFacetUrl(Url $url) {
     $this->drupalGet('search-api-test-fulltext');
     $this->assertResponse(200);
     $this->assertLink('item');
@@ -94,7 +151,7 @@ class UrlIntegrationTest extends FacetWebTestBase {
     $this->assertResponse(200);
     $this->assertLink('(-) item');
     $this->assertNoLink('article');
-    $this->assertUrl('search-api-test-fulltext', ['query' => ['y[0]' => 'facet||item']]);
+    $this->assertUrl($url);
   }
 
 }
