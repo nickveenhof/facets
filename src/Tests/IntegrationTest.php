@@ -35,6 +35,10 @@ class IntegrationTest extends FacetWebTestBase {
     $this->setUpExampleStructure();
     $this->insertExampleContent();
     $this->assertEqual($this->indexItems($this->indexId), 5, '5 items were indexed.');
+
+    // Make absolutely sure the ::$blocks variable doesn't pass information
+    // along between tests.
+    $this->blocks = NULL;
   }
 
   /**
@@ -204,6 +208,88 @@ class IntegrationTest extends FacetWebTestBase {
   }
 
   /**
+   * Tests facet dependencies.
+   */
+  public function testFacetDependencies() {
+    $facet_name = "DependableFacet";
+    $facet_id = 'dependablefacet';
+    $this->addFacet($facet_name);
+
+    $depending_facet_name = "DependingFacet";
+    $depending_facet_id = "dependingfacet";
+    $this->addFacet($depending_facet_name, 'keywords');
+
+    // Create both facets as blocks and add them on the page.
+    $this->createFacetBlock($facet_id);
+    $this->createFacetBlock($depending_facet_id);
+
+    // Go the the view and test that both facets are shown. Item and article
+    // come from the DependableFacet, orange and grape come from DependingFacet.
+    $this->drupalGet('search-api-test-fulltext');
+    $this->assertLink('grape');
+    $this->assertLink('orange');
+    $this->assertLink('item');
+    $this->assertLink('article');
+    $this->assertFacetBlocksAppear();
+
+    // Change the visiblity settings of the DependingFacet.
+    $this->drupalGet('admin/structure/block/manage/dependingfacet');
+    $edit = [
+      'visibility[other_facet][facets]' => 'facet_block:dependablefacet',
+      'visibility[other_facet][facet_value]' => 'item',
+    ];
+    $this->drupalPostForm(NULL, $edit, $this->t('Save block'));
+    $this->assertText('The block configuration has been saved.');
+
+    // Go to the view and test that only the types are shown.
+    $this->drupalGet('search-api-test-fulltext');
+    $this->assertNoLink('grape');
+    $this->assertNoLink('orange');
+    $this->assertLink('item');
+    $this->assertLink('article');
+
+    // Click on the item, and test that this shows the keywords.
+    $this->clickLink('item');
+    $this->assertLink('grape');
+    $this->assertLink('orange');
+
+    // Go back to the view, click on article and test that the keywords are
+    // hidden.
+    $this->drupalGet('search-api-test-fulltext');
+    $this->clickLink('article');
+    $this->assertNoLink('grape');
+    $this->assertNoLink('orange');
+
+    // Change the visibility settings to negate the previous settings.
+    $this->drupalGet('admin/structure/block/manage/dependingfacet');
+    $edit = [
+      'visibility[other_facet][facets]' => 'facet_block:dependablefacet',
+      'visibility[other_facet][facet_value]' => 'item',
+      'visibility[other_facet][negate]' => TRUE,
+    ];
+    $this->drupalPostForm(NULL, $edit, $this->t('Save block'));
+
+    // Go the the view and test only the type facet is shown.
+    $this->drupalGet('search-api-test-fulltext');
+    $this->assertLink('item');
+    $this->assertLink('article');
+    $this->assertLink('grape');
+    $this->assertLink('orange');
+
+    // Click on the article, and test that this shows the keywords.
+    $this->clickLink('article');
+    $this->assertLink('grape');
+    $this->assertLink('orange');
+
+    // Go back to the view, click on item and test that the keywords are
+    // hidden.
+    $this->drupalGet('search-api-test-fulltext');
+    $this->clickLink('item');
+    $this->assertNoLink('grape');
+    $this->assertNoLink('orange');
+  }
+
+  /**
    * Deletes a facet block by id.
    *
    * @param string $id
@@ -315,7 +401,7 @@ class IntegrationTest extends FacetWebTestBase {
    * @param string $facet_name
    *   The name of the facet.
    */
-  protected function addFacet($facet_name) {
+  protected function addFacet($facet_name, $facet_type = 'type') {
     $facet_id = $this->convertNameToMachineName($facet_name);
 
     // Go to the Add facet page and make sure that returns a 200.
@@ -353,7 +439,7 @@ class IntegrationTest extends FacetWebTestBase {
     // longer shown.
     $facet_source_form = [
       'facet_source_id' => 'search_api_views:search_api_test_view:page_1',
-      'facet_source_configs[search_api_views:search_api_test_view:page_1][field_identifier]' => 'type',
+      'facet_source_configs[search_api_views:search_api_test_view:page_1][field_identifier]' => $facet_type,
     ];
     $this->drupalPostForm(NULL, $form_values + $facet_source_form, $this->t('Save'));
     $this->assertNoText('field is required.');
@@ -364,7 +450,6 @@ class IntegrationTest extends FacetWebTestBase {
 
     $this->drupalGet('admin/config/search/facets');
   }
-
 
   /**
    * Tests editing of a facet through the UI.

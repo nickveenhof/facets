@@ -320,4 +320,22 @@ class DefaultFacetManager {
     $facet_source_plugin->fillFacetsWithResults($this->facets);
   }
 
+  /**
+   * Returns one of the processed facets.
+   *
+   * Returns one of the processed facets, this is a facet with filled results.
+   * Keep in mind that if you want to have the facet's build processor executed,
+   * there needs to be an extra call to the FacetManager::build with the facet
+   * returned here as argument.
+   *
+   * @param string $facet_id
+   *   The id of the facet.
+   * @return \Drupal\facets\FacetInterface|NULL
+   *   The updated facet if it exists, NULL otherwise.
+   */
+  public function returnProcessedFacet($facet_id) {
+    $this->processFacets();
+    return $this->facets[$facet_id];
+  }
+
 }
