@@ -32,6 +32,9 @@ abstract class WebTestBase extends SimpletestWebTestBase {
    * @var string[]
    */
   public static $modules = [
+    'field',
+    'search',
+    'entity_test',
     'views',
     'node',
     'facets',
@@ -61,17 +64,32 @@ abstract class WebTestBase extends SimpletestWebTestBase {
   protected $anonymousUser;
 
   /**
-   * A search index ID.
-   *
-   * @var string
-   */
-  protected $indexId = 'database_search_index';
-
-  /**
    * {@inheritdoc}
    */
   public function setUp() {
     parent::setUp();
+
+    // Create content types.
+    $this->drupalCreateContentType(['type' => 'page']);
+    $this->drupalCreateContentType(['type' => 'article']);
+
+    // Adding 10 pages.
+    for ($i = 0; $i < 10; $i++) {
+      $this->drupalCreateNode(array(
+        'title' => 'foo bar' . $i,
+        'body' => 'test page' . $i,
+        'type' => 'page',
+      ));
+    }
+
+    // Adding 10 articles.
+    for ($i = 0; $i < 10; $i++) {
+      $this->drupalCreateNode(array(
+        'title' => 'foo baz' . $i,
+        'body' => 'test article' . $i,
+        'type' => 'article',
+      ));
+    }
 
     // Create the users used for the tests.
     $this->adminUser = $this->drupalCreateUser([

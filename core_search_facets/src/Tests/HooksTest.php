@@ -34,8 +34,6 @@ class HooksTest extends WebTestBase {
   public function setUp() {
     parent::setUp();
 
-    $this->drupalCreateContentType(['type' => 'page']);
-
     // Create a field of type float.
     FieldStorageConfig::create(
       [
