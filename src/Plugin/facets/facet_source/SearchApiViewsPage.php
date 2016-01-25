@@ -75,7 +75,7 @@ class SearchApiViewsPage extends SearchApiBaseFacetSource {
   public function getPath() {
     $view = Views::getView($this->pluginDefinition['view_id']);
     $view->setDisplay($this->pluginDefinition['view_display']);
-    return $view->getDisplay()->getOption('path');
+    return $view->getDisplay()->getPath();
   }
 
   /**
