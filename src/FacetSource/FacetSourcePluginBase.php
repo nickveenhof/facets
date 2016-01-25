@@ -7,8 +7,10 @@
 
 namespace Drupal\facets\FacetSource;
 
+use Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException;
 use Drupal\Component\Plugin\PluginBase;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
+use Drupal\facets\Exception\InvalidProcessorException;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Drupal\Facets\FacetInterface;
 use Drupal\Core\Form\FormStateInterface;
@@ -45,16 +47,22 @@ abstract class FacetSourcePluginBase extends PluginBase implements FacetSourcePl
   protected $keys;
 
   /**
+   * The facet we're editing for.
+   *
+   * @var \Drupal\facets\FacetInterface
+   */
+  protected $facet;
+
+  /**
    * {@inheritdoc}
    */
-  public function __construct(
-    array $configuration,
-    $plugin_id,
-    $plugin_definition,
-    $query_type_plugin_manager
-  ) {
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, $query_type_plugin_manager) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
     $this->queryTypePluginManager = $query_type_plugin_manager;
+
+    if (isset($configuration['facet'])) {
+      $this->facet = $configuration['facet'];
+    }
   }
 
   /**
@@ -107,10 +115,17 @@ abstract class FacetSourcePluginBase extends PluginBase implements FacetSourcePl
   /**
    * {@inheritdoc}
    */
-  public function submitConfigurationForm(FormStateInterface $form_state, FacetInterface &$facet) {
-    $facet_source_id = $facet->getFacetSourceId();
+  public function validateConfigurationForm(array &$form, FormStateInterface $form_state) {
+    return TRUE;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function submitConfigurationForm(array &$form, FormStateInterface $form_state) {
+    $facet_source_id = $this->facet->getFacetSourceId();
     $field_identifier = $form_state->getValue('facet_source_configs')[$facet_source_id]['field_identifier'];
-    $facet->setFieldIdentifier($field_identifier);
+    $this->facet->setFieldIdentifier($field_identifier);
   }
 
 }

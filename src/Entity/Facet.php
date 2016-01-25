@@ -411,7 +411,7 @@ class Facet extends ConfigEntityBase implements FacetInterface {
     if (!$this->facet_source_instance && $this->facet_source_id) {
       /* @var $facet_source_plugin_manager \Drupal\facets\FacetSource\FacetSourcePluginManager */
       $facet_source_plugin_manager = \Drupal::service('plugin.manager.facets.facet_source');
-      $this->facet_source_instance = $facet_source_plugin_manager->createInstance($this->facet_source_id);
+      $this->facet_source_instance = $facet_source_plugin_manager->createInstance($this->facet_source_id, ['facet' => $this]);
     }
 
     return $this->facet_source_instance;

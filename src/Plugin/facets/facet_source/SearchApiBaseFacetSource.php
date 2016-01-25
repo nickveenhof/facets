@@ -10,7 +10,6 @@ use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\facets\Exception\InvalidQueryTypeException;
 use Drupal\facets\FacetInterface;
-use Drupal\facets\FacetSource\FacetSourcePluginInterface;
 use Drupal\search_api\Backend\BackendInterface;
 use Drupal\facets\FacetSource\FacetSourcePluginBase;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -65,7 +64,7 @@ abstract class SearchApiBaseFacetSource extends FacetSourcePluginBase {
   /**
    * {@inheritdoc}
    */
-  public function buildConfigurationForm(array $form, FormStateInterface $form_state, FacetInterface $facet, FacetSourcePluginInterface $facet_source) {
+  public function buildConfigurationForm(array $form, FormStateInterface $form_state) {
 
     $form['field_identifier'] = [
       '#type' => 'select',
@@ -73,7 +72,7 @@ abstract class SearchApiBaseFacetSource extends FacetSourcePluginBase {
       '#title' => $this->t('Facet field'),
       '#description' => $this->t('Choose the indexed field.'),
       '#required' => TRUE,
-      '#default_value' => $facet->getFieldIdentifier(),
+      '#default_value' => $this->facet->getFieldIdentifier(),
     ];
 
     return $form;

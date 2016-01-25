@@ -178,7 +178,7 @@ class CoreNodeSearchFacetSource extends FacetSourcePluginBase implements CoreSea
   /**
    * {@inheritdoc}
    */
-  public function buildConfigurationForm(array $form, FormStateInterface $form_state, FacetInterface $facet, FacetSourcePluginInterface $facet_source) {
+  public function buildConfigurationForm(array $form, FormStateInterface $form_state) {
 
     $form['field_identifier'] = [
       '#type' => 'select',
@@ -186,7 +186,7 @@ class CoreNodeSearchFacetSource extends FacetSourcePluginBase implements CoreSea
       '#title' => $this->t('Facet field'),
       '#description' => $this->t('Choose the indexed field.'),
       '#required' => TRUE,
-      '#default_value' => $facet->getFieldIdentifier(),
+      '#default_value' => $this->facet->getFieldIdentifier(),
     ];
 
     return $form;

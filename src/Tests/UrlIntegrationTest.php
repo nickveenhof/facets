@@ -8,6 +8,7 @@
 namespace Drupal\facets\Tests;
 
 use Drupal\Core\Url;
+use Drupal\facets\FacetInterface;
 use Drupal\facets\Tests\WebTestBase as FacetWebTestBase;
 use Drupal\facets\Entity\Facet;
 use Drupal\facets\FacetSourceInterface;
@@ -81,6 +82,7 @@ class UrlIntegrationTest extends FacetWebTestBase {
 
     /** @var \Drupal\facets\FacetInterface $facet */
     $facet = Facet::load($id);
+    $this->assertTrue($facet instanceof FacetInterface);
     $config = $facet->getFacetSourceConfig();
     $this->assertTrue($config instanceof FacetSourceInterface);
     $this->assertEqual(NULL, $config->getFilterKey());

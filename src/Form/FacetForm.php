@@ -256,9 +256,9 @@ class FacetForm extends EntityForm {
 
     if (!is_null($facet_source_id) && $facet_source_id !== '') {
       /** @var \Drupal\facets\FacetSource\FacetSourcePluginInterface $facet_source */
-      $facet_source = $this->getFacetSourcePluginManager()->createInstance($facet_source_id);
+      $facet_source = $this->getFacetSourcePluginManager()->createInstance($facet_source_id, ['facet' => $this->getEntity()]);
 
-      if ($config_form = $facet_source->buildConfigurationForm([], $form_state, $this->getEntity(), $facet_source)) {
+      if ($config_form = $facet_source->buildConfigurationForm([], $form_state)) {
         $form['facet_source_configs'][$facet_source_id]['#type'] = 'container';
         $form['facet_source_configs'][$facet_source_id]['#title'] = $this->t('%plugin settings', ['%plugin' => $facet_source->getPluginDefinition()['label']]);
         $form['facet_source_configs'][$facet_source_id] += $config_form;
@@ -315,8 +315,8 @@ class FacetForm extends EntityForm {
     $facet_source_id = $form_state->getValue('facet_source_id');
     if (!is_null($facet_source_id) && $facet_source_id !== '') {
       /** @var \Drupal\facets\FacetSource\FacetSourcePluginInterface $facet_source */
-      $facet_source = $this->getFacetSourcePluginManager()->createInstance($facet_source_id);
-      $facet_source->submitConfigurationForm($form_state, $facet);
+      $facet_source = $this->getFacetSourcePluginManager()->createInstance($facet_source_id, ['facet' => $this->getEntity()]);
+      $facet_source->submitConfigurationForm($form, $form_state);
     }
     $facet->save();
 

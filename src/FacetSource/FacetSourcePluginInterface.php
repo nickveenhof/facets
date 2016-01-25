@@ -7,7 +7,7 @@
 
 namespace Drupal\facets\FacetSource;
 
-use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Plugin\PluginFormInterface;
 use Drupal\facets\FacetInterface;
 
 /**
@@ -19,29 +19,7 @@ use Drupal\facets\FacetInterface;
  *
  * @see plugin_api
  */
-interface FacetSourcePluginInterface {
-
-  /**
-   * Adds a configuration form for this facet source.
-   *
-   * @param array $form
-   *   The configuration form definition.
-   * @param \Drupal\Core\Form\FormStateInterface $form_state
-   *   The current form state.
-   * @param \Drupal\facets\FacetInterface $facet
-   *   The facet being edited.
-   * @param \Drupal\facets\FacetSource\FacetSourcePluginInterface $facet_source
-   *   The facet source being edited.
-   */
-  public function buildConfigurationForm(array $form, FormStateInterface $form_state, FacetInterface $facet, FacetSourcePluginInterface $facet_source);
-
-  /**
-   * @param \Drupal\Core\Form\FormStateInterface $form_state
-   *   The current form state.
-   * @param \Drupal\facets\FacetInterface $facet
-   *   The facet being edited.
-   */
-  public function submitConfigurationForm(FormStateInterface $form_state, FacetInterface &$facet);
+interface FacetSourcePluginInterface extends PluginFormInterface {
 
   /**
    * Fill in facet data in to the configured facets.
@@ -50,14 +28,6 @@ interface FacetSourcePluginInterface {
    *   The configured facets.
    */
   public function fillFacetsWithResults($facets);
-
-  /**
-   * Returns the path where a facet should link to.
-   *
-   * @return string
-   *   The path of the facet.
-   */
-  public function getPath();
 
   /**
    * Get the allowed query types for a given facet for the facet source.
@@ -72,6 +42,14 @@ interface FacetSourcePluginInterface {
    *   An error when no query types are found.
    */
   public function getQueryTypesForFacet(FacetInterface $facet);
+
+  /**
+   * Returns the path where a facet should link to.
+   *
+   * @return string
+   *   The path of the facet.
+   */
+  public function getPath();
 
   /**
    * Returns true if the Facet source is being rendered in the current request.
