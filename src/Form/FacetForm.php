@@ -174,11 +174,15 @@ class FacetForm extends EntityForm {
     ];
 
     $form['url_alias'] = [
-      '#type' => 'textfield',
+      '#type' => 'machine_name',
       '#title' => $this->t('The name of the facet for usage in URLs'),
       '#default_value' => $facet->getUrlAlias(),
       '#maxlength' => 50,
       '#required' => TRUE,
+      '#machine_name' => [
+        'exists' => [$this->getFacetStorage(), 'load'],
+        'source' => ['name'],
+      ],
     ];
 
     $facet_sources = [];

@@ -327,6 +327,64 @@ class IntegrationTest extends FacetWebTestBase {
   }
 
   /**
+   * Tests that we disallow unwanted values.
+   */
+  public function testUnwantedValues() {
+    // Go to the Add facet page and make sure that returns a 200.
+    $facet_add_page = '/admin/config/search/facets/add-facet';
+    $this->drupalGet($facet_add_page);
+    $this->assertResponse(200);
+
+    // Configure the facet source by selecting one of the search api views.
+    $this->drupalGet($facet_add_page);
+    $this->drupalPostForm(NULL, ['facet_source_id' => 'search_api_views:search_api_test_view:page_1'], $this->t('Configure facet source'));
+
+    // Fill in all fields and make sure the 'field is required' message is no
+    // longer shown.
+    $facet_source_form = [
+      'facet_source_id' => 'search_api_views:search_api_test_view:page_1',
+      'facet_source_configs[search_api_views:search_api_test_view:page_1][field_identifier]' => 'type',
+    ];
+    $this->drupalPostForm(NULL, $facet_source_form, $this->t('Save'));
+
+    $form_values = [
+      'name' => 'name 1',
+      'id' => 'name 1',
+      'status' => 1,
+      'url_alias' => 'name',
+    ];
+    $this->drupalPostForm(NULL, $form_values, $this->t('Save'));
+    $this->assertText($this->t('The machine-readable name must contain only lowercase letters, numbers, and underscores.'));
+
+    $form_values = [
+      'name' => 'name 1',
+      'id' => 'name:&1',
+      'status' => 1,
+      'url_alias' => 'name',
+    ];
+    $this->drupalPostForm(NULL, $form_values, $this->t('Save'));
+    $this->assertText($this->t('The machine-readable name must contain only lowercase letters, numbers, and underscores.'));
+
+    $form_values = [
+      'name' => 'name 1',
+      'id' => 'name_1',
+      'status' => 1,
+      'url_alias' => 'name:1',
+    ];
+    $this->drupalPostForm(NULL, $form_values, $this->t('Save'));
+    $this->assertText($this->t('The machine-readable name must contain only lowercase letters, numbers, and underscores.'));
+
+    $form_values = [
+      'name' => 'name 1',
+      'id' => 'name_1',
+      'status' => 1,
+      'url_alias' => 'name_1',
+    ];
+    $this->drupalPostForm(NULL, $form_values, $this->t('Save'));
+    $this->assertNoText($this->t('The machine-readable name must contain only lowercase letters, numbers, and underscores.'));
+  }
+
+  /**
    * Deletes a facet block by id.
    *
    * @param string $id
