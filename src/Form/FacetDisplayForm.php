@@ -224,7 +224,7 @@ class FacetDisplayForm extends EntityForm {
         $form['facet_settings'][$processor_id]['status'] = array(
           '#type' => 'checkbox',
           '#title' => (string) $processor->getPluginDefinition()['label'],
-          '#default_value' => $processor->isLocked() || !empty($processor->configuration['enabled']),
+          '#default_value' => $processor->isLocked() || !empty($enabled_processors[$processor_id]),
           '#description' => $processor->getDescription(),
           '#attributes' => array(
             'class' => array(

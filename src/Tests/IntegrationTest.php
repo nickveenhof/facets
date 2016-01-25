@@ -385,6 +385,25 @@ class IntegrationTest extends FacetWebTestBase {
   }
 
   /**
+   * Tests for processor integration.
+   */
+  public function testProcessorIntegration() {
+    $facet_name = "Snowy owl~";
+    $facet_id = "snowy_owl_";
+    $this->addFacet($facet_name);
+
+    // Go to the processors form and check that the count limit processor is not
+    // checked.
+    $this->drupalGet('admin/config/search/facets/' . $facet_id . '/display');
+    $this->assertNoFieldChecked('edit-facet-settings-count-limit-status');
+
+    $form = ['facet_settings[count_limit][status]' => TRUE];
+    $this->drupalPostForm(NULL, $form, $this->t('Save'));
+    $this->assertResponse(200);
+    $this->assertFieldChecked('edit-facet-settings-count-limit-status');
+  }
+
+  /**
    * Deletes a facet block by id.
    *
    * @param string $id
