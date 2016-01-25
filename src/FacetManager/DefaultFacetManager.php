@@ -159,8 +159,14 @@ class DefaultFacetManager {
       // Make sure we don't alter queries for facets with a different source.
       if ($facet->getFacetSourceId() == $this->facetSourceId) {
         /** @var \Drupal\facets\QueryType\QueryTypeInterface $query_type_plugin */
-        $query_type_plugin = $this->queryTypePluginManager->createInstance($facet->getQueryType(), ['query' => $query, 'facet' => $facet]);
-        $query_type_plugin->execute();
+        $query_type_plugin = $this->queryTypePluginManager
+          ->createInstance($facet->getQueryType(), ['query' => $query, 'facet' => $facet]);
+        $unfiltered_results = $query_type_plugin->execute();
+
+        // Save unfiltered results in facet.
+        if (!is_null($unfiltered_results)) {
+          $facet->setUnfilteredResults($unfiltered_results);
+        }
       }
     }
   }

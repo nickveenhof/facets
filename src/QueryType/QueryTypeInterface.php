@@ -13,6 +13,9 @@ interface QueryTypeInterface {
 
   /**
    * Add facet info to the query using the backend native query object.
+   *
+   * @return array
+   *   Returns an array of unfiltered results
    */
   public function execute();
 

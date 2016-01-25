@@ -152,7 +152,7 @@ class UrlIntegrationTest extends FacetWebTestBase {
 
     $this->assertResponse(200);
     $this->assertLink('(-) item');
-    $this->assertNoLink('article');
+    $this->assertLink('article');
     $this->assertUrl($url);
   }
 

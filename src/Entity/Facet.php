@@ -162,6 +162,13 @@ class Facet extends ConfigEntityBase implements FacetInterface {
    */
   protected $results = [];
 
+  /**
+   * The results.
+   *
+   * @var \Drupal\facets\Result\ResultInterface[]
+   */
+  protected $unfiltered_results = [];
+
   protected $active_values = [];
 
   /**
@@ -255,6 +262,14 @@ class Facet extends ConfigEntityBase implements FacetInterface {
   /**
    * {@inheritdoc}
    */
+  protected function urlRouteParameters($rel) {
+    $parameters = parent::urlRouteParameters($rel);
+    return $parameters;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function getDescription() {
     return $this->description;
   }
@@ -270,11 +285,51 @@ class Facet extends ConfigEntityBase implements FacetInterface {
   /**
    * {@inheritdoc}
    */
+  public function getQueryTypes() {
+    return $this->query_type_name;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function getWidget() {
     return $this->widget;
   }
 
   /**
+   * Retrieves all processors supported by this facet.
+   *
+   * @return \Drupal\facets\Processor\ProcessorInterface[]
+   *   The loaded processors, keyed by processor ID.
+   */
+  protected function loadProcessors() {
+    if (!isset($this->processors)) {
+      /* @var $processor_plugin_manager \Drupal\facets\Processor\ProcessorPluginManager */
+      $processor_plugin_manager = \Drupal::service('plugin.manager.facets.processor');
+      $processor_settings = $this->getOption('processors', []);
+
+      foreach ($processor_plugin_manager->getDefinitions() as $name => $processor_definition) {
+        if (class_exists($processor_definition['class']) && empty($this->processors[$name])) {
+          // Create our settings for this processor.
+          $settings = empty($processor_settings[$name]['settings']) ? [] : $processor_settings[$name]['settings'];
+          $settings['facet'] = $this;
+
+          /* @var $processor \Drupal\facets\Processor\ProcessorInterface */
+          $processor = $processor_plugin_manager->createInstance($name, $settings);
+          $this->processors[$name] = $processor;
+        }
+        elseif (!class_exists($processor_definition['class'])) {
+          \Drupal::logger('facets')
+            ->warning('Processor @id specifies a non-existing @class.', array(
+              '@id' => $name,
+              '@class' => $processor_definition['class']
+            ));
+        }
+      }
+    }
+
+    return $this->processors;
+  }  /**
    * {@inheritdoc}
    */
   public function getQueryType() {
@@ -287,6 +342,13 @@ class Facet extends ConfigEntityBase implements FacetInterface {
     // Give the widget the chance to select a preferred query type. This is
     // useful with a date widget, as it needs to select the date query type.
     return $widget->getQueryType($query_types);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getQueryOperator() {
+    return $this->getOption('query_operator', 'OR');
   }
 
   /**
@@ -359,12 +421,7 @@ class Facet extends ConfigEntityBase implements FacetInterface {
     return $this;
   }
 
-  /**
-   * {@inheritdoc}
-   */
-  public function getQueryTypes() {
-    return $this->query_type_name;
-  }
+
 
   /**
    * {@inheritdoc}
@@ -459,44 +516,6 @@ class Facet extends ConfigEntityBase implements FacetInterface {
   }
 
   /**
-   * Retrieves all processors supported by this facet.
-   *
-   * @return \Drupal\facets\Processor\ProcessorInterface[]
-   *   The loaded processors, keyed by processor ID.
-   */
-  protected function loadProcessors() {
-    if (!isset($this->processors)) {
-      /* @var $processor_plugin_manager \Drupal\facets\Processor\ProcessorPluginManager */
-      $processor_plugin_manager = \Drupal::service('plugin.manager.facets.processor');
-
-      foreach ($processor_plugin_manager->getDefinitions() as $processor_id => $processor_definition) {
-        if (class_exists($processor_definition['class']) && empty($this->processors[$processor_id])) {
-          $settings = empty($this->processor_configs[$processor_id]['settings']) ? [] : $this->processor_configs[$processor_id]['settings'];
-          $settings['enabled'] = empty($this->processor_configs[$processor_id]) ? FALSE : TRUE;
-          $settings['facet'] = $this;
-
-          /* @var $processor \Drupal\facets\Processor\ProcessorInterface */
-          $processor = $processor_plugin_manager->createInstance($processor_id, $settings);
-          $this->processors[$processor_id] = $processor;
-        }
-        elseif (!class_exists($processor_definition['class'])) {
-          \Drupal::logger('facets')->warning('Processor @id specifies a non-existing @class.', array('@id' => $processor_id, '@class' => $processor_definition['class']));
-        }
-      }
-    }
-
-    return $this->processors;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  protected function urlRouteParameters($rel) {
-    $parameters = parent::urlRouteParameters($rel);
-    return $parameters;
-  }
-
-  /**
    * {@inheritdoc}
    */
   public function getResults() {
@@ -517,6 +536,20 @@ class Facet extends ConfigEntityBase implements FacetInterface {
         }
       }
     }
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setUnfilteredResults(array $all_results = []) {
+    $this->unfiltered_results = $all_results;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getUnfilteredResults() {
+    return $this->unfiltered_results;
   }
 
   /**
@@ -550,7 +583,11 @@ class Facet extends ConfigEntityBase implements FacetInterface {
           $this->facetSourcePlugins[$name] = $facet_source;
         }
         elseif (!class_exists($facet_source_definition['class'])) {
-          \Drupal::logger('facets')->warning('Facet Source @id specifies a non-existing @class.', ['@id' => $name, '@class' => $facet_source_definition['class']]);
+          \Drupal::logger('facets')
+            ->warning('Facet Source @id specifies a non-existing @class.', [
+              '@id' => $name,
+              '@class' => $facet_source_definition['class']
+            ]);
         }
       }
     }

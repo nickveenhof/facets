@@ -290,6 +290,43 @@ class IntegrationTest extends FacetWebTestBase {
   }
 
   /**
+   * Tests the facet's and/or functionality.
+   */
+  public function testAndOrFacet() {
+    $facet_name = 'test & facet';
+    $facet_id = 'test_facet';
+    $facet_edit_page = 'admin/config/search/facets/' . $facet_id . '/display';
+
+    $this->drupalLogin($this->adminUser);
+    $this->addFacet($facet_name);
+    $this->createFacetBlock('test_facet');
+
+    $this->drupalGet($facet_edit_page);
+    $this->drupalPostForm(NULL, ['facet_settings[query_operator]' => 'AND'], $this->t('Save'));
+
+    $this->insertExampleContent();
+    $this->assertEqual($this->indexItems($this->indexId), 5, '5 items were indexed.');
+
+    $this->drupalGet('search-api-test-fulltext');
+    $this->assertLink('item');
+    $this->assertLink('article');
+
+    $this->clickLink('item');
+    $this->assertLink('(-) item');
+    $this->assertNoLink('article');
+
+    $this->drupalGet($facet_edit_page);
+    $this->drupalPostForm(NULL, ['facet_settings[query_operator]' => 'OR'], $this->t('Save'));
+    $this->drupalGet('search-api-test-fulltext');
+    $this->assertLink('item');
+    $this->assertLink('article');
+
+    $this->clickLink('item');
+    $this->assertLink('(-) item');
+    $this->assertLink('article');
+  }
+
+  /**
    * Deletes a facet block by id.
    *
    * @param string $id

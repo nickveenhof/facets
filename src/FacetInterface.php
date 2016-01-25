@@ -126,6 +126,24 @@ interface FacetInterface extends ConfigEntityInterface {
    */
   public function setResults(array $results);
 
+  /**
+   * Sets an array of unfiltered results.
+   *
+   * These unfiltered results are used to set the correct count of the actual
+   * facet results when using the OR query operator. They are not results value
+   * objects like those in ::$results.
+   *
+   * @param array
+   *   Unfiltered results.
+   */
+  public function setUnfilteredResults(array $all_results = []);
+
+  /**
+   * Gets an array of unfiltered results.
+   *
+   * @return array
+   */
+  public function getUnfilteredResults();
 
   /**
    * Get the query type instance.
@@ -134,6 +152,14 @@ interface FacetInterface extends ConfigEntityInterface {
    *   The query type plugin being used.
    */
   public function getQueryType();
+
+  /**
+   * Get the query operator.
+   *
+   * @return string
+   *   The query operator being used.
+   */
+  public function getQueryOperator();
 
   /**
    * Get the plugin name for the url processor.

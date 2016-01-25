@@ -45,22 +45,20 @@ class LinksWidget implements WidgetInterface {
     $show_numbers = (bool) $configuration['show_numbers'];
 
     foreach ($results as $result) {
-      if ($result->getCount()) {
-        // Get the link.
-        $text = $result->getDisplayValue();
-        if ($show_numbers) {
-          $text .= ' (' . $result->getCount() . ')';
-        }
-        if ($result->isActive()) {
-          $text = '(-) ' . $text;
-        }
+      // Get the link.
+      $text = $result->getDisplayValue();
+      if ($show_numbers) {
+        $text .= ' (' . $result->getCount() . ')';
+      }
+      if ($result->isActive()) {
+        $text = '(-) ' . $text;
+      }
 
-        if (is_null($result->getUrl())) {
-          $items[] = $text;
-        }
-        else {
-          $items[] = new Link($text, $result->getUrl());
-        }
+      if (is_null($result->getUrl())) {
+        $items[] = $text;
+      }
+      else {
+        $items[] = new Link($text, $result->getUrl());
       }
     }
 

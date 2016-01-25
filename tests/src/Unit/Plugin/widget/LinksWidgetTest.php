@@ -79,29 +79,6 @@ class LinksWidgetTest extends UnitTestCase {
   /**
    * Test widget.
    */
-  public function testHideEmptyCount() {
-    $original_results = $this->originalResults;
-    $original_results[1] = new Result('badger', 'Badger', 0);
-
-    $facet = new Facet([], 'facet');
-    $facet->setResults($original_results);
-    $facet->setWidgetConfigs(['show_numbers' => 1]);
-
-    $output = $this->widget->build($facet);
-
-    $this->assertInternalType('array', $output);
-    $this->assertCount(3, $output['#items']);
-
-    $expected_links = ['Llama (10)', 'Duck (15)', 'Alpaca (9)'];
-    foreach ($expected_links as $index => $value) {
-      $this->assertInstanceOf('\Drupal\Core\Link', $output['#items'][$index]);
-      $this->assertEquals($value, $output['#items'][$index]->getText());
-    }
-  }
-
-  /**
-   * Test widget.
-   */
   public function testActiveItems() {
     $original_results = $this->originalResults;
     $original_results[0]->setActiveState(TRUE);

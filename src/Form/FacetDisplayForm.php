@@ -352,6 +352,15 @@ class FacetDisplayForm extends EntityForm {
       '#default_value' => isset($empty_behavior_config['text_format']) ? $empty_behavior_config['text'] : '',
     ];
 
+    // Query operator.
+    $form['facet_settings']['query_operator'] = [
+      '#type' => 'radios',
+      '#title' => $this->t('Operator'),
+      '#options' => ['OR' => $this->t('OR'), 'AND' => $this->t('AND')],
+      '#description' => $this->t('AND filters are exclusive and narrow the result set. OR filters are inclusive and widen the result set.'),
+      '#default_value' => $facet->getQueryOperator(),
+    ];
+
     $form['weights'] = array(
       '#type' => 'details',
       '#title' => t('Advanced settings'),
@@ -526,6 +535,8 @@ class FacetDisplayForm extends EntityForm {
       ]);
     }
     $facet->setEmptyBehavior($empty_behavior_config);
+
+    $facet->setOption('query_operator', $form_state->getValue(['facet_settings', 'query_operator']));
 
     $facet->save();
     drupal_set_message(t('Facet %name has been updated.', ['%name' => $facet->getName()]));
