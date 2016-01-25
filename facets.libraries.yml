@@ -1,3 +1,11 @@
+drupal.facets.index-active-formatters:
+  version: VERSION
+  js:
+    js/index-active-formatters.js: {}
+  dependencies:
+    - core/jquery
+    - core/drupal
+    - core/jquery.once
 drupal.facets.admin_css:
   version: VERSION
   css:

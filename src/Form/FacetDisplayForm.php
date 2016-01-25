@@ -204,7 +204,7 @@ class FacetDisplayForm extends EntityForm {
     }
 
     $form['#tree'] = TRUE;
-    $form['#attached']['library'][] = 'search_api/drupal.search_api.index-active-formatters';
+    $form['#attached']['library'][] = 'facets/drupal.facets.index-active-formatters';
     $form['#title'] = $this->t('Manage processors for facet %label', array('%label' => $facet->label()));
 
     // Add the list of all other processors with checkboxes to enable/disable
