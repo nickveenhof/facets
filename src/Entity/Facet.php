@@ -304,7 +304,7 @@ class Facet extends ConfigEntityBase implements FacetInterface {
     if (!isset($this->processors)) {
       /* @var $processor_plugin_manager \Drupal\facets\Processor\ProcessorPluginManager */
       $processor_plugin_manager = \Drupal::service('plugin.manager.facets.processor');
-      $processor_settings = !empty($this->processor_configs) ? $this->processor_configs : [];
+      $processor_settings = $this->getProcessorConfigs();
 
       foreach ($processor_plugin_manager->getDefinitions() as $name => $processor_definition) {
         if (class_exists($processor_definition['class']) && empty($this->processors[$name])) {
@@ -333,7 +333,7 @@ class Facet extends ConfigEntityBase implements FacetInterface {
    * {@inheritdoc}
    */
   public function getProcessorConfigs() {
-    return $this->processor_configs;
+    return !empty($this->processor_configs) ? $this->processor_configs : [];
   }
 
   /**
@@ -591,7 +591,7 @@ class Facet extends ConfigEntityBase implements FacetInterface {
     // Filter processors by status if required. Enabled processors are those
     // which have settings in the processor_configs.
     if ($only_enabled) {
-      $processors_settings = !empty($this->processor_configs) ? $this->processor_configs : [];
+      $processors_settings = $this->getProcessorConfigs();
       $processors = array_intersect_key($processors, $processors_settings);
     }
 
@@ -603,7 +603,7 @@ class Facet extends ConfigEntityBase implements FacetInterface {
    */
   public function getProcessorsByStage($stage, $only_enabled = TRUE) {
     $processors = $this->loadProcessors();
-    $processor_settings = $this->processor_configs;
+    $processor_settings = $this->getProcessorConfigs();
     $processor_weights = array();
 
     // Get a list of all processors meeting the criteria (stage and, optionally,
