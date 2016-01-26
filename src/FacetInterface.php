@@ -293,6 +293,14 @@ interface FacetInterface extends ConfigEntityInterface {
   public function getProcessorsByStage($stage, $only_enabled = TRUE);
 
   /**
+   * Retrieves this facets's processor configs.
+   *
+   * @return array
+   *   An array of processors and their configs.
+   */
+  public function getProcessorConfigs();
+
+  /**
    * Sets the "only visible when facet source is visible" boolean flag.
    *
    * @param bool $only_visible_when_facet_source_is_visible

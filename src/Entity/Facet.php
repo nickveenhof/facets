@@ -329,7 +329,16 @@ class Facet extends ConfigEntityBase implements FacetInterface {
     }
 
     return $this->processors;
-  }  /**
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getProcessorConfigs() {
+    return $this->processor_configs;
+  }
+
+  /**
    * {@inheritdoc}
    */
   public function getQueryType() {

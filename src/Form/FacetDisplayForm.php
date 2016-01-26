@@ -393,6 +393,8 @@ class FacetDisplayForm extends EntityForm {
       );
     }
 
+    $processor_settings = $facet->getProcessorConfigs();
+
     // Fill in the containers previously created with the processors that are
     // enabled on the facet.
     foreach ($processors_by_stage as $stage => $processors) {
@@ -498,9 +500,8 @@ class FacetDisplayForm extends EntityForm {
         'weights' => array(),
         'settings' => array(),
       );
-      $processor_values = $values[$form_container_key][$processor_id];
-      if (!empty($processor_values['weights'])) {
-        $new_settings['weights'] = $processor_values['weights'];
+      if (!empty($values['processors'][$processor_id]['weights'])) {
+        $new_settings['weights'] = $values['processors'][$processor_id]['weights'];
       }
       if (isset($form[$form_container_key][$processor_id]['settings'])) {
         $processor_form_state = new SubFormState(
