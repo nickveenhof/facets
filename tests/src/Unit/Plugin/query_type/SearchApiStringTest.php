@@ -25,7 +25,7 @@ class SearchApiStringTest extends UnitTestCase {
   public function testQueryType() {
     $query = new SearchApiQuery([], 'search_api_query', []);
     $facet = new Facet(
-      ['options' => ['query_operator' => 'AND']],
+      ['query_operator' => 'AND'],
       'facets_facet'
     );
 

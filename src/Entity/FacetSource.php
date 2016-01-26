@@ -37,8 +37,8 @@ use Drupal\facets\UrlProcessor\UrlProcessorInterface;
  *   config_export = {
  *     "id",
  *     "name",
- *     "filterKey",
- *     "urlProcessor"
+ *     "filter_key",
+ *     "url_processor"
  *   },
  *   links = {
  *     "canonical" = "/admin/config/search/facets/facet-sources/",
@@ -67,14 +67,14 @@ class FacetSource extends ConfigEntityBase implements FacetSourceInterface {
    *
    * @var string
    */
-  protected $filterKey;
+  protected $filter_key;
 
   /**
    * The url processor name.
    *
    * @var string
    */
-  protected $urlProcessor = 'query_string';
+  protected $url_processor = 'query_string';
 
   /**
    * {@inheritdoc}
@@ -94,28 +94,28 @@ class FacetSource extends ConfigEntityBase implements FacetSourceInterface {
    * {@inheritdoc}
    */
   public function setFilterKey($filter_key) {
-    $this->filterKey = $filter_key;
+    $this->filter_key = $filter_key;
   }
 
   /**
    * {@inheritdoc}
    */
   public function getFilterKey() {
-    return $this->filterKey;
+    return $this->filter_key;
   }
 
   /**
    * {@inheritdoc}
    */
   public function setUrlProcessor($processor_name) {
-    $this->urlProcessor = $processor_name;
+    $this->url_processor = $processor_name;
   }
 
   /**
    * {@inheritdoc}
    */
   public function getUrlProcessorName() {
-    return $this->urlProcessor;
+    return $this->url_processor;
   }
 
 }

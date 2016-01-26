@@ -11,7 +11,7 @@ facets.facet_source.*:
     name:
       type: label
       label: Name'
-    filterKey:
+    filter_key:
       type: string
       label: 'Filter key'
     url_processor:

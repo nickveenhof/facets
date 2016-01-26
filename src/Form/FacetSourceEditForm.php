@@ -94,7 +94,7 @@ class FacetSourceEditForm extends EntityForm {
     $facet_source = $this->getEntity();
 
     // Filter key setting.
-    $form['filterKey'] = [
+    $form['filter_key'] = [
       '#type' => 'textfield',
       '#title' => $this->t('Filter key'),
       '#size' => 20,
@@ -112,7 +112,7 @@ class FacetSourceEditForm extends EntityForm {
       $url_processors[$definition['id']] = $definition['label'];
       $url_processors_description[] = $definition['description'];
     }
-    $form['urlProcessor'] = [
+    $form['url_processor'] = [
       '#type' => 'radios',
       '#title' => $this->t('URL Processor'),
       '#options' => $url_processors,

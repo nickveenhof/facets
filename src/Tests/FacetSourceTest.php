@@ -42,16 +42,16 @@ class FacetSourceTest extends FacetWebTestBase {
 
     // Test the edit page.
     $edit = array(
-      'filterKey' => 'fq',
+      'filter_key' => 'fq',
     );
-    $this->assertField('filterKey');
-    $this->assertField('urlProcessor');
+    $this->assertField('filter_key');
+    $this->assertField('url_processor');
     $this->drupalPostForm(NULL, $edit, $this->t('Save'));
     $this->assertResponse(200);
 
-    // Test that saving worked filterkey has the new value
-    $this->assertField('filterKey');
-    $this->assertField('urlProcessor');
+    // Test that saving worked filter_key has the new value
+    $this->assertField('filter_key');
+    $this->assertField('url_processor');
     $this->assertRaw('fq');
   }
 
@@ -69,17 +69,17 @@ class FacetSourceTest extends FacetWebTestBase {
 
     // Test the edit page.
     $edit = array(
-      'urlProcessor' => 'dummy_query',
+      'url_processor' => 'dummy_query',
     );
-    $this->assertField('filterKey');
-    $this->assertField('urlProcessor');
+    $this->assertField('filter_key');
+    $this->assertField('url_processor');
     $this->drupalPostForm(NULL, $edit, $this->t('Save'));
     $this->assertResponse(200);
 
     // Test that saving worked and that the url processor has the new value.
-    $this->assertField('filterKey');
-    $this->assertField('urlProcessor');
-    $elements = $this->xpath('//input[@id=:id]', [':id' => 'edit-urlprocessor-dummy-query']);
+    $this->assertField('filter_key');
+    $this->assertField('url_processor');
+    $elements = $this->xpath('//input[@id=:id]', [':id' => 'edit-url-processor-dummy-query']);
     $this->assertEqual('dummy_query', $elements[0]['value']);
   }
 

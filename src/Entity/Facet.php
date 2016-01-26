@@ -43,7 +43,7 @@ use Drupal\facets\FacetInterface;
  *     "facet_source_id",
  *     "widget",
  *     "widget_configs",
- *     "options",
+ *     "query_operator",
  *     "only_visible_when_facet_source_is_visible",
  *     "processor_configs",
  *     "empty_behavior",
@@ -98,18 +98,16 @@ class Facet extends ConfigEntityBase implements FacetInterface {
   /**
    * Configuration for the widget. This is a key-value stored array.
    *
-   * @var string
+   * @var array
    */
-  protected $widget_configs;
+  protected $widget_configs = [];
 
   /**
-   * An array of options configuring this facet.
+   * The operator to hand over to the query, currently AND | OR.
    *
-   * @var array
-   *
-   * @see getOptions()
+   * @var string
    */
-  protected $options = array();
+  protected $query_operator;
 
   /**
    * The field identifier.
@@ -192,14 +190,14 @@ class Facet extends ConfigEntityBase implements FacetInterface {
    *
    * @var array
    */
-  protected $processor_configs;
+  protected $processor_configs = [];
 
   /**
    * Additional facet configurations.
    *
    * @var array
    */
-  protected $facet_configs;
+  protected $facet_configs = [];
 
   /**
    * Is the facet only visible when the facet source is only visible.
@@ -306,7 +304,7 @@ class Facet extends ConfigEntityBase implements FacetInterface {
     if (!isset($this->processors)) {
       /* @var $processor_plugin_manager \Drupal\facets\Processor\ProcessorPluginManager */
       $processor_plugin_manager = \Drupal::service('plugin.manager.facets.processor');
-      $processor_settings = $this->getOption('processors', []);
+      $processor_settings = !empty($this->processor_configs) ? $this->processor_configs : [];
 
       foreach ($processor_plugin_manager->getDefinitions() as $name => $processor_definition) {
         if (class_exists($processor_definition['class']) && empty($this->processors[$name])) {
@@ -356,8 +354,15 @@ class Facet extends ConfigEntityBase implements FacetInterface {
   /**
    * {@inheritdoc}
    */
+  public function setQueryOperator($operator = '') {
+    return $this->query_operator = $operator;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function getQueryOperator() {
-    return $this->getOption('query_operator', 'OR');
+    return $this->query_operator ?: 'OR';
   }
 
   /**
@@ -388,36 +393,6 @@ class Facet extends ConfigEntityBase implements FacetInterface {
   /**
    * {@inheritdoc}
    */
-  public function getOption($name, $default = NULL) {
-    return isset($this->options[$name]) ? $this->options[$name] : $default;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function getOptions() {
-    return $this->options;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function setOption($name, $option) {
-    $this->options[$name] = $option;
-    return $this;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function setOptions(array $options) {
-    $this->options = $options;
-    return $this;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
   public function getFieldIdentifier() {
     return $this->field_identifier;
   }
@@ -429,8 +404,6 @@ class Facet extends ConfigEntityBase implements FacetInterface {
     $this->field_identifier = $field_identifier;
     return $this;
   }
-
-
 
   /**
    * {@inheritdoc}
@@ -616,7 +589,7 @@ class Facet extends ConfigEntityBase implements FacetInterface {
     $processors = $this->loadProcessors();
 
     // Filter processors by status if required. Enabled processors are those
-    // which have settings in the "processors" option.
+    // which have settings in the processor_configs.
     if ($only_enabled) {
       $processors_settings = !empty($this->processor_configs) ? $this->processor_configs : [];
       $processors = array_intersect_key($processors, $processors_settings);
@@ -732,7 +705,5 @@ class Facet extends ConfigEntityBase implements FacetInterface {
   public function getFacetConfigs() {
     return $this->facet_configs;
   }
-
-
 
 }

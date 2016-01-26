@@ -537,7 +537,7 @@ class FacetDisplayForm extends EntityForm {
     }
     $facet->setEmptyBehavior($empty_behavior_config);
 
-    $facet->setOption('query_operator', $form_state->getValue(['facet_settings', 'query_operator']));
+    $facet->setQueryOperator($form_state->getValue(['facet_settings', 'query_operator']));
 
     $facet->save();
     drupal_set_message(t('Facet %name has been updated.', ['%name' => $facet->getName()]));

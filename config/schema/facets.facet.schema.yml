@@ -26,6 +26,9 @@ facets.facet.*:
     query_type_name:
       type: string
       label: 'Query Type Name'
+    query_operator:
+      type: string
+      label: 'Query Operator'
     widget:
       type: string
       label: 'Widget identifier'

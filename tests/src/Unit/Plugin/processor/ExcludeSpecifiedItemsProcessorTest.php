@@ -83,14 +83,6 @@ class ExcludeSpecifiedItemsProcessorTest extends UnitTestCase {
   public function testNoFilter() {
     $facet = new Facet([], 'facet');
     $facet->setResults($this->originalResults);
-    $facet->setOption('processors', [
-      'exclude_specified_items' => [
-        'settings' => [
-          'exclude' => 'alpaca',
-          'regex' => 0,
-        ],
-      ],
-    ]);
     $facet->addProcessor([
       'processor_id' => 'exclude_specified_items',
       'weights' => [],
@@ -114,14 +106,6 @@ class ExcludeSpecifiedItemsProcessorTest extends UnitTestCase {
   public function testStringFilter() {
     $facet = new Facet([], 'facet');
     $facet->setResults($this->originalResults);
-    $facet->setOption('processors', [
-      'exclude_specified_items' => [
-        'settings' => [
-          'exclude' => 'llama',
-          'regex' => 0,
-        ],
-      ],
-    ]);
     $facet->addProcessor([
       'processor_id' => 'exclude_specified_items',
       'weights' => [],
@@ -151,14 +135,6 @@ class ExcludeSpecifiedItemsProcessorTest extends UnitTestCase {
   public function testRegexFilter($regex, $expected_results) {
     $facet = new Facet([], 'facet');
     $facet->setResults($this->originalResults);
-    $facet->setOption('processors', [
-      'exclude_specified_items' => [
-        'settings' => [
-          'exclude' => $regex,
-          'regex' => 1,
-        ],
-      ],
-    ]);
     $facet->addProcessor([
       'processor_id' => 'exclude_specified_items',
       'weights' => [],

@@ -42,7 +42,7 @@ class LinksWidget implements WidgetInterface {
     $items = [];
 
     $configuration = $facet->getWidgetConfigs();
-    $show_numbers = (bool) $configuration['show_numbers'];
+    $show_numbers = empty($configuration['show_numbers']) ? FALSE : (bool) $configuration['show_numbers'];
 
     foreach ($results as $result) {
       // Get the link.

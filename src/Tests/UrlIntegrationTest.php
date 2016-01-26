@@ -95,8 +95,8 @@ class UrlIntegrationTest extends FacetWebTestBase {
     $this->clickLink($this->t('Configure'));
 
     $edit = [
-      'filterKey' => 'y',
-      'urlProcessor' => 'query_string',
+      'filter_key' => 'y',
+      'url_processor' => 'query_string',
     ];
     $this->drupalPostForm(NULL, $edit, $this->t('Save'));
 
@@ -118,8 +118,8 @@ class UrlIntegrationTest extends FacetWebTestBase {
     $this->clickLink($this->t('Configure'));
 
     $edit = [
-      'filterKey' => 'y',
-      'urlProcessor' => 'dummy_query',
+      'filter_key' => 'y',
+      'url_processor' => 'dummy_query',
     ];
     $this->drupalPostForm(NULL, $edit, $this->t('Save'));
 

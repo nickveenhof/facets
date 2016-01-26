@@ -170,7 +170,7 @@ class QueryStringTest extends UnitTestCase {
    * Test that the facet source configuration filter key override works.
    */
   public function testFacetSourceFilterKeyOverride() {
-    $facet_source = new FacetSource(['filterKey' => 'ab'], 'facets_facet_source');
+    $facet_source = new FacetSource(['filter_key' => 'ab'], 'facets_facet_source');
 
     // Override the container with the new facet source.
     $storage = $this->getMock('\Drupal\Core\Entity\EntityStorageInterface');

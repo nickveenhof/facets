@@ -99,7 +99,7 @@ class CheckboxWidget implements WidgetInterface, FormInterface {
     $results = $facet->getResults();
 
     $configuration = $facet->getWidgetConfigs();
-    $show_numbers = (bool) $configuration['show_numbers'];
+    $show_numbers = (bool) (isset($configuration['show_numbers']) ? $configuration['show_numbers'] : FALSE);
     $form[$facet->getFieldAlias()] = [
       '#type' => 'checkboxes',
       '#title' => $facet->getName(),
