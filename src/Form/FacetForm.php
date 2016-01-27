@@ -257,6 +257,20 @@ class FacetForm extends EntityForm {
   /**
    * {@inheritdoc}
    */
+  public function validateForm(array &$form, FormStateInterface $form_state) {
+    parent::validateForm($form, $form_state);
+
+    $facet_source_id = $form_state->getValue('facet_source_id');
+    if (!is_null($facet_source_id) && $facet_source_id !== '') {
+      /** @var \Drupal\facets\FacetSource\FacetSourcePluginInterface $facet_source */
+      $facet_source = $this->getFacetSourcePluginManager()->createInstance($facet_source_id, ['facet' => $this->getEntity()]);
+      $facet_source->validateConfigurationForm($form, $form_state);
+    }
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function submitForm(array &$form, FormStateInterface $form_state) {
     parent::submitForm($form, $form_state);
 
