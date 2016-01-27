@@ -41,12 +41,8 @@ plugin.plugin_configuration.facets_processor.count_limit:
       type: integer
       label: 'Maximum amount of items to show.'
 
-# There are no settings intended for this, this will probably always be an empty
-# array but not having a schema available means the facet config is not correct.
-# This is important because the tests use strict config validation.
 plugin.plugin_configuration.facets_processor.url_processor_handler:
-  type: sequence
-  label: 'URL processor settings'
-  sequence:
-    type: string
-    label: 'Single settings'
+  type: config_object
+
+plugin.plugin_configuration.facets_processor.hide_non_narrowing_result_processor:
+  type: config_object

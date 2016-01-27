@@ -78,3 +78,11 @@ facets.facet.*:
       sequence:
         type: plugin.plugin_configuration.facets_facet_options.[%key]
         label: 'Facet plugin options'
+
+condition.plugin.other_facet:
+  type: condition.plugin
+  mapping:
+    facet_value:
+      type: string
+    facets:
+      type: string

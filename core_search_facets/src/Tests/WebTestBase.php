@@ -18,15 +18,6 @@ abstract class WebTestBase extends SimpletestWebTestBase {
   use StringTranslationTrait;
 
   /**
-   * Exempt from strict schema checking.
-   *
-   * @see \Drupal\Core\Config\Testing\ConfigSchemaChecker
-   *
-   * @var bool
-   */
-  protected $strictConfigSchema = FALSE;
-
-  /**
    * Modules to enable for this test.
    *
    * @var string[]
