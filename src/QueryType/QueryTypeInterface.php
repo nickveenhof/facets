@@ -12,7 +12,7 @@ namespace Drupal\facets\QueryType;
 interface QueryTypeInterface {
 
   /**
-   * Add facet info to the query using the backend native query object.
+   * Adds facet info to the query using the backend native query object.
    *
    * @return array
    *   Returns an array of unfiltered results
@@ -20,7 +20,7 @@ interface QueryTypeInterface {
   public function execute();
 
   /**
-   * Build the facet information, so it can be rendered.
+   * Builds the facet information, so it can be rendered.
    */
   public function build();
 

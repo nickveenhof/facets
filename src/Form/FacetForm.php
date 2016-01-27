@@ -22,7 +22,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 class FacetForm extends EntityForm {
 
   /**
-   * The facet storage controller.
+   * The facet storage.
    *
    * @var \Drupal\Core\Entity\EntityStorageInterface
    */
@@ -72,22 +72,6 @@ class FacetForm extends EntityForm {
     $processor_plugin_manager = $container->get('plugin.manager.facets.processor');
 
     return new static($entity_type_manager, $facet_source_plugin_manager, $processor_plugin_manager);
-  }
-
-  /**
-   * Gets the form entity.
-   *
-   * The form entity which has been used for populating form element defaults.
-   * This method is defined on the \Drupal\Core\Entity\EntityFormInterface and
-   * has the same contents there, we only extend to add the correct return type,
-   * this makes IDE's smarter about the other places where we use
-   * $this->getEntity().
-   *
-   * @return \Drupal\facets\FacetInterface
-   *   The current form facet entity.
-   */
-  public function getEntity() {
-    return $this->entity;
   }
 
   /**
@@ -234,7 +218,7 @@ class FacetForm extends EntityForm {
   }
 
   /**
-   * Form submission handler for the facet source subform.
+   * Handles form submissions for the facet source subform.
    */
   public function submitAjaxFacetSourceConfigForm($form, FormStateInterface $form_state) {
     $form_state->setRebuild();
@@ -268,13 +252,6 @@ class FacetForm extends EntityForm {
         $form['facet_source_configs'][$facet_source_id] += $config_form;
       }
     }
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function validateForm(array &$form, FormStateInterface $form_state) {
-    parent::validateForm($form, $form_state);
   }
 
   /**

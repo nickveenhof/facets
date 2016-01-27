@@ -23,7 +23,7 @@ interface FacetSourceInterface extends ConfigEntityInterface {
   public function getName();
 
   /**
-   * Gets the filter key for this facet source.
+   * Returns the filter key for this facet source.
    *
    * @return string
    *   The filter key.
@@ -39,7 +39,7 @@ interface FacetSourceInterface extends ConfigEntityInterface {
   public function setFilterKey($filter_key);
 
   /**
-   * Set the processor name to be used.
+   * Sets the processor name to be used.
    *
    * @param string $processor_name
    *   Plugin name of the url processor.

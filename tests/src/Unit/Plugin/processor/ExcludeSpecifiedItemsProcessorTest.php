@@ -78,7 +78,7 @@ class ExcludeSpecifiedItemsProcessorTest extends UnitTestCase {
   }
 
   /**
-   * Test no filtering happens.
+   * Tests no filtering happens.
    */
   public function testNoFilter() {
     $facet = new Facet([], 'facet');
@@ -101,7 +101,7 @@ class ExcludeSpecifiedItemsProcessorTest extends UnitTestCase {
   }
 
   /**
-   * Test filtering happens for string filter.
+   * Tests filtering happens for string filter.
    */
   public function testStringFilter() {
     $facet = new Facet([], 'facet');
@@ -128,7 +128,7 @@ class ExcludeSpecifiedItemsProcessorTest extends UnitTestCase {
   }
 
   /**
-   * Test filtering happens for regex filter.
+   * Tests filtering happens for regex filter.
    *
    * @dataProvider provideRegexTests
    */
@@ -157,7 +157,7 @@ class ExcludeSpecifiedItemsProcessorTest extends UnitTestCase {
   }
 
   /**
-   * Provide multiple data sets for ::testRegexFilter.
+   * Provides multiple data sets for ::testRegexFilter.
    */
   public function provideRegexTests() {
     return [

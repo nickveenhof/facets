@@ -44,6 +44,11 @@ class FacetSourceEditForm extends EntityForm {
 
   /**
    * Constructs a FacetSourceEditForm.
+   *
+   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
+   *   The entity type manager.
+   * @param \Drupal\facets\UrlProcessor\UrlProcessorPluginManager $url_processor_plugin_manager
+   *   The url processor plugin manager.
    */
   public function __construct(EntityTypeManagerInterface $entity_type_manager, UrlProcessorPluginManager $url_processor_plugin_manager) {
     $facet_source_storage = $entity_type_manager->getStorage('facets_facet_source');
@@ -61,7 +66,6 @@ class FacetSourceEditForm extends EntityForm {
       $this->setEntity($facet_source);
     }
     else {
-
       // We didn't have a facet source config entity yet for this facet source
       // plugin, so we create it on the fly.
       $facet_source = new FacetSource(
@@ -93,7 +97,6 @@ class FacetSourceEditForm extends EntityForm {
     /** @var \Drupal\facets\FacetSourceInterface $facet_source */
     $facet_source = $this->getEntity();
 
-    // Filter key setting.
     $form['filter_key'] = [
       '#type' => 'textfield',
       '#title' => $this->t('Filter key'),
@@ -118,7 +121,7 @@ class FacetSourceEditForm extends EntityForm {
       '#options' => $url_processors,
       '#default_value' => $facet_source->getUrlProcessorName(),
       '#description' => $this->t(
-        'The URL Processor defines the url structure used for this facet source.') . '<br />- ' .  implode('<br>- ', $url_processors_description),
+        'The URL Processor defines the url structure used for this facet source.') . '<br />- ' . implode('<br>- ', $url_processors_description),
     ];
 
     // The parent's form build method will add a save button.

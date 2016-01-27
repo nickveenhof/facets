@@ -29,7 +29,7 @@ class FacetSourceTest extends FacetWebTestBase {
   ];
 
   /**
-   * Test the facet source editing.
+   * Tests the facet source editing.
    */
   public function testEditFilterKey() {
     // Make sure we're logged in with a user that has sufficient permissions.
@@ -49,7 +49,7 @@ class FacetSourceTest extends FacetWebTestBase {
     $this->drupalPostForm(NULL, $edit, $this->t('Save'));
     $this->assertResponse(200);
 
-    // Test that saving worked filter_key has the new value
+    // Test that saving worked filter_key has the new value.
     $this->assertField('filter_key');
     $this->assertField('url_processor');
     $this->assertRaw('fq');

@@ -93,10 +93,6 @@ abstract class WebTestBase extends SimpletestWebTestBase {
       'administer blocks',
       'search content',
     ]);
-
-    $this->unauthorizedUser = $this->drupalCreateUser(['access administration pages']);
-    $this->anonymousUser = $this->drupalCreateUser();
-
   }
 
 }

@@ -14,7 +14,7 @@ namespace Drupal\facets\Processor;
 interface PostQueryProcessorInterface extends ProcessorInterface {
 
   /**
-   * Processor runs after the query was executed.
+   * Runs after the query was executed.
    *
    * Uses the query results and can alter those results, for example a
    * ValueCallbackProcessor.

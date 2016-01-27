@@ -37,8 +37,8 @@ class FacetBlockDeriver implements ContainerDeriverInterface {
    * {@inheritdoc}
    */
   public static function create(ContainerInterface $container, $base_plugin_id) {
-    $deriver = new static;
-    $deriver->facetStorage = \Drupal::getContainer()->get('entity_type.manager')->getStorage('facets_facet');
+    $deriver = new static($container, $base_plugin_id);
+    $deriver->facetStorage = $container->get('entity_type.manager')->getStorage('facets_facet');
 
     return $deriver;
   }

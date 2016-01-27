@@ -11,7 +11,6 @@ use Drupal\facets\Entity\Facet;
 use Drupal\facets\Plugin\facets\widget\LinksWidget;
 use Drupal\facets\Result\Result;
 use Drupal\Tests\UnitTestCase;
-use Symfony\Component\DependencyInjection\ContainerBuilder;
 
 /**
  * Unit test for widget.
@@ -57,7 +56,7 @@ class LinksWidgetTest extends UnitTestCase {
   }
 
   /**
-   * Test widget.
+   * Tests widget without filters.
    */
   public function testNoFilterResults() {
     $facet = new Facet([], 'facet');
@@ -77,7 +76,7 @@ class LinksWidgetTest extends UnitTestCase {
   }
 
   /**
-   * Test widget.
+   * Test widget with 2 active items.
    */
   public function testActiveItems() {
     $original_results = $this->originalResults;
@@ -106,7 +105,7 @@ class LinksWidgetTest extends UnitTestCase {
   }
 
   /**
-   * Test widget, make sure hiding and showing numbers works.
+   * Tests widget, make sure hiding and showing numbers works.
    */
   public function testHideNumbers() {
     $original_results = $this->originalResults;

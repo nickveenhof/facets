@@ -8,7 +8,9 @@
 namespace Drupal\core_search_facets\Plugin\facets\facet_source;
 
 use Drupal\Component\Plugin\PluginBase;
+use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\facets\FacetSource\FacetSourceDeriverBase;
+use Drupal\search\SearchPluginManager;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -18,12 +20,24 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  */
 class CoreNodeSearchFacetSourceDeriver extends FacetSourceDeriverBase {
 
+  /**
+   * The plugin manager for core search plugins.
+   *
+   * @var \Drupal\search\SearchPluginManager
+   */
   protected $searchManager;
 
   /**
-   * Create an instance of the deriver.
+   * Creates an instance of the deriver.
+   *
+   * @param string $base_plugin_id
+   *   The plugin ID.
+   * @param \Drupal\search\SearchPluginManager $search_manager
+   *   The plugin manager for core search plugins.
+   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
+   *   The entity manager.
    */
-  public function __construct(ContainerInterface $container, $base_plugin_id, $search_manager, $entity_type_manager) {
+  public function __construct($base_plugin_id, SearchPluginManager $search_manager, EntityTypeManagerInterface $entity_type_manager) {
     $this->searchManager = $search_manager;
     $this->entityTypeManager = $entity_type_manager;
   }
@@ -33,11 +47,10 @@ class CoreNodeSearchFacetSourceDeriver extends FacetSourceDeriverBase {
    */
   public static function create(ContainerInterface $container, $base_plugin_id) {
     return new static(
-      $container,
       $base_plugin_id,
       $container->get('plugin.manager.search'),
       $container->get('entity_type.manager')
-      );
+    );
   }
 
   /**

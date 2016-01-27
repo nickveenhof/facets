@@ -71,17 +71,17 @@ class CheckboxWidgetTest extends UnitTestCase {
   }
 
   /**
-   * Test widget with default settings.
+   * Tests widget with default settings.
    */
   public function testDefaultSettings() {
     $facet = new Facet([], 'facet');
     $facet->setResults($this->originalResults);
     $facet->setFieldIdentifier('test_field');
 
-    $formState = new FormState();
-    $formState->addBuildInfo('args', [$facet]);
+    $form_state = new FormState();
+    $form_state->addBuildInfo('args', [$facet]);
     $form = [];
-    $built_form = $this->widget->buildForm($form, $formState);
+    $built_form = $this->widget->buildForm($form, $form_state);
 
     $this->assertInternalType('array', $built_form);
     $this->assertCount(4, $built_form['test_field']['#options']);
@@ -91,7 +91,7 @@ class CheckboxWidgetTest extends UnitTestCase {
       'llama' => 'Llama',
       'badger' => 'Badger',
       'duck' => 'Duck',
-      'alpaca' => 'Alpaca'
+      'alpaca' => 'Alpaca',
     ];
     foreach ($expected_links as $index => $value) {
       $this->assertEquals($value, $built_form['test_field']['#options'][$index]);
@@ -99,7 +99,7 @@ class CheckboxWidgetTest extends UnitTestCase {
   }
 
   /**
-   * Test widget, make sure hiding and showing numbers works.
+   * Tests widget, make sure hiding and showing numbers works.
    */
   public function testHideNumbers() {
     $original_results = $this->originalResults;
@@ -110,10 +110,10 @@ class CheckboxWidgetTest extends UnitTestCase {
     $facet->setFieldIdentifier('test__field');
     $facet->setWidgetConfigs(['show_numbers' => 0]);
 
-    $formState = new FormState();
-    $formState->addBuildInfo('args', [$facet]);
+    $form_state = new FormState();
+    $form_state->addBuildInfo('args', [$facet]);
     $form = [];
-    $built_form = $this->widget->buildForm($form, $formState);
+    $built_form = $this->widget->buildForm($form, $form_state);
 
     $this->assertInternalType('array', $built_form);
     $this->assertCount(4, $built_form['test__field']['#options']);
@@ -121,7 +121,7 @@ class CheckboxWidgetTest extends UnitTestCase {
       'llama' => 'Llama',
       'badger' => 'Badger',
       'duck' => 'Duck',
-      'alpaca' => 'Alpaca'
+      'alpaca' => 'Alpaca',
     ];
     foreach ($expected_links as $index => $value) {
       $this->assertEquals($value, $built_form['test__field']['#options'][$index]);
@@ -131,7 +131,7 @@ class CheckboxWidgetTest extends UnitTestCase {
     // between those settings works.
     $facet->setWidgetConfigs(['show_numbers' => 1]);
 
-    $built_form = $this->widget->buildForm($form, $formState);
+    $built_form = $this->widget->buildForm($form, $form_state);
 
     $this->assertInternalType('array', $built_form);
     $this->assertCount(4, $built_form['test__field']['#options']);

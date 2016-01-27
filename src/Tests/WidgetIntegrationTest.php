@@ -70,7 +70,7 @@ class WidgetIntegrationTest extends FacetWebTestBase {
       'settings' => [
         'region' => 'footer',
         'id' => str_replace('_', '-', $id),
-      ]
+      ],
     ];
     $this->drupalPlaceBlock($block_values['plugin_id'], $block_values['settings']);
 
@@ -80,7 +80,7 @@ class WidgetIntegrationTest extends FacetWebTestBase {
   }
 
   /**
-   * Test links widget's basic functionality.
+   * Tests links widget's basic functionality.
    */
   public function testLinksWidget() {
     $id = 'links_widget';
@@ -106,7 +106,7 @@ class WidgetIntegrationTest extends FacetWebTestBase {
       'settings' => [
         'region' => 'footer',
         'id' => str_replace('_', '-', $id),
-      ]
+      ],
     ];
     $this->drupalPlaceBlock($block_values['plugin_id'], $block_values['settings']);
 
@@ -146,7 +146,7 @@ class WidgetIntegrationTest extends FacetWebTestBase {
       'settings' => [
         'region' => 'footer',
         'id' => str_replace('_', '-', $id),
-      ]
+      ],
     ];
     $this->drupalPlaceBlock($block_values['plugin_id'], $block_values['settings']);
 
@@ -159,7 +159,7 @@ class WidgetIntegrationTest extends FacetWebTestBase {
     $this->drupalGet($facet_edit_page);
     $this->drupalPostForm(NULL, ['widget' => 'links', 'widget_configs[show_numbers]' => TRUE], $this->t('Save'));
 
-    // Go back to the same view and check that links now display the count
+    // Go back to the same view and check that links now display the count.
     $this->drupalGet('search-api-test-fulltext');
     $this->assertLink('item (3)');
     $this->assertLink('article (2)');

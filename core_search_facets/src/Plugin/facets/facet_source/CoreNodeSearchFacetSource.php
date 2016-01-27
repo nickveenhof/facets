@@ -13,10 +13,11 @@ use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\core_search_facets\Plugin\CoreSearchFacetSourceInterface;
 use Drupal\facets\FacetInterface;
 use Drupal\facets\FacetSource\FacetSourcePluginBase;
-use Drupal\facets\FacetSource\FacetSourcePluginInterface;
+use Drupal\facets\QueryType\QueryTypePluginManager;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\search\SearchPageInterface;
+use Drupal\search\SearchPluginManager;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
 
@@ -54,6 +55,11 @@ class CoreNodeSearchFacetSource extends FacetSourcePluginBase implements CoreSea
    */
   protected $configFactory;
 
+  /**
+   * The plugin manager for core search plugins.
+   *
+   * @var \Drupal\search\SearchPluginManager
+   */
   protected $searchManager;
 
   /**
@@ -64,7 +70,7 @@ class CoreNodeSearchFacetSource extends FacetSourcePluginBase implements CoreSea
   /**
    * {@inheritdoc}
    */
-  public function __construct(array $configuration, $plugin_id, array $plugin_definition, $query_type_plugin_manager, $search_manager, RequestStack $request_stack) {
+  public function __construct(array $configuration, $plugin_id, array $plugin_definition, QueryTypePluginManager $query_type_plugin_manager, SearchPluginManager $search_manager, RequestStack $request_stack) {
     parent::__construct($configuration, $plugin_id, $plugin_definition, $query_type_plugin_manager);
     $this->searchManager = $search_manager;
     $this->setSearchKeys($request_stack->getMasterRequest()->query->get('keys'));
@@ -112,7 +118,6 @@ class CoreNodeSearchFacetSource extends FacetSourcePluginBase implements CoreSea
 
       // Get the Facet Specific Query Type so we can process the results
       // using the build() function of the query type.
-      /** @var \Drupal\facets\Entity\Facet $facet **/
       $query_type = $this->queryTypePluginManager->createInstance($facet->getQueryType(), $configuration);
       $query_type->build();
     }
@@ -143,7 +148,7 @@ class CoreNodeSearchFacetSource extends FacetSourcePluginBase implements CoreSea
    * @return array
    *   An array of query types.
    */
-  public function getQueryTypesForFieldType($field_type) {
+  protected function getQueryTypesForFieldType($field_type) {
     $query_types = [];
     switch ($field_type) {
       case 'type':
@@ -204,10 +209,13 @@ class CoreNodeSearchFacetSource extends FacetSourcePluginBase implements CoreSea
 
     // Get the current field instances and detect if the field type is allowed.
     $fields = FieldConfig::loadMultiple();
+    /** @var \Drupal\Field\FieldConfigInterface $field */
     foreach ($fields as $field) {
       // Verify if the target type is allowed for entity reference fields,
       // otherwise verify the field type(i.e. integer, float...).
-      if (in_array($field->getFieldStorageDefinition()->getSetting('target_type'), $allowed_field_types) || in_array($field->getFieldStorageDefinition()->getType(), $allowed_field_types)) {
+      $target_is_allowed = in_array($field->getFieldStorageDefinition()->getSetting('target_type'), $allowed_field_types);
+      $field_is_allowed = in_array($field->getFieldStorageDefinition()->getType(), $allowed_field_types);
+      if ($target_is_allowed || $field_is_allowed) {
         /** @var \Drupal\field\Entity\FieldConfig $field */
         if (!array_key_exists($field->getName(), $facet_fields)) {
           $facet_fields[$field->getName()] = $this->t('@label', ['@label' => $field->getLabel()]);
@@ -222,6 +230,7 @@ class CoreNodeSearchFacetSource extends FacetSourcePluginBase implements CoreSea
    * Getter for default node fields.
    *
    * @return array
+   *   An array containing the default fields enabled on a node.
    */
   protected function getDefaultFields() {
     return [
@@ -235,14 +244,14 @@ class CoreNodeSearchFacetSource extends FacetSourcePluginBase implements CoreSea
    * {@inheritdoc}
    */
   public function getFacetQueryExtender() {
-     if (!$this->facetQueryExtender) {
-       $this->facetQueryExtender = db_select('search_index', 'i', array('target' => 'replica'))->extend('Drupal\core_search_facets\FacetsQuery');
-       $this->facetQueryExtender->join('node_field_data', 'n', 'n.nid = i.sid');
-       $this->facetQueryExtender
+    if (!$this->facetQueryExtender) {
+      $this->facetQueryExtender = db_select('search_index', 'i', array('target' => 'replica'))->extend('Drupal\core_search_facets\FacetsQuery');
+      $this->facetQueryExtender->join('node_field_data', 'n', 'n.nid = i.sid');
+      $this->facetQueryExtender
          // ->condition('n.status', 1).
          ->addTag('node_access')
          ->searchExpression($this->keys, 'node_search');
-     }
+    }
     return $this->facetQueryExtender;
   }
 
@@ -254,10 +263,10 @@ class CoreNodeSearchFacetSource extends FacetSourcePluginBase implements CoreSea
     $field_name = $facet->getFieldIdentifier();
     $default_fields = $this->getDefaultFields();
     if (array_key_exists($facet->getFieldIdentifier(), $default_fields)) {
-      // We add the language code of the indexed item to the result of the query.
-      // So in this case we need to use the search_index table alias (i) for the
-      // langcode field. Otherwise we will have same nid for multiple languages
-      // as result. For more details see NodeSearch::findResults().
+      // We add the language code of the indexed item to the result of the
+      // query. So in this case we need to use the search_index table alias (i)
+      // for the langcode field. Otherwise we will have same nid for multiple
+      // languages as result. For more details see NodeSearch::findResults().
       // @TODO review if I can refactor this.
       $table_alias = $facet->getFieldIdentifier() == 'langcode' ? 'i' : 'n';
       $query_info = [

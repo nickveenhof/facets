@@ -454,7 +454,7 @@ class IntegrationTest extends FacetWebTestBase {
   }
 
   /**
-   * Helper function: asserts that a facet block does not appear.
+   * Asserts that a facet block does not appear.
    */
   protected function assertNoFacetBlocksAppear() {
     foreach ($this->blocks as $block) {
@@ -463,7 +463,7 @@ class IntegrationTest extends FacetWebTestBase {
   }
 
   /**
-   * Helper function: asserts that a facet block appears.
+   * Asserts that a facet block appears.
    */
   protected function assertFacetBlocksAppear() {
     foreach ($this->blocks as $block) {
@@ -534,7 +534,7 @@ class IntegrationTest extends FacetWebTestBase {
   }
 
   /**
-   * Get the facet overview page and make sure the overview is empty.
+   * Tests that the facet overview is empty.
    */
   protected function checkEmptyOverview() {
     $facet_overview = '/admin/config/search/facets';
@@ -608,7 +608,7 @@ class IntegrationTest extends FacetWebTestBase {
    * @param string $facet_name
    *   The name of the facet.
    */
-  public function editFacet($facet_name) {
+  protected function editFacet($facet_name) {
     $facet_id = $this->convertNameToMachineName($facet_name);
 
     $facet_edit_page = '/admin/config/search/facets/' . $facet_id . '/edit';
@@ -640,7 +640,7 @@ class IntegrationTest extends FacetWebTestBase {
   }
 
   /**
-   * This deletes an unused facet through the UI.
+   * Deletes a facet through the UI that still has usages.
    *
    * @param string $facet_name
    *   The name of the facet.
@@ -661,7 +661,7 @@ class IntegrationTest extends FacetWebTestBase {
   }
 
   /**
-   * This deletes a facet through the UI.
+   * Deletes a facet through the UI.
    *
    * @param string $facet_name
    *   The name of the facet.

@@ -16,7 +16,7 @@ use Drupal\facets\FacetInterface;
 interface BuildProcessorInterface extends ProcessorInterface {
 
   /**
-   * Processor runs before the renderable array is created.
+   * Runs before the renderable array is created.
    *
    * @param \Drupal\facets\FacetInterface $facet
    *   The facet being changed.

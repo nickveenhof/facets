@@ -186,4 +186,5 @@ class OtherFacetTest extends UnitTestCase {
     $evaluation = $sut->evaluate();
     $this->assertFalse($evaluation);
   }
+
 }

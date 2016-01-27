@@ -7,10 +7,8 @@
 
 namespace Drupal\facets\FacetSource;
 
-use Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException;
 use Drupal\Component\Plugin\PluginBase;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
-use Drupal\facets\Exception\InvalidProcessorException;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Drupal\Facets\FacetInterface;
 use Drupal\Core\Form\FormStateInterface;

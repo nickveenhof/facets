@@ -73,7 +73,7 @@ class CountLimitProcessorTest extends UnitTestCase {
   }
 
   /**
-   * Test no filtering happens.
+   * Tests no filtering happens.
    */
   public function testNoFilter() {
     $facet = new Facet([], 'facet');
@@ -94,7 +94,7 @@ class CountLimitProcessorTest extends UnitTestCase {
   }
 
   /**
-   * Test no filtering happens.
+   * Tests no filtering happens.
    */
   public function testMinEqualsValue() {
     $facet = new Facet([], 'facet');
@@ -116,7 +116,7 @@ class CountLimitProcessorTest extends UnitTestCase {
   }
 
   /**
-   * Test between minimum and maximum values.
+   * Tests between minimum and maximum values.
    */
   public function testBetweenMinAndMaxValue() {
     $facet = new Facet([], 'facet');
@@ -142,7 +142,7 @@ class CountLimitProcessorTest extends UnitTestCase {
   }
 
   /**
-   * Test maximum values.
+   * Tests maximum values.
    */
   public function testMaxValue() {
     $facet = new Facet([], 'facet');
@@ -172,7 +172,7 @@ class CountLimitProcessorTest extends UnitTestCase {
   }
 
   /**
-   * Test filtering of results.
+   * Tests filtering of results.
    */
   public function testFilterResults() {
     $facet = new Facet([], 'facet');

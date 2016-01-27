@@ -80,8 +80,8 @@ class FacetsQuery extends SearchQuery {
 
     // For complex search queries, add the LIKE conditions.
     /*if (!$this->simple) {
-      $this->join('search_dataset', 'd', 'i.sid = d.sid AND i.type = d.type');
-      $this->condition($this->conditions);
+    $this->join('search_dataset', 'd', 'i.sid = d.sid AND i.type = d.type');
+    $this->condition($this->conditions);
     }*/
 
     // Add conditions to query.

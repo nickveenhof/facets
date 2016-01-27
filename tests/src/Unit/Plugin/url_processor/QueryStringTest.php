@@ -63,7 +63,7 @@ class QueryStringTest extends UnitTestCase {
   }
 
   /**
-   * Basic test with one active item.
+   * Tests with one active item.
    */
   public function testSetSingleActiveItem() {
     $facet = new Facet([], 'facet');
@@ -81,7 +81,7 @@ class QueryStringTest extends UnitTestCase {
   }
 
   /**
-   * Basic test with multiple active items.
+   * Tests with multiple active items.
    */
   public function testSetMultipleActiveItems() {
     $facet = new Facet([], 'facet');
@@ -99,7 +99,7 @@ class QueryStringTest extends UnitTestCase {
   }
 
   /**
-   * Basic test with an empty build.
+   * Tests with an empty build.
    */
   public function testEmptyBuild() {
     $facet = new Facet([], 'facet');
@@ -115,7 +115,7 @@ class QueryStringTest extends UnitTestCase {
   }
 
   /**
-   * Test with default build.
+   * Test swith default build.
    */
   public function testBuild() {
     $facet = new Facet([], 'facet');
@@ -137,7 +137,7 @@ class QueryStringTest extends UnitTestCase {
   }
 
   /**
-   * Test with an active item already from url.
+   * Tests with an active item already from url.
    */
   public function testBuildWithActiveItem() {
     $facet = new Facet([], 'facet');
@@ -167,7 +167,7 @@ class QueryStringTest extends UnitTestCase {
   }
 
   /**
-   * Test that the facet source configuration filter key override works.
+   * Tests that the facet source configuration filter key override works.
    */
   public function testFacetSourceFilterKeyOverride() {
     $facet_source = new FacetSource(['filter_key' => 'ab'], 'facets_facet_source');
@@ -208,7 +208,7 @@ class QueryStringTest extends UnitTestCase {
   }
 
   /**
-   * Set the container for use in unit tests.
+   * Sets up a container.
    */
   protected function setContainer() {
     $router = $this->getMockBuilder('Drupal\Tests\Core\Routing\TestRouterInterface')

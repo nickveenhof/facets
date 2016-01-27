@@ -83,7 +83,7 @@ abstract class SearchApiBaseFacetSource extends FacetSourcePluginBase {
    */
   public function getFields() {
     $indexed_fields = [];
-    $fields = $this->index->getFields(TRUE);
+    $fields = $this->index->getFields();
     foreach ($fields as $field) {
       $indexed_fields[$field->getFieldIdentifier()] = $field->getLabel();
     }
@@ -102,12 +102,13 @@ abstract class SearchApiBaseFacetSource extends FacetSourcePluginBase {
     // Get the Search API Backend.
     $backend = $server->getBackend();
 
-    $fields = $this->index->getFields(TRUE);
+    $fields = $this->index->getFields();
     foreach ($fields as $field) {
       if ($field->getFieldIdentifier() == $field_id) {
         return $this->getQueryTypesForDataType($backend, $field->getType());
       }
     }
+
     throw new InvalidQueryTypeException($this->t("No available query types were found for facet @facet", ['@facet' => $facet->getName()]));
   }
 

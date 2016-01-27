@@ -29,7 +29,7 @@ use Drupal\facets\Result\Result;
 class SearchApiString extends QueryTypePluginBase {
 
   /**
-   * Holds the backend's native query object.
+   * The backend's native query object.
    *
    * @var \Drupal\search_api\Query\QueryInterface
    */
@@ -64,7 +64,6 @@ class SearchApiString extends QueryTypePluginBase {
       $unfiltered_results = $unfiltered_query
         ->execute()
         ->getExtraData('search_api_facets');
-
 
       // Set the options for the actual query.
       $options = &$query->getOptions();

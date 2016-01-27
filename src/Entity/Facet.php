@@ -167,6 +167,11 @@ class Facet extends ConfigEntityBase implements FacetInterface {
    */
   protected $unfiltered_results = [];
 
+  /**
+   * An array of active values.
+   *
+   * @var string[]
+   */
   protected $active_values = [];
 
   /**
@@ -239,7 +244,7 @@ class Facet extends ConfigEntityBase implements FacetInterface {
   }
 
   /**
-   * Gets the widget plugin manager.
+   * Returns the widget plugin manager.
    *
    * @return \Drupal\facets\Widget\WidgetPluginManager
    *   The widget plugin manager.
@@ -248,13 +253,6 @@ class Facet extends ConfigEntityBase implements FacetInterface {
     $container = \Drupal::getContainer();
 
     return $this->widget_plugin_manager ?: $container->get('plugin.manager.facets.widget');
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function id() {
-    return $this->id;
   }
 
   /**
@@ -320,7 +318,7 @@ class Facet extends ConfigEntityBase implements FacetInterface {
           \Drupal::logger('facets')
             ->warning('Processor @id specifies a non-existing @class.', array(
               '@id' => $name,
-              '@class' => $processor_definition['class']
+              '@class' => $processor_definition['class'],
             ));
         }
       }
@@ -568,7 +566,7 @@ class Facet extends ConfigEntityBase implements FacetInterface {
           \Drupal::logger('facets')
             ->warning('Facet Source @id specifies a non-existing @class.', [
               '@id' => $name,
-              '@class' => $facet_source_definition['class']
+              '@class' => $facet_source_definition['class'],
             ]);
         }
       }
@@ -674,7 +672,7 @@ class Facet extends ConfigEntityBase implements FacetInterface {
   /**
    * {@inheritdoc}
    */
-  public function setEmptyBehavior($empty_behavior) {
+  public function setEmptyBehavior(array $empty_behavior) {
     $this->empty_behavior = $empty_behavior;
   }
 

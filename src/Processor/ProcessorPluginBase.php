@@ -28,8 +28,7 @@ class ProcessorPluginBase extends PluginBase implements ProcessorInterface {
   /**
    * {@inheritdoc}
    */
-  public function validateConfigurationForm(array $form, FormStateInterface $form_state, FacetInterface $facet) {
-  }
+  public function validateConfigurationForm(array $form, FormStateInterface $form_state, FacetInterface $facet) {}
 
   /**
    * {@inheritdoc}

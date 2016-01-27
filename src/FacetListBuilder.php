@@ -120,7 +120,7 @@ class FacetListBuilder extends ConfigEntityListBuilder {
   }
 
   /**
-   * {@inheritdoc}
+   * Builds an array of facet sources for display in the overview.
    */
   public function buildFacetSourceRow(array $facet_source = []) {
     return array(

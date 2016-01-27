@@ -14,7 +14,7 @@ use Drupal\facets\FacetInterface;
 interface WidgetInterface {
 
   /**
-   * Add facet info to the query using the selected query type.
+   * Adds facet info to the query using the selected query type.
    *
    * @return mixed
    *   A boolean
@@ -33,7 +33,7 @@ interface WidgetInterface {
   public function build(FacetInterface $facet);
 
   /**
-   * Pick the preferred query type for this widget.
+   * Picks the preferred query type for this widget.
    *
    * @param string[] $query_types
    *   An array keyed with query type name and it's plugin class to load.

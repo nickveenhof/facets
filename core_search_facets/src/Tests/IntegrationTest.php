@@ -35,8 +35,9 @@ class IntegrationTest extends CoreSearchFacetsWebTestBase {
     \Drupal::service('plugin.manager.search')->createInstance('node_search')->updateIndex();
     search_update_totals();
 
-    // Remove the facet blocks each time we run a new test.
-    unset($this->blocks);
+    // Make absolutely sure the ::$blocks variable doesn't pass information
+    // along between tests.
+    $this->blocks = NULL;
   }
 
   /**

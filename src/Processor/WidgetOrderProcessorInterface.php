@@ -13,7 +13,7 @@ namespace Drupal\facets\Processor;
 interface WidgetOrderProcessorInterface extends BuildProcessorInterface {
 
   /**
-   * Order results and return the new order of results.
+   * Orders results and return the new order of results.
    *
    * @param \Drupal\facets\Result\Result[] $results
    *   An array containing results.

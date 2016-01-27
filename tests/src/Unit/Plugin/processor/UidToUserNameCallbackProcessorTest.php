@@ -38,9 +38,8 @@ class UidToUserNameCallbackProcessorTest extends UnitTestCase {
     $this->createMocks();
   }
 
-
   /**
-   * Test that results were correctly changed.
+   * Tests that results were correctly changed.
    */
   public function testResultsChanged() {
     $original_results = [

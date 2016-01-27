@@ -21,7 +21,7 @@ use Drupal\facets\Result\Result;
 class CoreNodeSearchString extends QueryTypePluginBase {
 
   /**
-   * Holds the backend's native query object.
+   * The backend's native query object.
    *
    * @var \Drupal\search_api\Query\QueryInterface
    */
@@ -31,7 +31,6 @@ class CoreNodeSearchString extends QueryTypePluginBase {
    * {@inheritdoc}
    */
   public function execute() {
-
     /** @var \Drupal\core_search_facets\Plugin\CoreSearchFacetSourceInterface $facet_source */
     $facet_source = $this->facet->getFacetSource();
     $query_info = $facet_source->getQueryInfo($this->facet);

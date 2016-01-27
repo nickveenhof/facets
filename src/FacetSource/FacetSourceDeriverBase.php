@@ -82,7 +82,6 @@ abstract class FacetSourceDeriverBase implements ContainerDeriverInterface {
     return isset($derivatives[$derivative_id]) ? $derivatives[$derivative_id] : NULL;
   }
 
-
   /**
    * Compares two plugin definitions according to their labels.
    *

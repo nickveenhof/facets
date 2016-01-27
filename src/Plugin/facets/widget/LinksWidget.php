@@ -68,9 +68,9 @@ class LinksWidget implements WidgetInterface {
       '#cache' => [
         'contexts' => [
           'url.path',
-          'url.query_args'
-        ]
-      ]
+          'url.query_args',
+        ],
+      ],
     ];
     return $build;
   }

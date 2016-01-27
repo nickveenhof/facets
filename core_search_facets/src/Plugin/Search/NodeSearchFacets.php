@@ -9,15 +9,17 @@ namespace Drupal\core_search_facets\Plugin\Search;
 
 use Drupal\Core\Config\Config;
 use Drupal\Core\Database\Driver\mysql\Connection;
-use Drupal\Core\Entity\EntityManagerInterface;
+use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\Language\LanguageManagerInterface;
 use Drupal\Core\Session\AccountInterface;
+use Drupal\facets\FacetSource\FacetSourcePluginManager;
 use Drupal\node\Plugin\Search\NodeSearch;
 use Drupal\Core\Render\RendererInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
  * Handles searching for node entities using the Search module index.
@@ -34,13 +36,13 @@ class NodeSearchFacets extends NodeSearch {
     $plugin_id,
     $plugin_definition,
     Connection $database,
-    EntityManagerInterface $entity_manager,
+    EntityTypeManagerInterface $entity_manager,
     ModuleHandlerInterface $module_handler,
     Config $search_settings,
     LanguageManagerInterface $language_manager,
     RendererInterface $renderer,
-    $facet_source_plugin_manager,
-    $request_stack,
+    FacetSourcePluginManager $facet_source_plugin_manager,
+    RequestStack $request_stack,
     AccountInterface $account = NULL) {
 
     parent::__construct($configuration, $plugin_id, $plugin_definition, $database, $entity_manager, $module_handler, $search_settings, $language_manager, $renderer, $account);
@@ -60,7 +62,7 @@ class NodeSearchFacets extends NodeSearch {
       $plugin_id,
       $plugin_definition,
       $container->get('database'),
-      $container->get('entity.manager'),
+      $container->get('entity_type.manager'),
       $container->get('module_handler'),
       $container->get('config.factory')->get('search.settings'),
       $container->get('language_manager'),
@@ -96,6 +98,7 @@ class NodeSearchFacets extends NodeSearch {
       '#access' => $this->account && $this->account->hasPermission('use advanced search'),
       '#open' => $used_advanced,
     );
+
     $form['advanced']['keywords-fieldset'] = array(
       '#type' => 'fieldset',
       '#title' => t('Keywords'),

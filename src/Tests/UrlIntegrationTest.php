@@ -73,7 +73,7 @@ class UrlIntegrationTest extends FacetWebTestBase {
       'settings' => [
         'region' => 'footer',
         'id' => str_replace('_', '-', $id),
-      ]
+      ],
     ];
     $this->drupalPlaceBlock($block_values['plugin_id'], $block_values['settings']);
 

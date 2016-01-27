@@ -87,7 +87,8 @@ class FacetSourcePluginManagerTest extends UnitTestCase {
    */
   public function testConstruct() {
     $namespaces = new ArrayObject();
-    $this->sut = new FacetSourcePluginManager($namespaces, $this->cache, $this->moduleHandler);
+    $sut = new FacetSourcePluginManager($namespaces, $this->cache, $this->moduleHandler);
+    $this->assertInstanceOf('\Drupal\facets\FacetSource\FacetSourcePluginManager', $sut);
   }
 
   /**

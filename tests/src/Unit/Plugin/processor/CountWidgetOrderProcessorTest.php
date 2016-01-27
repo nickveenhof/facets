@@ -48,7 +48,7 @@ class CountWidgetOrderProcessorTest extends UnitTestCase {
   }
 
   /**
-   * Test sorting ascending.
+   * Tests sorting ascending.
    */
   public function testAscending() {
 
@@ -63,7 +63,7 @@ class CountWidgetOrderProcessorTest extends UnitTestCase {
   }
 
   /**
-   * Test sorting descending.
+   * Tests sorting descending.
    */
   public function testDescending() {
 

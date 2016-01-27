@@ -49,7 +49,7 @@ class FacetBlock extends BlockBase implements ContainerFactoryPluginInterface {
    *   The plugin implementation definition.
    * @param \Drupal\facets\FacetManager\DefaultFacetManager $facet_manager
    *   The facet manager.
-   * @param \Drupal\Core\Entity\EntityStorageInterface
+   * @param \Drupal\Core\Entity\EntityStorageInterface $facet_storage
    *   The entity storage used for facets.
    */
   public function __construct(array $configuration, $plugin_id, $plugin_definition, DefaultFacetManager $facet_manager, EntityStorageInterface $facet_storage) {
@@ -128,9 +128,9 @@ class FacetBlock extends BlockBase implements ContainerFactoryPluginInterface {
     // impossible to improve this significantly.
     //
     // Note: when using Drupal core's Search module instead of the contributed
-    //       Search API module, the above limitations do not apply, but for now
-    //       it is not considered worth the effort to optimize this just for
-    //       Drupal core's Search.
+    // Search API module, the above limitations do not apply, but for now it is
+    // not considered worth the effort to optimize this just for Drupal core's
+    // Search.
     return 0;
   }
 

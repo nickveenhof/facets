@@ -52,7 +52,7 @@ class DisplayValueWidgetOrderProcessorTest extends UnitTestCase {
   }
 
   /**
-   * Test sorting ascending.
+   * Tests sorting ascending.
    */
   public function testAscending() {
     $sorted_results = $this->processor->sortResults($this->originalResults, 'ASC');
@@ -71,7 +71,7 @@ class DisplayValueWidgetOrderProcessorTest extends UnitTestCase {
   }
 
   /**
-   * Test sorting descending.
+   * Tests sorting descending.
    */
   public function testDescending() {
     $sorted_results = $this->processor->sortResults($this->originalResults, 'DESC');
@@ -90,7 +90,7 @@ class DisplayValueWidgetOrderProcessorTest extends UnitTestCase {
   }
 
   /**
-   * Test that sorting uses the display value.
+   * Tests that sorting uses the display value.
    */
   public function testUseActualDisplayValue() {
     $original = [

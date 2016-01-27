@@ -17,7 +17,8 @@ use Drupal\facets\Processor\ProcessorPluginBase;
  * The URL processor handler triggers the actual url processor.
  *
  * The URL processor handler allows managing the weight of the actual URL
- * processor per Facet.  This handler will trigger the actual
+ * processor per Facet.  This handler will trigger the actual.
+ *
  * @FacetsUrlProcessor, which can be configured on the Facet source.
  *
  * @FacetsProcessor(
@@ -31,9 +32,13 @@ use Drupal\facets\Processor\ProcessorPluginBase;
  *   locked = true
  * )
  */
-class UrlProcessorHandler extends ProcessorPluginBase implements BuildProcessorInterface, PreQueryProcessorInterface{
+class UrlProcessorHandler extends ProcessorPluginBase implements BuildProcessorInterface, PreQueryProcessorInterface {
 
-  /** @var \Drupal\facets\UrlProcessor\UrlProcessorInterface */
+  /**
+   * The actual url processor used for handing urls.
+   *
+   * @var \Drupal\facets\UrlProcessor\UrlProcessorInterface
+   */
   protected $processor;
 
   /**
@@ -55,7 +60,7 @@ class UrlProcessorHandler extends ProcessorPluginBase implements BuildProcessorI
     $url_processor_name = $fs->getUrlProcessorName();
 
     $manager = \Drupal::getContainer()->get('plugin.manager.facets.url_processor');
-    $this->processor= $manager->createInstance($url_processor_name, ['facet' => $facet]);
+    $this->processor = $manager->createInstance($url_processor_name, ['facet' => $facet]);
   }
 
   /**

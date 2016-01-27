@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\facets\Annotation\FacetsFacet.
+ * Contains \Drupal\facets\Annotation\FacetsFacetSource.
  */
 
 namespace Drupal\facets\Annotation;
@@ -29,7 +29,7 @@ class FacetsFacetSource extends Plugin {
   public $id;
 
   /**
-   * The human-readable name of the facet soruce plugin.
+   * The human-readable name of the facet source plugin.
    *
    * @ingroup plugin_translatable
    *

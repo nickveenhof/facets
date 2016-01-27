@@ -33,7 +33,7 @@ class QueryString extends UrlProcessorPluginBase {
    *
    * @var string
    */
-  protected $url_alias;
+  protected $urlAlias;
 
   /**
    * An array of active filters.
@@ -55,21 +55,20 @@ class QueryString extends UrlProcessorPluginBase {
    * {@inheritdoc}
    */
   public function buildUrls(FacetInterface $facet, array $results) {
-    // Create links for all the values.
-    // First get the current list of get parameters.
-    $get_params = $this->request->query;
-
-    // Set the url alias from the the facet object.
-    $this->url_alias = $facet->getUrlAlias();
-
     // No results are found for this facet, so don't try to create urls.
     if (empty($results)) {
       return [];
     }
 
+    // First get the current list of get parameters.
+    $get_params = $this->request->query;
+
+    // Set the url alias from the the facet object.
+    $this->urlAlias = $facet->getUrlAlias();
+
     /** @var \Drupal\facets\Result\ResultInterface $result */
     foreach ($results as &$result) {
-      $filter_string = $this->url_alias . self::SEPARATOR . $result->getRawValue();
+      $filter_string = $this->urlAlias . self::SEPARATOR . $result->getRawValue();
       $result_get_params = clone $get_params;
 
       $filter_params = $result_get_params->get($this->filterKey, [], TRUE);
@@ -105,18 +104,18 @@ class QueryString extends UrlProcessorPluginBase {
    */
   public function setActiveItems(FacetInterface $facet) {
     // Set the url alias from the the facet object.
-    $this->url_alias = $facet->getUrlAlias();
+    $this->urlAlias = $facet->getUrlAlias();
 
     // Get the filter key of the facet.
-    if (isset($this->activeFilters[$this->url_alias])) {
-      foreach ($this->activeFilters[$this->url_alias] as $value) {
+    if (isset($this->activeFilters[$this->urlAlias])) {
+      foreach ($this->activeFilters[$this->urlAlias] as $value) {
         $facet->setActiveItem(trim($value, '"'));
       }
     }
   }
 
   /**
-   * Initialize the active filters.
+   * Initializes the active filters.
    *
    * Get all the filters that are active. This method only get's all the
    * filters but doesn't assign them to facets. In the processFacet method the

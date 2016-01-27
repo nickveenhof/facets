@@ -52,7 +52,7 @@ class RawValueWidgetOrderProcessorTest extends UnitTestCase {
   }
 
   /**
-   * Test sorting ascending.
+   * Tests sorting ascending.
    */
   public function testAscending() {
     $sorted_results = $this->processor->sortResults($this->originalResults, 'ASC');
@@ -71,7 +71,7 @@ class RawValueWidgetOrderProcessorTest extends UnitTestCase {
   }
 
   /**
-   * Test sorting descending.
+   * Tests sorting descending.
    */
   public function testDescending() {
     $sorted_results = $this->processor->sortResults($this->originalResults, 'DESC');

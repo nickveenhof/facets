@@ -33,7 +33,7 @@ interface FacetInterface extends ConfigEntityInterface {
   public function getWidget();
 
   /**
-   * Get field identifier.
+   * Returns field identifier.
    *
    * @return string
    *   The field identifier of this facet.
@@ -41,7 +41,7 @@ interface FacetInterface extends ConfigEntityInterface {
   public function getFieldIdentifier();
 
   /**
-   * Set field identifier.
+   * Sets field identifier.
    *
    * @param string $field_identifier
    *   The field identifier of this facet.
@@ -52,7 +52,7 @@ interface FacetInterface extends ConfigEntityInterface {
   public function setFieldIdentifier($field_identifier);
 
   /**
-   * Get the field alias used to identify the facet in the url.
+   * Returns the field alias used to identify the facet in the url.
    *
    * @return string
    *   The field alias for the facet.
@@ -60,7 +60,7 @@ interface FacetInterface extends ConfigEntityInterface {
   public function getFieldAlias();
 
   /**
-   * Get the field name of the facet as used in the index.
+   * Returns the field name of the facet as used in the index.
    *
    * @TODO: Check if fieldIdentifier can be used as well!
    *
@@ -70,9 +70,10 @@ interface FacetInterface extends ConfigEntityInterface {
   public function getName();
 
   /**
-   * Gets the name of the facet for use in the URL.
+   * Returns the name of the facet for use in the URL.
    *
    * @return string
+   *   The name of the facet for use in the URL.
    */
   public function getUrlAlias();
 
@@ -80,6 +81,7 @@ interface FacetInterface extends ConfigEntityInterface {
    * Sets the name of the facet for use in the URL.
    *
    * @param string $url_alias
+   *   The name of the facet for use in the URL.
    */
   public function setUrlAlias($url_alias);
 
@@ -92,7 +94,7 @@ interface FacetInterface extends ConfigEntityInterface {
   public function setActiveItem($value);
 
   /**
-   * Get all the active items in the facet.
+   * Returns all the active items in the facet.
    *
    * @return mixed
    *   An array containing all active items.
@@ -111,7 +113,7 @@ interface FacetInterface extends ConfigEntityInterface {
   public function isActiveValue($value);
 
   /**
-   * Get the result for the facet.
+   * Returns the result for the facet.
    *
    * @return \Drupal\facets\Result\ResultInterface[] $results
    *   The results of the facet.
@@ -133,20 +135,21 @@ interface FacetInterface extends ConfigEntityInterface {
    * facet results when using the OR query operator. They are not results value
    * objects like those in ::$results.
    *
-   * @param array
+   * @param array $all_results
    *   Unfiltered results.
    */
   public function setUnfilteredResults(array $all_results = []);
 
   /**
-   * Gets an array of unfiltered results.
+   * Returns an array of unfiltered results.
    *
    * @return array
+   *   Unfiltered results.
    */
   public function getUnfilteredResults();
 
   /**
-   * Get the query type instance.
+   * Returns the query type instance.
    *
    * @return string
    *   The query type plugin being used.
@@ -154,7 +157,7 @@ interface FacetInterface extends ConfigEntityInterface {
   public function getQueryType();
 
   /**
-   * Get the query operator.
+   * Returns the query operator.
    *
    * @return string
    *   The query operator being used.
@@ -162,7 +165,7 @@ interface FacetInterface extends ConfigEntityInterface {
   public function getQueryOperator();
 
   /**
-   * Get the plugin name for the url processor.
+   * Returns the plugin name for the url processor.
    *
    * @return string
    *   The id of the url processor.
@@ -185,7 +188,7 @@ interface FacetInterface extends ConfigEntityInterface {
   /**
    * Sets the query operator.
    *
-   * @param string
+   * @param string $operator
    *   The query operator being used.
    */
   public function setQueryOperator($operator);
@@ -215,7 +218,7 @@ interface FacetInterface extends ConfigEntityInterface {
   public function getFacetSourceConfig();
 
   /**
-   * Load the facet sources for this facet.
+   * Loads the facet sources for this facet.
    *
    * @param bool|TRUE $only_enabled
    *   Only return enabled facet sources.
@@ -282,60 +285,67 @@ interface FacetInterface extends ConfigEntityInterface {
   public function getOnlyVisibleWhenFacetSourceIsVisible();
 
   /**
-   * Enabled a processor for this facet.
+   * Adds a processor for this facet.
    *
    * @param array $processor
+   *   An array definition for a processor.
    */
   public function addProcessor(array $processor);
 
   /**
-   * Disable a processor for this facet.
+   * Removes a processor for this facet.
    *
    * @param string $processor_id
+   *   The plugin id of the processor.
    */
   public function removeProcessor($processor_id);
 
   /**
-   * Define the no-results behavior.
+   * Defines the no-results behavior.
    *
    * @param array $behavior
+   *   The definition of the behavior.
    */
-  public function setEmptyBehavior($behavior);
+  public function setEmptyBehavior(array $behavior);
 
   /**
-   * Return the defined no-results behavior or NULL if none defined.
+   * Returns the defined no-results behavior or NULL if none defined.
    *
    * @return array|NULL
+   *   The behavior definition or NULL.
    */
   public function getEmptyBehavior();
 
   /**
-   * Return the configuration of the selected widget.
+   * Returns the configuration of the selected widget.
    *
    * @return array
+   *   The configuration settings for the widget.
    */
   public function getWidgetConfigs();
 
   /**
-   * Set the configuration for the widget of this facet.
+   * Sets the configuration for the widget of this facet.
    *
    * @param array $widget_config
+   *   The configuration settings for the widget.
    */
   public function setWidgetConfigs(array $widget_config);
 
   /**
-   * Get any additional configuration for this facet, no defined above.
+   * Returns any additional configuration for this facet, not defined above.
    *
    * @return array
+   *   An array of additional configuration for the facet.
    */
   public function getFacetConfigs();
 
   /**
-   * Define any additional configuration for this facet not defined above.
+   * Defines any additional configuration for this facet not defined above.
    *
    * @param array $facet_config
+   *   An array of additional configuration for the facet.
    */
   public function setFacetConfigs(array $facet_config);
-
 
 }

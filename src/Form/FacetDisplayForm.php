@@ -326,7 +326,6 @@ class FacetDisplayForm extends EntityForm {
       '#default_value' => $facet->getOnlyVisibleWhenFacetSourceIsVisible(),
     ];
 
-    // Behavior for empty facets.
     $empty_behavior_config = $facet->getEmptyBehavior();
     $form['facet_settings']['empty_behavior'] = [
       '#type' => 'radios',
@@ -352,7 +351,6 @@ class FacetDisplayForm extends EntityForm {
       '#default_value' => isset($empty_behavior_config['text_format']) ? $empty_behavior_config['text'] : '',
     ];
 
-    // Query operator.
     $form['facet_settings']['query_operator'] = [
       '#type' => 'radios',
       '#title' => $this->t('Operator'),
@@ -544,7 +542,7 @@ class FacetDisplayForm extends EntityForm {
   }
 
   /**
-   * Form submission handler for the widget subform.
+   * Handles form submissions for the widget subform.
    */
   public function submitAjaxWidgetConfigForm($form, FormStateInterface $form_state) {
     $form_state->setRebuild();

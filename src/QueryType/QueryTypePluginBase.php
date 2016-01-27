@@ -28,7 +28,7 @@ abstract class QueryTypePluginBase extends PluginBase implements QueryTypeInterf
   }
 
   /**
-   * Holds the backend native query object.
+   * The backend native query object.
    *
    * @var \Drupal\search_api\Query\Query $query
    */
@@ -42,7 +42,7 @@ abstract class QueryTypePluginBase extends PluginBase implements QueryTypeInterf
   protected $facet;
 
   /**
-   * Holds the results for the facet.
+   * The results for the facet.
    *
    * @var \Drupal\facets\Result\ResultInterface[]
    */

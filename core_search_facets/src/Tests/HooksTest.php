@@ -9,7 +9,6 @@ namespace Drupal\core_search_facets\Tests;
 
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
-use Drupal\field_ui\Tests\FieldUiTestTrait;
 
 /**
  * Tests integration of hooks.
@@ -25,7 +24,7 @@ class HooksTest extends WebTestBase {
     'node',
     'search',
     'core_search_facets_test_hooks',
-    'field'
+    'field',
   ];
 
   /**
@@ -49,7 +48,7 @@ class HooksTest extends WebTestBase {
         'field_name' => 'float',
         'entity_type' => 'node',
         'bundle' => 'page',
-        'label' => 'Float Field Label'
+        'label' => 'Float Field Label',
       ]
     )->save();
 
@@ -62,7 +61,6 @@ class HooksTest extends WebTestBase {
    */
   public function testHooks() {
     // Verify that hook_facets_core_allowed_field_types was triggered.
-
     $facet_add_page = 'admin/config/search/facets/add-facet';
     $this->drupalGet($facet_add_page);
     $this->assertResponse(200);

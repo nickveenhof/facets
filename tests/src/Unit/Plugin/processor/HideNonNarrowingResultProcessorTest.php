@@ -48,9 +48,8 @@ class HideNonNarrowingResultProcessorTest extends UnitTestCase {
     $this->processor = new HideNonNarrowingResultProcessor([], 'hide_non_narrowing_result_processor', []);
   }
 
-
   /**
-   * Test filtering of results.
+   * Tests filtering of results.
    */
   public function testNoFilterResults() {
 
@@ -70,7 +69,7 @@ class HideNonNarrowingResultProcessorTest extends UnitTestCase {
   }
 
   /**
-   * Test filtering of results.
+   * Tests filtering of results.
    */
   public function testFilterResults() {
 

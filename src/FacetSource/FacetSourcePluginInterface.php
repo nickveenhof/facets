@@ -22,7 +22,7 @@ use Drupal\facets\FacetInterface;
 interface FacetSourcePluginInterface extends PluginFormInterface {
 
   /**
-   * Fill in facet data in to the configured facets.
+   * Fills the facet entities with results from the facet source.
    *
    * @param \Drupal\facets\FacetInterface[] $facets
    *   The configured facets.
@@ -30,7 +30,7 @@ interface FacetSourcePluginInterface extends PluginFormInterface {
   public function fillFacetsWithResults($facets);
 
   /**
-   * Get the allowed query types for a given facet for the facet source.
+   * Returns the allowed query types for a given facet for the facet source.
    *
    * @param \Drupal\facets\FacetInterface $facet
    *   The facet we should get query types for.
@@ -86,7 +86,7 @@ interface FacetSourcePluginInterface extends PluginFormInterface {
   public function setSearchKeys($keys);
 
   /**
-   * Gets the search keys, or query text, submitted by the user.
+   * Returns the search keys, or query text, submitted by the user.
    *
    * @return string
    *   The search keys, or query text, submitted by the user.

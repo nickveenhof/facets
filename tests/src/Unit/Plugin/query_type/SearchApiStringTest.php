@@ -20,7 +20,7 @@ use Drupal\Tests\UnitTestCase;
 class SearchApiStringTest extends UnitTestCase {
 
   /**
-   * Test string query type without executing the query.
+   * Tests string query type without executing the query.
    */
   public function testQueryType() {
     $query = new SearchApiQuery([], 'search_api_query', []);
@@ -60,7 +60,7 @@ class SearchApiStringTest extends UnitTestCase {
   }
 
   /**
-   * Test string query type without results.
+   * Tests string query type without results.
    */
   public function testEmptyResults() {
     $query = new SearchApiQuery([], 'search_api_query', []);

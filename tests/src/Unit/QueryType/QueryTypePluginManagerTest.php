@@ -86,7 +86,8 @@ class QueryTypePluginManagerTest extends UnitTestCase {
    */
   public function testConstruct() {
     $namespaces = new ArrayObject();
-    $this->sut = new QueryTypePluginManager($namespaces, $this->cache, $this->moduleHandler);
+    $sut = new QueryTypePluginManager($namespaces, $this->cache, $this->moduleHandler);
+    $this->assertInstanceOf('\Drupal\facets\QueryType\QueryTypePluginManager', $sut);
   }
 
   /**

@@ -11,7 +11,7 @@ use Drupal\Core\Form\FormStateInterface;
 use Drupal\facets\FacetInterface;
 
 /**
- * A base class for plugins that implements most of the boilerplate.
+ * A base class for plugins that implements some boilerplate for a widget order.
  */
 abstract class WidgetOrderPluginBase extends ProcessorPluginBase implements WidgetOrderProcessorInterface {
 

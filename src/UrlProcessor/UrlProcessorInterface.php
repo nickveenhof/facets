@@ -42,6 +42,7 @@ interface UrlProcessorInterface {
    * remembered when building the facet's urls.
    *
    * @param \Drupal\facets\FacetInterface $facet
+   *   The facet that is edited.
    */
   public function setActiveItems(FacetInterface $facet);
 

@@ -108,15 +108,11 @@ class DefaultFacetManager {
   protected $facetSourceId;
 
   /**
-   * Set the search id.
+   * The entity storage for facets.
    *
-   * @param string $facet_source_id
-   *   The id of the facet source.
+   * @var \Drupal\Core\Entity\EntityStorageInterface|object
    */
-  public function setFacetSourceId($facet_source_id) {
-    $this->facetSourceId = $facet_source_id;
-  }
-
+  protected $facetStorage;
   /**
    * Constructs a new instance of the DefaultFacetManager.
    *
@@ -136,11 +132,21 @@ class DefaultFacetManager {
     $this->widgetPluginManager = $widget_plugin_manager;
     $this->facetSourcePluginManager = $facet_source_manager;
     $this->processorPluginManager = $processor_plugin_manager;
-    $this->facet_storage = $entity_type_manager->getStorage('facets_facet');
+    $this->facetStorage = $entity_type_manager->getStorage('facets_facet');
 
     // Immediately initialize the facets. This can be done directly because the
     // only thing needed is the url.
     $this->initFacets();
+  }
+
+  /**
+   * Sets the search id.
+   *
+   * @param string $facet_source_id
+   *   The id of the facet source.
+   */
+  public function setFacetSourceId($facet_source_id) {
+    $this->facetSourceId = $facet_source_id;
   }
 
   /**
@@ -178,11 +184,11 @@ class DefaultFacetManager {
    *   An array of enabled facets.
    */
   public function getEnabledFacets() {
-    return $this->facet_storage->loadMultiple();
+    return $this->facetStorage->loadMultiple();
   }
 
   /**
-   * Get the ID of the facet source.
+   * Returns the ID of the facet source.
    *
    * @return string
    *   The id of the facet source.
@@ -209,7 +215,7 @@ class DefaultFacetManager {
   }
 
   /**
-   * Initialize enabled facets.
+   * Initializes enabled facets.
    *
    * In this method all pre-query processors get called and their contents are
    * executed.
@@ -235,7 +241,7 @@ class DefaultFacetManager {
   }
 
   /**
-   * Build a facet and returns it's render array.
+   * Builds a facet and returns it as a renderable array.
    *
    * This method delegates to the relevant plugins to render a facet, it calls
    * out to a widget plugin to do the actual rendering when results are found.
@@ -336,6 +342,7 @@ class DefaultFacetManager {
    *
    * @param string $facet_id
    *   The id of the facet.
+   *
    * @return \Drupal\facets\FacetInterface|NULL
    *   The updated facet if it exists, NULL otherwise.
    */

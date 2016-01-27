@@ -36,7 +36,7 @@ class UrlProcessorHandlerTest extends UnitTestCase {
   }
 
   /**
-   * Test that the build method is correctly called.
+   * Tests that the build method is correctly called.
    */
   public function testBuild() {
     $facet = new Facet(['id' => '_test'], 'facets_facet');
@@ -48,7 +48,7 @@ class UrlProcessorHandlerTest extends UnitTestCase {
   }
 
   /**
-   * Helper function to create a correct container.
+   * Sets up a container.
    */
   protected function createContainer() {
     $url_processor = $this->getMockBuilder('\Drupal\facets\UrlProcessor\UrlProcessorInterface')

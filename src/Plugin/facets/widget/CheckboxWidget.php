@@ -175,4 +175,5 @@ class CheckboxWidget implements WidgetInterface, FormInterface {
     $link->setAbsolute();
     $form_state->setResponse(new RedirectResponse($link->toString()));
   }
+
 }

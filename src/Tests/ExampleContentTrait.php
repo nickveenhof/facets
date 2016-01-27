@@ -8,7 +8,6 @@
 namespace Drupal\facets\Tests;
 
 use Drupal\search_api\Entity\Index;
-use Drupal\search_api\Utility;
 
 /**
  * Contains helpers to create data that can be used by tests.
@@ -39,42 +38,42 @@ trait ExampleContentTrait {
     $entity_test_storage = \Drupal::entityTypeManager()
       ->getStorage('entity_test');
     $this->entities[1] = $entity_test_storage->create(array(
-        'name' => 'foo bar baz',
-        'body' => 'test test',
-        'type' => 'item',
-        'keywords' => array('orange'),
-        'category' => 'item_category'
-      ));
+      'name' => 'foo bar baz',
+      'body' => 'test test',
+      'type' => 'item',
+      'keywords' => array('orange'),
+      'category' => 'item_category',
+    ));
     $this->entities[1]->save();
     $this->entities[2] = $entity_test_storage->create(array(
-        'name' => 'foo test',
-        'body' => 'bar test',
-        'type' => 'item',
-        'keywords' => array('orange', 'apple', 'grape'),
-        'category' => 'item_category'
-      ));
+      'name' => 'foo test',
+      'body' => 'bar test',
+      'type' => 'item',
+      'keywords' => array('orange', 'apple', 'grape'),
+      'category' => 'item_category',
+    ));
     $this->entities[2]->save();
     $this->entities[3] = $entity_test_storage->create(array(
-        'name' => 'bar',
-        'body' => 'test foobar',
-        'type' => 'item',
-      ));
+      'name' => 'bar',
+      'body' => 'test foobar',
+      'type' => 'item',
+    ));
     $this->entities[3]->save();
     $this->entities[4] = $entity_test_storage->create(array(
-        'name' => 'foo baz',
-        'body' => 'test test test',
-        'type' => 'article',
-        'keywords' => array('apple', 'strawberry', 'grape'),
-        'category' => 'article_category'
-      ));
+      'name' => 'foo baz',
+      'body' => 'test test test',
+      'type' => 'article',
+      'keywords' => array('apple', 'strawberry', 'grape'),
+      'category' => 'article_category',
+    ));
     $this->entities[4]->save();
     $this->entities[5] = $entity_test_storage->create(array(
-        'name' => 'bar baz',
-        'body' => 'foo',
-        'type' => 'article',
-        'keywords' => array('orange', 'strawberry', 'grape', 'banana'),
-        'category' => 'article_category'
-      ));
+      'name' => 'bar baz',
+      'body' => 'foo',
+      'type' => 'article',
+      'keywords' => array('orange', 'strawberry', 'grape', 'banana'),
+      'category' => 'article_category',
+    ));
     $this->entities[5]->save();
     $count = \Drupal::entityQuery('entity_test')->count()->execute() - $count;
     $this->assertEqual($count, 5, "$count items inserted.");
@@ -93,35 +92,6 @@ trait ExampleContentTrait {
     /** @var \Drupal\search_api\IndexInterface $index */
     $index = Index::load($index_id);
     return $index->indexItems();
-  }
-
-  /**
-   * Returns the internal field ID for the given entity field name.
-   *
-   * @param string $field_name
-   *   The field name.
-   *
-   * @return string
-   *   The internal field ID.
-   */
-  protected function getFieldId($field_name) {
-    return Utility::createCombinedId('entity:entity_test', $field_name);
-  }
-
-  /**
-   * Returns the item IDs for the given entity IDs.
-   *
-   * @param array $entity_ids
-   *   An array of entity IDs.
-   *
-   * @return string[]
-   *   An array of item IDs.
-   */
-  protected function getItemIds(array $entity_ids) {
-    $translate_ids = function ($entity_id) {
-      return Utility::createCombinedId('entity:entity_test', $entity_id . ':en');
-    };
-    return array_map($translate_ids, $entity_ids);
   }
 
 }

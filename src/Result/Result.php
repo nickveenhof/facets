@@ -45,7 +45,7 @@ class Result implements ResultInterface {
   protected $active = FALSE;
 
   /**
-   * Construct a new instance of the value object.
+   * Constructs a new result value object.
    *
    * @param mixed $raw_value
    *   The raw value.

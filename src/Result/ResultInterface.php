@@ -15,7 +15,7 @@ use Drupal\Core\Url;
 interface ResultInterface {
 
   /**
-   * Get the raw value as present in the index.
+   * Returns the raw value as present in the index.
    *
    * @return string
    *   The raw value of the result.
@@ -23,7 +23,7 @@ interface ResultInterface {
   public function getRawValue();
 
   /**
-   * Get the display value as present in the index.
+   * Returns the display value as present in the index.
    *
    * @return string
    *   The formatted value of the result.
@@ -31,7 +31,7 @@ interface ResultInterface {
   public function getDisplayValue();
 
   /**
-   * Get the count for the result.
+   * Returns the count for the result.
    *
    * @return mixed
    *   The amount of items for the result.
@@ -39,7 +39,7 @@ interface ResultInterface {
   public function getCount();
 
   /**
-   * Get the url.
+   * Returns the url.
    *
    * @return \Drupal\Core\Url
    *   The url of the search page with the facet url appended.
@@ -47,7 +47,7 @@ interface ResultInterface {
   public function getUrl();
 
   /**
-   * Set the url.
+   * Sets the url.
    *
    * @param \Drupal\Core\Url $url
    *   The url of the search page with the facet url appended.
@@ -55,7 +55,7 @@ interface ResultInterface {
   public function setUrl(Url $url);
 
   /**
-   * Indicate that the value is active (selected).
+   * Indicates that the value is active (selected).
    *
    * @param bool $active
    *   A boolean indicating the active state.
@@ -71,7 +71,7 @@ interface ResultInterface {
   public function isActive();
 
   /**
-   * Override the display value of a result.
+   * Overrides the display value of a result.
    *
    * @param string $display_value
    *   Override display value.

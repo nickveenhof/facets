@@ -9,7 +9,6 @@ namespace Drupal\facets\Entity;
 
 use Drupal\Core\Config\Entity\ConfigEntityBase;
 use Drupal\facets\FacetSourceInterface;
-use Drupal\facets\UrlProcessor\UrlProcessorInterface;
 
 /**
  * Defines the facet source configuration entity.
@@ -75,13 +74,6 @@ class FacetSource extends ConfigEntityBase implements FacetSourceInterface {
    * @var string
    */
   protected $url_processor = 'query_string';
-
-  /**
-   * {@inheritdoc}
-   */
-  public function id() {
-    return $this->id;
-  }
 
   /**
    * {@inheritdoc}
