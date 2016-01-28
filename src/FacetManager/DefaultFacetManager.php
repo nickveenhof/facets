@@ -225,16 +225,13 @@ class DefaultFacetManager {
       $this->facets = $this->getEnabledFacets();
       foreach ($this->facets as $facet) {
 
-        foreach ($facet->getProcessors() as $processor) {
-          $processor_definition = $processor->getPluginDefinition();
-          if (is_array($processor_definition['stages']) && array_key_exists(ProcessorInterface::STAGE_PRE_QUERY, $processor_definition['stages'])) {
-            /** @var PreQueryProcessorInterface $pre_query_processor */
-            $pre_query_processor = $this->processorPluginManager->createInstance($processor->getPluginDefinition()['id'], ['facet' => $facet]);
-            if (!$pre_query_processor instanceof PreQueryProcessorInterface) {
-              throw new InvalidProcessorException(new FormattableMarkup("The processor @processor has a pre_query definition but doesn't implement the required PreQueryProcessorInterface interface", ['@processor' => $processor_configuration['processor_id']]));
-            }
-            $pre_query_processor->preQuery($facet);
+        foreach ($facet->getProcessorsByStage(ProcessorInterface::STAGE_PRE_QUERY) as $processor) {
+          /** @var PreQueryProcessorInterface $pre_query_processor */
+          $pre_query_processor = $this->processorPluginManager->createInstance($processor->getPluginDefinition()['id'], ['facet' => $facet]);
+          if (!$pre_query_processor instanceof PreQueryProcessorInterface) {
+            throw new InvalidProcessorException(new FormattableMarkup("The processor @processor has a pre_query definition but doesn't implement the required PreQueryProcessorInterface interface", ['@processor' => $processor_configuration['processor_id']]));
           }
+          $pre_query_processor->preQuery($facet);
         }
       }
     }
@@ -289,16 +286,13 @@ class DefaultFacetManager {
     // @see \Drupal\facets\Processor\WidgetOrderProcessorInterface.
     $results = $facet->getResults();
 
-    foreach ($facet->getProcessors() as $processor) {
-      $processor_definition = $this->processorPluginManager->getDefinition($processor->getPluginDefinition()['id']);
-      if (is_array($processor_definition['stages']) && array_key_exists(ProcessorInterface::STAGE_BUILD, $processor_definition['stages'])) {
-        /** @var BuildProcessorInterface $build_processor */
-        $build_processor = $this->processorPluginManager->createInstance($processor->getPluginDefinition()['id'], ['facet' => $facet]);
-        if (!$build_processor instanceof BuildProcessorInterface) {
-          throw new InvalidProcessorException(new FormattableMarkup("The processor @processor has a build definition but doesn't implement the required BuildProcessorInterface interface", ['@processor' => $processor['processor_id']]));
-        }
-        $results = $build_processor->build($facet, $results);
+    foreach ($facet->getProcessorsByStage(ProcessorInterface::STAGE_BUILD) as $processor) {
+      /** @var BuildProcessorInterface $build_processor */
+      $build_processor = $this->processorPluginManager->createInstance($processor->getPluginDefinition()['id'], ['facet' => $facet]);
+      if (!$build_processor instanceof BuildProcessorInterface) {
+        throw new InvalidProcessorException(new FormattableMarkup("The processor @processor has a build definition but doesn't implement the required BuildProcessorInterface interface", ['@processor' => $processor['processor_id']]));
       }
+      $results = $build_processor->build($facet, $results);
     }
     $facet->setResults($results);
 
