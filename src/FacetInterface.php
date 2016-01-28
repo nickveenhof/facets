@@ -165,6 +165,18 @@ interface FacetInterface extends ConfigEntityInterface {
   public function getQueryOperator();
 
   /**
+   * Returns the value of the exclude boolean.
+   *
+   * This will return true when the current facet's value should be exclusive
+   * from the search rather than inclusive.
+   * When this returns TRUE, the operator will be "<>" instead of "=".
+   *
+   * @return bool
+   *   A boolean flag indicating if search should exlude selected facets
+   */
+  public function getExclude();
+
+  /**
    * Returns the plugin name for the url processor.
    *
    * @return string
@@ -192,6 +204,14 @@ interface FacetInterface extends ConfigEntityInterface {
    *   The query operator being used.
    */
   public function setQueryOperator($operator);
+
+  /**
+   * Sets the exclude.
+   *
+   * @param bool
+   *   A boolean flag indicating if search should exclude selected facets
+   */
+  public function setExclude($exclude);
 
   /**
    * Returns the Facet source id.

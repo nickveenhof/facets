@@ -441,6 +441,52 @@ class IntegrationTest extends FacetWebTestBase {
   }
 
   /**
+   * Tests the facet's exclude functionality.
+   */
+  public function testExcludeFacet() {
+    $facet_name = 'test & facet';
+    $facet_id = 'test_facet';
+    $facet_edit_page = 'admin/config/search/facets/' . $facet_id . '/display';
+
+    $this->addFacet($facet_name);
+    $this->createFacetBlock($facet_id);
+
+    $this->drupalGet($facet_edit_page);
+    $this->assertNoFieldChecked('edit-facet-settings-exclude');
+    $this->drupalPostForm(NULL, ['facet_settings[exclude]' => TRUE], $this->t('Save'));
+    $this->assertResponse(200);
+    $this->assertFieldChecked('edit-facet-settings-exclude');
+
+    $this->drupalGet('search-api-test-fulltext');
+    $this->assertText('foo bar baz');
+    $this->assertText('foo baz');
+    $this->assertLink('item');
+
+    $this->clickLink('item');
+    $this->assertLink('(-) item');
+    $this->assertText('foo baz');
+    $this->assertText('bar baz');
+    $this->assertNoText('foo bar baz');
+
+    $this->drupalGet($facet_edit_page);
+    $this->drupalPostForm(NULL, ['facet_settings[exclude]' => FALSE], $this->t('Save'));
+    $this->assertResponse(200);
+    $this->assertNoFieldChecked('edit-facet-settings-exclude');
+
+    $this->drupalGet('search-api-test-fulltext');
+    $this->assertText('foo bar baz');
+    $this->assertText('foo baz');
+    $this->assertLink('item');
+
+    $this->clickLink('item');
+    $this->assertLink('(-) item');
+    $this->assertText('foo bar baz');
+    $this->assertText('foo test');
+    $this->assertText('bar');
+    $this->assertNoText('foo baz');
+  }
+
+  /**
    * Deletes a facet block by id.
    *
    * @param string $id

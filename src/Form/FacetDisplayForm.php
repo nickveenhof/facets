@@ -359,6 +359,13 @@ class FacetDisplayForm extends EntityForm {
       '#default_value' => $facet->getQueryOperator(),
     ];
 
+    $form['facet_settings']['exclude'] = [
+      '#type' => 'checkbox',
+      '#title' => $this->t('Exclude'),
+      '#description' => $this->t('Make the search exclude selected facets, instead of restricting it to them.'),
+      '#default_value' => $facet->getExclude(),
+    ];
+
     $form['weights'] = array(
       '#type' => 'details',
       '#title' => t('Advanced settings'),
@@ -536,6 +543,8 @@ class FacetDisplayForm extends EntityForm {
     $facet->setEmptyBehavior($empty_behavior_config);
 
     $facet->setQueryOperator($form_state->getValue(['facet_settings', 'query_operator']));
+
+    $facet->setExclude($form_state->getValue(['facet_settings', 'exclude']));
 
     $facet->save();
     drupal_set_message(t('Facet %name has been updated.', ['%name' => $facet->getName()]));

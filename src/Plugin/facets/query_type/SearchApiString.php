@@ -47,6 +47,7 @@ class SearchApiString extends QueryTypePluginBase {
     if (!empty($query)) {
       $operator = $this->facet->getQueryOperator();
       $field_identifier = $this->facet->getFieldIdentifier();
+      $exclude = $this->facet->getExclude();
 
       // Copy the query object so we can do an unfiltered query. We need to have
       // this unfiltered results to make sure that the count of a facet is
@@ -81,7 +82,7 @@ class SearchApiString extends QueryTypePluginBase {
       if (count($active_items)) {
         $filter = $query->createConditionGroup($operator);
         foreach ($active_items as $value) {
-          $filter->addCondition($this->facet->getFieldIdentifier(), $value);
+          $filter->addCondition($this->facet->getFieldIdentifier(), $value, $exclude ? '<>' : '=');
         }
         $query->addConditionGroup($filter);
       }

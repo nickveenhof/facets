@@ -44,6 +44,7 @@ use Drupal\facets\FacetInterface;
  *     "widget",
  *     "widget_configs",
  *     "query_operator",
+ *     "exclude",
  *     "only_visible_when_facet_source_is_visible",
  *     "processor_configs",
  *     "empty_behavior",
@@ -108,6 +109,13 @@ class Facet extends ConfigEntityBase implements FacetInterface {
    * @var string
    */
   protected $query_operator;
+
+  /**
+   * A boolean flag indicating if search should exclude selected facets
+   *
+   * @var bool
+   */
+  protected $exclude;
 
   /**
    * The field identifier.
@@ -361,6 +369,20 @@ class Facet extends ConfigEntityBase implements FacetInterface {
    */
   public function getQueryOperator() {
     return $this->query_operator ?: 'OR';
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setExclude($exclude) {
+    return $this->exclude = $exclude;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getExclude() {
+    return $this->exclude;
   }
 
   /**
