@@ -19,8 +19,8 @@ display:
       query:
         type: search_api_query
         options:
-          search_api_bypass_access: false
-          entity_access: false
+          bypass_access: true
+          skip_access: true
           parse_mode: terms
       exposed_form:
         type: basic

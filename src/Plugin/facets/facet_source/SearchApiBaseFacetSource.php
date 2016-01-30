@@ -98,7 +98,7 @@ abstract class SearchApiBaseFacetSource extends FacetSourcePluginBase {
     // identifier.
     $field_id = $facet->getFieldIdentifier();
     // Get the Search API Server.
-    $server = $this->index->getServer();
+    $server = $this->index->getServerInstance();
     // Get the Search API Backend.
     $backend = $server->getBackend();
 
