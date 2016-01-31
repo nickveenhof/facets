@@ -208,7 +208,7 @@ interface FacetInterface extends ConfigEntityInterface {
   /**
    * Sets the exclude.
    *
-   * @param bool
+   * @param bool $exclude
    *   A boolean flag indicating if search should exclude selected facets
    */
   public function setExclude($exclude);

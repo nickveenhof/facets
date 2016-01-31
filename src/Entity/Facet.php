@@ -111,7 +111,7 @@ class Facet extends ConfigEntityBase implements FacetInterface {
   protected $query_operator;
 
   /**
-   * A boolean flag indicating if search should exclude selected facets
+   * A boolean flag indicating if search should exclude selected facets.
    *
    * @var bool
    */
