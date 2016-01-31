@@ -71,9 +71,10 @@ class IntegrationTest extends FacetWebTestBase {
     // Check if the overview is empty.
     $this->checkEmptyOverview();
 
-    // Add a new facet and edit it.
+    // Add a new facet and edit it. Check adding a duplicate.
     $this->addFacet($facet_name);
     $this->editFacet($facet_name);
+    $this->addFacetDuplicate($facet_name);
 
     // By default, the view should show all entities.
     $this->drupalGet('search-api-test-fulltext');
@@ -646,6 +647,40 @@ class IntegrationTest extends FacetWebTestBase {
     $this->assertUrl('admin/config/search/facets/' . $facet_id . '/display');
 
     $this->drupalGet('admin/config/search/facets');
+  }
+
+  /**
+   * Tests creating a facet with an existing machine name.
+   *
+   * @param string $facet_name
+   *   The name of the facet.
+   */
+  protected function addFacetDuplicate($facet_name, $facet_type = 'type') {
+    $facet_id = $this->convertNameToMachineName($facet_name);
+
+    $facet_add_page = '/admin/config/search/facets/add-facet';
+    $this->drupalGet($facet_add_page);
+
+    $form_values = [
+      'name' => $facet_name,
+      'id' => $facet_id,
+      'url_alias' => $facet_id,
+      'facet_source_id' => 'search_api_views:search_api_test_view:page_1',
+    ];
+
+    $facet_source_configs['facet_source_configs[search_api_views:search_api_test_view:page_1][field_identifier]'] = $facet_type;
+
+    // Try to submit a facet with a duplicate machine name after form rebuilding
+    // via facet source submit.
+    $this->drupalPostForm(NULL, $form_values, $this->t('Configure facet source'));
+    $this->drupalPostForm(NULL, $form_values + $facet_source_configs, $this->t('Save'));
+    $this->assertText($this->t('The machine-readable name is already in use. It must be unique.'));
+
+    // Try to submit a facet with a duplicate machine name after form rebuilding
+    // via facet source submit using AJAX.
+    $this->drupalPostAjaxForm(NULL, $form_values, array('facet_source_configure' => t('Configure facet source')));
+    $this->drupalPostForm(NULL, $form_values + $facet_source_configs, $this->t('Save'));
+    $this->assertText($this->t('The machine-readable name is already in use. It must be unique.'));
   }
 
   /**

@@ -221,6 +221,7 @@ class FacetForm extends EntityForm {
    * Handles form submissions for the facet source subform.
    */
   public function submitAjaxFacetSourceConfigForm($form, FormStateInterface $form_state) {
+    $form_state->setValue('id', NULL);
     $form_state->setRebuild();
   }
 
