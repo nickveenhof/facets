@@ -4,3 +4,7 @@ description: 'Faceted search interfaces that can be used on Search API searchers
 core: 8.x
 package: Search
 configure: facets.overview
+test_dependencies:
+  - search_api:search_api
+  - search_api:search_api_test_db
+  - drupal:views
