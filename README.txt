@@ -4,9 +4,7 @@ CONTENTS OF THIS FILE
  * Requirements
  * Installation
  * Configuration
- * Troubleshooting
  * FAQ
- * Maintainers
 
  INTRODUCTION
  ------------
@@ -14,8 +12,9 @@ Todo
 
 REQUIREMENTS
 ------------
-No other modules required, though the module is useless without an implementing
-module like search api.
+No other modules required, we're supporting drupal core as a source for creating
+facets. Though we recommend using Search API, as that integration is better
+tested.
 
 INSTALLATION
 ------------
@@ -25,17 +24,14 @@ INSTALLATION
 
 CONFIGURATION
 -------------
-Todo
+Before adding a facet, there should be a facet source. Facet sources can be:
+- Drupal core's search.
+- A view based on a Search API index with a page display.
+- A page from the search_api_page module.
 
-TROUBLESHOOTING
----------------
-Todo
+After adding one of those, you can add a facet on the facets configuration page:
+/admin/config/search/facets
 
 FAQ
 ---
 Todo
-
-MAINTAINERS
------------
-Current maintainers:
- * Todo
