@@ -12,6 +12,7 @@ use Drupal\facets\Exception\InvalidQueryTypeException;
 use Drupal\facets\FacetInterface;
 use Drupal\search_api\Backend\BackendInterface;
 use Drupal\facets\FacetSource\FacetSourcePluginBase;
+use Drupal\search_api\FacetsQueryTypeMappingInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
