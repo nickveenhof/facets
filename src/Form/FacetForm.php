@@ -346,6 +346,9 @@ class FacetForm extends EntityForm {
       $form_state->setRedirect('entity.facets_facet.edit_form', ['facets_facet' => $facet->id()]);
     }
 
+    // Clear Drupal cache for blocks to reflect recent changes.
+    \Drupal::service('plugin.manager.block')->clearCachedDefinitions();
+
     return $facet;
   }
 
