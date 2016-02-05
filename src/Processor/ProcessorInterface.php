@@ -10,11 +10,12 @@ namespace Drupal\facets\Processor;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\facets\FacetInterface;
 use Drupal\Component\Plugin\ConfigurablePluginInterface;
+use Drupal\Component\Plugin\PluginInspectionInterface;
 
 /**
  * Describes a processor.
  */
-interface ProcessorInterface extends ConfigurablePluginInterface {
+interface ProcessorInterface extends ConfigurablePluginInterface, PluginInspectionInterface {
 
   /**
    * Processing stage: pre_query.

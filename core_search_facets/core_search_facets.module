@@ -19,11 +19,10 @@ function core_search_facets_query_search_node_search_alter(AlterableInterface $q
 
   /** @var \Drupal\facets\FacetManager\DefaultFacetManager $facet_manager */
   $facet_manager = \Drupal::service('facets.manager');
-  $search_id = 'core_node_search:' . $search_page->id();
+  $facetsource_id = 'core_node_search:' . $search_page->id();
 
   // Add the active filters.
-  $facet_manager->setFacetSourceId($search_id);
-  $facet_manager->alterQuery($query);
+  $facet_manager->alterQuery($query, $facetsource_id);
 
 }
 

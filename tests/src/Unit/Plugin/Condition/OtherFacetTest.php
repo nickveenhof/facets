@@ -129,7 +129,7 @@ class OtherFacetTest extends UnitTestCase {
       ->getMock();
     $facet_manager->expects($this->exactly(1))
       ->method('returnProcessedFacet')
-      ->with('id')
+      ->with($facet)
       ->willReturn($facet);
 
     $configuration = ['facets' => 'test', 'facet_value' => 'llama'];
@@ -177,7 +177,7 @@ class OtherFacetTest extends UnitTestCase {
       ->getMock();
     $facet_manager->expects($this->exactly(1))
       ->method('returnProcessedFacet')
-      ->with('id')
+      ->with($facet)
       ->willReturn($facet);
 
     $configuration = ['facets' => 'test', 'facet_value' => 'llama'];

@@ -183,9 +183,7 @@ class OtherFacet extends ConditionPluginBase implements ContainerFactoryPluginIn
 
     /** @var \Drupal\facets\FacetInterface $facet */
     $facet = $this->facetStorage->load($facet_id);
-    $this->facetManager->setFacetSourceId($facet->getFacetSourceId());
-
-    $facet = $this->facetManager->returnProcessedFacet($facet_id);
+    $facet = $this->facetManager->returnProcessedFacet($facet);
 
     foreach ($facet->getResults() as $result) {
       $is_value = $result->getRawValue() == $allowed_facet_value || $result->getDisplayValue() == $allowed_facet_value;
