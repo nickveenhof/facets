@@ -17,3 +17,4 @@ facets.facet_source.*:
     url_processor:
       type: string
       label: 'Url processor'
+    third_party_settings: {}

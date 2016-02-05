@@ -6,11 +6,11 @@
  */
 
 use Drupal\Core\Database\Query\AlterableInterface;
+use Drupal\Core\Form\FormStateInterface;
+use Drupal\facets\FacetSourceInterface;
 
 /**
  * Implements hook_query_TAG_alter(): tag search_$type with $type node_search.
- *
- * @param \Drupal\Core\Database\Query\AlterableInterface $query
  */
 function core_search_facets_query_search_node_search_alter(AlterableInterface $query) {
   // Obtain the Facet Source id for the current search.
@@ -28,22 +28,43 @@ function core_search_facets_query_search_node_search_alter(AlterableInterface $q
 }
 
 /**
- * Implements hook_search_plugin_alter(). Alter search plugin definitions.
+ * Implements hook_search_plugin_alter().
  *
- * @param array $definitions
- *   The array of search plugin definitions, keyed by plugin ID.
- *
- * @see \Drupal\search\Annotation\SearchPlugin
- * @see \Drupal\search\SearchPluginManager
+ * Alter search plugin definitions.
  */
 function core_search_facets_search_plugin_alter(array &$definitions) {
-  // Replace the Search Plugin class to alter the search form on a different
-  // way because we don't need content types or languages as advanced search
-  // filters.
-  // @TODO wait until we can add configuration to a facet source.
+  // Replace the Search Plugin class to alter the search form adding the
+  // possibility to show or hide the Content Type and Language advanced filters.
   if (isset($definitions['node_search'])) {
-    //$definitions['node_search']['class'] = 'Drupal\core_search_facets\Plugin\Search\NodeSearchFacets';
+    $definitions['node_search']['class'] = 'Drupal\core_search_facets\Plugin\Search\NodeSearchFacets';
   }
+}
+
+/**
+ * Implements hook_form_FORM_ID_alter() for facet_source_edit_form.
+ *
+ * Adds a checkbox to show or hide some advanced filters for the core search.
+ */
+function core_search_facets_form_facet_source_edit_form_alter(&$form, FormStateInterface $form_state) {
+  $request = \Drupal::requestStack()->getMasterRequest();
+  $facet_source_id = str_replace(":", "__", $request->attributes->get('source_id'));
+  if (strpos($facet_source_id, 'core_node_search') !== FALSE) {
+    $form['advanced_filters'] = array(
+      '#type' => 'checkbox',
+      '#title' => t('Show Advanced Filters.'),
+      '#default_value' => \Drupal::config("facets.facet_source.{$facet_source_id}")->get('third_party_settings.core_search_facets.advanced_filters'),
+    );
+    $form['#entity_builders'][] = 'core_search_facets_facet_source_form_form_builder';
+  }
+}
+
+/**
+ * Entity builder for the facet source form edit form with third party options.
+ *
+ * @see core_search_facets_form_facet_source_edit_form_alter()
+ */
+function core_search_facets_facet_source_form_form_builder($entity_type, FacetSourceInterface $facet_source, &$form, FormStateInterface $form_state) {
+  $facet_source->setThirdPartySetting('core_search_facets', 'advanced_filters', $form_state->getValue('advanced_filters'));
 }
 
 /**

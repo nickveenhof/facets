@@ -7,71 +7,14 @@
 
 namespace Drupal\core_search_facets\Plugin\Search;
 
-use Drupal\Core\Config\Config;
-use Drupal\Core\Database\Driver\mysql\Connection;
-use Drupal\Core\Entity\EntityTypeManagerInterface;
-use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Language\LanguageInterface;
-use Drupal\Core\Language\LanguageManagerInterface;
-use Drupal\Core\Session\AccountInterface;
-use Drupal\facets\FacetSource\FacetSourcePluginManager;
 use Drupal\node\Plugin\Search\NodeSearch;
-use Drupal\Core\Render\RendererInterface;
-use Symfony\Component\DependencyInjection\ContainerInterface;
-use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
  * Handles searching for node entities using the Search module index.
  */
 class NodeSearchFacets extends NodeSearch {
-
-  protected $facetSource;
-
-  /**
-   * {@inheritdoc}
-   */
-  public function __construct(
-    array $configuration,
-    $plugin_id,
-    $plugin_definition,
-    Connection $database,
-    EntityTypeManagerInterface $entity_manager,
-    ModuleHandlerInterface $module_handler,
-    Config $search_settings,
-    LanguageManagerInterface $language_manager,
-    RendererInterface $renderer,
-    FacetSourcePluginManager $facet_source_plugin_manager,
-    RequestStack $request_stack,
-    AccountInterface $account = NULL) {
-
-    parent::__construct($configuration, $plugin_id, $plugin_definition, $database, $entity_manager, $module_handler, $search_settings, $language_manager, $renderer, $account);
-    /** @var \Symfony\Component\HttpFoundation\RequestStack $request_stack */
-    if ($search_page = $request_stack->getMasterRequest()->attributes->get('entity')) {
-      /** @var \Drupal\facets\FacetSource\FacetSourcePluginManager $facet_source_plugin_manager */
-      $this->facetSource = $facet_source_plugin_manager->createInstance('core_node_search:' . $search_page->id());
-    }
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  static public function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
-    return new static(
-      $configuration,
-      $plugin_id,
-      $plugin_definition,
-      $container->get('database'),
-      $container->get('entity_type.manager'),
-      $container->get('module_handler'),
-      $container->get('config.factory')->get('search.settings'),
-      $container->get('language_manager'),
-      $container->get('renderer'),
-      $container->get('plugin.manager.facets.facet_source'),
-      $container->get('request_stack'),
-      $container->get('current_user')
-    );
-  }
 
   /**
    * {@inheritdoc}
@@ -141,8 +84,7 @@ class NodeSearchFacets extends NodeSearch {
       '#weight' => 100,
     );
 
-    // Only add node types and language filters when a facet source has facets.
-    if (!$this->facetSource->hasFacets()) {
+    if (\Drupal::config("facets.facet_source.core_node_search__{$this->searchPageId}")->get('third_party_settings.core_search_facets.advanced_filters')) {
       // Add node types.
       $types = array_map(array('\Drupal\Component\Utility\Html', 'escape'), node_type_get_names());
       $form['advanced']['types-fieldset'] = array(
