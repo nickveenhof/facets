@@ -123,11 +123,11 @@ class ActiveWidgetOrderProcessorTest extends UnitTestCase {
     );
     $built = $this->processor->build($facet, $this->originalResults);
 
-    $this->assertEquals('Minimus', $built[0]->getDisplayValue());
-    $this->assertEquals('Old Major', $built[1]->getDisplayValue());
-    $this->assertEquals('Mr. Whymper', $built[2]->getDisplayValue());
-    $this->assertEquals('Boxer', $built[3]->getDisplayValue());
-    $this->assertEquals('Clover', $built[4]->getDisplayValue());
+    $this->assertEquals(TRUE, $built[0]->isActive());
+    $this->assertEquals(TRUE, $built[1]->isActive());
+    $this->assertEquals(TRUE, $built[2]->isActive());
+    $this->assertEquals(FALSE, $built[3]->isActive());
+    $this->assertEquals(FALSE, $built[4]->isActive());
   }
 
 }
