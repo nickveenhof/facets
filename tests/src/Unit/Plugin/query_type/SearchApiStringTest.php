@@ -83,4 +83,21 @@ class SearchApiStringTest extends UnitTestCase {
     $this->assertEmpty($results);
   }
 
+  /**
+   * Tests string query type without results.
+   */
+  public function testConfiguration() {
+    $query = new SearchApiQuery([], 'search_api_query', []);
+    $facet = new Facet([], 'facets_facet');
+
+    $default_config = ['facet' => $facet, 'query' => $query];
+    $query_type = new SearchApiString($default_config, 'search_api_string', []);
+
+    $this->assertEquals([], $query_type->defaultConfiguration());
+    $this->assertEquals($default_config, $query_type->getConfiguration());
+
+    $query_type->setConfiguration(['owl' => 'Long-eared owl']);
+    $this->assertEquals(['owl' => 'Long-eared owl'], $query_type->getConfiguration());
+  }
+
 }

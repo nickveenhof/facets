@@ -12,6 +12,7 @@ use Drupal\Component\Plugin\Factory\DefaultFactory;
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\StringTranslation\TranslationInterface;
+use Drupal\facets\Processor\ProcessorInterface;
 use Drupal\facets\Processor\ProcessorPluginManager;
 use Drupal\Tests\UnitTestCase;
 use Zend\Stdlib\ArrayObject;
@@ -114,6 +115,22 @@ class ProcessorPluginManagerTest extends UnitTestCase {
       ->method('getDefinitions')
       ->willReturn($definitions);
     $this->assertSame($definitions, $this->sut->getDefinitions());
+  }
+
+  /**
+   * Tests processing stages.
+   */
+  public function testGetProcessingStages() {
+    $namespaces = new ArrayObject();
+    $sut = new ProcessorPluginManager($namespaces, $this->cache, $this->moduleHandler, $this->translator);
+
+    $stages = [
+      ProcessorInterface::STAGE_PRE_QUERY,
+      ProcessorInterface::STAGE_POST_QUERY,
+      ProcessorInterface::STAGE_BUILD
+    ];
+
+    $this->assertEquals($stages, array_keys($sut->getProcessingStages()));
   }
 
 }

@@ -48,6 +48,52 @@ class UrlProcessorHandlerTest extends UnitTestCase {
   }
 
   /**
+   * Tests configuration.
+   */
+  public function testConfiguration() {
+    $facet = new Facet([], 'facets_facet');
+    $this->createContainer();
+    $processor = new UrlProcessorHandler(['facet' => $facet], 'url_processor_handler', []);
+
+    $config = $processor->defaultConfiguration();
+    $this->assertEquals([], $config);
+  }
+
+  /**
+   * Tests testDescription().
+   */
+  public function testDescription() {
+    $facet = new Facet([], 'facets_facet');
+    $this->createContainer();
+    $processor = new UrlProcessorHandler(['facet' => $facet], 'url_processor_handler', []);
+
+    $this->assertEquals('', $processor->getDescription());
+  }
+
+  /**
+   * Tests isHidden().
+   */
+  public function testIsHidden() {
+    $facet = new Facet([], 'facets_facet');
+    $this->createContainer();
+    $processor = new UrlProcessorHandler(['facet' => $facet], 'url_processor_handler', []);
+
+    $this->assertEquals(FALSE, $processor->isHidden());
+  }
+
+  /**
+   * Tests isLocked().
+   */
+  public function testIsLocked() {
+    $facet = new Facet([], 'facets_facet');
+    $this->createContainer();
+    $processor = new UrlProcessorHandler(['facet' => $facet], 'url_processor_handler', []);
+
+    $this->assertEquals(FALSE, $processor->isLocked());
+  }
+
+
+  /**
    * Sets up a container.
    */
   protected function createContainer() {

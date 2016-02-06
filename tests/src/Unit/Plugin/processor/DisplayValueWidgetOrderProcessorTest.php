@@ -7,9 +7,12 @@
 
 namespace Drupal\Tests\facets\Unit\Plugin\processor;
 
+use Drupal\facets\Entity\Facet;
 use Drupal\facets\Plugin\facets\processor\DisplayValueWidgetOrderProcessor;
+use Drupal\facets\Processor\ProcessorPluginManager;
 use Drupal\facets\Result\Result;
 use Drupal\Tests\UnitTestCase;
+use Symfony\Component\DependencyInjection\ContainerBuilder;
 
 /**
  * Unit test for processor.
@@ -102,6 +105,58 @@ class DisplayValueWidgetOrderProcessorTest extends UnitTestCase {
 
     $this->assertEquals('Test BB', $sorted_results[0]->getDisplayValue());
     $this->assertEquals('Test AA', $sorted_results[1]->getDisplayValue());
+  }
+
+  /**
+   * Tests configuration.
+   */
+  public function testConfiguration() {
+    $config = $this->processor->defaultConfiguration();
+    $this->assertEquals(['sort' => 'ASC'], $config);
+  }
+
+
+  /**
+   * Tests build.
+   */
+  public function testBuild() {
+    $processor_definitions = [
+      'display_value_widget_order' => [
+        'id' => 'display_value_widget_order',
+        'class' => 'Drupal\facets\Plugin\facets\processor\DisplayValueWidgetOrderProcessor',
+      ],
+    ];
+    $manager = $this->getMockBuilder(ProcessorPluginManager::class)
+      ->disableOriginalConstructor()
+      ->getMock();
+    $manager->expects($this->once())
+      ->method('getDefinitions')
+      ->willReturn($processor_definitions);
+    $manager->expects($this->once())
+      ->method('createInstance')
+      ->willReturn($this->processor);
+
+    $container_builder = new ContainerBuilder();
+    $container_builder->set('plugin.manager.facets.processor', $manager);
+    \Drupal::setContainer($container_builder);
+
+    $facet = new Facet(
+      [
+        'id' => 'the_zoo',
+        'results' => $this->originalResults,
+        'processor_configs' => $processor_definitions,
+      ],
+      'facets_facet'
+    );
+    $built = $this->processor->build($facet, $this->originalResults);
+
+    $this->assertEquals('2', $built[0]->getDisplayValue());
+    $this->assertEquals('1977', $built[1]->getDisplayValue());
+    $this->assertEquals('FALSE', $built[2]->getDisplayValue());
+    $this->assertEquals('Hubbard', $built[3]->getDisplayValue());
+    $this->assertEquals('thetans', $built[4]->getDisplayValue());
+    $this->assertEquals('Tom', $built[5]->getDisplayValue());
+    $this->assertEquals('xenu', $built[6]->getDisplayValue());
   }
 
 }

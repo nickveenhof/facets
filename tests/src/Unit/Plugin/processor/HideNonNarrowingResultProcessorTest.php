@@ -92,4 +92,34 @@ class HideNonNarrowingResultProcessorTest extends UnitTestCase {
     $this->assertEquals('duck', $filtered_results[2]->getDisplayValue());
   }
 
+  /**
+   * Tests configuration.
+   */
+  public function testConfiguration() {
+    $config = $this->processor->defaultConfiguration();
+    $this->assertEquals([], $config);
+  }
+
+  /**
+   * Tests testDescription().
+   */
+  public function testDescription() {
+    $this->assertEquals('', $this->processor->getDescription());
+  }
+
+  /**
+   * Tests isHidden().
+   */
+  public function testIsHidden() {
+    $this->assertEquals(FALSE, $this->processor->isHidden());
+  }
+
+  /**
+   * Tests isLocked().
+   */
+  public function testIsLocked() {
+    $this->assertEquals(FALSE, $this->processor->isLocked());
+  }
+
+
 }

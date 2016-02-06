@@ -59,10 +59,10 @@ class CountLimitProcessorTest extends UnitTestCase {
     $manager = $this->getMockBuilder('Drupal\facets\Processor\ProcessorPluginManager')
       ->disableOriginalConstructor()
       ->getMock();
-    $manager->expects($this->once())
+    $manager->expects($this->any())
       ->method('getDefinitions')
       ->willReturn($processor_definitions);
-    $manager->expects($this->once())
+    $manager->expects($this->any())
       ->method('createInstance')
       ->willReturn($this->processor);
 
@@ -190,6 +190,35 @@ class CountLimitProcessorTest extends UnitTestCase {
 
     $this->assertEquals('llama', $sorted_results[0]->getDisplayValue());
     $this->assertEquals('duck', $sorted_results[2]->getDisplayValue());
+  }
+
+  /**
+   * Tests configuration.
+   */
+  public function testConfiguration() {
+    $config = $this->processor->defaultConfiguration();
+    $this->assertEquals(['minimum_items' => 1, 'maximum_items' => 0], $config);
+  }
+
+  /**
+   * Tests testDescription().
+   */
+  public function testDescription() {
+    $this->assertEquals('', $this->processor->getDescription());
+  }
+
+  /**
+   * Tests isHidden().
+   */
+  public function testIsHidden() {
+    $this->assertEquals(FALSE, $this->processor->isHidden());
+  }
+
+  /**
+   * Tests isLocked().
+   */
+  public function testIsLocked() {
+    $this->assertEquals(FALSE, $this->processor->isLocked());
   }
 
 }

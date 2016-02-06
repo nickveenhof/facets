@@ -88,4 +88,12 @@ class UidToUserNameCallbackProcessorTest extends UnitTestCase {
     \Drupal::setContainer($container);
   }
 
+  /**
+   * Tests configuration.
+   */
+  public function testConfiguration() {
+    $config = $this->processor->defaultConfiguration();
+    $this->assertEquals([], $config);
+  }
+
 }

@@ -7,9 +7,12 @@
 
 namespace Drupal\Tests\facets\Unit\Plugin\processor;
 
+use Drupal\facets\Entity\Facet;
 use Drupal\facets\Plugin\facets\processor\CountWidgetOrderProcessor;
+use Drupal\facets\Processor\ProcessorPluginManager;
 use Drupal\facets\Result\Result;
 use Drupal\Tests\UnitTestCase;
+use Symfony\Component\DependencyInjection\ContainerBuilder;
 
 /**
  * Unit test for processor.
@@ -75,6 +78,53 @@ class CountWidgetOrderProcessorTest extends UnitTestCase {
     $this->assertEquals('llama', $sorted_results[1]->getDisplayValue());
     $this->assertEquals(5, $sorted_results[2]->getCount());
     $this->assertEquals('badger', $sorted_results[2]->getDisplayValue());
+  }
+
+  /**
+   * Tests configuration.
+   */
+  public function testConfiguration() {
+    $config = $this->processor->defaultConfiguration();
+    $this->assertEquals(['sort' => 'ASC'], $config);
+  }
+
+  /**
+   * Tests build.
+   */
+  public function testBuild() {
+    $processor_definitions = [
+      'count_widget_order' => [
+        'id' => 'count_widget_order',
+        'class' => 'Drupal\facets\Plugin\facets\processor\CountWidgetOrderProcessor',
+      ],
+    ];
+    $manager = $this->getMockBuilder(ProcessorPluginManager::class)
+      ->disableOriginalConstructor()
+      ->getMock();
+    $manager->expects($this->once())
+      ->method('getDefinitions')
+      ->willReturn($processor_definitions);
+    $manager->expects($this->once())
+      ->method('createInstance')
+      ->willReturn($this->processor);
+
+    $container_builder = new ContainerBuilder();
+    $container_builder->set('plugin.manager.facets.processor', $manager);
+    \Drupal::setContainer($container_builder);
+
+    $facet = new Facet(
+      [
+        'id' => 'the_zoo',
+        'results' => $this->originalResults,
+        'processor_configs' => $processor_definitions,
+      ],
+      'facets_facet'
+    );
+    $built = $this->processor->build($facet, $this->originalResults);
+
+    $this->assertEquals('badger', $built[0]->getDisplayValue());
+    $this->assertEquals('llama', $built[1]->getDisplayValue());
+    $this->assertEquals('duck', $built[2]->getDisplayValue());
   }
 
 }

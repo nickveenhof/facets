@@ -15,6 +15,7 @@ use Drupal\Tests\UnitTestCase;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpFoundation\ParameterBag;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
  * Unit test for processor.
@@ -60,6 +61,23 @@ class QueryStringTest extends UnitTestCase {
   public function testEmptyProcessorConfiguration() {
     $this->setExpectedException('\Drupal\facets\Exception\InvalidProcessorException', "The url processor doesn't have the required 'facet' in the configuration array.");
     new QueryString([], 'test', [], new Request());
+  }
+
+  /**
+   * Tests that the processor correctly throws an exception.
+   */
+  public function testCreate() {
+    $facet = new Facet([], 'facet');
+
+    $request_stack = new RequestStack();
+    $request = new Request();
+    $request_stack->push($request);
+
+    $container = new ContainerBuilder();
+    $container->set('request_stack', $request_stack);
+
+    $qs = QueryString::create($container, ['facet' => $facet], 'query_string', []);
+    $this->assertInstanceOf(QueryString::class, $qs);
   }
 
   /**
@@ -115,7 +133,7 @@ class QueryStringTest extends UnitTestCase {
   }
 
   /**
-   * Test swith default build.
+   * Tests with default build.
    */
   public function testBuild() {
     $facet = new Facet([], 'facet');
@@ -128,6 +146,8 @@ class QueryStringTest extends UnitTestCase {
 
     $this->processor = new QueryString(['facet' => $facet], 'query_string', [], $request);
     $results = $this->processor->buildUrls($facet, $this->originalResults);
+
+    $this->assertEquals('f', $this->processor->getFilterKey());
 
     /** @var \Drupal\facets\Result\ResultInterface $r */
     foreach ($results as $r) {
