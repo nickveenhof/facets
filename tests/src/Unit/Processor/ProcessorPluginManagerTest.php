@@ -127,7 +127,7 @@ class ProcessorPluginManagerTest extends UnitTestCase {
     $stages = [
       ProcessorInterface::STAGE_PRE_QUERY,
       ProcessorInterface::STAGE_POST_QUERY,
-      ProcessorInterface::STAGE_BUILD
+      ProcessorInterface::STAGE_BUILD,
     ];
 
     $this->assertEquals($stages, array_keys($sut->getProcessingStages()));

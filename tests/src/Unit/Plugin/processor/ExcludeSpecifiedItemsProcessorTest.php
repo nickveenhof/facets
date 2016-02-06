@@ -8,7 +8,6 @@ namespace Drupal\Tests\facets\Unit\Plugin\processor;
 
 use Drupal\facets\Entity\Facet;
 use Drupal\facets\Plugin\facets\processor\ExcludeSpecifiedItemsProcessor;
-use Drupal\facets\Processor\ProcessorInterface;
 use Drupal\facets\Result\Result;
 use Drupal\Tests\UnitTestCase;
 use Symfony\Component\DependencyInjection\ContainerBuilder;

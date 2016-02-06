@@ -121,5 +121,4 @@ class HideNonNarrowingResultProcessorTest extends UnitTestCase {
     $this->assertEquals(FALSE, $this->processor->isLocked());
   }
 
-
 }
